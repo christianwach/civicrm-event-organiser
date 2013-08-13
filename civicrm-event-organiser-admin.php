@@ -405,7 +405,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			
 			// debug
 			//$this->show_venues_locations();
-			$this->show_eo_civi_events();
+			//$this->show_eo_civi_events();
 			//$this->show_eo_civi_taxonomies();
 			
 		}
@@ -597,7 +597,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				$civi_event_ids = $this->plugin->civi->update_civi_events( $event, $dates );
 				
 				// store in EO venue
-				$this->plugin->eo->store_civi_events( $event->ID, $civi_event_ids );
+				$this->plugin->civi->store_civi_events( $event->ID, $civi_event_ids );
 				
 			}
 			

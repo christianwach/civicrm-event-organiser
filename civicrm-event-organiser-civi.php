@@ -259,11 +259,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			);
 			*/
 			
+			/*
 			print_r( array(
 				'post' => $post,
 				'dates' => $dates,
 				'civi_event' => $civi_event,
 			) );
+			*/
 			
 		} // end dates loop
 		
@@ -311,7 +313,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		// store these in post meta
-		//$this->plugin->eo->store_civi_events( $post->ID, $civi_event_ids );
+		$this->store_civi_events( $post->ID, $civi_event_ids );
 		
 		
 		
