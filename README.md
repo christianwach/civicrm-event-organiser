@@ -19,6 +19,15 @@ It also requires
 * [Radio Buttons for Taxonomies](http://wordpress.org/plugins/radio-buttons-for-taxonomies/) to ensure only one event type is selected
 
 
+#### Known Issues ####
+
+Lots. And lots.
+
+The biggest is that it does'nt sync events properly yet. I'm working on it. I've said it before, I'll say it again:
+
+**This plugin is still in development and probably won't work for you. You have been warned.**
+
+
 #### Installation ####
 
 There are two ways to install from GitHub:
@@ -32,9 +41,7 @@ If you have downloaded *CiviCRM Event Organiser* as a ZIP file from the GitHub r
 3. You are done!
 4. Not so fast… 
 
-**This plugin is still in development and probably won't work for you** 
-
-**You have been warned.**
+**This plugin is still in development and probably won't work for you. You have been warned.**
 
 
 ###### git clone ######
