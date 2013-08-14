@@ -407,6 +407,333 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			//$this->show_venues_locations();
 			//$this->show_eo_civi_events();
 			//$this->show_eo_civi_taxonomies();
+			print_r( $this->get_all_event_correspondences() ); die();
+			
+		}
+		
+	}
+	
+	
+	
+	//##########################################################################
+	
+	
+	
+	/**
+	 * @description: store CiviEvents <-> Event Organiser event data
+	 * @param int $post_id the numeric ID of the WP post
+	 * @param array $civi_event_ids all CiviEvent IDs for the post
+	 * @return nothing
+	 */
+	public function store_event_correspondences( $post_id, $civi_event_ids ) {
+		
+		// an EO event needs to know the IDs of all the CiviEvents
+		update_post_meta( $post_id, '_civi_eo_civicrm_events', $civi_event_ids );
+		
+		// init array
+		$civi_event_data = array();
+		
+		// each CiviEvent needs to know the ID of the EO post
+		if ( count( $civi_event_ids ) > 0 ) {
+			
+			// construct array
+			foreach( $civi_event_ids AS $civi_event_id ) {
+				
+				// add post ID, keyed by CiviEvent ID
+				$civi_event_data[$civi_event_id] = $post_id;
+				
+			}
+			
+		}
+		
+		// store option
+		$this->option_save( 'civi_eo_civi_event_data', $civi_event_data );
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get all CiviEvent - Event Organiser event correspondences
+	 * @param int $post_id the numeric ID of the WP post
+	 * @return array $civi_event_ids all CiviEvent IDs for the post
+	 */
+	public function get_all_event_correspondences() {
+	
+		// init return
+		$event_data = array();
+		
+		// add "Civi to EO"
+		$event_data['civi_to_eo'] = $this->get_all_civi_to_eo_correspondences();
+		
+		// add "EO to Civi"
+		$event_data['eo_to_civi'] = $this->get_all_eo_to_civi_correspondences();
+		
+		// --<
+		return $event_data;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get Event Organiser event ID for a CiviEvent event ID
+	 * @return array $civi_event_data all CiviEvent IDs for the post
+	 */
+	public function get_civi_to_eo_correspondence( $civi_event_id ) {
+	
+		// init return
+		$eo_event_id = false;
+		
+		// get all correspondences
+		$eo_event_data = $this->get_all_civi_to_eo_correspondences();
+		
+		// if we get some...
+		if ( count( $eo_event_data ) > 0 ) {
+		
+			// do we have the key
+			if ( isset( $eo_event_data[$civi_event_id] ) ) {
+			
+				// get keyed value
+				$eo_event_id = $eo_event_data[$civi_event_id];
+				
+			}
+		
+		}
+		
+		// --<
+		return $eo_event_id;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get all Event Organiser events for all CiviEvents
+	 * @return array $civi_event_data all CiviEvent IDs for the post
+	 */
+	public function get_all_civi_to_eo_correspondences() {
+	
+		// store once
+		static $eo_event_data;
+		
+		// have we done this?
+		if ( !isset( $eo_event_data ) ) {
+	
+			// get option
+			$eo_event_data = $this->option_get( 'civi_eo_civi_event_data', array() );
+		
+		}
+		
+		// --<
+		return $eo_event_data;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get CiviEvent IDs for an Event Organiser event ID
+	 * @param int $post_id the numeric ID of the WP post
+	 * @return array $civi_event_ids all CiviEvent IDs for the post
+	 */
+	public function get_eo_to_civi_correspondences( $post_id ) {
+		
+		// get the meta value
+		$civi_event_ids = get_post_meta( $post_id, '_civi_eo_civicrm_events', true );
+		
+		// if it's not yet set it will be an empty string, so cast as array
+		if ( $civi_event_ids === '' ) { $civi_event_ids = array(); }
+		
+		// --<
+		return $civi_event_ids;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get all CiviEvents for all Event Organiser events
+	 * @param int $post_id the numeric ID of the WP post
+	 * @return array $civi_event_ids all CiviEvent IDs for the post
+	 */
+	public function get_all_eo_to_civi_correspondences() {
+		
+		// init civi data
+		$civi_event_data = array();
+		
+		// construct args for all event posts
+		$args = array(
+			
+			'post_type' => 'event',
+			'numberposts' => -1,
+			
+		);
+		
+		// get all event posts
+		$all_events = get_posts( $args );
+
+		// did we get any?
+		if ( count( $all_events ) > 0 ) {
+			
+			// loop
+			foreach( $all_events AS $event ) {
+				
+				// get post meta and add to return array
+				$civi_event_data[$event->ID] = $this->get_eo_to_civi_correspondences( $event->ID );
+				
+			}
+			
+		}
+		
+		// --<
+		return $civi_event_data;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: delete all CiviEvents for an Event Organiser event
+	 * @param int $post_id the numeric ID of the WP post
+	 * @return nothing
+	 */
+	public function clear_event_correspondences( $post_id ) {
+		
+		// delete the meta value
+		delete_post_meta( $post_id, '_civi_eo_civicrm_events' );
+		
+	}
+	
+	
+	
+	//##########################################################################
+	
+	
+	
+	/**
+	 * @description: show values
+	 * @return nothing
+	 */
+	public function show_eo_civi_events() {
+		
+		// construct args for all event posts
+		$args = array(
+			
+			'post_type' => 'event',
+			'numberposts' => -1,
+			
+		);
+		
+		// get all event posts
+		$all_events = get_posts( $args );
+		
+		// get all EO events
+		$all_eo_events = eo_get_events();
+		
+		// get all Civi Events
+		$all_civi_events = $this->plugin->civi->get_all_events();
+		
+		// init
+		$delete = array();
+		
+		// delete all?
+		if ( 1 === 2 ) {
+		
+			// error check
+			if ( $all_civi_events['is_error'] == '0' ) {
+			
+				// do we have any?
+				if ( 
+					is_array( $all_civi_events['values'] ) 
+					AND 
+					count( $all_civi_events['values'] ) > 0 
+				) {
+			
+					// get all event IDs
+					$all_civi_event_ids = array_keys( $all_civi_events['values'] );
+				
+					// delete all CiviEvents!
+					$delete = $this->plugin->civi->delete_all_events( $all_civi_event_ids );
+			
+				}
+			
+			}
+			
+		}
+		
+		print_r( array(
+			'all_events' => $all_events,
+			'all_eo_events' => $all_eo_events,
+			'all_civi_events' => $all_civi_events,
+			'delete' => $delete,
+		) ); 
+		
+		die();
+		
+	}
+	
+	
+	
+	/**
+	 * @description: sync EO events to CiviEvents
+	 * @return nothing
+	 */
+	public function sync_events_to_civi() {
+		
+		// construct args for all event posts
+		$args = array(
+			
+			'post_type' => 'event',
+			'numberposts' => -1,
+			
+		);
+		
+		// get all event posts
+		$all_events = get_posts( $args );
+
+		// did we get any?
+		if ( count( $all_events ) > 0 ) {
+			
+			// loop
+			foreach( $all_events AS $event ) {
+				
+				// get dates for this event
+				$dates = $this->plugin->eo->get_all_dates( $event->ID );
+				
+				// update CiviEvent - or create if it doesn't exist
+				$civi_event_ids = $this->plugin->civi->update_civi_events( $event, $dates );
+				
+				// store in EO venue
+				$this->store_event_correspondences( $event->ID, $civi_event_ids );
+				
+			}
+			
+		}
+		
+	}
+	
+	
+	
+	/**
+	 * @description: sync CiviEvents to EO events
+	 * @return nothing
+	 */
+	public function sync_events_to_eo() {
+		
+		// get all Civi Events
+		$all_civi_events = $this->plugin->civi->get_all_events();
+		
+		// sync Civi to EO
+		if ( count( $all_civi_events['values'] ) > 0 ) {
+			
+			// loop
+			foreach( $all_civi_events['values'] AS $civi_event ) {
+				
+				// update EO venue - or create if it doesn't exist
+				$this->plugin->eo->update_event( $civi_event );
+				
+			}
 			
 		}
 		
@@ -520,114 +847,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			'sync_event_types_to_categories links' => $links,
 		) ); //die();
 		*/
-		
-	}
-	
-	
-	
-	//##########################################################################
-	
-	
-	
-	/**
-	 * @description: show values
-	 * @return nothing
-	 */
-	public function show_eo_civi_events() {
-		
-		// construct args for all event posts
-		$args = array(
-			
-			'post_type' => 'event',
-			'numberposts' => -1,
-			
-		);
-		
-		// get all event posts
-		$all_events = get_posts( $args );
-		
-		// get all EO events
-		//$all_eo_events = eo_get_events();
-		
-		// get all Civi Events
-		$all_civi_events = $this->plugin->civi->get_all_events();
-		
-		// delete all CiviEvents!
-		//$this->plugin->civi->delete_all_events();
-		
-		print_r( array(
-			'all_events' => $all_events,
-			//'all_eo_events' => $all_eo_events,
-			'all_civi_events' => $all_civi_events,
-		) ); 
-		
-		die();
-		
-	}
-	
-	
-	
-	/**
-	 * @description: sync EO events to CiviEvents
-	 * @return nothing
-	 */
-	public function sync_events_to_civi() {
-		
-		// construct args for all event posts
-		$args = array(
-			
-			'post_type' => 'event',
-			'numberposts' => -1,
-			
-		);
-		
-		// get all event posts
-		$all_events = get_posts( $args );
-
-		// did we get any?
-		if ( count( $all_events ) > 0 ) {
-			
-			// loop
-			foreach( $all_events AS $event ) {
-				
-				// get dates for this event
-				$dates = $this->plugin->eo->get_all_dates( $event->ID );
-				
-				// update CiviEvent - or create if it doesn't exist
-				$civi_event_ids = $this->plugin->civi->update_civi_events( $event, $dates );
-				
-				// store in EO venue
-				$this->plugin->civi->store_civi_events( $event->ID, $civi_event_ids );
-				
-			}
-			
-		}
-		
-	}
-	
-	
-	
-	/**
-	 * @description: sync CiviEvents to EO events
-	 * @return nothing
-	 */
-	public function sync_events_to_eo() {
-		
-		// get all Civi Events
-		$all_civi_events = $this->plugin->civi->get_all_events();
-		
-		// sync Civi to EO
-		if ( count( $all_civi_events['values'] ) > 0 ) {
-			
-			// loop
-			foreach( $all_civi_events['values'] AS $civi_event ) {
-				
-				// update EO venue - or create if it doesn't exist
-				$this->plugin->eo->update_event( $civi_event );
-				
-			}
-			
-		}
 		
 	}
 	

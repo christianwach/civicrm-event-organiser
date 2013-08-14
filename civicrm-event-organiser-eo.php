@@ -169,14 +169,14 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// get post data
 		$post = get_post( $post_id );
 		
-		// get event data
-		//$schedule = eo_get_event_schedule( $post_id );
-		
 		// save custom EO event components
 		$this->_save_event_components( $post_id );
 		
 		// get all dates
 		$dates = $this->get_all_dates( $post_id );
+		
+		// get event data
+		//$schedule = eo_get_event_schedule( $post_id );
 		
 		/*
 		print_r( array(
@@ -218,16 +218,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 		) ); die();
 		*/
 		
+		// TODO
 		return;
 		
 		// get IDs from post meta
-		$civi_event_ids = $this->plugin->civi->get_civi_events( $post_id );
+		$civi_event_ids = $this->plugin->db->get_eo_to_civi_correspondences( $post_id );
 		
 		// delete those CiviCRM events
-		$this->plugin->civi->delete_civi_events( $civi_event_ids );
+		$this->plugin->civi->delete_all_events( $civi_event_ids );
 		
 		// delete our stored CiviCRM event IDs
-		$this->_clear_civi_events( $post_id );
+		$this->plugin->db->clear_event_correspondences( $post_id );
 		
 	}
 	
@@ -429,6 +430,31 @@ class CiviCRM_WP_Event_Organiser_EO {
 	
 	
 	
+	/**
+	 * @description: get all Event Organiser date objects for a given post ID
+	 * @param int $post_id the numeric ID of the WP post
+	 * @return array $all_dates all dates for the post, keyed by ID
+	 */
+	public function get_date_objects( $post_id ) {
+		
+		// get schedule
+		$schedule = eo_get_event_schedule( $post_id );
+		
+		// if we have some dates
+		if( isset( $schedule['_occurrences'] ) AND count( $schedule['_occurrences'] ) > 0 ) {
+			
+			// --<
+			return $schedule['_occurrences'];
+		
+		}
+		
+		// --<
+		return array();
+		
+	}
+	
+	
+	
 	//##########################################################################
 	
 	
@@ -520,7 +546,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function clear_event_registration( $post_id ) {
 		
 		// delete the meta value
-		delete_post_meta( $post_id, '_civi_eo_civicrm_events' );
+		delete_post_meta( $post_id, '_civi_reg' );
 		
 	}
 	

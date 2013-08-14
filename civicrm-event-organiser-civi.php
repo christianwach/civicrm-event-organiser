@@ -313,7 +313,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		// store these in post meta
-		$this->store_civi_events( $post->ID, $civi_event_ids );
+		$this->plugin->db->store_event_correspondences( $post->ID, $civi_event_ids );
 		
 		
 		
@@ -339,7 +339,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( count( $dates ) == 0 ) return false;
 		
 		// get existing CiviEvents from post meta
-		$civi_event_ids = $this->get_civi_events( $post->ID );
+		$civi_event_ids = $this->plugin->db->get_eo_to_civi_correspondences( $post->ID );
 		
 		// if we have none yet
 		if ( count( $civi_event_ids ) === 0 ) {
@@ -495,6 +495,66 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	/**
+	 * @description: get all CiviEvents
+	 * @return array $events the CiviEvents data
+	 */
+	public function get_all_events() {
+		
+		// init CiviCRM or die
+		if ( ! $this->is_active() ) return false;
+		
+		// construct locations array
+		$params = array( 
+			'version' => 3,
+		);
+		
+		// call API
+		$events = civicrm_api( 'event', 'get', $params );
+		
+		// --<
+		return $events;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: delete all CiviEvents WARNING only for dev purposes really!
+	 * @return array $results an array of CiviCRM results
+	 */
+	public function delete_all_events( $civi_event_ids ) {
+		
+		// init CiviCRM or die
+		if ( ! $this->is_active() ) return false;
+		
+		// just for safety, check we get some
+		if ( count( $civi_event_ids ) == 0 ) return false;
+		
+		// init return
+		$results = array();
+		
+		// one by one, it seems
+		foreach( $civi_event_ids AS $civi_event_id ) {
+			
+			// construct "query"
+			$params = array( 
+				'version' => 3,
+				'id' => $civi_event_id,
+			);
+			
+			// okay, let's do it
+			$results[] = civicrm_api( 'event', 'delete', $params );
+		
+		}
+		
+		// --<
+		return $results;
+	
+	}
+	
+	
+	
+	/**
 	 * @description: get a CiviEvent by ID
 	 * @param array $location the CiviEvent location data
 	 */
@@ -519,80 +579,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
-	/**
-	 * @description: get all CiviEvents
-	 * @return array $events the CiviEvents data
-	 */
-	public function get_all_events() {
-		
-		// init CiviCRM or die
-		if ( ! $this->is_active() ) return false;
-		
-		// construct locations array
-		$params = array( 
-			'version' => 3,
-		);
-		
-		// call API
-		$events = civicrm_api( 'event', 'get', $params );
-		
-		// --<
-		return $events;
-		
-	}
-	
-	
-	
 	//##########################################################################
-	
-	
-	
-	/**
-	 * @description: store all CiviEvents for an Event Organiser event
-	 * @param int $post_id the numeric ID of the WP post
-	 * @param array $civi_event_ids all CiviEvent IDs for the post
-	 * @return nothing
-	 */
-	public function store_civi_events( $post_id, $civi_event_ids ) {
-		
-		// set the meta value
-		update_post_meta( $post_id, '_civi_eo_civicrm_events', $civi_event_ids );
-		
-	}
-	
-	
-	
-	/**
-	 * @description: get all CiviEvents for an Event Organiser event
-	 * @param int $post_id the numeric ID of the WP post
-	 * @return array $civi_event_ids all CiviEvent IDs for the post
-	 */
-	public function get_civi_events( $post_id ) {
-		
-		// get the meta value
-		$civi_event_ids = get_post_meta( $post_id, '_civi_eo_civicrm_events', true );
-		
-		// if it's not yet set it will be an empty string, so cast as array
-		if ( $civi_event_ids === '' ) { $civi_event_ids = array(); }
-		
-		// --<
-		return $civi_event_ids;
-		
-	}
-	
-	
-	
-	/**
-	 * @description: delete all CiviEvents for an Event Organiser event
-	 * @param int $post_id the numeric ID of the WP post
-	 * @return nothing
-	 */
-	public function clear_civi_events( $post_id ) {
-		
-		// delete the meta value
-		delete_post_meta( $post_id, '_civi_eo_civicrm_events' );
-		
-	}
 	
 	
 	
@@ -1186,7 +1173,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( !is_object( $post ) ) return $default;
 		
 		// get CiviEvents for this EO event
-		$civi_events = $this->get_civi_events( $post->ID );
+		$civi_events = $this->plugin->db->get_eo_to_civi_correspondences( $post->ID );
 		
 		// did we get any?
 		if ( is_array( $civi_events ) AND count( $civi_events ) > 0 ) {
