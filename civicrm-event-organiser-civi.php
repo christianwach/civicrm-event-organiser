@@ -338,6 +338,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// just for safety, check we get some (though we must)
 		if ( count( $dates ) == 0 ) return false;
 		
+		
+		
 		// get existing CiviEvents from post meta
 		$civi_event_ids = $this->plugin->db->get_eo_to_civi_correspondences( $post->ID );
 		
@@ -352,9 +354,46 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			
 		}
 		
-		// TESTING!!!! go no further!!!!
-		return false;
 		
+		
+		/*
+		------------------------------------------------------------------------
+		
+		The logic for updating is as follows:
+		
+		Event sequences can only be generated from EO, so any CiviEvents that are
+		part of a sequence must have been generated automatically.
+		
+		Since CiviEvents will only be generated when the "Create CiviEvents"
+		checkbox is ticked (and only those with 'publish_posts' caps can see the
+		checkbox) we assume that this is the definitive set of events.
+		
+		Any further changes work thusly:
+		
+		We get the correspondences and match by date and time. Any CiviEvents
+		that match have their info updated since their correspondence remains
+		unaltered.
+		
+		Any additions to the EO event are treated as new CiviEvents and are added
+		to CiviCRM. Any removals are treated as if the event has been cancelled
+		and the CiviEvent is set to 'disabled' rather than deleted. This is to
+		preserve any data that may have been collected for the removed event.
+		
+		The bottom line is: make sure your sequences are right before hitting
+		the Publish button and be wary of making further changes.
+		
+		Things get a bit more complicated when a sequence is split, but it's not
+		too bad. THis functionality will be handled by the EO 'occurrence' hooks
+		when I get round to it!
+		
+		------------------------------------------------------------------------
+		*/
+		
+		
+		
+		// TODO event update logic
+		// go no further
+		return false;
 		
 		
 		
@@ -449,46 +488,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		} // end check for empty array
 		
 		die();
-		
-		
-		/*
-		// inform the admin user
-		if ( user_access( 'access CiviEvent' ) ) {
-			
-			// where there is only one CiviEvent...
-			if ( count( $dates ) == 1 ) {
-				
-				// contruct link
-				$link = l(
-					'CiviCRM Event page', 
-					'civicrm/event/manage/eventInfo', 
-					array('query' => 'reset=1&action=update&id='. $civi_event_id)
-				);
-				
-				// feedback
-				drupal_set_message(
-					'The corresponding CiviCRM Event has been updated. '.
-					'You can add further details to it on the '.$link
-				);
-			
-			}
-			
-			// where there are repeating CiviEvents...
-			if ( count( $dates ) > 1 ) {
-				
-				// construct list of links
-				$link_list = implode( '<br/>', $links );
-				
-				// feedback
-				drupal_set_message(
-					'The following CiviCRM Events have been created. '.
-					'If you need to, visit the following links to configure the events further:<br/>'.$link_list
-				);
-				
-			}
-			
-		}
-		*/
 		
 	}
 	
