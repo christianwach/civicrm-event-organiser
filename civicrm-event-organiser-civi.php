@@ -56,9 +56,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// allow plugins to register php and template directories
 		//add_action( 'civicrm_config', array( $this, 'register_directories' ), 10, 1 );
 		
-		// intercept pre-save
-		//add_action( 'civicrm_custom', array( $this, 'event_type_pre' ), 10, 4 );
-		
 		// intercept event type enable/disable
 		//add_action( 'civicrm_enableDisable', array( $this, 'event_type_toggle' ), 10, 3 );
 		

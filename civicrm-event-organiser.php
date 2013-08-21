@@ -178,22 +178,11 @@ class CiviCRM_WP_Event_Organiser {
 
 
 
-/**
- * @description: initialise our plugin after CiviCRM initialises
- */
-function civicrm_wp_event_organiser_init() {
-	
-	// declare as global
-	global $civicrm_wp_event_organiser;
-	
-	// init plugin
-	$civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
-	
-}
+// declare as global
+global $civicrm_wp_event_organiser;
 
-// add action for plugin init
-add_action( 'civicrm_instance_loaded', 'civicrm_wp_event_organiser_init' );
-
+// init plugin
+$civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
 
 
 
