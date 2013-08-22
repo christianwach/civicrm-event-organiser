@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		if ( is_admin() ) {
 			
 			// multisite?
-			if ( is_multisite() ) {
+			if ( $this->is_network_activated() ) {
 				
 				// add menu to Network submenu
 				add_action( 'network_admin_menu', array( $this, 'add_admin_menu' ), 30 );
@@ -78,8 +78,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// try and update options
 		$saved = $this->update_options();
 
-		// multisite?
-		if ( is_multisite() ) {
+		// multisite and network activated?
+		if ( $this->is_network_activated() ) {
 				
 			// add the admin page to the Network Settings menu
 			$page = add_submenu_page( 
@@ -98,7 +98,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// add the admin page to the Settings menu
 			$page = add_options_page( 
 				
-				'settings.php', 
 				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ), 
 				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ), 
 				'manage_options', 
@@ -144,14 +143,14 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function admin_form() {
 		
-		// only allow network admins through
-		if( ! is_super_admin() ) {
-			wp_die( __( 'You do not have permission to access this page.', 'civicrm-event-organiser' ) );
-		}
+		// multisite and network activated?
+		if ( $this->is_network_activated() ) {
+				
+			// only allow network admins through
+			if( ! is_super_admin() ) {
+				wp_die( __( 'You do not have permission to access this page.', 'civicrm-event-organiser' ) );
+			}
 		
-		// if we've updated...
-		if ( isset( $_GET['updated'] ) ) {
-			echo '<div id="message" class="updated"><p>'.__( 'Options saved.', 'civicrm-event-organiser' ).'</p></div>';
 		}
 		
 		// sanitise admin page url
@@ -407,7 +406,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			//$this->show_venues_locations();
 			//$this->show_eo_civi_events();
 			//$this->show_eo_civi_taxonomies();
-			print_r( $this->get_all_event_correspondences() ); die();
+			//print_r( $this->get_all_event_correspondences() ); die();
 			
 		}
 		
@@ -936,18 +935,33 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get all Civi Event locations
 		$all_locations = $this->plugin->civi->get_all_locations();
 		
+		/*
+		print_r( array(
+			//'all_venues' => $all_venues,
+			'all_locations' => $all_locations,
+		) ); die();
+		*/
+		
 		// sync Civi to EO
 		if ( count( $all_locations['values'] ) > 0 ) {
 			
 			// loop
 			foreach( $all_locations['values'] AS $location ) {
+			
+				// if we have a street name, print it
+				print_r( array( 'working on' => $location ) );
 				
 				// update EO venue - or create if it doesn't exist
-				$this->plugin->eo_venue->update_venue( $location );
+				$result = $this->plugin->eo_venue->update_venue( $location );
+				
+				// print result
+				print_r( array( 'completed' => $result ) );
 				
 			}
 			
 		}
+		
+		die();
 		
 	}
 	
@@ -965,8 +979,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function option_get( $key ) {
 		
-		// if multisite...
-		if ( is_multisite() ) {
+		// if multisite and network activated
+		if ( $this->is_network_activated() ) {
 			
 			// get site option
 			$value = get_site_option( $key, $value );
@@ -993,8 +1007,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function option_save( $key, $value ) {
 		
-		// if multisite...
-		if ( is_multisite() ) {
+		// if multisite and network activated
+		if ( $this->is_network_activated() ) {
 			
 			// update site option
 			update_site_option( $key, $value );
@@ -1017,8 +1031,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function option_delete( $key ) {
 		
-		// if multisite...
-		if ( is_multisite() ) {
+		// if multisite and network activated
+		if ( $this->is_network_activated() ) {
 			
 			// delete site option
 			delete_site_option( $key, $value );
@@ -1034,6 +1048,48 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	
 	
 	
+	// test to see if we are network activated
+	/**
+	 * @description: test if this plugin is neytwork activated
+	 * @return bool true if network activated, false otherwise
+	 */
+	function is_network_activated() {
+		
+		// only need to test once
+		static $is_network_active;
+		
+		// have we done this already?
+		if ( isset( $is_network_active ) ) return $is_network_active;
+	
+		// if not multisite, it cannot be
+		if ( ! is_multisite() ) {
+			
+			// set flag
+			$is_network_active = false;
+			
+			// kick out
+			return $is_network_active;
+			
+		}
+		
+		// make sure plugin file is included when outside admin
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once( ABSPATH . '/wp-admin/includes/plugin.php' );
+		}
+		
+		// get path from 'plugins' directory to this plugin
+		$this_plugin = plugin_basename( CIVICRM_WP_EVENT_ORGANISER_FILE );
+		
+		// test if network active
+		$is_network_active = is_plugin_active_for_network( $this_plugin );
+		
+		// --<
+		return $is_network_active;
+		
+	}
+
+
+
 } // class ends
 
 
