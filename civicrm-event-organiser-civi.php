@@ -857,9 +857,19 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( ! $this->is_active() ) return false;
 		
 		// construct locations array
-		$params = array( 
+		$params = array(
+		
+			// API v3 please
 			'version' => 3,
+			
+			// return all data
 			'return' => 'all',
+
+			// define stupidly high limit, because API defaults to 25
+			'options' => array( 
+				'limit' => '10000',
+			),
+			
 		);
 		
 		// call API

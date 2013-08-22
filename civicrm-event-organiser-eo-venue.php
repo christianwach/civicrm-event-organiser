@@ -329,11 +329,40 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		add_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10, 1 );
 		
 		// if not an error
-		if ( is_wp_error( $result ) OR !isset( $result['term_id'] ) ) return false;
+		if ( is_wp_error( $result ) OR !isset( $result['term_id'] ) ) {
+			
+			print_r( array(
+				'method' => 'create_venue',
+				'result' => $result,
+			) ); die();
+			
+		}
 		
 		// create venue meta data
-		eo_update_venue_meta( $result['term_id'],  '_civi_email', esc_sql( $location['email']['email'] ) );
-		eo_update_venue_meta( $result['term_id'],  '_civi_phone', esc_sql( $location['phone']['phone'] ) );
+		
+		// init email to site default
+		$email = get_option( 'admin_email' );
+		
+		// do we have an alternative in CiviCRM?
+		if ( isset( $location['email']['email'] ) ) {
+			
+			// override
+			$email = $location['email']['email'];
+			
+		}
+		
+		// store email in meta
+		eo_update_venue_meta( $result['term_id'],  '_civi_email', esc_sql( $email ) );
+		
+		// do we have an alternative in CiviCRM?
+		if ( isset( $location['phone']['phone'] ) ) {
+			
+			// store phone in meta
+			eo_update_venue_meta( $result['term_id'],  '_civi_phone', esc_sql( $location['phone']['phone'] ) );
+			
+		}
+		
+		// store location ID
 		eo_update_venue_meta( $result['term_id'],  '_civi_loc_id', $location['id'] );
 		
 		/*
@@ -363,6 +392,10 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		
 		// does this location have an existing venue?
 		$venue_id = $this->get_venue_id( $location );
+		
+		print_r( array(
+			'venue_id' => $venue_id,
+		) );
 		
 		// if we get one
 		if ( $venue_id === false ) {
@@ -470,13 +503,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// this should return a value
 		$venue_id = $wpdb->get_var( $sql );
 		
-		/*
+		///*
 		print_r( array(
-			'location' => $location,
+			//'location' => $location,
 			'sql' => $sql,
 			'venue_id' => $venue_id,
-		) ); die();
-		*/
+		) ); //die();
+		//*/
 		
 		// if we get one, return it
 		if ( isset( $venue_id ) AND !is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
@@ -512,13 +545,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			// this should return a value
 			$venue_id = $wpdb->get_var( $sql );
 			
-			/*
+			///*
 			print_r( array(
-				'location' => $location,
+				//'location' => $location,
 				'sql' => $sql,
 				'venue_id' => $venue_id,
-			) ); die();
-			*/
+			) ); //die();
+			//*/
 			
 			// if we get one, return it
 			if ( isset( $venue_id ) AND !is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
@@ -537,20 +570,20 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			$sql = $wpdb->prepare(
 				"SELECT eo_venue_id FROM $wpdb->eo_venuemeta WHERE 
 				meta_key = '_address' AND 
-				meta_value = %d", 
+				meta_value = %s", 
 				$location['address']['street_address'] 
 			);
 			
 			// get value
 			$venue_id = $wpdb->get_var( $sql );
 			
-			/*
+			///*
 			print_r( array(
-				'location' => $location,
+				//'location' => $location,
 				'sql' => $sql,
 				'venue_id' => $venue_id,
-			) ); die();
-			*/
+			) ); //die();
+			//*/
 			
 			// if we get one, return it
 			if ( isset( $venue_id ) AND !is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
