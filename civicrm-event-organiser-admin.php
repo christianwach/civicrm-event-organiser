@@ -935,33 +935,18 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get all Civi Event locations
 		$all_locations = $this->plugin->civi->get_all_locations();
 		
-		/*
-		print_r( array(
-			//'all_venues' => $all_venues,
-			'all_locations' => $all_locations,
-		) ); die();
-		*/
-		
 		// sync Civi to EO
 		if ( count( $all_locations['values'] ) > 0 ) {
 			
 			// loop
 			foreach( $all_locations['values'] AS $location ) {
-			
-				// if we have a street name, print it
-				print_r( array( 'working on' => $location ) );
 				
 				// update EO venue - or create if it doesn't exist
-				$result = $this->plugin->eo_venue->update_venue( $location );
-				
-				// print result
-				print_r( array( 'completed' => $result ) );
+				$this->plugin->eo_venue->update_venue( $location );
 				
 			}
 			
 		}
-		
-		die();
 		
 	}
 	

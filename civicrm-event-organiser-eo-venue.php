@@ -393,10 +393,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// does this location have an existing venue?
 		$venue_id = $this->get_venue_id( $location );
 		
-		print_r( array(
-			'venue_id' => $venue_id,
-		) );
-		
 		// if we get one
 		if ( $venue_id === false ) {
 			
@@ -503,13 +499,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// this should return a value
 		$venue_id = $wpdb->get_var( $sql );
 		
-		///*
+		/*
 		print_r( array(
-			//'location' => $location,
+			'location' => $location,
 			'sql' => $sql,
 			'venue_id' => $venue_id,
-		) ); //die();
-		//*/
+		) ); die();
+		*/
 		
 		// if we get one, return it
 		if ( isset( $venue_id ) AND !is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
@@ -545,13 +541,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			// this should return a value
 			$venue_id = $wpdb->get_var( $sql );
 			
-			///*
+			/*
 			print_r( array(
-				//'location' => $location,
+				'location' => $location,
 				'sql' => $sql,
 				'venue_id' => $venue_id,
-			) ); //die();
-			//*/
+			) ); die();
+			*/
 			
 			// if we get one, return it
 			if ( isset( $venue_id ) AND !is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
@@ -577,13 +573,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			// get value
 			$venue_id = $wpdb->get_var( $sql );
 			
-			///*
+			/*
 			print_r( array(
-				//'location' => $location,
+				'location' => $location,
 				'sql' => $sql,
 				'venue_id' => $venue_id,
-			) ); //die();
-			//*/
+			) ); die();
+			*/
 			
 			// if we get one, return it
 			if ( isset( $venue_id ) AND !is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
