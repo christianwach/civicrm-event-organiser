@@ -502,6 +502,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// construct locations array
 		$params = array( 
 			'version' => 3,
+			// define stupidly high limit, because API defaults to 25
+			'options' => array( 
+				'limit' => '10000',
+			),
 		);
 		
 		// call API
