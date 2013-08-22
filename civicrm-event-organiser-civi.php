@@ -781,7 +781,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// construct get-by-id array
 		$params = array( 
 			'version' => 3,
-			'id' => $venue->venue_civi_id,
+			'id' => $civi_id,
 			'return' => 'all',
 		);
 		
@@ -918,6 +918,33 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
+	/**
+	 * @description: gets a CiviEvent Location given an CiviEvent Location ID
+	 * @param int $loc_id the CiviEvent Location ID
+	 * @return array $location the CiviEvent Location data
+	 */
+	public function get_location_by_id( $loc_id ) {
+		
+		// init CiviCRM or die
+		if ( ! $this->is_active() ) return false;
+		
+		// construct get-by-id array
+		$params = array( 
+			'version' => 3,
+			'id' => $loc_id,
+			'return' => 'all',
+		);
+		
+		// call API
+		$location = civicrm_api( 'loc_block', 'get', $params );
+		
+		// --<
+		return $location;
+		
+	}
+
+
+
 	/**
 	 * @description: creates (or updates) a CiviEvent Location given an EO venue
 	 * The only disadvantage to this method is that, for example, if we update 
@@ -1752,6 +1779,38 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		// --<
 		return $existing_id;
+		
+	}
+	
+	
+	
+	/*
+	 * @description: get a CiviEvent event type by ID
+	 * @return array $type CiviEvent event type data
+	 */
+	public function get_event_type_by_id( $type_id ) {
+		
+		// if we fail to init CiviCRM...
+		if ( ! $this->is_active() ) return false;
+		
+		// get option group ID
+		$opt_group_id = $this->get_event_types_optgroup_id();
+		
+		// error check
+		if ( $opt_group_id === false ) return false;
+		
+		// define params to get item
+		$type_params = array( 
+			'option_group_id' => $opt_group_id,
+			'version' => 3,
+			'value' => $type_id,
+		);
+		
+		// get them (descriptions will be present if not null)
+		$type = civicrm_api( 'option_value', 'getsingle', $type_params );
+		
+		// --<
+		return $type;
 		
 	}
 	

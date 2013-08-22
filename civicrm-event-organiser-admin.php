@@ -703,7 +703,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				// update CiviEvent - or create if it doesn't exist
 				$civi_event_ids = $this->plugin->civi->update_civi_events( $event, $dates );
 				
-				// store in EO venue
+				// store correspondences
 				$this->store_event_correspondences( $event->ID, $civi_event_ids );
 				
 			}
@@ -730,7 +730,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			foreach( $all_civi_events['values'] AS $civi_event ) {
 				
 				// update EO venue - or create if it doesn't exist
-				$this->plugin->eo->update_event( $civi_event );
+				$event_id = $this->plugin->eo->update_event( $civi_event );
+				
+				// store correspondences
+				$this->store_event_correspondences( $event_id, array( $civi_event['id'] ) );
 				
 			}
 			

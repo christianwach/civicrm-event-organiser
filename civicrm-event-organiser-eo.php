@@ -239,6 +239,155 @@ class CiviCRM_WP_Event_Organiser_EO {
 	
 	
 	/**
+	 * @description: update and EO event, given a CiviEvent. If no EO event exists
+	 * then create one
+	 * @param array $civi_event and array of data for the CiviEvent
+	 * @return nothing
+	 */
+	public function update_event( $civi_event ) {
+		
+		/*
+		print_r( array(
+			'civi_event' => $civi_event,
+		) );
+		*/
+		
+		// define schedule
+		$event_data = array(
+		
+			// start date
+			'start' => new DateTime( $civi_event['start_date'], eo_get_blog_timezone() ),
+
+			// end date and end of schedule are the same
+			'end' => new DateTime( $civi_event['end_date'], eo_get_blog_timezone() ),
+			'schedule_last' => new DateTime( $civi_event['end_date'], eo_get_blog_timezone() ),
+			
+			// we can't tell if a CiviEvent is repeating, so only once
+			'frequency' => 1,
+			
+			// Civi does not have "all day"
+			'all_day' => 0,
+			
+			// we can't tell if a CiviEvent is repeating
+			'schedule' => 'once',
+			
+		);
+		
+		// add items that are common to all CiviEvents
+		$civi_event['is_active'] = 1;
+		
+		// define post
+		$post_data = array(
+			
+			// standard post data
+			'post_title' => $civi_event['title'],
+			'post_content' => $civi_event['description'],
+			'post_excerpt' => $civi_event['summary'],
+			'post_date' => $civi_event['created_date'],
+			
+			// quick fixes for Windows which need to be present
+			'to_ping' => '', 
+			'pinged' => '',
+			'post_content_filtered' => '',
+			
+		);
+		
+		// assume the CiviEvent is live
+		$post_data['post_status'] = 'publish';
+		
+		// is the event active?
+		if ( $civi_event['is_active'] == 0 ) {
+		
+			// make the CiviEvent unpublished
+			$post_data['post_status'] = 'draft';
+		
+		}
+		
+		// init venue as undefined
+		$venue_id = 0;
+		
+		// get location ID
+		if ( isset( $civi_event['loc_block_id'] ) ) {
+		
+			// we have a location...
+			
+			// get location data
+			$location = $this->plugin->civi->get_location_by_id( $civi_event['loc_block_id'] );
+			
+			// get corresponding EO venue ID
+			$venue_id = $this->plugin->eo_venue->get_venue_id( $location );
+		
+		}
+		
+		// init category as undefined
+		$terms = array();
+		
+		// get location ID
+		if ( isset( $civi_event['event_type_id'] ) ) {
+		
+			// we have a category...
+			//print_r( $this->plugin->civi->get_event_types() ); die();
+			
+			// get event type data for this ID
+			$type = $this->plugin->civi->get_event_type_by_id( $civi_event['event_type_id'] );
+			
+			// does this type have an existing term?
+			$term_id = $this->get_term_id( $type );
+			
+			// define as array
+			$terms = array( absint( $term_id ) );
+
+		}
+		
+		// add to post data
+		$post_data['tax_input'] = array(
+			'event-venue' => array( absint( $venue_id ) ),
+			'event-category' => $terms,
+		);
+		
+		/*
+		print_r( array(
+			'post_data' => $post_data,
+			'type' => $type,
+		) ); die();
+		*/
+		
+		// do we have a post ID for this event?
+		$eo_post_id = $this->plugin->db->get_civi_to_eo_correspondence( $civi_event['id'] );
+		
+		// remove hooks
+		remove_action( 'wp_insert_post', array( $this, 'insert_post' ), 10 );
+		remove_action( 'eventorganiser_save_event', array( $this, 'save_event' ), 10 );
+	
+		// did we get a post ID?
+		if ( $eo_post_id === false ) {
+		
+			// use EO's API to create event
+			$event_id = eo_insert_event( $post_data, $event_data );
+
+		} else {
+		
+			// use EO's API to update event
+			$event_id = eo_update_event( $eo_post_id, $post_data, $event_data );
+
+		}
+		
+		// re-add hooks
+		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
+		add_action( 'eventorganiser_save_event', array( $this, 'save_event' ), 10, 1 );
+		
+		// --<
+		return $event_id;
+	
+	}
+	
+	
+	
+	//##########################################################################
+	
+	
+	
+	/**
 	 * @description: intercept before break occurrence
 	 * @param int $post_id the numeric ID of the WP post
 	 * @param int $occurrence_id the numeric ID of the occurrence
