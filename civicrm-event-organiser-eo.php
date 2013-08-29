@@ -165,6 +165,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * @return nothing
 	 */
 	public function save_event( $post_id ) {
+	
+		// is our checkbox checked?
+		if ( !isset( $_POST['civi_eo_event_sync'] ) ) return;
+		if ( $_POST['civi_eo_event_sync'] != 1 ) return;
 		
 		// get post data
 		$post = get_post( $post_id );
@@ -515,6 +519,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 		<select id="civi_eo_event_role" name="civi_eo_event_role">
 			'.$roles.'
 		</select>
+		</p>
+		
+		<p>
+		<label for="civi_eo_event_sync">Sync to CiviCRM:</label>
+		<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
 		</p>
 		
 		';
