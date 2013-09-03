@@ -166,15 +166,22 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function save_event( $post_id ) {
 	
-		// is our checkbox checked?
-		if ( !isset( $_POST['civi_eo_event_sync'] ) ) return;
-		if ( $_POST['civi_eo_event_sync'] != 1 ) return;
-		
 		// get post data
 		$post = get_post( $post_id );
 		
 		// save custom EO event components
 		$this->_save_event_components( $post_id );
+		
+		
+		
+		// sync checkbox is only shown to people who can publish posts
+		if ( !current_user_can( 'publish_posts' ) ) return;
+
+		// is our checkbox checked?
+		if ( !isset( $_POST['civi_eo_event_sync'] ) ) return;
+		if ( $_POST['civi_eo_event_sync'] != 1 ) return;
+		
+		
 		
 		// get all dates
 		$dates = $this->get_all_dates( $post_id );
@@ -502,6 +509,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// get participant roles
 		$roles = $this->plugin->civi->get_participant_roles_select( $event );
 		
+		// init checkbox
+		$checkbox = '';
+		
+		// show checkbox to people who can publish posts
+		if ( current_user_can( 'publish_posts' ) ) {
+
+			// define checkbox
+			$checkbox = '
+			<p>
+			<label for="civi_eo_event_sync">Sync to CiviCRM:</label>
+			<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
+			</p>
+		
+			';
+		
+		}
+		
 		// show meta box
 		echo '
 		
@@ -521,12 +545,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		</select>
 		</p>
 		
-		<p>
-		<label for="civi_eo_event_sync">Sync to CiviCRM:</label>
-		<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
-		</p>
-		
 		';
+		
+		// show checkbox, if allowed
+		echo $checkbox;
 		
 	}
 
