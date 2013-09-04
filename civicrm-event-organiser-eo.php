@@ -65,7 +65,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// intercept update event (though by misuse of a filter)
 		add_filter( 'eventorganiser_update_event_event_data', array( $this, 'intercept_update_event' ), 10, 4 );
 		
-		// intercept delete event occurrences
+		// intercept delete event occurrences (which is the preferred way to hook into event deletion)
 		add_action( 'eventorganiser_delete_event_occurrences', array( $this, 'delete_event_occurrences' ), 10, 1 );
 		
 		// intercept before break occurrence
@@ -247,14 +247,31 @@ class CiviCRM_WP_Event_Organiser_EO {
 		) ); die();
 		*/
 		
-		// TODO
+		// TODO - delete
 		return;
+		
+		/*
+		Once again, the question arises as to whether we should actually delete 
+		the CiviEvents or set them to "disabled"... I guess this behaviour could
+		be set as a plugin option.
+		
+		Also whether we should delete the correspondences or transfer them to an
+		"inactive" array of some kind.
+		*/
 		
 		// get IDs from post meta
 		$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
 		
-		// delete those CiviCRM events
-		$this->plugin->civi->delete_all_events( $correspondences );
+		// loop through them
+		foreach ( $correspondences AS $civi_event_id ) {
+		
+			// disable CiviEvent
+			$return = $this->plugin->civi->disable_civi_event( $civi_event_id );
+		
+		}
+		
+		// delete those CiviCRM events - not used at present
+		//$this->plugin->civi->delete_all_civi_events( $correspondences );
 		
 		// delete our stored CiviCRM event IDs
 		$this->plugin->db->clear_event_correspondences( $post_id );
@@ -434,6 +451,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 		
 		// init or die
 		if ( ! $this->is_active() ) return;
+		
+		/*
+		At minimum, we need to prevent our '_civi_eo_civicrm_events' post meta
+		from being copied to the new EO event. We need to rebuild this for both
+		EO events, excluding from the broken and adding to the new EO event.
+		*/
 		
 	}
 	

@@ -670,13 +670,35 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	
 	
 	/**
-	 * @description: delete all CiviEvents for an Event Organiser event
+	 * @description: delete all correspondences between a CiviEvent and an Event Organiser event
 	 * @param int $post_id the numeric ID of the WP post
 	 * @return nothing
 	 */
 	public function clear_event_correspondences( $post_id ) {
 		
-		// delete the meta value
+		// get CiviEvent IDs from post meta
+		$civi_event_ids = $this->get_civi_event_ids_by_eo_event_id( $post_id );
+		
+		// get CiviEvent data held in option
+		$civi_event_data = $this->get_all_civi_to_eo_correspondences();
+		
+		// if we have some CiviEvent IDs for this EO event
+		if ( count( $civi_event_ids ) > 0 ) {
+			
+			// loop
+			foreach( $civi_event_ids AS $civi_event_id ) {
+			
+				// unset the item with this key in the option array
+				unset( $civi_event_data[$civi_event_id] );
+		
+			}
+			
+			// store updated array
+			$this->option_save( 'civi_eo_civi_event_data', $civi_event_data );
+		
+		}
+		
+		// now we can delete the array held in post meta
 		delete_post_meta( $post_id, '_civi_eo_civicrm_events' );
 		
 	}
@@ -816,7 +838,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$all_eo_events = eo_get_events();
 		
 		// get all Civi Events
-		$all_civi_events = $this->plugin->civi->get_all_events();
+		$all_civi_events = $this->plugin->civi->get_all_civi_events();
 		
 		// init
 		$delete = array();
@@ -838,7 +860,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 					$all_civi_event_ids = array_keys( $all_civi_events['values'] );
 				
 					// delete all CiviEvents!
-					$delete = $this->plugin->civi->delete_all_events( $all_civi_event_ids );
+					$delete = $this->plugin->civi->delete_all_civi_events( $all_civi_event_ids );
 			
 				}
 			
@@ -906,7 +928,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function sync_events_to_eo() {
 		
 		// get all Civi Events
-		$all_civi_events = $this->plugin->civi->get_all_events();
+		$all_civi_events = $this->plugin->civi->get_all_civi_events();
 		
 		// sync Civi to EO
 		if ( count( $all_civi_events['values'] ) > 0 ) {

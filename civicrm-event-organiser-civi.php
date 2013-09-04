@@ -119,6 +119,105 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	/**
+	 * @description: prepare a CiviEvent with data from an EO Event
+	 * @return array $civi_event the basic CiviEvent data
+	 */
+	public function prepare_civi_event( $post ) {
+		
+		// init CiviEvent array
+		$civi_event = array(
+			'version' => 3,
+		);
+		
+		// add items that are common to all CiviEvents
+		$civi_event['title'] = $post->post_title;
+		$civi_event['description'] = $post->post_content;
+		$civi_event['summary'] = strip_tags( $post->post_excerpt );
+		$civi_event['created_date'] = $post->post_date;
+		$civi_event['is_public'] = 1;
+		$civi_event['is_active'] = 1;
+		$civi_event['participant_listing_id'] = NULL;
+		
+		
+		
+		// get venue for this event
+		$venue_id = eo_get_venue( $post->ID );
+		
+		// get CiviEvent location
+		$location_id = $this->plugin->eo_venue->get_civi_location( $venue_id );
+		
+		// did we get one?
+		if ( is_numeric( $location_id ) ) {
+			
+			// add to our params
+			$civi_event['loc_block_id'] = $location_id;
+			
+			// set CiviCRM to add map
+			$civi_event['is_map'] = 1;
+			
+		}
+		
+		
+		
+		// online registration off by default
+		$civi_event['is_online_registration'] = 0;
+		
+		// get CiviEvent online registration value
+		$is_reg = $this->plugin->eo->get_event_registration( $post->ID );
+		
+		// did we get one?
+		if ( is_numeric( $is_reg ) AND $is_reg != 0 ) {
+			
+			// add to our params
+			$civi_event['is_online_registration'] = 1;
+			
+		}
+		
+		
+		
+		// participant_role default
+		$civi_event['default_role_id'] = 0;
+		
+		// get existing role ID
+		$existing_id = $this->get_participant_role( $post );
+		
+		// did we get one?
+		if ( $existing_id !== false AND is_numeric( $existing_id ) AND $existing_id != 0 ) {
+			
+			// add to our params
+			$civi_event['default_role_id'] = $existing_id;
+			
+		}
+		
+		
+		
+		// get event type id, because it is required in CiviCRM
+		$type_id = $this->get_default_event_type( $post );
+		
+		// well?
+		if ( $type_id === false ) {
+			
+			// error
+			wp_die( __( 'You must have some CiviCRM event types defined', 'civicrm-event-organiser' ) );
+			
+		}
+		
+		// we need the event type 'value'
+		$type_value = $this->get_event_type_value( $type_id );
+		
+		// assign event type value
+		$civi_event['event_type_id'] = $type_value;
+		
+		
+		
+		// --<
+		return $civi_event;
+		
+	}
+	
+	
+	
+	/**
 	 * @description: create CiviEvents for an EO event
 	 * @param object $post the WP post object
 	 * @param array $dates array of properly formatted dates
@@ -309,26 +408,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		Things get a bit more complicated when a sequence is split, but it's not
 		too bad. This functionality will be handled by the EO 'occurrence' hooks
-		when I get round to it!
+		when I get round to it.
+		
+		Also, note the inline comment discussing what to do with CiviEvents that
+		have been "orphaned" from the sequence. The current need is to retain the
+		CiviEvent, since there may be associated data.
 		
 		------------------------------------------------------------------------
 		*/
 		
+		// start with new correspondence array
+		$new_correspondences = array();
+		
 		// prepare CiviEvent
 		$civi_event = $this->prepare_civi_event( $post );
-		
-		
-		
-		// init Civi events array
-		$civi_events = array();
-		
-		//  get CiviEvents by ID
-		foreach ( $correspondences AS $occurrence_id => $civi_event_id ) {
-		
-			// add data to array
-			$civi_events[] = $this->get_event_by_id( $civi_event_id );
-		
-		}
 		
 		
 		
@@ -350,9 +443,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 			// let's assume that the intention is simply to update the CiviEvents
 			// and that each date corresponds to the sequential CiviEvent
-			
-			// start with new correspondence array
-			$new_correspondences = array();
 			
 			// loop through dates
 			foreach ( $dates AS $date ) {
@@ -391,8 +481,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// overwrite those stored in post meta
 			$this->plugin->db->store_event_correspondences( $post->ID, $new_correspondences );
 			
-			//die();
-		
 			// --<
 			return $new_correspondences;
 			
@@ -400,195 +488,126 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		
-		// disable from here
-		return false;
+		// init Civi events array
+		$civi_events = array();
 		
-
-
-		// get matches between EO events and CiviEvents
-		$matches = $this->get_event_matches( $dates, $civi_events );
+		//  get CiviEvents by ID
+		foreach ( $correspondences AS $occurrence_id => $civi_event_id ) {
 		
+			// add CiviEvent to array
+			$civi_events[] = $this->get_event_by_id( $civi_event_id );
 		
-		
-		// first loop through matched dates and update CiviEvents
-		foreach ( $matched AS $date_id => $civi_id ) {
-		
-			// assign ID so we perform an update
-			$civi_event['id'] = $civi_id;
-			
-			// use API to update event
-			$result = civicrm_api( 'event', 'create', $civi_event );
-			
-			// did we do okay?
-			if ( $result['is_error'] == '1' ) {
-				
-				// not much else we can do here if we get an error...
-				wp_die( $result['error_message'] );
-				
-			}
-			
-			// add to correspondence array
-			$correspondences[] = $civi_id;
-			
 		}
 		
 		
+		
+		// get matches between EO events and CiviEvents
+		$matches = $this->get_event_matches( $dates, $civi_events );
+		
+		/*
+		// trace
+		print_r( array(
+			'dates' => $dates,
+			'correspondences' => $correspondences,
+			'matches' => $matches,
+		) ); die();
+		*/
+		
+		
+		
+		// extract matched array
+		$matched = $matches['matched'];
+		
+		// do we have any matched?
+		if ( count( $matched ) > 0 ) {
+		
+			// loop through matched dates and update CiviEvents
+			foreach ( $matched AS $date_id => $civi_id ) {
+		
+				// assign ID so we perform an update
+				$civi_event['id'] = $civi_id;
 			
-		// now loop through unmatched EO dates and create CiviEvents
-		foreach ( $unmatched_eo AS $date ) {
+				// use API to update event
+				$result = civicrm_api( 'event', 'create', $civi_event );
 			
-			// see what our Drupal node date looks like
-			//print_r( $date ); die();
-			
-			// overwrite dates
-			$civi_event['start_date'] = $date['start'];
-			$civi_event['end_date'] = $date['end'];
-			
-			// use API to create event
-			//$result = civicrm_api( 'event', 'create', $civi_event );
-			
-			/*
-			// did we do okay?
-			if ( $result['is_error'] == '1' ) {
+				// did we do okay?
+				if ( $result['is_error'] == '1' ) {
 				
-				// not much else we can do here if we get an error...
-				wp_die( $result['error_message'] );
+					// not much else we can do here if we get an error...
+					wp_die( $result['error_message'] );
 				
+				}
+			
+				// add to new correspondence array
+				$new_correspondences[$dates[$date_id]['occurrence_id']] = $civi_id;
+			
+			}
+		
+		} // end check for empty array
+		
+		
+			
+		// extract unmatched EO events array
+		$unmatched_eo = $matches['unmatched_eo'];
+		
+		// do we have any unmatched EO occurrences?
+		if ( count( $unmatched_eo ) > 0 ) {
+		
+			// now loop through unmatched EO dates and create CiviEvents
+			foreach ( $unmatched_eo AS $eo_date ) {
+			
+				// overwrite dates
+				$civi_event['start_date'] = $eo_date['start'];
+				$civi_event['end_date'] = $eo_date['end'];
+			
+				// use API to create event
+				$result = civicrm_api( 'event', 'create', $civi_event );
+			
+				// did we do okay?
+				if ( $result['is_error'] == '1' ) {
+				
+					// not much else we can do here if we get an error...
+					wp_die( $result['error_message'] );
+				
+				}
+				
+				// add the CiviEvent ID to array, keyed by occurrence_id
+				$new_correspondences[$eo_date['occurrence_id']] = $result['id'];
+			
 			}
 			
-			// let's retrieve our CiviEvent ID
-			$civi_event_id = $result['id'];
-			*/
+		} // end check for empty array
+		
+		
+		
+		// extract unmatched CiviEvents array
+		$unmatched_civi = $matches['unmatched_civi'];
+		
+		// do we have any unmatched CiviEvents?
+		if ( count( $unmatched_civi ) > 0 ) {
+		
+			// loop through unmatched CiviEvents
+			foreach ( $unmatched_civi AS $civi_id ) {
 			
-			/*
-			// store the Drupal Node -> CiviEvent relationship in our table
-			db_query(
-				"INSERT {wpa_civievent_sync} SET nid = '%d', civi_eid = %d", 
-				$post->nid, 
-				$civi_event_id
-			);
-			*/
+				// set to disabled
+				$result = $this->disable_civi_event( $civi_id );
 			
-			/*
-			// construct link
-			$links[] = l(
-				'CiviCRM Event ('.$date['human'].')', 
-				'civicrm/event/manage/eventInfo', 
-				array(
-					'query' => 'reset=1&action=update&id='. $civi_event_id
-				)
-			);
-			*/
+				/*
+				Am mulling over whether or not to add to correspondence data in
+				some way, because althought the CiviEvent is effectively dispensed 
+				with as far as EO is concerned, the CiviEvent might have other
+				data associated with it, or might indeed be "reconnected" by a
+				further change in the sequence.
+				*/
 			
-			print_r( array(
-				'civi_event' => $civi_event,
-			) );
+			}
 			
 		} // end check for empty array
 		
 		
 		
 		// store these in post meta
-		$this->plugin->db->store_event_correspondences( $post->ID, $correspondences );
-		
-	}
-	
-	
-	
-	/**
-	 * @description: prepare a CiviEvent with data from an EO Event
-	 * @return array $civi_event the basic CiviEvent data
-	 */
-	public function prepare_civi_event( $post ) {
-		
-		// init CiviEvent array
-		$civi_event = array(
-			'version' => 3,
-		);
-		
-		// add items that are common to all CiviEvents
-		$civi_event['title'] = $post->post_title;
-		$civi_event['description'] = $post->post_content;
-		$civi_event['summary'] = strip_tags( $post->post_excerpt );
-		$civi_event['created_date'] = $post->post_date;
-		$civi_event['is_public'] = 1;
-		$civi_event['is_active'] = 1;
-		$civi_event['participant_listing_id'] = NULL;
-		
-		
-		
-		// get venue for this event
-		$venue_id = eo_get_venue( $post->ID );
-		
-		// get CiviEvent location
-		$location_id = $this->plugin->eo_venue->get_civi_location( $venue_id );
-		
-		// did we get one?
-		if ( is_numeric( $location_id ) ) {
-			
-			// add to our params
-			$civi_event['loc_block_id'] = $location_id;
-			
-			// set CiviCRM to add map
-			$civi_event['is_map'] = 1;
-			
-		}
-		
-		
-		
-		// online registration off by default
-		$civi_event['is_online_registration'] = 0;
-		
-		// get CiviEvent online registration value
-		$is_reg = $this->plugin->eo->get_event_registration( $post->ID );
-		
-		// did we get one?
-		if ( is_numeric( $is_reg ) AND $is_reg != 0 ) {
-			
-			// add to our params
-			$civi_event['is_online_registration'] = 1;
-			
-		}
-		
-		
-		
-		// participant_role default
-		$civi_event['default_role_id'] = 0;
-		
-		// get existing role ID
-		$existing_id = $this->get_participant_role( $post );
-		
-		// did we get one?
-		if ( $existing_id !== false AND is_numeric( $existing_id ) AND $existing_id != 0 ) {
-			
-			// add to our params
-			$civi_event['default_role_id'] = $existing_id;
-			
-		}
-		
-		
-		
-		// get event type id, because it is required in CiviCRM
-		$type_id = $this->get_default_event_type( $post );
-		
-		// well?
-		if ( $type_id === false ) {
-			
-			// error
-			wp_die( __( 'You must have some CiviCRM event types defined', 'civicrm-event-organiser' ) );
-			
-		}
-		
-		// we need the event type 'value'
-		$type_value = $this->get_event_type_value( $type_id );
-		
-		// assign event type value
-		$civi_event['event_type_id'] = $type_value;
-		
-		
-		
-		// --<
-		return $civi_event;
+		$this->plugin->db->store_event_correspondences( $post->ID, $new_correspondences );
 		
 	}
 	
@@ -679,7 +698,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @description: get all CiviEvents
 	 * @return array $events the CiviEvents data
 	 */
-	public function get_all_events() {
+	public function get_all_civi_events() {
 		
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return false;
@@ -707,7 +726,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @description: delete all CiviEvents WARNING only for dev purposes really!
 	 * @return array $results an array of CiviCRM results
 	 */
-	public function delete_all_events( $civi_event_ids ) {
+	public function delete_all_civi_events( $civi_event_ids ) {
 		
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return false;
@@ -734,6 +753,44 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		// --<
 		return $results;
+	
+	}
+	
+	
+	
+	/**
+	 * @description: disable a CiviEvent
+	 * @return array $result a CiviCRM result array
+	 */
+	public function disable_civi_event( $civi_event_id ) {
+		
+		// init CiviCRM or die
+		if ( ! $this->is_active() ) return false;
+		
+		// init event array
+		$civi_event = array(
+			'version' => 3,
+		);
+		
+		// assign ID so we perform an update
+		$civi_event['id'] = $civi_event_id;
+	
+		// set "disabled" flag - see below
+		$civi_event['is_active'] = 0;
+	
+		// use API to update event
+		$result = civicrm_api( 'event', 'create', $civi_event );
+	
+		// did we do okay?
+		if ( $result['is_error'] == '1' ) {
+		
+			// not much else we can do here if we get an error...
+			wp_die( $result['error_message'] );
+		
+		}
+		
+		// --<
+		return $result;
 	
 	}
 	
@@ -1476,6 +1533,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'recordID' => $recordID,
 			'isActive' => $isActive,
 		), true ), E_USER_ERROR ); die();
+		*/
+		
+		/*
+		if this happens, should we set its corresponding EO occurrence to the 
+		array of "not in the sequence" items? Or remove it from the correspondences?
 		*/
 		
 	}
