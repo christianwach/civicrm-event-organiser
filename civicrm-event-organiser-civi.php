@@ -272,8 +272,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			
 		}
 		
-		// disable
-		return false;
+		
 		
 		/*
 		------------------------------------------------------------------------
@@ -333,14 +332,16 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		
+		/*
 		// trace
 		print_r( array(
 			'post' => $post,
 			'dates' => $dates,
 			'correspondences' => $correspondences,
-			'civi_event' => $civi_event,
-			'civi_events' => $civi_events,
-		) ); die();
+			//'civi_event' => $civi_event,
+			//'civi_events' => $civi_events,
+		) ); //die();
+		*/
 		
 		
 		
@@ -357,7 +358,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			foreach ( $dates AS $date ) {
 				
 				// set ID, triggering update
-				$civi_event['id'] = $correspondences[$date['occurrence_id']];
+				$civi_event['id'] = array_shift( $correspondences );
 
 				// overwrite dates
 				$civi_event['start_date'] = $date['start'];
@@ -365,7 +366,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			
 				// use API to create event
 				$result = civicrm_api( 'event', 'create', $civi_event );
-			
+				
+				/*
+				// trace
+				print_r( array(
+					'civi_event' => $civi_event,
+					'result' => $result,
+				) ); //die();
+				*/
+				
 				// did we do okay?
 				if ( $result['is_error'] == '1' ) {
 				
@@ -374,13 +383,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				
 				}
 			
-				// add the new CiviEvent ID to array, keyed by occurrence_id
+				// add the CiviEvent ID to array, keyed by occurrence_id
 				$new_correspondences[$date['occurrence_id']] = $result['id'];
 			
 			}
 			
 			// overwrite those stored in post meta
 			$this->plugin->db->store_event_correspondences( $post->ID, $new_correspondences );
+			
+			//die();
 		
 			// --<
 			return $new_correspondences;
@@ -389,6 +400,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		
+		// disable from here
+		return false;
+		
+
+
 		// get matches between EO events and CiviEvents
 		$matches = $this->get_event_matches( $dates, $civi_events );
 		
