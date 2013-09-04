@@ -272,7 +272,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			
 		}
 		
-		
+		// disable
+		return false;
 		
 		/*
 		------------------------------------------------------------------------
@@ -323,7 +324,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$civi_events = array();
 		
 		//  get CiviEvents by ID
-		foreach ( $civi_event_ids AS $civi_event_id ) {
+		foreach ( $correspondences AS $occurrence_id => $civi_event_id ) {
 		
 			// add data to array
 			$civi_events[] = $this->get_event_by_id( $civi_event_id );
@@ -332,33 +333,64 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		
+		// trace
+		print_r( array(
+			'post' => $post,
+			'dates' => $dates,
+			'correspondences' => $correspondences,
+			'civi_event' => $civi_event,
+			'civi_events' => $civi_events,
+		) ); die();
+		
+		
+		
 		// do the arrays have the same length?
-		if ( count( $dates ) === count( $civi_event_ids ) ) {
+		if ( count( $dates ) === count( $correspondences ) ) {
 		
-			// let's assume that 
+			// let's assume that the intention is simply to update the CiviEvents
+			// and that each date corresponds to the sequential CiviEvent
+			
+			// start with new correspondence array
+			$new_correspondences = array();
+			
+			// loop through dates
+			foreach ( $dates AS $date ) {
+				
+				// set ID, triggering update
+				$civi_event['id'] = $correspondences[$date['occurrence_id']];
+
+				// overwrite dates
+				$civi_event['start_date'] = $date['start'];
+				$civi_event['end_date'] = $date['end'];
+			
+				// use API to create event
+				$result = civicrm_api( 'event', 'create', $civi_event );
+			
+				// did we do okay?
+				if ( $result['is_error'] == '1' ) {
+				
+					// not much else we can do here if we get an error...
+					wp_die( $result['error_message'] );
+				
+				}
+			
+				// add the new CiviEvent ID to array, keyed by occurrence_id
+				$new_correspondences[$date['occurrence_id']] = $result['id'];
+			
+			}
+			
+			// overwrite those stored in post meta
+			$this->plugin->db->store_event_correspondences( $post->ID, $new_correspondences );
 		
+			// --<
+			return $new_correspondences;
+			
 		}
 		
 		
 		
 		// get matches between EO events and CiviEvents
 		$matches = $this->get_event_matches( $dates, $civi_events );
-		
-		
-		// trace
-		print_r( array(
-			'post' => $post,
-			'dates' => $dates,
-			'civi_event_ids' => $civi_event_ids,
-			'civi_event' => $civi_event,
-			'civi_events' => $civi_events,
-			'matches' => $matches,
-		) ); die();
-		
-		
-		
-		// init array of correspondences
-		$correspondences = array();
 		
 		
 		
