@@ -330,6 +330,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// check that we trust the source of the data
 			check_admin_referer( 'civi_eo_admin_action', 'civi_eo_nonce' );
 			
+			// rebuild broken correspondences in 0.1
+			$this->rebuild_event_correspondences();
+
 			// init vars
 			$civi_eo_event_default_role = '0';
 			$civi_eo_eo_to_civi = '0';
@@ -418,34 +421,158 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	
 	
 	
+	/*
+	Correspondences are stored using existing data structures. This imposes some
+	limitations on us. Ideally, I suppose, this plugin would define its own table
+	for the correspondences, but the existing tables will work.
+	
+	(a) A CiviEvent needs to know which post ID and which occurrence ID it is synced with.
+	(b) An EO event (post) needs to know the CiviEvents which are synced with it.
+	(c) An EO occurrence needs to know which CiviEvent is is synced with
+	
+	So, given that CiviCRM seems to have no meta storage for CiviEvents, use a
+	WordPress option to store this data. We can now query the data by CiviEvent ID
+	and retrieve post ID and occurrence ID. The array looks like:
+	
+	array(
+		$civi_event_id => array( 
+			'post_id' => $post_id, 
+			'occurrence_id' => $occurrence_id, 
+		),
+		$civi_event_id => array( 
+			'post_id' => $post_id, 
+			'occurrence_id' => $occurrence_id, 
+		),
+		...
+	)
+	
+	In the reverse situation, we store an array of correspondences as post meta.
+	We will need to know the post ID to get it. The array looks like:
+	
+	array(
+		$occurrence_id => $civi_event_id,
+		$occurrence_id => $civi_event_id,
+		$occurrence_id => $civi_event_id,
+		...
+	)
+	
+	In practice, however, if the sequence changes, then EO regenerates the 
+	occurrences anyway, so our correspondences need to be rebuilt when that
+	happens. This makes the occurrence_id linkage useful only when sequences are
+	broken - and that isn't built yet.
+	*/
+	
+	
+	
+	/**
+	 * @description: rebuilds all CiviEvents <-> Event Organiser event data
+	 * @return nothing
+	 */
+	public function rebuild_event_correspondences() {
+		
+		// only applies to version 0.1
+		if ( CIVICRM_WP_EVENT_ORGANISER_VERSION != '0.1' ) return;
+	
+		// only rely on the EO event correspondences, because of a bug in the 
+		// 0.1 version of the plugin which overwrote the civi_to_eo array
+		$eo_to_civi = $this->get_all_eo_to_civi_correspondences();
+		
+		// kick out if we get none
+		if ( count( $eo_to_civi ) === 0 ) return;
+		
+		/*
+		print_r( array(
+			'eo_to_civi' => $eo_to_civi,
+			'civi_to_eo' => $this->get_all_civi_to_eo_correspondences(),
+		) );
+		*/
+		
+		// init Civi correspondence array to be stored as option
+		$civi_correspondences = array();
+		
+		// loop through the data
+		foreach( $eo_to_civi AS $event_id => $civi_event_ids ) {
+		
+			// get occurrences
+			$occurrences = eo_get_the_occurrences_of( $event_id );
+			
+			// init EO correspondence array
+			$eo_correspondences = array();
+			
+			// init counter
+			$n = 0;
+			
+			// loop through them
+			foreach( $occurrences AS $occurrence_id => $data ) {
+			
+				// add CiviEvent ID to EO correspondences
+				$eo_correspondences[$occurrence_id] = $civi_event_ids[$n];
+				
+				// add EO event ID to Civi correspondences
+				$civi_correspondences[$civi_event_ids[$n]] = array(
+					'post_id' => $event_id,
+					'occurrence_id' => $occurrence_id,
+				);
+				
+				// increment counter
+				$n++;
+			
+			}
+			
+			///*
+			print_r( array(
+				'event_id' => $event_id,
+				'eo_correspondences' => $eo_correspondences,
+			) );
+			//*/
+			
+			// replace our post meta
+			//update_post_meta( $event_id, '_civi_eo_civicrm_events', $eo_correspondences );
+			
+		}
+		
+		print_r( array(
+			'civi_correspondences' => $civi_correspondences,
+		) );
+
+		// replace our option
+		//$this->option_save( 'civi_eo_civi_event_data', $civi_correspondences );
+		
+	}
+	
+	
+	
 	/**
 	 * @description: store CiviEvents <-> Event Organiser event data
 	 * @param int $post_id the numeric ID of the WP post
-	 * @param array $civi_event_ids all CiviEvent IDs for the post
+	 * @param array $correspondences CiviEvent IDs, keyed by EO occurrence ID
 	 * @return nothing
 	 */
-	public function store_event_correspondences( $post_id, $civi_event_ids ) {
+	public function store_event_correspondences( $post_id, $correspondences ) {
 		
-		// an EO event needs to know the IDs of all the CiviEvents
-		update_post_meta( $post_id, '_civi_eo_civicrm_events', $civi_event_ids );
+		// an EO event needs to know the IDs of all the CiviEvents, keyed by EO occurrence ID
+		update_post_meta( $post_id, '_civi_eo_civicrm_events', $correspondences );
 		
-		// init array
-		$civi_event_data = array();
+		// init array with stored value (or empty array)
+		$civi_event_data = $this->option_get( 'civi_eo_civi_event_data', array() );
 		
-		// each CiviEvent needs to know the ID of the EO post
-		if ( count( $civi_event_ids ) > 0 ) {
+		// each CiviEvent needs to know the IDs of the EO post and the EO occurrence
+		if ( count( $correspondences ) > 0 ) {
 			
 			// construct array
-			foreach( $civi_event_ids AS $civi_event_id ) {
+			foreach( $correspondences AS $occurrence_id => $civi_event_id ) {
 				
 				// add post ID, keyed by CiviEvent ID
-				$civi_event_data[$civi_event_id] = $post_id;
+				$civi_event_data[$civi_event_id] = array( 
+					'post_id' => $post_id,
+					'occurrence_id' => $occurrence_id,
+				);
 				
 			}
 			
 		}
 		
-		// store option
+		// store updated array as option
 		$this->option_save( 'civi_eo_civi_event_data', $civi_event_data );
 		
 	}
@@ -453,55 +580,23 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	
 	
 	/**
-	 * @description: get all CiviEvent - Event Organiser event correspondences
+	 * @description: get all  event correspondences
 	 * @param int $post_id the numeric ID of the WP post
-	 * @return array $civi_event_ids all CiviEvent IDs for the post
+	 * @return array $correspondences all CiviEvent - Event Organiser correspondences
 	 */
 	public function get_all_event_correspondences() {
 	
 		// init return
-		$event_data = array();
+		$correspondences = array();
 		
 		// add "Civi to EO"
-		$event_data['civi_to_eo'] = $this->get_all_civi_to_eo_correspondences();
+		$correspondences['civi_to_eo'] = $this->get_all_civi_to_eo_correspondences();
 		
 		// add "EO to Civi"
-		$event_data['eo_to_civi'] = $this->get_all_eo_to_civi_correspondences();
+		$correspondences['eo_to_civi'] = $this->get_all_eo_to_civi_correspondences();
 		
 		// --<
-		return $event_data;
-		
-	}
-	
-	
-	
-	/**
-	 * @description: get Event Organiser event ID for a CiviEvent event ID
-	 * @return array $civi_event_data all CiviEvent IDs for the post
-	 */
-	public function get_civi_to_eo_correspondence( $civi_event_id ) {
-	
-		// init return
-		$eo_event_id = false;
-		
-		// get all correspondences
-		$eo_event_data = $this->get_all_civi_to_eo_correspondences();
-		
-		// if we get some...
-		if ( count( $eo_event_data ) > 0 ) {
-		
-			// do we have the key
-			if ( isset( $eo_event_data[$civi_event_id] ) ) {
-			
-				// get keyed value
-				$eo_event_id = $eo_event_data[$civi_event_id];
-				
-			}
-		
-		}
-		
-		// --<
-		return $eo_event_id;
+		return $correspondences;
 		
 	}
 	
@@ -526,26 +621,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		
 		// --<
 		return $eo_event_data;
-		
-	}
-	
-	
-	
-	/**
-	 * @description: get CiviEvent IDs for an Event Organiser event ID
-	 * @param int $post_id the numeric ID of the WP post
-	 * @return array $civi_event_ids all CiviEvent IDs for the post
-	 */
-	public function get_eo_to_civi_correspondences( $post_id ) {
-		
-		// get the meta value
-		$civi_event_ids = get_post_meta( $post_id, '_civi_eo_civicrm_events', true );
-		
-		// if it's not yet set it will be an empty string, so cast as array
-		if ( $civi_event_ids === '' ) { $civi_event_ids = array(); }
-		
-		// --<
-		return $civi_event_ids;
 		
 	}
 	
@@ -579,7 +654,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			foreach( $all_events AS $event ) {
 				
 				// get post meta and add to return array
-				$civi_event_data[$event->ID] = $this->get_eo_to_civi_correspondences( $event->ID );
+				$civi_event_data[$event->ID] = $this->get_civi_event_ids_by_eo_event_id( $event->ID );
 				
 			}
 			
@@ -601,6 +676,114 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		
 		// delete the meta value
 		delete_post_meta( $post_id, '_civi_eo_civicrm_events' );
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get Event Organiser event ID for a CiviEvent event ID
+	 * @return array $civi_event_data all CiviEvent IDs for the post
+	 */
+	public function get_eo_event_id_by_civi_event_id( $civi_event_id ) {
+	
+		// init return
+		$eo_event_id = false;
+		
+		// get all correspondences
+		$eo_event_data = $this->get_all_civi_to_eo_correspondences();
+		
+		// if we get some...
+		if ( count( $eo_event_data ) > 0 ) {
+		
+			// do we have the key?
+			if ( isset( $eo_event_data[$civi_event_id] ) ) {
+			
+				// get keyed value
+				$eo_event_id = $eo_event_data[$civi_event_id]['post_id'];
+				
+			}
+		
+		}
+		
+		// --<
+		return $eo_event_id;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get Event Organiser event ID for a CiviEvent event ID
+	 * @return array $civi_event_data all CiviEvent IDs for the post
+	 */
+	public function get_eo_occurrence_id_by_civi_event_id( $civi_event_id ) {
+	
+		// init return
+		$eo_event_id = false;
+		
+		// get all correspondences
+		$eo_event_data = $this->get_all_civi_to_eo_correspondences();
+		
+		// if we get some...
+		if ( count( $eo_event_data ) > 0 ) {
+		
+			// do we have the key?
+			if ( isset( $eo_event_data[$civi_event_id] ) ) {
+			
+				// get keyed value
+				$eo_event_id = $eo_event_data[$civi_event_id]['occurrence_id'];
+				
+			}
+		
+		}
+		
+		// --<
+		return $eo_event_id;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get CiviEvent IDs (keyed by occurrence ID) for an Event Organiser event ID
+	 * @param int $post_id the numeric ID of the WP post
+	 * @return array $civi_event_ids all CiviEvent IDs for the post, keyed by occurrence ID
+	 */
+	public function get_civi_event_ids_by_eo_event_id( $post_id ) {
+		
+		// get the meta value
+		$civi_event_ids = get_post_meta( $post_id, '_civi_eo_civicrm_events', true );
+		
+		// if it's not yet set it will be an empty string, so cast as array
+		if ( $civi_event_ids === '' ) { $civi_event_ids = array(); }
+		
+		// --<
+		return $civi_event_ids;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get CiviEvent ID for an Event Organiser event occurrence
+	 * @param int $post_id the numeric ID of the WP post
+	 * @param int $occurrence_id the numeric ID of the EO event occurrence
+	 * @return int $civi_event_id the CiviEvent ID (or false otherwise)
+	 */
+	public function get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id ) {
+		
+		// get the meta value
+		$civi_event_ids = $this->get_civi_event_ids_by_eo_event_id( $post_id );
+		
+		// return false if none present
+		if ( count( $civi_event_ids ) === 0 ) return false;
+		
+		// get value
+		$civi_event_id = isset( $civi_event_ids[$occurrence_id] ) ? $civi_event_ids[$occurrence_id]: false;
+		
+		// --<
+		return $civi_event_id;
 		
 	}
 	
@@ -701,10 +884,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				$dates = $this->plugin->eo->get_all_dates( $event->ID );
 				
 				// update CiviEvent - or create if it doesn't exist
-				$civi_event_ids = $this->plugin->civi->update_civi_events( $event, $dates );
+				$correspondences = $this->plugin->civi->update_civi_events( $event, $dates );
 				
 				// store correspondences
-				$this->store_event_correspondences( $event->ID, $civi_event_ids );
+				$this->store_event_correspondences( $event->ID, $correspondences );
 				
 			}
 			
@@ -715,7 +898,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	
 	
 	/**
-	 * @description: sync CiviEvents to EO events
+	 * @description: sync CiviEvents to EO events. This will NOT create sequences
 	 * @return nothing
 	 */
 	public function sync_events_to_eo() {
@@ -729,11 +912,18 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// loop
 			foreach( $all_civi_events['values'] AS $civi_event ) {
 				
-				// update EO venue - or create if it doesn't exist
+				// update a single EO event - or create if it doesn't exist
 				$event_id = $this->plugin->eo->update_event( $civi_event );
 				
+				// get occurrences
+				$occurrences = eo_get_the_occurrences_of( $event_id );
+				
+				// in this context, a CiviEvent can only have an EO event with a
+				// single occurrence associated with it, so use first item
+				$occurrence_id = array_pop( array_keys( $occurrences ) );
+				
 				// store correspondences
-				$this->store_event_correspondences( $event_id, array( $civi_event['id'] ) );
+				$this->store_event_correspondences( $event_id, array( $occurrence_id => $civi_event['id'] ) );
 				
 			}
 			

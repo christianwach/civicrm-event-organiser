@@ -60,7 +60,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
 		
 		// intercept save event
-		add_action( 'eventorganiser_save_event', array( $this, 'save_event' ), 10, 1 );
+		add_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10, 1 );
+		
+		// intercept update event (though by misuse of a filter)
+		add_filter( 'eventorganiser_update_event_event_data', array( $this, 'intercept_update_event' ), 10, 4 );
 		
 		// intercept delete event occurrences
 		add_action( 'eventorganiser_delete_event_occurrences', array( $this, 'delete_event_occurrences' ), 10, 1 );
@@ -164,7 +167,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * @param int $post_id the numeric ID of the WP post
 	 * @return nothing
 	 */
-	public function save_event( $post_id ) {
+	public function intercept_save_event( $post_id ) {
 	
 		// get post data
 		$post = get_post( $post_id );
@@ -198,18 +201,33 @@ class CiviCRM_WP_Event_Organiser_EO {
 		) ); die();
 		*/
 		
-		// are we creating an event for the first time?
-		if ( $this->insert_event ) {
-			
-			// create our CiviCRM events
-			$this->plugin->civi->create_civi_events( $post, $dates );
-			
-		} else {
+		// update our CiviCRM events (or create new if none exist)
+		$this->plugin->civi->update_civi_events( $post, $dates );
 		
-			// update our CiviCRM events
-			$this->plugin->civi->update_civi_events( $post, $dates );
-			
-		}
+	}
+	
+	
+	
+	/**
+	 * @description: intercept update event
+	 * @param array $event_data the new event data
+	 * @param int $post_id the numeric ID of the WP post
+	 * @param array $post_data the updated post data
+	 * @param array $event_data the updated event data
+	 * @return array $event_data always pass back the updated event data
+	 */
+	public function intercept_update_event( $event_data, $post_id, $post_data, $event_data ) {
+		
+		/*
+		print_r( array(
+			'event_data' => $event_data,
+			'post_id' => $post_id,
+			'post_data' => $post_data,
+		) ); //die();
+		*/
+		
+		// --<
+		return $event_data;
 		
 	}
 	
@@ -233,10 +251,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		return;
 		
 		// get IDs from post meta
-		$civi_event_ids = $this->plugin->db->get_eo_to_civi_correspondences( $post_id );
+		$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
 		
 		// delete those CiviCRM events
-		$this->plugin->civi->delete_all_events( $civi_event_ids );
+		$this->plugin->civi->delete_all_events( $correspondences );
 		
 		// delete our stored CiviCRM event IDs
 		$this->plugin->db->clear_event_correspondences( $post_id );
@@ -251,7 +269,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	
 	/**
 	 * @description: update and EO event, given a CiviEvent. If no EO event exists
-	 * then create one
+	 * then create one. This will NOT create sequences and is intended for the 
+	 * initial migration of CiviEvents to WordPress
 	 * @param array $civi_event and array of data for the CiviEvent
 	 * @return nothing
 	 */
@@ -364,12 +383,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 		*/
 		
 		// do we have a post ID for this event?
-		$eo_post_id = $this->plugin->db->get_civi_to_eo_correspondence( $civi_event['id'] );
+		$eo_post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $civi_event['id'] );
 		
 		// remove hooks
 		remove_action( 'wp_insert_post', array( $this, 'insert_post' ), 10 );
-		remove_action( 'eventorganiser_save_event', array( $this, 'save_event' ), 10 );
-	
+		remove_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10 );
+		
 		// did we get a post ID?
 		if ( $eo_post_id === false ) {
 		
@@ -385,7 +404,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		
 		// re-add hooks
 		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
-		add_action( 'eventorganiser_save_event', array( $this, 'save_event' ), 10, 1 );
+		add_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10, 1 );
 		
 		// --<
 		return $event_id;
@@ -504,7 +523,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		//print_r( $event ); die();
 		
 		// get online registration
-		$reg_checked = $this->plugin->civi->get_registration( $event );
+		$reg_checked = $this->get_event_registration( $event->ID );
 		
 		// get participant roles
 		$roles = $this->plugin->civi->get_participant_roles_select( $event );
@@ -518,7 +537,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// define checkbox
 			$checkbox = '
 			<p>
-			<label for="civi_eo_event_sync">Sync to CiviCRM:</label>
+			<label for="civi_eo_event_sync">Sync Event(s) with CiviCRM:</label>
 			<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
 			</p>
 		
@@ -585,13 +604,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 				// get the post
 				$all_event_dates->the_post();
 				
+				// access post
+				global $post;
+				
 				// init
 				$date = array();
 				
 				// add to our array, formatted for CiviCRM
+				$date['occurrence_id'] = $post->occurrence_id;
 				$date['start'] = eo_get_the_start( 'Y-m-d H:i:s' );
 				$date['end'] = eo_get_the_end( 'Y-m-d H:i:s' );
-				$date['human'] = eo_get_the_start( 'M j, Y, g:i a' );
+				$date['human'] = eo_get_the_start( 'g:ia, M jS, Y' );
 				
 				// add to our array
 				$all_dates[] = $date;

@@ -3,7 +3,7 @@
 --------------------------------------------------------------------------------
 Plugin Name: CiviCRM Event Organiser
 Description: A WordPress plugin for syncing Event Organiser plugin Events with CiviCRM Events so they play nicely with BuddyPress Groups and Group Hierarchies
-Version: 0.1
+Version: 0.2
 Author: Christian Wach
 Author URI: http://haystack.co.uk
 Plugin URI: http://haystack.co.uk
