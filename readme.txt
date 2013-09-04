@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_i
 Tags: civicrm, buddypress, user, profile, xprofile, sync
 Requires at least: 3.6
 Tested up to: 3.6
-Stable tag: 0.1
+Stable tag: 0.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,4 @@ It also requires
 
 == Changelog ==
 
-= 0.1 =
-
-Initial release
+See https://github.com/christianwach/civicrm-event-organiser/commits/master
