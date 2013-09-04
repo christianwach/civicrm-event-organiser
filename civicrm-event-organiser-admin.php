@@ -519,24 +519,26 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			
 			}
 			
-			///*
+			/*
 			print_r( array(
 				'event_id' => $event_id,
 				'eo_correspondences' => $eo_correspondences,
 			) );
-			//*/
+			*/
 			
 			// replace our post meta
-			//update_post_meta( $event_id, '_civi_eo_civicrm_events', $eo_correspondences );
+			update_post_meta( $event_id, '_civi_eo_civicrm_events', $eo_correspondences );
 			
 		}
 		
+		/*
 		print_r( array(
 			'civi_correspondences' => $civi_correspondences,
 		) );
-
+		*/
+		
 		// replace our option
-		//$this->option_save( 'civi_eo_civi_event_data', $civi_correspondences );
+		$this->option_save( 'civi_eo_civi_event_data', $civi_correspondences );
 		
 	}
 	
