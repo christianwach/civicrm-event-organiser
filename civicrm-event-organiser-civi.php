@@ -499,7 +499,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		/*
 		------------------------------------------------------------------------
-		When arrays are NOT equal in length
+		When arrays are NOT equal in length, we MUST have correspondences
 		------------------------------------------------------------------------
 		*/
 		
@@ -516,15 +516,52 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		
-		// get matches between EO events and CiviEvents
-		$matches = $this->get_event_matches( $dates, $civi_events );
+		// init orphaned CiviEvent data
+		$orphaned_civi_events = array();
+		
+		// get orphaned CiviEvents for this EO event
+		$orphaned = $this->plugin->db->get_orphaned_events_by_eo_event_id( $post->ID );
+		
+		// did we get any?
+		if ( count( $orphaned ) > 0 ) {
+		
+			//  get CiviEvents by ID
+			foreach ( $orphaned AS $civi_event_id ) {
+		
+				// add CiviEvent to array
+				$orphaned_civi_events[] = $this->get_event_by_id( $civi_event_id );
+		
+			}
+		
+		}
 		
 		/*
 		// trace
 		print_r( array(
 			'dates' => $dates,
 			'correspondences' => $correspondences,
+			'orphaned' => $orphaned,
+			'orphaned_civi_events' => $orphaned_civi_events,
+		) ); die();
+		*/
+		
+		
+		
+		// get matches between EO events and CiviEvents
+		$matches = $this->get_event_matches( $dates, $civi_events, $orphaned_civi_events );
+		
+		// amend the orphaned array, removing on what has been "unorphaned"
+		$orphans = array_diff( $orphaned, $matches['unorphaned'] );
+		
+		/*
+		// trace
+		print_r( array(
+			'dates' => $dates,
+			'correspondences' => $correspondences,
+			'orphaned' => $orphaned,
+			//'orphaned_civi_events' => $orphaned_civi_events,
 			'matches' => $matches,
+			'orphans' => $orphans,
 		) ); die();
 		*/
 		
@@ -544,7 +581,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			
 				// use API to update event
 				$result = civicrm_api( 'event', 'create', $civi_event );
-			
+				
 				// did we do okay?
 				if ( $result['is_error'] == '1' ) {
 				
@@ -607,7 +644,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// assume we're not deleting extra CiviEvents
 			$unmatched_delete = false;
 		
-			// get delete unused checkbox value
+			// get "delete unused" checkbox value
 			if ( 
 				isset( $_POST['civi_eo_event_delete_unused'] ) AND 
 				absint( $_POST['civi_eo_event_delete_unused'] ) === 1
@@ -617,30 +654,28 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				$unmatched_delete = true;
 				
 			}
-		
+			
 			// loop through unmatched CiviEvents
 			foreach ( $unmatched_civi AS $civi_id ) {
 			
 				// if deleting
 				if ( $unmatched_delete ) {
-			
+					
 					// delete CiviEvent
 					$result = $this->delete_civi_events( array( $civi_id ) );
 					
+					// delete this ID from the orphans array?
+					//$orphans = array_diff( $orphans, array( $civi_id ) );
+					
 				} else {
-			
+				
 					// set CiviEvent to disabled
 					$result = $this->disable_civi_event( $civi_id );
+					
+					// add to orphans array
+					$orphans[] = $civi_id;
 				
 				}
-				
-				/*
-				Am mulling over whether or not to add to correspondence data in
-				some way, because althought the CiviEvent is effectively dispensed 
-				with as far as EO is concerned, the CiviEvent might have other
-				data associated with it, or might indeed be "reconnected" by a
-				further change in the sequence.
-				*/
 			
 			}
 			
@@ -648,8 +683,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		
-		// store these in post meta
-		$this->plugin->db->store_event_correspondences( $post->ID, $new_correspondences );
+		// store new correspondences and orphans
+		$this->plugin->db->store_event_correspondences( $post->ID, $new_correspondences, $orphans );
 		
 	}
 	
@@ -657,15 +692,19 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	/**
 	 * @description: match EO Events and CiviEvents
+	 * @param array $dates an array of EO event occurrence data
+	 * @param array $civi_events an array of CiviEvent data
+	 * @param array $orphaned_civi_events an array of orphaned CiviEvent data
 	 * @return array $event_data a nested array of matched and unmatched events
 	 */
-	public function get_event_matches( $dates, $civi_events ) {
+	public function get_event_matches( $dates, $civi_events, $orphaned_civi_events ) {
 		
 		// init return array
 		$event_data = array(
 			'matched' => array(),
 			'unmatched_eo' => array(),
 			'unmatched_civi' => array(),
+			'unorphaned' => array(),
 		);
 		
 		// init matched
@@ -692,13 +731,45 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		}
 		
+		// init unorphaned
+		$unorphaned = array();
+		
+		// check orphaned array
+		if ( count( $orphaned_civi_events ) > 0 ) {
+		
+			// match EO dates to orphaned CiviEvents
+			foreach ( $dates AS $key => $date ) {
+		
+				// run through orphaned CiviEvents
+				foreach( $orphaned_civi_events AS $orphaned_civi_event ) {
+			
+					// does the start_date match?
+					if ( $date['start'] == $orphaned_civi_event['start_date'] ) {
+					
+						// add to matched array
+						$matched[$date['occurrence_id']] = $orphaned_civi_event['id'];
+						
+						// add to "unorphaned" array
+						$unorphaned[] = $orphaned_civi_event['id'];
+					
+						// found - break this loop
+						break;
+					
+					}
+			
+				}
+		
+			}
+		
+		}
+		
 		// init EO unmatched
 		$unmatched_eo = array();
 		
 		// find unmatched EO dates
 		foreach ( $dates AS $key => $date ) {
 		
-			// does the matched array have an entry?
+			// if the matched array has no entry
 			if ( !isset( $matched[$date['occurrence_id']] ) ) {
 			
 				// add to unmatched
@@ -724,10 +795,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		}
 		
+		// sort matched by key
+		ksort( $matched );
+		
 		// construct return array
 		$event_data['matched'] = $matched;
 		$event_data['unmatched_eo'] = $unmatched_eo;
 		$event_data['unmatched_civi'] = $unmatched_civi;
+		$event_data['unorphaned'] = $unorphaned;
 		
 		// --<
 		return $event_data;
@@ -766,6 +841,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	/**
 	 * @description: delete all CiviEvents WARNING only for dev purposes really!
+	 * @param array $civi_event_ids an array of CiviEvent IDs
 	 * @return array $results an array of CiviCRM results
 	 */
 	public function delete_civi_events( $civi_event_ids ) {
@@ -802,6 +878,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	/**
 	 * @description: disable a CiviEvent
+	 * @param int $civi_event_id the numeric ID of the CiviEvent
 	 * @return array $result a CiviCRM result array
 	 */
 	public function disable_civi_event( $civi_event_id ) {
@@ -840,6 +917,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	/**
 	 * @description: get a CiviEvent by ID
+	 * @param int $civi_event_id the numeric ID of the CiviEvent
 	 * @param array $location the CiviEvent location data
 	 */
 	public function get_event_by_id( $civi_event_id ) {

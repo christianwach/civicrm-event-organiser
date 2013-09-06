@@ -548,9 +548,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @description: store CiviEvents <-> Event Organiser event data
 	 * @param int $post_id the numeric ID of the WP post
 	 * @param array $correspondences CiviEvent IDs, keyed by EO occurrence ID
+	 * @param array $unlinked CiviEvent IDs that have been orphaned from an EO event
 	 * @return nothing
 	 */
-	public function store_event_correspondences( $post_id, $correspondences ) {
+	public function store_event_correspondences( $post_id, $correspondences, $unlinked = array() ) {
 		
 		// an EO event needs to know the IDs of all the CiviEvents, keyed by EO occurrence ID
 		update_post_meta( $post_id, '_civi_eo_civicrm_events', $correspondences );
@@ -564,7 +565,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// construct array
 			foreach( $correspondences AS $occurrence_id => $civi_event_id ) {
 				
-				// add post ID, keyed by CiviEvent ID
+				// add post ID and occurrence ID, keyed by CiviEvent ID
 				$civi_event_data[$civi_event_id] = array( 
 					'post_id' => $post_id,
 					'occurrence_id' => $occurrence_id,
@@ -577,12 +578,15 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// store updated array as option
 		$this->option_save( 'civi_eo_civi_event_data', $civi_event_data );
 		
+		// finally, store orphaned CiviEvents
+		$this->store_orphaned_events( $post_id, $unlinked );
+		
 	}
 	
 	
 	
 	/**
-	 * @description: get all  event correspondences
+	 * @description: get all event correspondences
 	 * @param int $post_id the numeric ID of the WP post
 	 * @return array $correspondences all CiviEvent - Event Organiser correspondences
 	 */
@@ -813,6 +817,132 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	
 	
 	
+	//##########################################################################
+	
+	
+	
+	/**
+	 * @description: store orphaned CiviEvents
+	 * @param int $post_id the numeric ID of the WP post
+	 * @param array $unlinked CiviEvent IDs that have been orphaned from an EO event
+	 * @return nothing
+	 */
+	public function store_orphaned_events( $post_id, $orphans ) {
+		
+		// get existing orphans before we update
+		$existing = $this->get_orphaned_events_by_eo_event_id( $post_id );
+		
+		// an EO event needs to know the IDs of all the orphaned CiviEvents
+		update_post_meta( $post_id, '_civi_eo_civicrm_events_disabled', $orphans );
+		
+		// get the values that are not present in new orphans
+		$to_remove = array_diff( $existing, $orphans );
+		
+		// get the values that are not present in existing
+		$to_add = array_diff( $orphans, $existing );
+		
+		// init array with stored value (or empty array)
+		$civi_event_disabled = $this->option_get( 'civi_eo_civi_event_disabled', array() );
+		
+		// do we have any orphans to add?
+		if ( count( $to_add ) > 0 ) {
+	
+			// construct array
+			foreach( $to_add AS $civi_event_id ) {
+		
+				// add post ID, keyed by CiviEvent ID
+				$civi_event_disabled[$civi_event_id] = $post_id;
+		
+			}
+	
+		}
+	
+		// do we have any orphans to remove?
+		if ( count( $to_remove ) > 0 ) {
+	
+			// construct array
+			foreach( $to_remove AS $civi_event_id ) {
+		
+				// delete it from the data array
+				unset( $civi_event_disabled[$civi_event_id] );
+		
+			}
+	
+		}
+	
+		// store updated array as option
+		$this->option_save( 'civi_eo_civi_event_disabled', $civi_event_disabled );
+	
+	}
+	
+	
+		
+	/**
+	 * @description: get orphaned CiviEvents by EO event ID
+	 * @param int $post_id the numeric ID of the WP post = EO event
+	 * @return array $orphans array of CiviEvent IDs
+	 */
+	public function get_orphaned_events_by_eo_event_id( $post_id ) {
+		
+		// get the meta value
+		$civi_event_ids = get_post_meta( $post_id, '_civi_eo_civicrm_events_disabled', true );
+		
+		// if it's not yet set it will be an empty string, so cast as array
+		if ( $civi_event_ids === '' ) { $civi_event_ids = array(); }
+		
+		// --<
+		return $civi_event_ids;
+		
+	}
+	
+	
+		
+	/**
+	 * @description: get all Event Organiser event IDs for all orphaned CiviEvents
+	 * @return array $civi_event_disabled all CiviEvent IDs for the post
+	 */
+	public function get_eo_event_ids_for_orphans() {
+	
+		// return option
+		return $this->option_get( 'civi_eo_civi_event_disabled', array() );
+		
+	}
+	
+	
+	
+	/**
+	 * @description: get EO event ID by orphaned CiviEvent ID
+	 * @param int $civi_event_id the numeric ID of the CiviEvent
+	 * @return int $eo_event_id the numeric ID of the WP post = EO event
+	 */
+	public function get_eo_event_id_by_orphaned_event_id( $civi_event_id ) {
+		
+		// init return
+		$eo_event_id = false;
+		
+		// get all orphan data
+		$eo_event_data = $this->get_eo_event_ids_for_orphans();
+		
+		// if we get some...
+		if ( count( $eo_event_data ) > 0 ) {
+		
+			// do we have the key?
+			if ( isset( $eo_event_data[$civi_event_id] ) ) {
+			
+				// get keyed value
+				$eo_event_id = $eo_event_data[$civi_event_id];
+				
+			}
+		
+		}
+		
+		// --<
+		return $eo_event_id;
+		
+	}
+	
+	
+		
 	//##########################################################################
 	
 	
