@@ -860,7 +860,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 					$all_civi_event_ids = array_keys( $all_civi_events['values'] );
 				
 					// delete all CiviEvents!
-					$delete = $this->plugin->civi->delete_all_civi_events( $all_civi_event_ids );
+					$delete = $this->plugin->civi->delete_civi_events( $all_civi_event_ids );
 			
 				}
 			

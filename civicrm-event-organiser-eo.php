@@ -271,7 +271,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 		
 		// delete those CiviCRM events - not used at present
-		//$this->plugin->civi->delete_all_civi_events( $correspondences );
+		//$this->plugin->civi->delete_civi_events( $correspondences );
 		
 		// delete our stored CiviCRM event IDs
 		$this->plugin->db->clear_event_correspondences( $post_id );
@@ -551,27 +551,40 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// get participant roles
 		$roles = $this->plugin->civi->get_participant_roles_select( $event );
 		
-		// init checkbox
-		$checkbox = '';
+		// init sync options
+		$sync_options = '';
 		
 		// show checkbox to people who can publish posts
 		if ( current_user_can( 'publish_posts' ) ) {
 
-			// define checkbox
-			$checkbox = '
+			// define sync options
+			$sync_options = '
+			<h4>CiviCRM Sync Options</h4>
+			
+			<p class="civi_eo_event_desc">Choose whether or not to sync events and (if the sequence has changed) whether or not to delete the unused CiviEvents. If you do not delete them, they will be set to "disabled".</p>
+		
 			<p>
-			<label for="civi_eo_event_sync">Sync Event(s) with CiviCRM:</label>
+			<label for="civi_eo_event_sync">Sync this event with CiviCRM:</label>
 			<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
+			</p>
+		
+			<p>
+			<label for="civi_eo_event_delete_unused">Delete unused CiviEvents:</label>
+			<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
 			</p>
 		
 			';
 		
 		}
 		
+		// show sync options, if allowed
+		echo $sync_options;
+		
 		// show meta box
 		echo '
+		<h4>CiviEvent Options</h4>
 		
-		<p class="civi_eo_event_desc">Choose whether or not the events will allow online registration. WARNING changing this will set the event registration for all events.</p>
+		<p class="civi_eo_event_desc">Choose whether or not the events will allow online registration. <em>NOTE</em> changing this will set the event registration for all events.</p>
 		
 		<p>
 		<label for="civi_eo_event_reg">Online Registration:</label>
@@ -588,9 +601,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 		</p>
 		
 		';
-		
-		// show checkbox, if allowed
-		echo $checkbox;
 		
 	}
 

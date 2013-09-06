@@ -420,6 +420,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// start with new correspondence array
 		$new_correspondences = array();
 		
+		// sort existing correspondences by key, which will always be chronological
+		ksort( $correspondences );
+		
 		// prepare CiviEvent
 		$civi_event = $this->prepare_civi_event( $post );
 		
@@ -433,10 +436,16 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'correspondences' => $correspondences,
 			//'civi_event' => $civi_event,
 			//'civi_events' => $civi_events,
-		) ); //die();
+		) ); die();
 		*/
 		
 		
+		
+		/*
+		------------------------------------------------------------------------
+		When arrays are equal in length
+		------------------------------------------------------------------------
+		*/
 		
 		// do the arrays have the same length?
 		if ( count( $dates ) === count( $correspondences ) ) {
@@ -488,6 +497,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		
+		/*
+		------------------------------------------------------------------------
+		When arrays are NOT equal in length
+		------------------------------------------------------------------------
+		*/
+		
 		// init Civi events array
 		$civi_events = array();
 		
@@ -522,7 +537,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( count( $matched ) > 0 ) {
 		
 			// loop through matched dates and update CiviEvents
-			foreach ( $matched AS $date_id => $civi_id ) {
+			foreach ( $matched AS $occurrence_id => $civi_id ) {
 		
 				// assign ID so we perform an update
 				$civi_event['id'] = $civi_id;
@@ -539,7 +554,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				}
 			
 				// add to new correspondence array
-				$new_correspondences[$dates[$date_id]['occurrence_id']] = $civi_id;
+				$new_correspondences[$occurrence_id] = $civi_id;
 			
 			}
 		
@@ -555,6 +570,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 			// now loop through unmatched EO dates and create CiviEvents
 			foreach ( $unmatched_eo AS $eo_date ) {
+			
+				// make sure there's no ID
+				unset( $civi_event['id'] );
 			
 				// overwrite dates
 				$civi_event['start_date'] = $eo_date['start'];
@@ -586,12 +604,36 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// do we have any unmatched CiviEvents?
 		if ( count( $unmatched_civi ) > 0 ) {
 		
+			// assume we're not deleting extra CiviEvents
+			$unmatched_delete = false;
+		
+			// get delete unused checkbox value
+			if ( 
+				isset( $_POST['civi_eo_event_delete_unused'] ) AND 
+				absint( $_POST['civi_eo_event_delete_unused'] ) === 1
+			) {
+				
+				// override - we ARE deleting
+				$unmatched_delete = true;
+				
+			}
+		
 			// loop through unmatched CiviEvents
 			foreach ( $unmatched_civi AS $civi_id ) {
 			
-				// set to disabled
-				$result = $this->disable_civi_event( $civi_id );
+				// if deleting
+				if ( $unmatched_delete ) {
 			
+					// delete CiviEvent
+					$result = $this->delete_civi_events( array( $civi_id ) );
+					
+				} else {
+			
+					// set CiviEvent to disabled
+					$result = $this->disable_civi_event( $civi_id );
+				
+				}
+				
 				/*
 				Am mulling over whether or not to add to correspondence data in
 				some way, because althought the CiviEvent is effectively dispensed 
@@ -639,7 +681,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				if ( $date['start'] == $civi_event['start_date'] ) {
 					
 					// add to matched array
-					$matched[$key] = $civi_event['id'];
+					$matched[$date['occurrence_id']] = $civi_event['id'];
 					
 					// found - break this loop
 					break;
@@ -657,7 +699,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		foreach ( $dates AS $key => $date ) {
 		
 			// does the matched array have an entry?
-			if ( !isset( $matched[$key] ) ) {
+			if ( !isset( $matched[$date['occurrence_id']] ) ) {
 			
 				// add to unmatched
 				$unmatched_eo[] = $date;
@@ -726,7 +768,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @description: delete all CiviEvents WARNING only for dev purposes really!
 	 * @return array $results an array of CiviCRM results
 	 */
-	public function delete_all_civi_events( $civi_event_ids ) {
+	public function delete_civi_events( $civi_event_ids ) {
 		
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return false;
