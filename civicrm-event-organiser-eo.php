@@ -522,7 +522,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		
 		// create it
 		add_meta_box( 
-			'civi_eo_venue_metabox', 
+			'civi_eo_event_metabox', 
 			'CiviCRM Settings', 
 			array( $this, 'event_meta_box_render' ), 
 			'event', 
