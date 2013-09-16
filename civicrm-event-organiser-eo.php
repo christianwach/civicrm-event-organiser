@@ -800,10 +800,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_event_role( $event_id ) {
 		
 		// kick out if not set
-		if ( isset( $_POST['civi_eo_event_role'] ) ) return;
-		
-		// retrieve meta value
-		$value = $_POST['civi_eo_event_role'];
+		if ( !isset( $_POST['civi_eo_event_role'] ) ) return;
 		
 		// retrieve meta value
 		$value = absint( $_POST['civi_eo_event_role'] );
