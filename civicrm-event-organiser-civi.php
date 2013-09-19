@@ -266,17 +266,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$correspondences[$date['occurrence_id']] = $result['id'];
 			
 			/*
-			// construct Drupal link
-			$links[] = l(
-				'CiviCRM Event ('.$date['human'].')', 
-				'civicrm/event/manage/eventInfo', 
-				array(
-					'query' => 'reset=1&action=update&id='. $result['id']
-				)
-			);
-			*/
-			
-			/*
 			print_r( array(
 				'post' => $post,
 				'dates' => $dates,
@@ -285,47 +274,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			*/
 			
 		} // end dates loop
-		
-		
-		
-		/*
-		// inform the admin user
-		if ( user_access( 'access CiviEvent' ) ) {
-			
-			// where there is only one CiviEvent...
-			if ( count( $dates ) == 1 ) {
-				
-				// contruct link
-				$link = l(
-					'CiviCRM Event page', 
-					'civicrm/event/manage/eventInfo', 
-					array('query' => 'reset=1&action=update&id='. $civi_event_id)
-				);
-				
-				// feedback
-				drupal_set_message(
-					'The corresponding CiviCRM Event has been updated. '.
-					'You can add further details to it on the '.$link
-				);
-			
-			}
-		
-			// where there are repeating CiviEvents...
-			if ( count( $dates ) > 1 ) {
-				
-				// construct list of links
-				$link_list = implode( '<br/>', $links );
-				
-				// feedback
-				drupal_set_message(
-					'The following CiviCRM Events have been created. '.
-					'If you need to, visit the following links to configure the events further:<br/>'.$link_list
-				);
-			
-			}
-		
-		}
-		*/
 		
 		
 		
@@ -550,7 +498,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// get matches between EO events and CiviEvents
 		$matches = $this->get_event_matches( $dates, $civi_events, $orphaned_civi_events );
 		
-		// amend the orphaned array, removing on what has been "unorphaned"
+		// amend the orphans array, removing on what has been "unorphaned"
 		$orphans = array_diff( $orphaned, $matches['unorphaned'] );
 		
 		/*
@@ -1382,6 +1330,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			
 		}
 		
+		// we now need to create a dummy CiviEvent, or this venue will not show
+		// up in CiviCRM...
+		//$this->create_dummy_event( $location );
+		
 		// --<
 		return $location;
 		
@@ -1604,7 +1556,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	/**
-	 * @description: update a WP user when a CiviCRM contact is updated
+	 * @description: intercept when a CiviCRM event type is updated
 	 * @param string $op the type of database operation
 	 * @param string $objectName the type of object
 	 * @param integer $objectId the ID of the object
@@ -1656,8 +1608,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		*/
 		
 		/*
-		if this happens, should we set its corresponding EO occurrence to the 
-		array of "not in the sequence" items? Or remove it from the correspondences?
+		WordPress does not have an "Inactive" term state...
 		*/
 		
 	}
@@ -1665,7 +1616,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	/**
-	 * @description: update a WP user when a CiviCRM contact is updated
+	 * @description: update an EO 'event-category' term when a CiviCRM event type is updated
 	 * @param string $formName the CiviCRM form name
 	 * @param object $form the CiviCRM form object
 	 * @return nothing

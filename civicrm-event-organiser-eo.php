@@ -69,13 +69,16 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_action( 'eventorganiser_delete_event_occurrences', array( $this, 'delete_event_occurrences' ), 10, 1 );
 		
 		// intercept before break occurrence
-		//add_action( 'eventorganiser_pre_break_occurrence', array( $this, 'pre_break_occurrence' ), 10, 2 );
+		add_action( 'eventorganiser_pre_break_occurrence', array( $this, 'pre_break_occurrence' ), 10, 2 );
 		
 		// there's no hook for 'eventorganiser_delete_event_occurrence', which moves the occurrence
 		// to the 'exclude' array of the date sequence
 		
 		// intercept after break occurrence
-		//add_action( 'eventorganiser_occurrence_broken', array( $this, 'occurrence_broken' ), 10, 3 );
+		add_action( 'eventorganiser_occurrence_broken', array( $this, 'occurrence_broken' ), 10, 3 );
+		
+		// intercept "Delete Occurrence" in admin calendar
+		add_action( 'eventorganiser_admin_calendar_occurrence_deleted', array( $this, 'occurrence_deleted' ), 10, 2 );
 		
 		// debug
 		//add_filter( 'eventorganiser_pre_event_content', array( $this, 'pre_event_content' ), 10, 2 );
@@ -247,9 +250,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 		) ); die();
 		*/
 		
-		// TODO - delete
-		return;
-		
 		/*
 		Once again, the question arises as to whether we should actually delete 
 		the CiviEvents or set them to "disabled"... I guess this behaviour could
@@ -270,11 +270,46 @@ class CiviCRM_WP_Event_Organiser_EO {
 		
 		}
 		
+		// TODO - decide if we delete CiviEvents...
+		return;
+		
 		// delete those CiviCRM events - not used at present
 		//$this->plugin->civi->delete_civi_events( $correspondences );
 		
 		// delete our stored CiviCRM event IDs
 		$this->plugin->db->clear_event_correspondences( $post_id );
+		
+	}
+	
+	
+	
+	/**
+	 * @description: intercept delete event
+	 * @param int $post_id the numeric ID of the WP post
+	 * @param int $occurrence_id the numeric ID of the EO event occurrence
+	 * @return nothing
+	 */
+	public function occurrence_deleted( $post_id, $occurrence_id ) {
+		
+		/*
+		print_r( array(
+			'method' => 'occurrence_deleted',
+			'post_id' => $post_id,
+			'occurrence_id' => $occurrence_id,
+		) ); die();
+		*/
+		
+		// init or die
+		if ( ! $this->is_active() ) return;
+		
+		// get CiviEvent ID from post meta
+		$civi_event_id = $this->plugin->db->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
+		
+		// disable CiviEvent
+		$return = $this->plugin->civi->disable_civi_event( $civi_event_id );
+		
+		// convert occurrence to orphaned
+		$this->plugin->db->occurrence_orphaned( $post_id, $occurrence_id, $civi_event_id );
 		
 	}
 	
@@ -442,21 +477,34 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function pre_break_occurrence( $post_id, $occurrence_id ) {
 		
+		/*
 		// eg ( [post_id] => 31 [occurrence_id] => 2 )
 		print_r( array(
 			'method' => 'pre_break_occurrence',
 			'post_id' => $post_id,
 			'occurrence_id' => $occurrence_id,
 		) ); die();
+		*/
 		
 		// init or die
 		if ( ! $this->is_active() ) return;
 		
 		/*
 		At minimum, we need to prevent our '_civi_eo_civicrm_events' post meta
-		from being copied to the new EO event. We need to rebuild this for both
-		EO events, excluding from the broken and adding to the new EO event.
+		from being copied as is to the new EO event. We need to rebuild the data
+		for both EO events, excluding from the broken and adding to the new EO event.
+		We get the excluded CiviEvent before the break, remove it from the event,
+		then rebuild after - see occurrence_broken() below
 		*/
+		
+		// unhook eventorganiser_save_event, because that relies on $_POST
+		remove_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10 );
+		
+		// get the CiviEvent that this occurrence is synced with
+		$this->temp_civi_event_id = $this->plugin->db->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
+		
+		// remove it from the correspondences for this post
+		$this->plugin->db->clear_event_correspondence( $post_id, $occurrence_id );
 		
 	}
 	
@@ -471,15 +519,31 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function occurrence_broken( $post_id, $occurrence_id, $new_event_id ) {
 		
+		/*
 		print_r( array(
 			'method' => 'occurrence_broken',
 			'post_id' => $post_id,
 			'occurrence_id' => $occurrence_id,
 			'new_event_id' => $new_event_id,
 		) ); die();
+		*/
 		
-		// init or die
-		if ( ! $this->is_active() ) return;
+		/*
+		EO transfers across all existing post meta, so we don't need to update
+		registration or event_role values.
+		
+		However, because the correspondence data is also copied over, we have to
+		delete and rebuild it.
+		*/
+		
+		// clear existing correspondences
+		$this->plugin->db->clear_event_correspondences( $new_event_id );
+		
+		// build new correspondences array
+		$correspondences = array( $occurrence_id => $this->temp_civi_event_id );
+		
+		// store new correspondences
+		$this->plugin->db->store_event_correspondences( $new_event_id, $correspondences );
 		
 	}
 	
@@ -556,24 +620,40 @@ class CiviCRM_WP_Event_Organiser_EO {
 		
 		// show checkbox to people who can publish posts
 		if ( current_user_can( 'publish_posts' ) ) {
-
-			// define sync options
-			$sync_options = '
-			<h4>CiviCRM Sync Options</h4>
+		
+			// do not allow sync by default
+			$can_be_synced = false;
 			
-			<p class="civi_eo_event_desc">Choose whether or not to sync events and (if the sequence has changed) whether or not to delete the unused CiviEvents. If you do not delete them, they will be set to "disabled".</p>
+			// does this event have a category set?
+			if ( has_term( '', $taxonomy = 'event-category', $event ) ) {
+			
+				// allow sync
+				$can_be_synced = true;
+			
+			}
 		
-			<p>
-			<label for="civi_eo_event_sync">Sync this event with CiviCRM:</label>
-			<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
-			</p>
+			// does the EO event have enough data for us to sync?
+			if ( $can_be_synced ) {
+
+				// define sync options
+				$sync_options = '
+				<h4>CiviCRM Sync Options</h4>
+			
+				<p class="civi_eo_event_desc">Choose whether or not to sync events and (if the sequence has changed) whether or not to delete the unused CiviEvents. If you do not delete them, they will be set to "disabled".</p>
 		
-			<p>
-			<label for="civi_eo_event_delete_unused">Delete unused CiviEvents:</label>
-			<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
-			</p>
+				<p>
+				<label for="civi_eo_event_sync">Sync this event with CiviCRM:</label>
+				<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
+				</p>
 		
-			';
+				<p>
+				<label for="civi_eo_event_delete_unused">Delete unused CiviEvents:</label>
+				<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
+				</p>
+		
+				';
+			
+			}
 		
 		}
 		
@@ -732,14 +812,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * @description: update event online registration value
 	 * @param int $event_id the numeric ID of the event
+	 * @param bool $value whether registration is enabled or not
 	 * @return nothing
 	 */
-	public function update_event_registration( $event_id ) {
+	public function update_event_registration( $event_id, $value = 0 ) {
 		
-		// init as off
-		$value = 0;
-		
-		// kick out if not set
+		// if not set
 		if ( isset( $_POST['civi_eo_event_reg'] ) ) {
 			
 			// retrieve meta value
@@ -813,9 +891,40 @@ class CiviCRM_WP_Event_Organiser_EO {
 	
 	
 	/**
+	 * @description: update event participant role value
+	 * @param int $event_id the numeric ID of the event
+	 * @param int $value the event participant role value for the CiviEvent
+	 * @return nothing
+	 */
+	public function set_event_role( $event_id, $value = null ) {
+		
+		// if not set
+		if ( is_null( $value ) ) {
+		
+			// do we have a default set?
+			$default = $this->plugin->db->option_get( 'civi_eo_event_default_role' );
+		
+			// did we get one?
+			if ( $default !== '' AND is_numeric( $default ) ) {
+			
+				// override with default value
+				$value = absint( $default );
+			
+			}
+		
+		}
+		
+		// update event meta
+		update_post_meta( $event_id,  '_civi_role', $value );
+		
+	}
+	
+	
+	
+	/**
 	 * @description: get event participant role value
 	 * @param int $post_id the numeric ID of the WP post
-	 * @return bool $civi_role the event participant role value for the CiviEvent
+	 * @return int $civi_role the event participant role value for the CiviEvent
 	 */
 	public function get_event_role( $post_id ) {
 		

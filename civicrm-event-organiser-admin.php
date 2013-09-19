@@ -37,6 +37,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				
 			}
 			
+			// override "no category" option
+			 add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'force_taxonomy' ), 30 );
+			
 		}
 		
 		// --<
@@ -411,6 +414,26 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			//$this->show_eo_civi_taxonomies();
 			//print_r( $this->get_all_event_correspondences() ); die();
 			
+			/*
+			// TEST DATA
+			$post_data = array(
+				'post_title' => 'The Event Title',
+				'post_content' => 'My event content goes here',
+			);
+
+			$event_data = array(
+				'start'=> new DateTime('2013-12-03 15:00', new DateTimeZone('UTC') ),
+				'end'=> new DateTime('2013-12-04 15:00', new DateTimeZone('UTC') ),
+				'schedule_last'=> new DateTime('2013-12-25 15:00', new DateTimeZone('UTC') ),
+				'frequency' => 4,
+				'all_day' => 0,
+				'schedule'=>'daily',
+			);
+
+			// use EO's API to create event
+			$event_id = eo_insert_event( $post_data, $event_data );
+			*/
+
 		}
 		
 	}
@@ -459,7 +482,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	In practice, however, if the sequence changes, then EO regenerates the 
 	occurrences anyway, so our correspondences need to be rebuilt when that
 	happens. This makes the occurrence_id linkage useful only when sequences are
-	broken - and that isn't built yet.
+	broken.
+	
+	There is an additional "orphans" array, so that when occurrences are added
+	(or added back) to a sequence, the corresponding CiviEvent may be reconnected
+	as long as none of its date and time data has changed. 
 	*/
 	
 	
@@ -674,7 +701,67 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	
 	
 	/**
-	 * @description: delete all correspondences between a CiviEvent and an Event Organiser event
+	 * @description: delete the correspondence between an Event Organiser occurrence and a CiviEvent
+	 * @param int $post_id the numeric ID of the WP post
+	 * @param int $occurrence_id the numeric ID of the EO event occurrence
+	 * @return nothing
+	 */
+	public function clear_event_correspondence( $post_id, $occurrence_id ) {
+		
+		// get CiviEvent ID
+		$civi_event_id = $this->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
+		
+		// get all CiviEvent data held in option
+		$civi_event_data = $this->get_all_civi_to_eo_correspondences();
+		
+		// if we have a CiviEvent ID for this EO occurrence
+		if ( $civi_event_id !== false ) {
+			
+			// unset the item with this key in the option array
+			unset( $civi_event_data[$civi_event_id] );
+			
+			// store updated array
+			$this->option_save( 'civi_eo_civi_event_data', $civi_event_data );
+		
+		}
+		
+		// get existing "live"
+		$correspondences = $this->get_civi_event_ids_by_eo_event_id( $post_id );
+		
+		// is the CiviEvent in the "live" array?
+		if ( in_array( $civi_event_id, $correspondences ) ) {
+		
+			// ditch the current CiviEvent ID
+			$correspondences = array_diff( $correspondences, array( $civi_event_id ) );
+		
+			// update the meta value
+			update_post_meta( $post_id, '_civi_eo_civicrm_events', $correspondences );
+			
+			// no need to go further
+			return;
+			
+		}
+		
+		// get existing "orphans"
+		$orphans = $this->get_orphaned_events_by_eo_event_id( $post_id );
+		
+		// is the CiviEvent in the "orphans" array?
+		if ( in_array( $civi_event_id, $orphans ) ) {
+		
+			// ditch the current CiviEvent ID
+			$orphans = array_diff( $orphans, array( $civi_event_id ) );
+		
+			// update the meta value
+			update_post_meta( $post_id, '_civi_eo_civicrm_events_disabled', $orphans );
+			
+		}
+		
+	}
+	
+	
+	
+	/**
+	 * @description: delete all correspondences between an Event Organiser event and CiviEvents
 	 * @param int $post_id the numeric ID of the WP post
 	 * @return nothing
 	 */
@@ -704,6 +791,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		
 		// now we can delete the array held in post meta
 		delete_post_meta( $post_id, '_civi_eo_civicrm_events' );
+		
+		// also delete the array of orphans held in post meta
+		delete_post_meta( $post_id, '_civi_eo_civicrm_events_disabled' );
 		
 	}
 	
@@ -873,6 +963,47 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// store updated array as option
 		$this->option_save( 'civi_eo_civi_event_disabled', $civi_event_disabled );
 	
+	}
+	
+	
+		
+	/**
+	 * @description: make a single occurrence orphaned
+	 * @param int $post_id the numeric ID of the WP post = EO event
+	 * @param int $occurrence_id the numeric ID of the EO event occurrence
+	 * @param int $civi_event_id the numeric ID of the orphaned CiviEvent
+	 * @return nothing
+	 */
+	public function occurrence_orphaned( $post_id, $occurrence_id, $civi_event_id ) {
+	
+		// get existing orphans for this post
+		$existing_orphans = $this->get_orphaned_events_by_eo_event_id( $post_id );
+		
+		// get existing "live" correspondences
+		$correspondences = $this->get_civi_event_ids_by_eo_event_id( $post_id );
+		
+		// add the current orphan
+		$existing_orphans[] = $civi_event_id;
+		
+		// safely remove it from live
+		if ( isset( $correspondences[$occurrence_id] ) ) {
+			unset( $correspondences[$occurrence_id] );
+		}
+		
+		/*
+		print_r( array(
+			'method' => 'occurrence_orphaned',
+			'post_id' => $post_id,
+			'occurrence_id' => $occurrence_id,
+			'civi_event_id' => $civi_event_id,
+			'existing_orphans' => $existing_orphans,
+			'correspondences' => $correspondences,
+		) ); die();
+		*/
+		
+		// store updated correspondences and orphans
+		$this->store_event_correspondences( $post_id, $correspondences, $existing_orphans );
+		
 	}
 	
 	
@@ -1091,6 +1222,19 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	
 	
 	
+	/**
+	 * @description: disallow "no category" in EO Event category box
+	 * @return bool false
+	 */
+	public function force_taxonomy() {
+		
+		// disable
+		return false;
+		
+	}
+	
+	
+		
 	/**
 	 * @description: show values
 	 * @return nothing
