@@ -1273,6 +1273,23 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return array();
 		
+		// first, see if the loc_block email, phone and address already exist
+		
+		// check email
+		$email = $this->_query_email( $venue->venue_civi_email );
+		
+		// check phone
+		$phone = $this->_query_phone( $venue->venue_civi_phone );
+		
+		// check address
+		$address = $this->_query_address( $venue );
+		
+		/*
+		'address_id' => 2,
+		'phone_id' => 2,
+		'email_id' => 3,
+		*/
+		
 		// define create array
 		$params = array(
 			
@@ -1280,28 +1297,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'version' => 3,
 			
 			// contact email
-			'email' => array( 
-				'location_type_id' => 1,
-				'email' => $venue->venue_civi_email,
-			),
+			'email' => $email,
 			
 			// contact phone
-			'phone' => array( 
-				'location_type_id' => 1,
-				'phone' => $venue->venue_civi_phone,
-			),
+			'phone' => $phone,
 			
 			// address
-			'address' => array( 
-				'location_type_id' => 1,
-				'street_address' => $venue->venue_address,
-				'city' => $venue->venue_city,
-				//'county' => $venue->venue_state, // can't do county in CiviCRM yet
-				'postal_code' => $venue->venue_postcode,
-				//'country' => $venue->venue_country, // can't do country in CiviCRM yet
-				'geo_code_1' => $venue->venue_lat,
-				'geo_code_2' => $venue->venue_lng,
-			),
+			'address' => $address,
 			
 		);
 		
@@ -2192,6 +2194,181 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	//##########################################################################
+	
+	
+	
+	/**
+	 * @description: query email via API
+	 * @param string $email
+	 * @return mixed $email_data integer if found, array if not found
+	 */
+	private function _query_email( $email ) {
+		
+		// check email
+		$email_params = array(
+			'version' => 3,
+			'contact_id' => null,
+			'is_primary' => 0,
+			'location_type_id' => 1,
+			'email' => $email,
+		);
+		
+		// query API
+		$existing_email_data = civicrm_api( 'email', 'get', $email_params );
+		
+		// did we get one?
+		if ( $existing_email_data['is_error'] == 0 AND $existing_email_data['count'] > 0 ) {
+		
+			// get first one
+			$existing_email = array_shift( $existing_email_data['values'] );
+			
+			// get its ID
+			$email_data = $existing_email['id'];
+		
+		} else {
+			
+			// define new email
+			$email_data = array( 
+				'location_type_id' => 1,
+				'email' => $email,
+			);
+					
+		}
+		
+		/*
+		print_r( array(
+			'email_params' => $email_params,
+			'existing_email_data' => $existing_email_data,
+			'email_data' => $email_data,
+		) ); die();
+		*/
+		
+		// --<
+		return $email_data;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: query phone via API
+	 * @param string $phone
+	 * @return mixed $phone_data integer if found, array if not found
+	 */
+	private function _query_phone( $phone ) {
+	
+		// create numeric version of phone number
+		$numeric = preg_replace( "/[^0-9]/", '', $phone );
+		
+		// check phone by its numeric field
+		$phone_params = array(
+			'version' => 3,
+			'contact_id' => null,
+			'is_primary' => 0,
+			'location_type_id' => 1,
+			'phone_numeric' => $numeric,
+		);
+		
+		// query API
+		$existing_phone_data = civicrm_api( 'phone', 'get', $phone_params );
+		
+		// did we get one?
+		if ( $existing_phone_data['is_error'] == 0 AND $existing_phone_data['count'] > 0 ) {
+		
+			// get first one
+			$existing_phone = array_shift( $existing_phone_data['values'] );
+			
+			// get its ID
+			$phone_data = $existing_phone['id'];
+		
+		} else {
+			
+			// define new phone
+			$phone_data = array( 
+				'location_type_id' => 1,
+				'phone' => $phone,
+				'phone_numeric' => $numeric,
+			);
+					
+		}
+		
+		/*
+		print_r( array(
+			'phone_params' => $phone_params,
+			'existing_phone_data' => $existing_phone_data,
+			'phone_data' => $phone_data,
+		) ); die();
+		*/
+		
+		// --<
+		return $phone_data;
+		
+	}
+	
+	
+	
+	/**
+	 * @description: query address via API
+	 * @param object $venue
+	 * @return mixed $address_data integer if found, array if not found
+	 */
+	private function _query_address( $venue ) {
+		
+		// check address
+		$address_params = array(
+			'version' => 3,
+			'contact_id' => null,
+			'is_primary' => 0,
+			'location_type_id' => 1,
+			'street_address' => $venue->venue_address,
+			'city' => $venue->venue_city,
+			//'county' => $venue->venue_state, // can't do county in CiviCRM yet
+			'postal_code' => $venue->venue_postcode,
+			//'country' => $venue->venue_country, // can't do country in CiviCRM yet
+			'geo_code_1' => $venue->venue_lat,
+			'geo_code_2' => $venue->venue_lng,
+		);
+		
+		// query API
+		$existing_address_data = civicrm_api( 'address', 'get', $address_params );
+		
+		// did we get one?
+		if ( $existing_address_data['is_error'] == 0 AND $existing_address_data['count'] > 0 ) {
+		
+			// get first one
+			$existing_address = array_shift( $existing_address_data['values'] );
+			
+			// get its ID
+			$address_data = $existing_address['id'];
+		
+		} else {
+			
+			// define new address
+			$address_data = array( 
+				'location_type_id' => 1,
+				'street_address' => $venue->venue_address,
+				'city' => $venue->venue_city,
+				//'county' => $venue->venue_state, // can't do county in CiviCRM yet
+				'postal_code' => $venue->venue_postcode,
+				//'country' => $venue->venue_country, // can't do country in CiviCRM yet
+				'geo_code_1' => $venue->venue_lat,
+				'geo_code_2' => $venue->venue_lng,
+			);
+					
+		}
+		
+		/*
+		print_r( array(
+			'address_params' => $address_params,
+			'existing_address_data' => $existing_address_data,
+			'address_data' => $address_data,
+		) ); die();
+		*/
+		
+		// --<
+		return $address_data;
+		
+	}
 	
 	
 	
