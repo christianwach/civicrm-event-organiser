@@ -1284,12 +1284,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// check address
 		$address = $this->_query_address( $venue );
 		
-		/*
-		'address_id' => 2,
-		'phone_id' => 2,
-		'email_id' => 3,
-		*/
-		
 		// define create array
 		$params = array(
 			
