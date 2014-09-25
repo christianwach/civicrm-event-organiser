@@ -238,23 +238,21 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		
 		
 		
-		// show table
+		// show blurb
 		echo '
-		<h3>'.__( 'Event Synchronisation', 'civicrm-event-organiser' ).'</h3>
+		<h3>'.__( 'Synchronisation', 'civicrm-event-organiser' ).'</h3>
 		
-		<table class="form-table">
-			
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_eo_to_civi">'.__( 'Synchronise Event Organiser Events to CiviEvents', 'civicrm-event-organiser' ).'</label></th>
-				<td><input id="civi_eo_event_eo_to_civi" name="civi_eo_event_eo_to_civi" value="1" type="checkbox" /></td>
-			</tr>
-			
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_civi_to_eo">'.__( 'Synchronise CiviEvents to Event Organiser Events', 'civicrm-event-organiser' ).'</label></th>
-				<td><input id="civi_eo_event_civi_to_eo" name="civi_eo_event_civi_to_eo" value="1" type="checkbox" /></td>
-			</tr>
-			
-		</table>
+		<p>' . __( 'Things can be a little complicated on initial setup because there can be data in WordPress or CiviCRM or both.', 'civicrm-event-organiser' ) . '</p>
+		
+		<p>' . __( 'The most robust procedure for setting up the sync between Event Organiser events and CiviEvents is to sync in the following order:', 'civicrm-event-organiser' ) . '</p>
+		
+		<ol>
+			<li>' . __( 'Event Categories with CiviCRM Event Types', 'civicrm-event-organiser' ) . '</li>
+			<li>' . __( 'EO Venues with CiviCRM Locations', 'civicrm-event-organiser' ) . '</li>
+			<li>' . __( 'EO Events with CiviEvents.', 'civicrm-event-organiser' ) . '</li>
+		</ol>
+		
+		<p>' . __( 'Your set up may require some direct manipulation of the data, but the following options should help get things moving.', 'civicrm-event-organiser' ) . '</p>
 		
 		<hr>';
 		
@@ -265,7 +263,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		<h3>'.__( 'Event Type Synchronisation', 'civicrm-event-organiser' ).'</h3>
 		
 		<p>'.__( 'At present, there is no CiviCRM hook that fires when a CiviEvent event type is deleted.', 'civicrm-event-organiser' ).'<br />
-		'.__( 'Event types should always be deleted from the Event Category screen.', 'civicrm-event-organiser' ).'</p>
+		<strong>'.__( 'Event types should always be deleted from the Event Category screen.', 'civicrm-event-organiser' ).'</strong></p>
 		
 		<table class="form-table">
 			
@@ -299,6 +297,28 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			<tr valign="top">
 				<th scope="row"><label for="civi_eo_civi_to_eo">'.__( 'Synchronise CiviEvent Locations to Event Organiser Venues', 'civicrm-event-organiser' ).'</label></th>
 				<td><input id="civi_eo_civi_to_eo" name="civi_eo_civi_to_eo" value="1" type="checkbox" /></td>
+			</tr>
+			
+		</table>
+		
+		<hr>';
+		
+		
+		
+		// show table
+		echo '
+		<h3>'.__( 'Event Synchronisation', 'civicrm-event-organiser' ).'</h3>
+		
+		<table class="form-table">
+			
+			<tr valign="top">
+				<th scope="row"><label for="civi_eo_event_eo_to_civi">'.__( 'Synchronise Event Organiser Events to CiviEvents', 'civicrm-event-organiser' ).'</label></th>
+				<td><input id="civi_eo_event_eo_to_civi" name="civi_eo_event_eo_to_civi" value="1" type="checkbox" /></td>
+			</tr>
+			
+			<tr valign="top">
+				<th scope="row"><label for="civi_eo_event_civi_to_eo">'.__( 'Synchronise CiviEvents to Event Organiser Events', 'civicrm-event-organiser' ).'</label></th>
+				<td><input id="civi_eo_event_civi_to_eo" name="civi_eo_event_civi_to_eo" value="1" type="checkbox" /></td>
 			</tr>
 			
 		</table>
