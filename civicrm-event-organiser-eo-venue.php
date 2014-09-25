@@ -322,7 +322,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		
 		// construct args
 		$args = array(
-			//'description' => $location['description'], // can't do county yet
+			//'description' => $location['description'], // can't do description yet
 			'address' => $location['address']['street_address'],
 			'city' => $location['address']['city'],
 			//'state' => $location['address']['county'], // can't do county yet
@@ -344,7 +344,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		add_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10, 1 );
 		
 		// if not an error
-		if ( is_wp_error( $result ) OR !isset( $result['term_id'] ) ) {
+		if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) {
 			
 			print_r( array(
 				'method' => 'create_venue',
@@ -355,21 +355,18 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		
 		// create venue meta data
 		
-		// init email to site default
-		$email = get_option( 'admin_email' );
-		
-		// do we have an alternative in CiviCRM?
+		// do we have an email for the location?
 		if ( isset( $location['email']['email'] ) ) {
 			
-			// override
+			// yes, get it
 			$email = $location['email']['email'];
 			
+			// store email in meta
+			eo_update_venue_meta( $result['term_id'],  '_civi_email', esc_sql( $email ) );
+		
 		}
 		
-		// store email in meta
-		eo_update_venue_meta( $result['term_id'],  '_civi_email', esc_sql( $email ) );
-		
-		// do we have an alternative in CiviCRM?
+		// do we have a phone number for the location?
 		if ( isset( $location['phone']['phone'] ) ) {
 			
 			// store phone in meta
@@ -404,40 +401,40 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function update_venue( $location ) {
 		
 		// check permissions
-		if ( !$this->allow_venue_edit() ) return;
+		if ( ! $this->allow_venue_edit() ) return;
 		
 		// does this location have an existing venue?
 		$venue_id = $this->get_venue_id( $location );
 		
-		// if we get one
+		// if we do not get one...
 		if ( $venue_id === false ) {
 			
 			// create venue
-			$result = $this->create_venue( $location );
+			$term_id = $this->create_venue( $location );
 			
 			// --<
-			return $result['term_id'];
+			return $term_id;
 			
 		} else {
 			
-			// get full venue
+			// get full venue object
 			$venue = eo_get_venue_by( 'id', $venue_id );
 			
-			// did we get one?
+			// if for some reason the linkage fails
 			if ( ! is_object( $venue ) ) {
 				
 				// create venue
-				$result = $this->create_venue( $location );
+				$term_id = $this->create_venue( $location );
 				
 				// --<
-				return $result['term_id'];
+				return $term_id;
 				
 			}
 			
 			// construct args
 			$args = array(
-				'name' => $venue->name, // can't update name yet
-				//'description' => $location['description'], // can't do county yet
+				'name' => $venue->name, // can't update name yet (locations don't have one)
+				//'description' => $location['description'], // can't do description yet
 				'address' => $location['address']['street_address'],
 				'city' => $location['address']['city'],
 				//'state' => $location['address']['county'], // can't do county yet
@@ -466,11 +463,17 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			add_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10, 1 );
 			
 			// if not an error
-			if ( is_wp_error( $result ) OR !isset( $result['term_id'] ) ) return false;
+			if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) return false;
 			
-			// create venue meta data
-			eo_update_venue_meta( $result['term_id'],  '_civi_email', esc_sql( $location['email']['email'] ) );
-			eo_update_venue_meta( $result['term_id'],  '_civi_phone', esc_sql( $location['phone']['phone'] ) );
+			// create venue meta data, if present
+			if ( isset( $location['email']['email'] ) ) {
+				eo_update_venue_meta( $result['term_id'],  '_civi_email', esc_sql( $location['email']['email'] ) );
+			}
+			if ( isset( $location['phone']['phone'] ) ) {
+				eo_update_venue_meta( $result['term_id'],  '_civi_phone', esc_sql( $location['phone']['phone'] ) );
+			}
+			
+			// always store location ID
 			eo_update_venue_meta( $result['term_id'],  '_civi_loc_id', $location['id'] );
 			
 		}
