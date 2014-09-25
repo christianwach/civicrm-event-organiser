@@ -1389,8 +1389,24 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get all Civi Event locations
 		$all_locations = $this->plugin->civi->get_all_locations();
 		
-		// delete all Civi Event locations!
-		//$this->plugin->civi->delete_all_locations();
+		/*
+		// delete all Civi Event locations
+		$this->plugin->civi->delete_all_locations();
+		
+		// clear all EO Event location IDs
+		if ( count( $all_venues ) > 0 ) {
+			
+			// loop
+			foreach( $all_venues AS $venue ) {
+				
+				// clear all 
+				$this->plugin->eo_venue->clear_civi_location( $venue->term_id );
+				$this->plugin->eo_venue->clear_venue_components( $venue->term_id );
+				
+			}
+			
+		}
+		*/
 		
 		print_r( array(
 			'all_venues' => $all_venues,
