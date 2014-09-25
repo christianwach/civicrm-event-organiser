@@ -175,6 +175,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// update CiviEvent location
 		$location = $this->plugin->civi->update_location( $venue );
 		
+		// store loc_block ID
+		$this->store_civi_location( $venue->term_id, $location );
+		
 	}
 	
 	
@@ -854,6 +857,22 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	private function _delete_venue_components( $venue_id ) {
 		
 		// EO garbage-collects when it deletes a venue, so no need
+		
+	}
+	
+	
+	
+	/**
+	 * Clear custom components that sync with CiviCRM
+	 * 
+	 * @param int $venue_id The numeric ID of the venue
+	 * @return void
+	 */
+	public function clear_venue_components( $venue_id ) {
+		
+		// delete venue meta
+		eo_delete_venue_meta( $venue_id,  '_civi_email' );
+		eo_delete_venue_meta( $venue_id,  '_civi_phone' );
 		
 	}
 	
