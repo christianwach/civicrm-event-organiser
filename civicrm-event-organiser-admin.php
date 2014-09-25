@@ -192,7 +192,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// open div
 		echo '<div id="civi_eo_admin_options">
 		
-		';
+		<hr>';
 		
 		
 		
@@ -232,7 +232,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		
 		// close table
 		echo '
-		</table>';
+		</table>
+		
+		<hr>';
 		
 		
 		
@@ -252,7 +254,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				<td><input id="civi_eo_event_civi_to_eo" name="civi_eo_event_civi_to_eo" value="1" type="checkbox" /></td>
 			</tr>
 			
-		</table>';
+		</table>
+		
+		<hr>';
 		
 		
 		
@@ -275,7 +279,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				<td><input id="civi_eo_tax_civi_to_eo" name="civi_eo_tax_civi_to_eo" value="1" type="checkbox" /></td>
 			</tr>
 			
-		</table>';
+		</table>
+		
+		<hr>';
 		
 		
 		
@@ -295,7 +301,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				<td><input id="civi_eo_civi_to_eo" name="civi_eo_civi_to_eo" value="1" type="checkbox" /></td>
 			</tr>
 			
-		</table>';
+		</table>
+		
+		<hr>';
 		
 		
 		
