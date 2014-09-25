@@ -45,7 +45,7 @@ return new WP_Error('eo_error',__('Start date not provided.','eventorganiser'));
 class CiviCRM_WP_Event_Organiser {
 	
 	/** 
-	 * properties
+	 * Properties
 	 */
 	
 	// Admin/DB class
@@ -63,7 +63,8 @@ class CiviCRM_WP_Event_Organiser {
 	
 	
 	/** 
-	 * @description: initialises this object
+	 * Initialises this object
+	 * 
 	 * @return object
 	 */
 	function __construct() {
@@ -82,8 +83,9 @@ class CiviCRM_WP_Event_Organiser {
 	
 	
 	/**
-	 * @description: do stuff on plugin init
-	 * @return nothing
+	 * Do stuff on plugin init
+	 * 
+	 * @return void
 	 */
 	public function initialise() {
 		
@@ -122,8 +124,9 @@ class CiviCRM_WP_Event_Organiser {
 	
 		
 	/**
-	 * @description: do stuff on plugin activation
-	 * @return nothing
+	 * Do stuff on plugin activation
+	 * 
+	 * @return void
 	 */
 	public function activate() {
 		
@@ -132,8 +135,9 @@ class CiviCRM_WP_Event_Organiser {
 	
 		
 	/**
-	 * @description: do stuff on plugin deactivation
-	 * @return nothing
+	 * Do stuff on plugin deactivation
+	 * 
+	 * @return void
 	 */
 	public function deactivate() {
 		
@@ -146,10 +150,11 @@ class CiviCRM_WP_Event_Organiser {
 	
 	
 	/** 
-	 * @description: load translation files
+	 * Load translation files
 	 * A good reference on how to implement translation in WordPress:
 	 * http://ottopress.com/2012/internationalization-youre-probably-doing-it-wrong/
-	 * @return nothing
+	 * 
+	 * @return void
 	 */
 	public function enable_translation() {
 		
