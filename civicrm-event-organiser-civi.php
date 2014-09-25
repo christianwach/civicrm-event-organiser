@@ -1229,14 +1229,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return false;
 		
-		// construct locations array
-		$params = array( 
-			'version' => 3,
-			'return' => 'all',
-		);
-		
-		// call API
-		$locations = civicrm_api( 'loc_block', 'get', $params );
+		// get all locations
+		$locations = $this->get_all_locations();
 		
 		// start again
 		foreach( $locations['values'] AS $location ) {
