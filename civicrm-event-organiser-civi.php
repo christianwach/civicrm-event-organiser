@@ -1761,7 +1761,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
-	/*
+	/**
 	 * Update a CiviEvent event type
 	 * 
 	 * @param object $new_term The new EO event category term
@@ -1845,7 +1845,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
-	/*
+	/**
 	 * Delete a CiviEvent event type
 	 * 
 	 * @param object $term The EO event category term
@@ -1886,7 +1886,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
-	/*
+	/**
 	 * Get a CiviEvent event type by term
 	 * 
 	 * @param object $term The EO event category term
@@ -1942,7 +1942,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
-	/*
+	/**
 	 * Get a CiviEvent event type value by type ID
 	 * 
 	 * @param int $type_id The numeric ID of the CiviEvent event type
@@ -1990,7 +1990,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
-	/*
+	/**
 	 * Get all CiviEvent event types.
 	 * 
 	 * @return mixed $types CiviCRM API return array (or false on failure)
@@ -2028,7 +2028,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
-	/*
+	/**
 	 * Get all CiviEvent event types formatted as a dropdown list
 	 * 
 	 * @return str $html Markup containing select options
@@ -2154,7 +2154,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
-	/*
+	/**
 	 * Get a CiviEvent event type by ID
 	 * 
 	 * @param int $type_id The numeric ID of a CiviEvent event type
@@ -2188,7 +2188,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	
-	/*
+	/**
 	 * Get the CiviEvent event_types option group ID. Multiple calls 
 	 * to the db are avoided by setting the static variable.
 	 * 
