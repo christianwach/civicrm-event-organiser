@@ -131,7 +131,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function insert_venue( $venue_id ) {
 		
 		// check permissions
-		if ( !$this->_allow_venue_edit() ) return;
+		if ( !$this->allow_venue_edit() ) return;
 		
 		// check nonce
 		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
@@ -161,7 +161,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function save_venue( $venue_id ) {
 		
 		// check permissions
-		if ( !$this->_allow_venue_edit() ) return;
+		if ( !$this->allow_venue_edit() ) return;
 	
 		// check nonce
 		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
@@ -286,7 +286,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function deleted_venue( $venue_id ) {
 		
 		// check permissions
-		if ( !$this->_allow_venue_edit() ) return;
+		if ( !$this->allow_venue_edit() ) return;
 		
 		// delete components
 		$this->_delete_venue_components( $venue_id );
@@ -313,7 +313,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function create_venue( $location ) {
 		
 		// check permissions
-		if ( !$this->_allow_venue_edit() ) return false;
+		if ( !$this->allow_venue_edit() ) return false;
 		
 		// construct name
 		$name = !empty( $location['address']['street_address'] ) ? 
@@ -404,7 +404,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function update_venue( $location ) {
 		
 		// check permissions
-		if ( !$this->_allow_venue_edit() ) return;
+		if ( !$this->allow_venue_edit() ) return;
 		
 		// does this location have an existing venue?
 		$venue_id = $this->get_venue_id( $location );
@@ -814,11 +814,11 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	
 	
 	/**
-	 * Intercept save venue
+	 * Check current user's permission to edit venue taxonomy
 	 * 
 	 * @return bool
 	 */
-	public function _allow_venue_edit() {
+	public function allow_venue_edit() {
 		
 		// check permissions
 		$tax = get_taxonomy( 'event-venue' );
@@ -838,11 +838,15 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 */
 	private function _save_venue_components( $venue_id ) {
 		
-		// save email
-		$this->_update_venue_email( $venue_id );
+		// save email if set...
+		if ( isset( $_POST['civi_eo_venue_email'] ) ) {
+			$this->update_venue_email( $venue_id, $_POST['civi_eo_venue_email'] );
+		}
 		
-		// save phone
-		$this->_update_venue_phone( $venue_id );
+		// save phone if set...
+		if ( isset( $_POST['civi_eo_venue_phone'] ) ) {
+			$this->update_venue_phone( $venue_id, $_POST['civi_eo_venue_phone'] );
+		}
 		
 	}
 	
@@ -882,15 +886,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 * Update venue email value
 	 * 
 	 * @param int $venue_id The numeric ID of the venue
+	 * @param str $venue_email The email associated with the venue
 	 * @return void
 	 */
-	public function _update_venue_email( $venue_id ) {
+	public function update_venue_email( $venue_id, $venue_email ) {
 		
-		// kick out if not set
-		if ( !isset( $_POST['civi_eo_venue_email'] ) ) return;
-	
 		// retrieve meta value
-		$value = sanitize_email( $_POST['civi_eo_venue_email'] );
+		$value = sanitize_email( $venue_email );
 		
 		// validate as email address
 		if ( !is_email( $value ) ) return;
@@ -906,12 +908,10 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 * Update venue phone value
 	 * 
 	 * @param int $venue_id The numeric ID of the venue
+	 * @param str $venue_phone The phone number associated with the venue
 	 * @return void
 	 */
-	public function _update_venue_phone( $venue_id ) {
-		
-		// retrieve meta value
-		$value = $_POST['civi_eo_venue_phone'];
+	public function update_venue_phone( $venue_id, $venue_phone ) {
 		
 		// use CiviCRM to validate?
 		

@@ -1294,33 +1294,43 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return array();
 		
-		// first, see if the loc_block email, phone and address already exist
-		
-		// check email
-		$email = $this->_query_email( $venue->venue_civi_email );
-		
-		// check phone
-		$phone = $this->_query_phone( $venue->venue_civi_phone );
-		
-		// check address
-		$address = $this->_query_address( $venue );
-		
 		// define create array
 		$params = array(
 			
 			// API version
 			'version' => 3,
 			
-			// contact email
-			'email' => $email,
-			
-			// contact phone
-			'phone' => $phone,
-			
-			// address
-			'address' => $address,
-			
 		);
+		
+		// first, see if the loc_block email, phone and address already exist
+		
+		// if we have an email
+		if ( isset( $venue->venue_civi_email ) AND ! empty( $venue->venue_civi_email ) ) {
+
+			// check email
+			$email = $this->_query_email( $venue->venue_civi_email );
+			
+			// add to params
+			$params['email'] = $email;
+			
+		}
+		
+		// if we have a phone number
+		if ( isset( $venue->venue_civi_phone ) AND ! empty( $venue->venue_civi_phone ) ) {
+
+			// check phone
+			$phone = $this->_query_phone( $venue->venue_civi_phone );
+		
+			// add to params
+			$params['phone'] = $phone;
+			
+		}
+		
+		// check address
+		$address = $this->_query_address( $venue );
+		
+		// add to params
+		$params['address'] = $address;
 		
 		// if our venue has a location, add it
 		if ( 
