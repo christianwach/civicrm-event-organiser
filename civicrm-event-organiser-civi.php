@@ -1339,6 +1339,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// call API
 		$location = civicrm_api( 'loc_block', 'create', $params );
 		
+		/*
+		print_r( array( 
+			'venue' => $venue,
+			'create-update params' => $params,
+			'location' => $location,
+		) ); //die();
+		*/
+		
 		// did we do okay?
 		if ( $location['is_error'] == '1' ) {
 			
@@ -1577,6 +1585,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Intercept when a CiviCRM event type is updated
 	 * 
+	 * Unfortunately, this doesn't work because Civi does not fire hook_civicrm_pre
+	 * for this entity type. Sad face.
+	 * 
 	 * @param string $op The type of database operation
 	 * @param string $objectName The type of object
 	 * @param integer $objectId The ID of the object
@@ -1649,6 +1660,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'formName' => $formName,
 			'form' => $form,
 		) ); die();
+		*/
+		
+		/*
+		trigger_error( print_r( array( 
+			'formName' => $formName,
+			'form' => $form,
+		), true ), E_USER_ERROR ); die();
 		*/
 		
 		// kick out if not options form
