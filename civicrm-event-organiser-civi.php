@@ -200,19 +200,16 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		
 		
 		
-		// get event type id, because it is required in CiviCRM
-		$type_id = $this->get_default_event_type( $post );
+		// get event type pseudo-ID (or value), because it is required in CiviCRM
+		$type_value = $this->get_default_event_type_value( $post );
 		
 		// well?
-		if ( $type_id === false ) {
+		if ( $type_value === false ) {
 			
 			// error
 			wp_die( __( 'You must have some CiviCRM event types defined', 'civicrm-event-organiser' ) );
 			
 		}
-		
-		// we need the event type 'value'
-		$type_value = $this->get_event_type_value( $type_id );
 		
 		// assign event type value
 		$civi_event['event_type_id'] = $type_value;
@@ -313,12 +310,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( ! $this->is_active() ) return false;
 		
 		// just for safety, check we get some (though we must)
-		if ( count( $dates ) == 0 ) return false;
+		if ( count( $dates ) === 0 ) return false;
 		
 		
 		
 		// get existing CiviEvents from post meta
 		$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post->ID );
+		
+		/*
+		print_r( array(
+			'post' => $post,
+			'dates' => $dates,
+			'correspondences' => $correspondences,
+		) ); die();
+		*/
 		
 		// if we have none yet...
 		if ( count( $correspondences ) === 0 ) {
@@ -1803,7 +1808,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// do we have a description?
 		if ( $new_term->description != '' ) {
 			
-			// trigger update
+			// add it
 			$params['description'] = $new_term->description;
 		
 		}
@@ -2039,7 +2044,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	/**
-	 * Get all CiviEvent event types formatted as a dropdown list
+	 * Get all CiviEvent event types formatted as a dropdown list. The pseudo-ID
+	 * is actually the event type "value" rather than the event type ID.
 	 * 
 	 * @return str $html Markup containing select options
 	 */
@@ -2066,20 +2072,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// init options
 			$options = array();
 			
-			// get existing type ID
-			$existing_id = $this->get_default_event_type( $post );
+			// get existing type value
+			$existing_value = $this->get_default_event_type_value( $post );
 			
 			// loop
 			foreach( $types AS $key => $type ) {
 				
-				// get type
-				$type_id = absint( $type['value'] );
+				// get type value
+				$type_value = absint( $type['value'] );
 				
 				// init selected
 				$selected = '';
 				
 				// is this value the same as in the post?
-				if ( $existing_id === $type_id ) {
+				if ( $existing_value === $type_value ) {
 					
 					// override selected
 					$selected = ' selected="selected"';
@@ -2087,7 +2093,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				}
 				
 				// construct option
-				$options[] = '<option value="'.$type_id.'"'.$selected.'>'.esc_html( $type['label'] ).'</option>';
+				$options[] = '<option value="' . $type_value . '"' . $selected . '>' . esc_html( $type['label'] ) . '</option>';
 				
 			}
 			
@@ -2113,16 +2119,16 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	
 	
 	/**
-	 * Get the default event type for a post, but fall back to the default as set 
+	 * Get the default event type value for a post, but fall back to the default as set 
 	 * on the admin screen, fall back to false otherwise
 	 * 
 	 * @param object $post The WP event object
 	 * @return mixed $existing_id The numeric ID of the CiviEvent event type (or false if none exists)
 	 */
-	public function get_default_event_type( $post = null ) {
+	public function get_default_event_type_value( $post = null ) {
 		
 		// init with impossible ID
-		$existing_id = false;
+		$existing_value = false;
 		
 		// do we have a default set?
 		$default = $this->plugin->db->option_get( 'civi_eo_event_default_type' );
@@ -2131,7 +2137,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( $default !== '' AND is_numeric( $default ) ) {
 			
 			// override with default value
-			$existing_id = absint( $default );
+			$existing_value = absint( $default );
 			
 		}
 		
@@ -2153,12 +2159,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				// get type ID for this term
 				$existing_id = $this->get_event_type_id( $term );
 				
+				// convert to value
+				$existing_value = $this->get_event_type_value( $existing_id );
+				
 			}
 		
 		}
 		
 		// --<
-		return $existing_id;
+		return $existing_value;
 		
 	}
 	
@@ -2185,7 +2194,41 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$type_params = array( 
 			'option_group_id' => $opt_group_id,
 			'version' => 3,
-			'value' => $type_id,
+			'id' => $type_id,
+		);
+		
+		// get them (descriptions will be present if not null)
+		$type = civicrm_api( 'option_value', 'getsingle', $type_params );
+		
+		// --<
+		return $type;
+		
+	}
+	
+	
+	
+	/**
+	 * Get a CiviEvent event type by "value" pseudo-ID
+	 * 
+	 * @param int $type_value The numeric value of a CiviEvent event type
+	 * @return array $type CiviEvent event type data
+	 */
+	public function get_event_type_by_value( $type_value ) {
+		
+		// if we fail to init CiviCRM...
+		if ( ! $this->is_active() ) return false;
+		
+		// get option group ID
+		$opt_group_id = $this->get_event_types_optgroup_id();
+		
+		// error check
+		if ( $opt_group_id === false ) return false;
+		
+		// define params to get item
+		$type_params = array( 
+			'option_group_id' => $opt_group_id,
+			'version' => 3,
+			'value' => $type_value,
 		);
 		
 		// get them (descriptions will be present if not null)

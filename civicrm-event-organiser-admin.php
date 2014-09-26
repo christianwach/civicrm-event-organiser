@@ -447,6 +447,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			//$this->show_venues_locations();
 			//$this->show_eo_civi_events();
 			//$this->show_eo_civi_taxonomies();
+			//$this->clear_all_correspondences();
 			//print_r( $this->get_all_event_correspondences() ); die();
 			
 			/*
@@ -526,6 +527,48 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	
 	
 	
+	/**
+	 * Clears all CiviEvents <-> Event Organiser event data
+	 * 
+	 * @return void
+	 */
+	public function clear_all_correspondences() {
+
+		// construct args for all event posts
+		$args = array(
+			
+			'post_type' => 'event',
+			'numberposts' => -1,
+			
+		);
+		
+		// get all event posts
+		$all_events = get_posts( $args );
+
+		// did we get any?
+		if ( count( $all_events ) > 0 ) {
+			
+			// loop
+			foreach( $all_events AS $event ) {
+				
+				// delete post meta
+				delete_post_meta( $post_id, '_civi_eo_civicrm_events' );
+				delete_post_meta( $post_id, '_civi_eo_civicrm_events_disabled' );
+				
+			}
+			
+		}
+		
+		// overwrite event_disabled array
+		$this->option_save( 'civi_eo_civi_event_disabled', array() );
+		
+		// overwrite EO to CIvi data
+		$this->option_save( 'civi_eo_civi_event_data', array() );
+		
+	}
+	
+	
+		
 	/**
 	 * Rebuilds all CiviEvents <-> Event Organiser event data
 	 * 
@@ -1220,6 +1263,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				
 				// get dates for this event
 				$dates = $this->plugin->eo->get_all_dates( $event->ID );
+				
+				//print_r( $dates ); die();
 				
 				// update CiviEvent - or create if it doesn't exist
 				$correspondences = $this->plugin->civi->update_civi_events( $event, $dates );

@@ -366,9 +366,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 			
 		);
 		
-		// add items that are common to all CiviEvents
-		$civi_event['is_active'] = 1;
-		
 		// define post
 		$post_data = array(
 			
@@ -409,6 +406,14 @@ class CiviCRM_WP_Event_Organiser_EO {
 			
 			// get corresponding EO venue ID
 			$venue_id = $this->plugin->eo_venue->get_venue_id( $location );
+			
+			// did we get one?
+			if ( $venue_id === false ) {
+				
+				// no, let's create one
+				$venue_id = $this->plugin->eo_venue->create_venue( $location );
+				
+			}
 		
 		}
 		
@@ -426,6 +431,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 			
 			// does this type have an existing term?
 			$term_id = $this->get_term_id( $type );
+			
+			// if not...
+			if ( $term_id === false ) {
+				
+				// create one
+				$term = $this->create_term( $type );
+				
+				// assign term ID
+				$term_id = $term['term_id'];
+			
+			}
 			
 			// define as array
 			$terms = array( absint( $term_id ) );
