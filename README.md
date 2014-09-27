@@ -23,12 +23,7 @@ It also requires
 
 #### Known Issues ####
 
-Lots. And lots.
-
-The biggest is that it doesn't sync events properly yet. I'm working on it. I've said it before, I'll say it again:
-
-**This plugin is still in development and probably won't work for you. You have been warned.**
-
+The plugin does not yet allow automatic linking to event registration.
 
 #### Installation ####
 
