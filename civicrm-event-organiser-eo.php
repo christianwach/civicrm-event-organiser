@@ -1079,18 +1079,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * because we need to get the corresponding CiviEvent type before the WP term 
 	 * is updated.
 	 * 
-	 * @param array $term_id The numeric ID of the new term
-	 * @param obj $term The term being edited (param introduced in WP 3.7)
+	 * @param int $term_id The numeric ID of the new term
+	 * @param string $taxonomy The taxonomy containing the term (param introduced in WP 3.7)
 	 * @return void
 	 */
-	public function intercept_pre_update_term( $term_id, $term = null ) {
+	public function intercept_pre_update_term( $term_id, $taxonomy = null ) {
 		
-		// did we get a term passed in?
-		if ( is_null( $term ) ) {
+		// did we get a taxonomy passed in?
+		if ( is_null( $taxonomy ) ) {
 		
 			// no, get reference to term object
 			$term = $this->get_term_by_id( $term_id );
 		
+		} else {
+		
+			// get term
+			$term = get_term_by( 'id', $term_id, $taxonomy );
+			
 		}
 		
 		/*
@@ -1118,8 +1123,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Hook into updates to an EO event category term
 	 * 
-	 * @param array $term_id The numeric ID of the new term
-	 * @param array $tt_id The numeric ID of the new term
+	 * @param int $term_id The numeric ID of the edited term
+	 * @param array $tt_id The numeric ID of the edited term taxonomy
 	 * @param string $taxonomy Should be (an array containing) 'event-category'
 	 * @return void
 	 */
@@ -1172,8 +1177,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * Hook into deletion of an EO event category term - requires WordPress 3.5+ 
 	 * because of the 4th parameter
 	 * 
-	 * @param array $term_id The numeric ID of the new term
-	 * @param array $tt_id The numeric ID of the new term
+	 * @param int $term_id The numeric ID of the deleted term
+	 * @param array $tt_id The numeric ID of the deleted term taxonomy
 	 * @param string $taxonomy Name of the taxonomy
 	 * @param object $deleted_term The deleted term object
 	 * @return void
@@ -1348,10 +1353,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 	
 	
 	/**
-	 * Get a term without knowing its taxonomy - this is necessary  until WordPress 
-	 * passes $taxonomy to the 'edit_terms' action, due in WP 3.7:
+	 * Get a term without knowing its taxonomy - this was necessary  before WordPress 
+	 * passed $taxonomy to the 'edit_terms' action in WP 3.7:
 	 * 
 	 * @see http://core.trac.wordpress.org/ticket/22542
+	 * @see https://core.trac.wordpress.org/changeset/24829
 	 * 
 	 * @param int $term_id The ID of the term whose taxonomy we want
 	 * @param string $output Passed to get_term
