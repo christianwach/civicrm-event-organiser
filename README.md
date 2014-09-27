@@ -1,11 +1,13 @@
 CiviCRM Event Organiser
 =======================
 
-A *WordPress* plugin for syncing *Event Organiser* plugin Events with *CiviCRM* Events so they (will eventually) play nicely with *BuddyPress* Groups and Group Hierarchies. Be warned: this plugin is at a very early stage of development.
+A *WordPress* plugin for syncing *Event Organiser* plugin Events with *CiviCRM* Events. The plugin syncs *Event Organiser* Events, Venues and Event Categories to their corresponding entities in CiviCRM.
+
+If you want *Event Organiser* Events to play nicely with *BuddyPress* Groups and Group Hierarchies, you can also install [BuddyPress Event Organiser](https://github.com/christianwach/bp-event-organiser).
 
 #### Notes ####
 
-This plugin has been developed using *WordPress 3.6*, *BuddyPress 1.8* and *CiviCRM 4.3.5*. 
+This plugin requires at least *WordPress 3.6*, *BuddyPress 1.8* and *CiviCRM 4.4.n*.
 
 It requires 
 
@@ -37,12 +39,9 @@ There are two ways to install from GitHub:
 If you have downloaded *CiviCRM Event Organiser* as a ZIP file from the GitHub repository, do the following to install and activate the plugin and theme:
 
 1. Unzip the .zip file and, if needed, rename the enclosing folder so that the plugin's files are located directly inside `/wp-content/plugins/civicrm-event-organiser`
-2. Activate the plugin
-3. You are done!
-4. Not so fast… 
-
-**This plugin is still in development and probably won't work for you. You have been warned.**
-
+2. Activate the plugin (if on WP multisite, only activate the plugin on the main site, or wherever *Event Organiser* is activated)
+3. Go to the plugin's admin page and follow the instructions
+4. You are done!
 
 ###### git clone ######
 
