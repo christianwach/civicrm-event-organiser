@@ -94,7 +94,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
 		
 		// intercept term updates
-		add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 1 );
+		add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 2 );
 		add_action( 'edited_term', array( $this, 'intercept_update_term' ), 20, 3 );
 		
 		// intercept term deletion
@@ -1080,12 +1080,18 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * is updated.
 	 * 
 	 * @param array $term_id The numeric ID of the new term
+	 * @param obj $term The term being edited (param introduced in WP 3.7)
 	 * @return void
 	 */
-	public function intercept_pre_update_term( $term_id ) {
+	public function intercept_pre_update_term( $term_id, $term = null ) {
 		
-		// get reference to term object
-		$term = $this->get_term_by_id( $term_id );
+		// did we get a term passed in?
+		if ( is_null( $term ) ) {
+		
+			// no, get reference to term object
+			$term = $this->get_term_by_id( $term_id );
+		
+		}
 		
 		/*
 		print_r( array( 
