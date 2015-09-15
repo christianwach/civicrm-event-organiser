@@ -787,9 +787,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return false;
 
-		// construct locations array
+		// construct events array
 		$params = array(
 			'version' => 3,
+			'is_template' => 0,
 			// define stupidly high limit, because API defaults to 25
 			'options' => array(
 				'limit' => '10000',
