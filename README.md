@@ -9,12 +9,12 @@ If you want *Event Organiser* Events to play nicely with *BuddyPress* Groups and
 
 This plugin requires at least *WordPress 3.6*, *BuddyPress 1.8* and *CiviCRM 4.4.n*.
 
-It requires 
+It requires
 
-* the master branch of the [CiviCRM WordPress plugin](https://github.com/civicrm/civicrm-wordpress) 
-* the custom WordPress.php hook file from the [CiviCRM Hook Tester repo on GitHub](https://github.com/christianwach/civicrm-wp-hook-tester) installed so that it overrides the built-in *CiviCRM* hook file. 
+* the master branch of the [CiviCRM WordPress plugin](https://github.com/civicrm/civicrm-wordpress)
+* the custom WordPress.php hook file from the [CiviCRM Hook Tester repo on GitHub](https://github.com/christianwach/civicrm-wp-hook-tester) installed so that it overrides the built-in *CiviCRM* hook file.
 
-It also requires 
+It also requires
 
 * [Event Organiser](http://wordpress.org/plugins/event-organiser/) version 2.0.2 or greater
 * [WooDojo](http://www.woothemes.com/woodojo/) HTML Category Descriptions so that HTML descriptions sync

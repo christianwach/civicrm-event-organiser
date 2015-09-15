@@ -33,7 +33,7 @@ It also requires
 
 == Installation ==
 
-1. Extract the plugin archive 
+1. Extract the plugin archive
 1. Upload plugin files to your `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress
 
