@@ -178,9 +178,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		<div class="wrap" id="civi_eo_admin_wrapper">
 
-		<div class="icon32" id="icon-options-general"><br/></div>
-
-		<h2>'.__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ).'</h2>
+		<h1>'.__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ).'</h1>
 
 		<form method="post" action="'.htmlentities($url.'&updated=true').'">
 
