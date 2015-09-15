@@ -1574,20 +1574,21 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * Get an option
 	 * 
 	 * @param string $key The option name
+	 * @param mixed $default The default option value if none exists
 	 * @return mixed $value
 	 */
-	public function option_get( $key ) {
+	public function option_get( $key, $default = null ) {
 		
 		// if multisite and network activated
 		if ( $this->is_network_activated() ) {
 			
 			// get site option
-			$value = get_site_option( $key, $value );
+			$value = get_site_option( $key, $default );
 			
 		} else {
 			
 			// get option
-			$value = get_option( $key, $value );
+			$value = get_option( $key, $default );
 			
 		}
 		
