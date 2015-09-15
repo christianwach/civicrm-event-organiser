@@ -48,6 +48,9 @@ class CiviCRM_WP_Event_Organiser {
 	 * Properties
 	 */
 
+	// Taxonomy class
+	public $taxonomy;
+
 	// Admin/DB class
 	public $db;
 
@@ -89,6 +92,12 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public function initialise() {
 
+		// load our Taxonomy class
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm-event-organiser-taxonomy.php' );
+
+		// initialise
+		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy;
+
 		// load our Admin/DB class
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm-event-organiser-admin.php' );
 
@@ -114,6 +123,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue;
 
 		// store references
+		$this->taxonomy->set_references( $this );
 		$this->db->set_references( $this );
 		$this->civi->set_references( $this );
 		$this->eo->set_references( $this );
@@ -180,16 +190,11 @@ class CiviCRM_WP_Event_Organiser {
 
 
 
-
-
-
 // declare as global
 global $civicrm_wp_event_organiser;
 
 // init plugin
 $civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
-
-
 
 
 

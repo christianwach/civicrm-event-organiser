@@ -340,9 +340,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_event( $civi_event ) {
 
 		/*
-		print_r( array(
+		error_log( print_r( array(
+			'class' => __CLASS__,
+			'method' => __METHOD__,
 			'civi_event' => $civi_event,
-		) );
+		), true ) );
 		*/
 
 		// define schedule
