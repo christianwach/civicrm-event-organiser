@@ -1302,7 +1302,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 				// in this context, a CiviEvent can only have an EO event with a
 				// single occurrence associated with it, so use first item
-				$occurrence_id = array_pop( array_keys( $occurrences ) );
+				$keys = array_keys( $occurrences );
+				$occurrence_id = array_pop( $keys );
 
 				// store correspondences
 				$this->store_event_correspondences( $event_id, array( $occurrence_id => $civi_event['id'] ) );

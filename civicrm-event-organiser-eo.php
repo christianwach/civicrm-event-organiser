@@ -375,7 +375,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'post_title' => $civi_event['title'],
 			'post_content' => $civi_event['description'],
 			'post_excerpt' => $civi_event['summary'],
-			'post_date' => $civi_event['created_date'],
 
 			// quick fixes for Windows which need to be present
 			'to_ping' => '',
@@ -383,6 +382,14 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'post_content_filtered' => '',
 
 		);
+
+		// test for created date, which may be absent
+		if ( isset( $civi_event['created_date'] ) AND ! empty( $civi_event['created_date'] ) ) {
+
+			// add it
+			$post_data['post_date'] = $civi_event['created_date'];
+
+		}
 
 		// assume the CiviEvent is live
 		$post_data['post_status'] = 'publish';
