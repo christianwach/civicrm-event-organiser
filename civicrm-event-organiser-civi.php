@@ -1931,23 +1931,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// get the item
 		$type = civicrm_api( 'option_value', 'getsingle', $types_params );
 
-		// error check
-		if ( $type['is_error'] == '1' ) {
+		// bail if we get an error
+		if ( isset( $type['is_error'] ) AND $type['is_error'] == '1' ) return false;
 
-			// --<
-			return false;
-
-			/*
-			trigger_error( print_r( array(
-				'method' => 'get_event_type_id',
-				'params' => $types_params,
-				'type' => $type,
-			), true ), E_USER_ERROR ); die();
-			*/
-
-		}
-
-		// sanity check
+		// sanity check ID and return if valid
 		if ( isset( $type['id'] ) AND is_numeric( $type['id'] ) AND $type['id'] > 0 ) return $type['id'];
 
 		// if all the above fails
