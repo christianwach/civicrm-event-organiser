@@ -2073,7 +2073,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$options = array();
 
 			// get existing type value
-			$existing_value = $this->get_default_event_type_value( $post );
+			$existing_value = $this->get_default_event_type_value();
 
 			// loop
 			foreach( $types AS $key => $type ) {
