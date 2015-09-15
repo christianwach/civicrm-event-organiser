@@ -198,3 +198,38 @@ $civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
 
 
 
+/**
+ * Utility to add link to settings page
+ *
+ * @param array $links The existing links array
+ * @param str $file The name of the plugin file
+ * @return array $links The modified links array
+ */
+function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
+
+	// add settings link
+	if ( $file == plugin_basename( dirname( __FILE__ ) . '/civicrm-event-organiser.php' ) ) {
+
+		// is this Network Admin?
+		if ( is_network_admin() ) {
+			$link = add_query_arg( array( 'page' => 'civi_eo_admin_page' ), network_admin_url( 'settings.php' ) );
+		} else {
+			$link = add_query_arg( array( 'page' => 'civi_eo_admin_page' ), admin_url( 'options-general.php' ) );
+		}
+
+		// add settings link
+		$links[] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'Settings', 'civicrm-event-organiser' ) . '</a>';
+
+	}
+
+	// --<
+	return $links;
+
+}
+
+// add filters for the above
+add_filter( 'network_admin_plugin_action_links', 'civicrm_wp_event_organiser_plugin_action_links', 10, 2 );
+add_filter( 'plugin_action_links', 'civicrm_wp_event_organiser_plugin_action_links', 10, 2 );
+
+
+
