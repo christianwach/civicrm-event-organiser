@@ -328,9 +328,15 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			//'state' => $location['address']['county'], // can't do county yet
 			'postcode' => $location['address']['postal_code'],
 			//'country' => $location['address']['country'], // can't do country yet
-			'latitude' => $location['address']['geo_code_1'],
-			'longtitude' => $location['address']['geo_code_2'],
 		);
+
+		// add geocodes if present
+		if ( isset( $location['address']['geo_code_1'] ) AND ! empty( $location['address']['geo_code_1'] ) ) {
+			$args['latitude'] = $location['address']['geo_code_1'];
+		}
+		if ( isset( $location['address']['geo_code_2'] ) AND ! empty( $location['address']['geo_code_2'] ) ) {
+			$args['longtitude'] = $location['address']['geo_code_2'];
+		}
 
 		// remove actions to prevent recursion
 		remove_action( 'eventorganiser_insert_venue', array( $this, 'insert_venue' ), 10 );
