@@ -57,7 +57,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function register_hooks() {
 
-		// allow plugins to register php and template directories
+		// allow plugin to register php and template directories
 		//add_action( 'civicrm_config', array( $this, 'register_directories' ), 10, 1 );
 
 		// intercept event type enable/disable
@@ -95,17 +95,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function register_directories( &$config ) {
 
-		/*
-		print_r( array(
-			'config' => $config
-		) ); die();
-		*/
-
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return;
 
 		// define our custom path
-		$custom_path = BP_GROUPS_CIVICRM_SYNC_PATH . 'civicrm_custom_templates';
+		$custom_path = CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm_custom_templates';
 
 		// get template instance
 		$template = CRM_Core_Smarty::singleton();
