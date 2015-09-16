@@ -323,12 +323,24 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// construct args
 		$args = array(
 			//'description' => $location['description'], // can't do description yet
-			'address' => $location['address']['street_address'],
-			'city' => $location['address']['city'],
 			//'state' => $location['address']['county'], // can't do county yet
-			'postcode' => $location['address']['postal_code'],
 			//'country' => $location['address']['country'], // can't do country yet
 		);
+
+		// add street address if present
+		if ( isset( $location['address']['street_address'] ) AND ! empty( $location['address']['street_address'] ) ) {
+			$args['address'] = $location['address']['street_address'];
+		}
+
+		// add city if present
+		if ( isset( $location['address']['city'] ) AND ! empty( $location['address']['city'] ) ) {
+			$args['city'] = $location['address']['city'];
+		}
+
+		// add postcode if present
+		if ( isset( $location['address']['postal_code'] ) AND ! empty( $location['address']['postal_code'] ) ) {
+			$args['postcode'] = $location['address']['postal_code'];
+		}
 
 		// add geocodes if present
 		if ( isset( $location['address']['geo_code_1'] ) AND ! empty( $location['address']['geo_code_1'] ) ) {
