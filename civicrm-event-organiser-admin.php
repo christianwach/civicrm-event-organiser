@@ -132,13 +132,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// add admin css
 		wp_enqueue_style(
-
 			'civi_eo_admin_style',
 			CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/css/admin.css',
 			null,
 			CIVICRM_WP_EVENT_ORGANISER_VERSION,
 			'all' // media
-
 		);
 
 	}
@@ -192,8 +190,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		<hr>';
 
-
-
 		// show table
 		echo '
 		<h3>' . __( 'General Settings', 'civicrm-event-organiser' ) . '</h3>
@@ -234,8 +230,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		<hr>';
 
-
-
 		// show blurb
 		echo '
 		<h3>' . __( 'Synchronisation', 'civicrm-event-organiser' ) . '</h3>
@@ -253,8 +247,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		<p>' . __( 'Your set up may require some direct manipulation of the data, but the following options should help get things moving.', 'civicrm-event-organiser' ) . '</p>
 
 		<hr>';
-
-
 
 		// show table
 		echo '
@@ -279,8 +271,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		<hr>';
 
-
-
 		// show table
 		echo '
 		<h3>' . __( 'Venue Synchronisation', 'civicrm-event-organiser' ) . '</h3>
@@ -301,8 +291,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		<hr>';
 
-
-
 		// show table
 		echo '
 		<h3>' . __( 'Event Synchronisation', 'civicrm-event-organiser' ) . '</h3>
@@ -322,8 +310,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		</table>
 
 		<hr>';
-
-
 
 		// close div
 		echo '
@@ -346,8 +332,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		</div>
 		' . "\n\n\n\n";
-
-
 
 	}
 
@@ -750,10 +734,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// construct args for all event posts
 		$args = array(
-
 			'post_type' => 'event',
 			'numberposts' => -1,
-
 		);
 
 		// get all event posts
@@ -1244,10 +1226,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// construct args for all event posts
 		$args = array(
-
 			'post_type' => 'event',
 			'numberposts' => -1,
-
 		);
 
 		// get all event posts
@@ -1692,9 +1672,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 } // class ends
-
-
-
 
 
 

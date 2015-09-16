@@ -548,8 +548,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// if we get one, return it
 		if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
 
-
-
 		// ---------------------------------------------------------------------
 		// next, see if we have an identical location
 		// ---------------------------------------------------------------------
@@ -592,8 +590,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		}
 
-
-
 		// ---------------------------------------------------------------------
 		// lastly, see if we have an identical street address
 		// ---------------------------------------------------------------------
@@ -623,8 +619,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
 
 		}
-
-
 
 		// --<
 		return false;
@@ -733,8 +727,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			$terms = array( $terms );
 		}
 
-		if( empty( $terms ) )
-			   return $terms;
+		if( empty( $terms ) ) return $terms;
 
 		// check if its array of terms or term IDs
 		$first_element = reset( $terms );
@@ -962,9 +955,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 
 } // class ends
-
-
-
 
 
 

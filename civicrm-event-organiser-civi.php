@@ -141,8 +141,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$civi_event['is_active'] = 1;
 		$civi_event['participant_listing_id'] = NULL;
 
-
-
 		// get venue for this event
 		$venue_id = eo_get_venue( $post->ID );
 
@@ -160,8 +158,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-
-
 		// online registration off by default
 		$civi_event['is_online_registration'] = 0;
 
@@ -175,8 +171,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$civi_event['is_online_registration'] = 1;
 
 		}
-
-
 
 		// participant_role default
 		$civi_event['default_role_id'] = 0;
@@ -192,8 +186,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-
-
 		// get event type pseudo-ID (or value), because it is required in CiviCRM
 		$type_value = $this->get_default_event_type_value( $post );
 
@@ -207,8 +199,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// assign event type value
 		$civi_event['event_type_id'] = $type_value;
-
-
 
 		// --<
 		return $civi_event;
@@ -239,12 +229,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// init correspondences
 		$correspondences = array();
 
-
-
 		// prepare CiviEvent
 		$civi_event = $this->prepare_civi_event( $post );
-
-
 
 		// now loop through dates and create CiviEvents per date
 		foreach ( $dates AS $date ) {
@@ -277,12 +263,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		} // end dates loop
 
-
-
 		// store these in post meta
 		$this->plugin->db->store_event_correspondences( $post->ID, $correspondences );
-
-
 
 		// --<
 		return $correspondences;
@@ -306,8 +288,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// just for safety, check we get some (though we must)
 		if ( count( $dates ) === 0 ) return false;
 
-
-
 		// get existing CiviEvents from post meta
 		$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post->ID );
 
@@ -329,8 +309,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			return $correspondences;
 
 		}
-
-
 
 		/*
 		------------------------------------------------------------------------
@@ -385,8 +363,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// prepare CiviEvent
 		$civi_event = $this->prepare_civi_event( $post );
 
-
-
 		/*
 		// trace
 		print_r( array(
@@ -397,8 +373,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			//'civi_events' => $civi_events,
 		) ); die();
 		*/
-
-
 
 		/*
 		------------------------------------------------------------------------
@@ -454,8 +428,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-
-
 		/*
 		------------------------------------------------------------------------
 		When arrays are NOT equal in length, we MUST have correspondences
@@ -472,8 +444,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$civi_events[] = $this->get_event_by_id( $civi_event_id );
 
 		}
-
-
 
 		// init orphaned CiviEvent data
 		$orphaned_civi_events = array();
@@ -504,8 +474,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		) ); die();
 		*/
 
-
-
 		// get matches between EO events and CiviEvents
 		$matches = $this->get_event_matches( $dates, $civi_events, $orphaned_civi_events );
 
@@ -523,8 +491,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'orphans' => $orphans,
 		) ); die();
 		*/
-
-
 
 		// extract matched array
 		$matched = $matches['matched'];
@@ -555,8 +521,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			}
 
 		} // end check for empty array
-
-
 
 		// extract unmatched EO events array
 		$unmatched_eo = $matches['unmatched_eo'];
@@ -591,8 +555,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			}
 
 		} // end check for empty array
-
-
 
 		// extract unmatched CiviEvents array
 		$unmatched_civi = $matches['unmatched_civi'];
@@ -639,8 +601,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			}
 
 		} // end check for empty array
-
-
 
 		// store new correspondences and orphans
 		$this->plugin->db->store_event_correspondences( $post->ID, $new_correspondences, $orphans );
@@ -1296,10 +1256,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// define create array
 		$params = array(
-
-			// API version
 			'version' => 3,
-
 		);
 
 		// first, see if the loc_block email, phone and address already exist
@@ -2478,9 +2435,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 } // class ends
-
-
-
 
 
 

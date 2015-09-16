@@ -185,16 +185,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// save custom EO event components
 		$this->_save_event_components( $post_id );
 
-
-
 		// sync checkbox is only shown to people who can publish posts
 		if ( ! current_user_can( 'publish_posts' ) ) return;
 
 		// is our checkbox checked?
 		if ( ! isset( $_POST['civi_eo_event_sync'] ) ) return;
 		if ( $_POST['civi_eo_event_sync'] != 1 ) return;
-
-
 
 		// get all dates
 		$dates = $this->get_all_dates( $post_id );
@@ -1431,9 +1427,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 
 } // class ends
-
-
-
 
 
 
