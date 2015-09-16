@@ -660,12 +660,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		echo '
 		<p>
 		<label for="civi_eo_venue_email">Email contact:</label>
-		<input type="text" id="civi_eo_venue_email" name="civi_eo_venue_email" value="'.esc_attr( $email ).'" />
+		<input type="text" id="civi_eo_venue_email" name="civi_eo_venue_email" value="' . esc_attr( $email ) . '" />
 		</p>
 
 		<p>
 		<label for="civi_eo_venue_phone">Phone contact:</label>
-		<input type="text" id="civi_eo_venue_phone" name="civi_eo_venue_phone" value="'.esc_attr( $phone ).'" />
+		<input type="text" id="civi_eo_venue_phone" name="civi_eo_venue_phone" value="' . esc_attr( $phone ) . '" />
 		</p>
 		';
 

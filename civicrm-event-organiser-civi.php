@@ -1523,7 +1523,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				}
 
 				// construct option
-				$options[] = '<option value="'.$role_id.'"'.$selected.'>'.esc_html( $role['label'] ).'</option>';
+				$options[] = '<option value="' . $role_id . '"' . $selected . '>' . esc_html( $role['label'] ) . '</option>';
 
 			}
 

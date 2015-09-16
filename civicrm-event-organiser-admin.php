@@ -117,7 +117,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// add styles only on our admin page, see:
 		// http://codex.wordpress.org/Function_Reference/wp_enqueue_script#Load_scripts_only_on_plugin_pages
-		//add_action( 'admin_print_styles-'.$page, array( $this, 'add_admin_styles' ) );
+		//add_action( 'admin_print_styles-' . $page, array( $this, 'add_admin_styles' ) );
 
 	}
 
@@ -178,12 +178,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		<div class="wrap" id="civi_eo_admin_wrapper">
 
-		<h1>'.__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ).'</h1>
+		<h1>' . __( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ) . '</h1>
 
-		<form method="post" action="'.htmlentities($url.'&updated=true').'">
+		<form method="post" action="' . htmlentities( $url . '&updated=true' ) . '">
 
-		'.wp_nonce_field( 'civi_eo_admin_action', 'civi_eo_nonce', true, false ).'
-		'.wp_referer_field( false ).'
+		' . wp_nonce_field( 'civi_eo_admin_action', 'civi_eo_nonce', true, false ) . '
+		' . wp_referer_field( false ) . '
 
 		';
 
@@ -196,9 +196,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// show table
 		echo '
-		<h3>'.__( 'General Settings', 'civicrm-event-organiser' ).'</h3>
+		<h3>' . __( 'General Settings', 'civicrm-event-organiser' ) . '</h3>
 
-		<p>'.__( 'The following options configure some CiviCRM and Event Organiser defaults.', 'civicrm-event-organiser' ).'</p>
+		<p>' . __( 'The following options configure some CiviCRM and Event Organiser defaults.', 'civicrm-event-organiser' ) . '</p>
 
 		<table class="form-table">
 
@@ -209,8 +209,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			echo '
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_default_role">'.__( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ).'</label></th>
-				<td><select id="civi_eo_event_default_role" name="civi_eo_event_default_role">'.$roles.'</select></td>
+				<th scope="row"><label for="civi_eo_event_default_role">' . __( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ) . '</label></th>
+				<td><select id="civi_eo_event_default_role" name="civi_eo_event_default_role">' . $roles . '</select></td>
 			</tr>
 			';
 
@@ -221,8 +221,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			echo '
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_default_type">'.__( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ).'</label></th>
-				<td><select id="civi_eo_event_default_type" name="civi_eo_event_default_type">'.$types.'</select></td>
+				<th scope="row"><label for="civi_eo_event_default_type">' . __( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ) . '</label></th>
+				<td><select id="civi_eo_event_default_type" name="civi_eo_event_default_type">' . $types . '</select></td>
 			</tr>
 			';
 
@@ -238,7 +238,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// show blurb
 		echo '
-		<h3>'.__( 'Synchronisation', 'civicrm-event-organiser' ).'</h3>
+		<h3>' . __( 'Synchronisation', 'civicrm-event-organiser' ) . '</h3>
 
 		<p>' . __( 'Things can be a little complicated on initial setup because there can be data in WordPress or CiviCRM or both.', 'civicrm-event-organiser' ) . '</p>
 
@@ -258,20 +258,20 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// show table
 		echo '
-		<h3>'.__( 'Event Type Synchronisation', 'civicrm-event-organiser' ).'</h3>
+		<h3>' . __( 'Event Type Synchronisation', 'civicrm-event-organiser' ) . '</h3>
 
-		<p>'.__( 'At present, there is no CiviCRM hook that fires when a CiviEvent event type is deleted.', 'civicrm-event-organiser' ).'<br />
-		<strong>'.__( 'Event types should always be deleted from the Event Category screen.', 'civicrm-event-organiser' ).'</strong></p>
+		<p>' . __( 'At present, there is no CiviCRM hook that fires when a CiviEvent event type is deleted.', 'civicrm-event-organiser' ) . '<br />
+		<strong>' . __( 'Event types should always be deleted from the Event Category screen.', 'civicrm-event-organiser' ) . '</strong></p>
 
 		<table class="form-table">
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_tax_eo_to_civi">'.__( 'Synchronise Event Organiser Categories to CiviCRM Event Types', 'civicrm-event-organiser' ).'</label></th>
+				<th scope="row"><label for="civi_eo_tax_eo_to_civi">' . __( 'Synchronise Event Organiser Categories to CiviCRM Event Types', 'civicrm-event-organiser' ) . '</label></th>
 				<td><input id="civi_eo_tax_eo_to_civi" name="civi_eo_tax_eo_to_civi" value="1" type="checkbox" /></td>
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_tax_civi_to_eo">'.__( 'Synchronise CiviCRM Event Types to Event Organiser Categories', 'civicrm-event-organiser' ).'</label></th>
+				<th scope="row"><label for="civi_eo_tax_civi_to_eo">' . __( 'Synchronise CiviCRM Event Types to Event Organiser Categories', 'civicrm-event-organiser' ) . '</label></th>
 				<td><input id="civi_eo_tax_civi_to_eo" name="civi_eo_tax_civi_to_eo" value="1" type="checkbox" /></td>
 			</tr>
 
@@ -283,17 +283,17 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// show table
 		echo '
-		<h3>'.__( 'Venue Synchronisation', 'civicrm-event-organiser' ).'</h3>
+		<h3>' . __( 'Venue Synchronisation', 'civicrm-event-organiser' ) . '</h3>
 
 		<table class="form-table">
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_eo_to_civi">'.__( 'Synchronise Event Organiser Venues to CiviEvent Locations', 'civicrm-event-organiser' ).'</label></th>
+				<th scope="row"><label for="civi_eo_eo_to_civi">' . __( 'Synchronise Event Organiser Venues to CiviEvent Locations', 'civicrm-event-organiser' ) . '</label></th>
 				<td><input id="civi_eo_eo_to_civi" name="civi_eo_eo_to_civi" value="1" type="checkbox" /></td>
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_civi_to_eo">'.__( 'Synchronise CiviEvent Locations to Event Organiser Venues', 'civicrm-event-organiser' ).'</label></th>
+				<th scope="row"><label for="civi_eo_civi_to_eo">' . __( 'Synchronise CiviEvent Locations to Event Organiser Venues', 'civicrm-event-organiser' ) . '</label></th>
 				<td><input id="civi_eo_civi_to_eo" name="civi_eo_civi_to_eo" value="1" type="checkbox" /></td>
 			</tr>
 
@@ -305,17 +305,17 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// show table
 		echo '
-		<h3>'.__( 'Event Synchronisation', 'civicrm-event-organiser' ).'</h3>
+		<h3>' . __( 'Event Synchronisation', 'civicrm-event-organiser' ) . '</h3>
 
 		<table class="form-table">
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_eo_to_civi">'.__( 'Synchronise Event Organiser Events to CiviEvents', 'civicrm-event-organiser' ).'</label></th>
+				<th scope="row"><label for="civi_eo_event_eo_to_civi">' . __( 'Synchronise Event Organiser Events to CiviEvents', 'civicrm-event-organiser' ) . '</label></th>
 				<td><input id="civi_eo_event_eo_to_civi" name="civi_eo_event_eo_to_civi" value="1" type="checkbox" /></td>
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_civi_to_eo">'.__( 'Synchronise CiviEvents to Event Organiser Events', 'civicrm-event-organiser' ).'</label></th>
+				<th scope="row"><label for="civi_eo_event_civi_to_eo">' . __( 'Synchronise CiviEvents to Event Organiser Events', 'civicrm-event-organiser' ) . '</label></th>
 				<td><input id="civi_eo_event_civi_to_eo" name="civi_eo_event_civi_to_eo" value="1" type="checkbox" /></td>
 			</tr>
 
@@ -334,7 +334,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		echo '
 
 		<p class="submit">
-			<input type="submit" name="civi_eo_submit" value="'.__( 'Submit', 'civicrm-event-organiser' ).'" class="button-primary" />
+			<input type="submit" name="civi_eo_submit" value="' . __( 'Submit', 'civicrm-event-organiser' ) . '" class="button-primary" />
 		</p>
 
 		';
@@ -345,7 +345,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		</form>
 
 		</div>
-		'."\n\n\n\n";
+		' . "\n\n\n\n";
 
 
 

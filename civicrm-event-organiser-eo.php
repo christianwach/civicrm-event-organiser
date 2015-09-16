@@ -712,7 +712,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		<p>
 		<label for="civi_eo_event_reg">Online Registration:</label>
-		<input type="checkbox" id="civi_eo_event_reg" name="civi_eo_event_reg" value="1"'.$reg_checked.' />
+		<input type="checkbox" id="civi_eo_event_reg" name="civi_eo_event_reg" value="1"' . $reg_checked . ' />
 		</p>
 
 		<p class="civi_eo_event_desc">The role you select here is automatically assigned to people when they register online for this event (usually the default <em>Attendee</em> role).</p>
@@ -720,7 +720,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		<p>
 		<label for="civi_eo_event_role">Participant Role:</label>
 		<select id="civi_eo_event_role" name="civi_eo_event_role">
-			'.$roles.'
+			' . $roles . '
 		</select>
 		</p>
 
