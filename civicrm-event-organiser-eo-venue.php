@@ -374,7 +374,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// create venue meta data
 
 		// do we have an email for the location?
-		if ( isset( $location['email']['email'] ) ) {
+		if ( isset( $location['email']['email'] ) AND ! empty( $location['email']['email'] ) ) {
 
 			// yes, get it
 			$email = $location['email']['email'];
@@ -385,7 +385,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		// do we have a phone number for the location?
-		if ( isset( $location['phone']['phone'] ) ) {
+		if ( isset( $location['phone']['phone'] ) AND ! empty( $location['phone']['phone'] ) ) {
 
 			// store phone in meta
 			eo_update_venue_meta( $result['term_id'],  '_civi_phone', esc_sql( $location['phone']['phone'] ) );
