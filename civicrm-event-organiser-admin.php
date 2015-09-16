@@ -77,10 +77,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function add_admin_menu() {
 
 		// we must be network admin in multisite
-		if ( is_multisite() AND !is_super_admin() ) { return false; }
+		if ( is_multisite() AND ! is_super_admin() ) { return false; }
 
 		// check user permissions
-		if ( !current_user_can( 'manage_options' ) ) { return false; }
+		if ( ! current_user_can( 'manage_options' ) ) { return false; }
 
 		// try and update options
 		$saved = $this->update_options();
@@ -724,7 +724,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		static $eo_event_data;
 
 		// have we done this?
-		if ( !isset( $eo_event_data ) ) {
+		if ( ! isset( $eo_event_data ) ) {
 
 			// get option
 			$eo_event_data = $this->option_get( 'civi_eo_civi_event_data', array() );

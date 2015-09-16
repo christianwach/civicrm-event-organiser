@@ -55,7 +55,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function register_hooks() {
 
 		// check for Event Organiser
-		if ( !$this->is_active() ) return;
+		if ( ! $this->is_active() ) return;
 
 		// intercept create venue
 		add_action( 'eventorganiser_insert_venue', array( $this, 'insert_venue' ), 10, 1 );
@@ -131,7 +131,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function insert_venue( $venue_id ) {
 
 		// check permissions
-		if ( !$this->allow_venue_edit() ) return;
+		if ( ! $this->allow_venue_edit() ) return;
 
 		// check nonce
 		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
@@ -161,7 +161,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function save_venue( $venue_id ) {
 
 		// check permissions
-		if ( !$this->allow_venue_edit() ) return;
+		if ( ! $this->allow_venue_edit() ) return;
 
 		// check nonce
 		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
@@ -194,9 +194,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function delete_venue_term( $term, $tt_id, $taxonomy, $deleted_term ) {
 
 		// sanity checks
-		if ( !is_object( $deleted_term ) ) return;
-		if ( is_array( $taxonomy ) && !in_array( 'event-venue', $taxonomy ) ) return;
-		if ( !is_array( $taxonomy ) && $taxonomy != 'event-venue' ) return;
+		if ( ! is_object( $deleted_term ) ) return;
+		if ( is_array( $taxonomy ) && ! in_array( 'event-venue', $taxonomy ) ) return;
+		if ( ! is_array( $taxonomy ) && $taxonomy != 'event-venue' ) return;
 
 		// delete anything associated with this venue
 		$this->delete_venue_meta( $deleted_term );
@@ -216,7 +216,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function delete_venue( $term, $tt_id, $deleted_term ) {
 
 		// sanity check
-		if ( !is_object( $deleted_term ) ) return;
+		if ( ! is_object( $deleted_term ) ) return;
 
 		// delete anything associated with this venue
 		$this->delete_venue_meta( $deleted_term );
@@ -238,7 +238,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		if ( isset( $term_deleted ) AND $term_deleted === $deleted_term->term_id ) return;
 
 		// sanity check
-		if ( !is_object( $deleted_term ) ) return;
+		if ( ! is_object( $deleted_term ) ) return;
 
 		// get venue ID
 		$venue_id = $deleted_term->term_id;
@@ -286,7 +286,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function deleted_venue( $venue_id ) {
 
 		// check permissions
-		if ( !$this->allow_venue_edit() ) return;
+		if ( ! $this->allow_venue_edit() ) return;
 
 		// delete components
 		$this->_delete_venue_components( $venue_id );
@@ -313,10 +313,10 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function create_venue( $location ) {
 
 		// check permissions
-		if ( !$this->allow_venue_edit() ) return false;
+		if ( ! $this->allow_venue_edit() ) return false;
 
 		// construct name
-		$name = !empty( $location['address']['street_address'] ) ?
+		$name = ! empty( $location['address']['street_address'] ) ?
 				$location['address']['street_address'] :
 				'Untitled venue';
 
@@ -534,7 +534,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		*/
 
 		// if we get one, return it
-		if ( isset( $venue_id ) AND !is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
+		if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
 
 
 
@@ -576,7 +576,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			*/
 
 			// if we get one, return it
-			if ( isset( $venue_id ) AND !is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
+			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
 
 		}
 
@@ -608,7 +608,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			*/
 
 			// if we get one, return it
-			if ( isset( $venue_id ) AND !is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
+			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
 
 		}
 
@@ -708,10 +708,10 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 */
 	function update_venue_meta_cache( $terms, $tax ) {
 
-		if ( is_array( $tax ) && !in_array( 'event-venue', $tax ) ) {
+		if ( is_array( $tax ) && ! in_array( 'event-venue', $tax ) ) {
 			return $terms;
 		}
-		if ( !is_array( $tax ) && $tax != 'event-venue' ) {
+		if ( ! is_array( $tax ) && $tax != 'event-venue' ) {
 			return $terms;
 		}
 
@@ -738,20 +738,20 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		foreach( $terms AS $term ) {
 
 			// skip if not useful
-			if( !is_object( $term ) ) continue;
+			if( ! is_object( $term ) ) continue;
 
 			// get id
 			$term_id = (int) $term->term_id;
 
-			if( !isset( $term->venue_civi_email ) ) {
+			if( ! isset( $term->venue_civi_email ) ) {
 				$term->venue_civi_email = eo_get_venue_meta( $term_id, '_civi_email', true );
 			}
 
-			if( !isset( $term->venue_civi_phone ) ) {
+			if( ! isset( $term->venue_civi_phone ) ) {
 				$term->venue_civi_phone = eo_get_venue_meta( $term_id, '_civi_phone', true );
 			}
 
-			if( !isset( $term->venue_civi_id ) ) {
+			if( ! isset( $term->venue_civi_id ) ) {
 				$term->venue_civi_id = eo_get_venue_meta( $term_id, '_civi_loc_id', true );
 			}
 
@@ -904,7 +904,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$value = sanitize_email( $venue_email );
 
 		// validate as email address
-		if ( !is_email( $value ) ) return;
+		if ( ! is_email( $value ) ) return;
 
 		// update venue meta
 		eo_update_venue_meta( $venue_id,  '_civi_email', esc_sql( $value ) );

@@ -58,7 +58,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function register_hooks() {
 
 		// check for Event Organiser
-		if ( !$this->is_active() ) return;
+		if ( ! $this->is_active() ) return;
 
 		// intercept insert post
 		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
@@ -188,10 +188,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 
 		// sync checkbox is only shown to people who can publish posts
-		if ( !current_user_can( 'publish_posts' ) ) return;
+		if ( ! current_user_can( 'publish_posts' ) ) return;
 
 		// is our checkbox checked?
-		if ( !isset( $_POST['civi_eo_event_sync'] ) ) return;
+		if ( ! isset( $_POST['civi_eo_event_sync'] ) ) return;
 		if ( $_POST['civi_eo_event_sync'] != 1 ) return;
 
 
@@ -930,7 +930,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_event_role( $event_id ) {
 
 		// kick out if not set
-		if ( !isset( $_POST['civi_eo_event_role'] ) ) return;
+		if ( ! isset( $_POST['civi_eo_event_role'] ) ) return;
 
 		// retrieve meta value
 		$value = absint( $_POST['civi_eo_event_role'] );
@@ -1117,7 +1117,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// error check
 		if ( is_null( $term ) ) return;
 		if ( is_wp_error( $term ) ) return;
-		if ( !is_object( $term ) ) return;
+		if ( ! is_object( $term ) ) return;
 
 		// check taxonomy
 		if ( $term->taxonomy != 'event-category' ) return;
@@ -1226,7 +1226,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function create_term( $type ) {
 
 		// sanity check
-		if ( !is_array( $type ) ) return false;
+		if ( ! is_array( $type ) ) return false;
 
 		// define description if present
 		$description = isset( $type['description'] ) ? $type['description'] : '';
@@ -1265,10 +1265,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_term( $new_type, $old_type = null ) {
 
 		// sanity check
-		if ( !is_array( $new_type ) ) return false;
+		if ( ! is_array( $new_type ) ) return false;
 
 		// if we're updating a term
-		if ( !is_null( $old_type ) ) {
+		if ( ! is_null( $old_type ) ) {
 
 			// does this type have an existing term?
 			$term_id = $this->get_term_id( $old_type );
@@ -1331,7 +1331,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function get_term_id( $type ) {
 
 		// sanity check
-		if ( !is_array( $type ) ) return false;
+		if ( ! is_array( $type ) ) return false;
 
 		// init return
 		$term_id = false;

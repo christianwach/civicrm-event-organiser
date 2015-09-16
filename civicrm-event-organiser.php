@@ -19,16 +19,16 @@ define( 'CIVICRM_WP_EVENT_ORGANISER_DEBUG', false );
 define( 'CIVICRM_WP_EVENT_ORGANISER_VERSION', '0.2' );
 
 // store reference to this file
-if ( !defined( 'CIVICRM_WP_EVENT_ORGANISER_FILE' ) ) {
+if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_FILE' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_FILE', __FILE__ );
 }
 
 // store URL to this plugin's directory
-if ( !defined( 'CIVICRM_WP_EVENT_ORGANISER_URL' ) ) {
+if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_URL' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_URL', plugin_dir_url( CIVICRM_WP_EVENT_ORGANISER_FILE ) );
 }
 // store PATH to this plugin's directory
-if ( !defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
+if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_PATH', plugin_dir_path( CIVICRM_WP_EVENT_ORGANISER_FILE ) );
 }
 

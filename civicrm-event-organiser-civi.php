@@ -736,7 +736,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		foreach ( $dates AS $key => $date ) {
 
 			// if the matched array has no entry
-			if ( !isset( $matched[$date['occurrence_id']] ) ) {
+			if ( ! isset( $matched[$date['occurrence_id']] ) ) {
 
 				// add to unmatched
 				$unmatched_eo[] = $date;
@@ -752,7 +752,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		foreach( $civi_events AS $civi_event ) {
 
 			// does the matched array have an entry?
-			if ( !in_array( $civi_event['id'], $matched ) ) {
+			if ( ! in_array( $civi_event['id'], $matched ) ) {
 
 				// add to unmatched
 				$unmatched_civi[] = $civi_event['id'];
@@ -974,7 +974,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		) {
 
 			// is there a record on the EO side?
-			if ( !isset( $venue->venue_civi_id ) ) {
+			if ( ! isset( $venue->venue_civi_id ) ) {
 
 				// use the result and fake the property
 				$venue->venue_civi_id = $location['id'];
@@ -1564,7 +1564,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$default = '';
 
 		// sanity check
-		if ( !is_object( $post ) ) return $default;
+		if ( ! is_object( $post ) ) return $default;
 
 		// get CiviEvents for this EO event
 		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post->ID );
@@ -1787,7 +1787,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	public function update_event_type( $new_term, $old_term = null ) {
 
 		// sanity check
-		if ( !is_object( $new_term ) ) return false;
+		if ( ! is_object( $new_term ) ) return false;
 
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return false;
@@ -1815,7 +1815,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		}
 
 		// if we're updating a term
-		if ( !is_null( $old_term ) ) {
+		if ( ! is_null( $old_term ) ) {
 
 			// get existing event type ID
 			$type_id = $this->get_event_type_id( $old_term );
@@ -1870,7 +1870,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	public function delete_event_type( $term ) {
 
 		// sanity check
-		if ( !is_object( $term ) ) return false;
+		if ( ! is_object( $term ) ) return false;
 
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return false;
@@ -2241,7 +2241,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		static $optgroup_id;
 
 		// do we have it?
-		if ( !isset( $optgroup_id ) ) {
+		if ( ! isset( $optgroup_id ) ) {
 
 			// if we fail to init CiviCRM...
 			if ( ! $this->is_active() ) {
