@@ -1237,8 +1237,29 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'return' => 'all',
 		);
 
-		// call API
-		$location = civicrm_api( 'loc_block', 'get', $params );
+		// call API ('get' returns an array keyed by the item)
+		$result = civicrm_api( 'loc_block', 'get', $params );
+
+		// did we do okay?
+		if ( $result['is_error'] == '1' || $result['count'] != 1 ) {
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'params' => $params,
+				'result' => $result,
+			), true ) );
+
+		}
+
+		// get location from nested array
+		$location = array_pop( $result['values'] );
+
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'params' => $params,
+			'result' => $result,
+			'location' => $location,
+		), true ) );
 
 		// --<
 		return $location;
