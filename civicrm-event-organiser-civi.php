@@ -60,11 +60,210 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// allow plugin to register php and template directories
 		//add_action( 'civicrm_config', array( $this, 'register_directories' ), 10, 1 );
 
+		// intercept CiviEvent create/update/delete actions
+		add_action( 'civicrm_post', array( $this, 'event_created' ), 10, 4 );
+		add_action( 'civicrm_post', array( $this, 'event_updated' ), 10, 4 );
+		add_action( 'civicrm_post', array( $this, 'event_deleted' ), 10, 4 );
+
 		// intercept event type enable/disable
 		//add_action( 'civicrm_enableDisable', array( $this, 'event_type_toggle' ), 10, 3 );
 
 		// intercept event type form edits
 		add_action( 'civicrm_postProcess', array( $this, 'event_type_process_form' ), 10, 2 );
+
+	}
+
+
+
+	/**
+	 * Create an EO event when a CiviEvent is created
+	 *
+	 * @param string $op the type of database operation
+	 * @param string $objectName the type of object
+	 * @param integer $objectId the ID of the object
+	 * @param object $objectRef the object
+	 * @return void
+	 */
+	public function event_created( $op, $objectName, $objectId, $objectRef ) {
+
+		// target our operation
+		if ( $op != 'create' ) return;
+
+		// target our object type
+		if ( $objectName != 'Event' ) return;
+
+		// kick out if not event object
+		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
+
+		/*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'op' => $op,
+			'objectName' => $objectName,
+			'objectId' => $objectId,
+			'objectRef' => $objectRef,
+		), true ) );
+		*/
+
+		// update a single EO event - or create if it doesn't exist
+		$event_id = $this->plugin->eo->update_event( (array) $objectRef );
+
+		// kick out if not event object
+		if ( is_wp_error( $event_id ) ) {
+
+			// log error
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'error' => $event_id->get_error_message(),
+			), true ) );
+
+			// kick out
+			return;
+
+		}
+
+		// get occurrences
+		$occurrences = eo_get_the_occurrences_of( $event_id );
+
+		// in this context, a CiviEvent can only have an EO event with a
+		// single occurrence associated with it, so use first item
+		$keys = array_keys( $occurrences );
+		$occurrence_id = array_pop( $keys );
+
+		// store correspondences
+		$this->plugin->db->store_event_correspondences( $event_id, array( $occurrence_id => $objectRef->id ) );
+
+	}
+
+
+
+	/**
+	 * Update an EO event when a CiviEvent is updated
+	 *
+	 * @param string $op the type of database operation
+	 * @param string $objectName the type of object
+	 * @param integer $objectId the ID of the object
+	 * @param object $objectRef the object
+	 * @return void
+	 */
+	public function event_updated( $op, $objectName, $objectId, $objectRef ) {
+
+		// target our operation
+		if ( $op != 'edit' ) return;
+
+		// target our object type
+		if ( $objectName != 'Event' ) return;
+
+		// kick out if not event object
+		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
+
+		///*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'op' => $op,
+			'objectName' => $objectName,
+			'objectId' => $objectId,
+			'objectRef' => $objectRef,
+		), true ) );
+		//*/
+
+		// check for event_type_id, which is a mandatory field
+		if ( ! empty( $objectRef->id ) AND empty( $objectRef->event_type_id ) ) {
+
+			// this probably means that a Location has been added to the event
+			if ( ! empty( $objectRef->loc_block_id ) ) {
+
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'updated_event' => $updated_event,
+				), true ) );
+
+				// get full event data
+				$updated_event = $this->get_event_by_id( $objectRef->id );
+
+				// update the EO event
+				$event_id = $this->plugin->eo->update_event( $updated_event );
+
+			} else {
+
+				// what's going on ehre?
+				return;
+
+				trigger_error( print_r( array(
+					'method' => __METHOD__,
+					'op' => $op,
+					'objectName' => $objectName,
+					'objectId' => $objectId,
+					'objectRef' => $objectRef,
+				), true ), E_USER_ERROR ); die();
+
+			}
+
+		} else {
+
+			// update a single EO event - or create if it doesn't exist
+			$event_id = $this->plugin->eo->update_event( (array) $objectRef );
+
+		}
+
+		// kick out if not event object
+		if ( is_wp_error( $event_id ) ) {
+
+			// log error
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'error' => $event_id->get_error_message(),
+			), true ) );
+
+			// kick out
+			return;
+
+		}
+
+		// get occurrences
+		$occurrences = eo_get_the_occurrences_of( $event_id );
+
+		// in this context, a CiviEvent can only have an EO event with a
+		// single occurrence associated with it, so use first item
+		$keys = array_keys( $occurrences );
+		$occurrence_id = array_pop( $keys );
+
+		// store correspondences
+		$this->plugin->db->store_event_correspondences( $event_id, array( $occurrence_id => $objectRef->id ) );
+
+	}
+
+
+
+	/**
+	 * Delete an EO event when a CiviEvent is updated
+	 *
+	 * @param string $op the type of database operation
+	 * @param string $objectName the type of object
+	 * @param integer $objectId the ID of the object
+	 * @param object $objectRef the object
+	 * @return void
+	 */
+	public function event_deleted( $op, $objectName, $objectId, $objectRef ) {
+
+		// target our operation
+		if ( $op != 'delete' ) return;
+
+		// target our object type
+		if ( $objectName != 'Event' ) return;
+
+		// kick out if not event object
+		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
+
+		///*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'op' => $op,
+			'objectName' => $objectName,
+			'objectId' => $objectId,
+			'objectRef' => $objectRef,
+		), true ) );
+		//*/
 
 	}
 
