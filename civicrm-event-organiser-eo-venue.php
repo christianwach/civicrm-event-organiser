@@ -951,7 +951,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// use CiviCRM to validate?
 
 		// update venue meta
-		eo_update_venue_meta( $venue_id,  '_civi_phone', esc_sql( $value ) );
+		eo_update_venue_meta( $venue_id,  '_civi_phone', esc_sql( $venue_phone ) );
 
 	}
 
