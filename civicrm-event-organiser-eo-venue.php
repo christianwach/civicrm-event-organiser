@@ -396,11 +396,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		eo_update_venue_meta( $result['term_id'],  '_civi_loc_id', $location['id'] );
 
 		/*
-		print_r( array(
-			'action' => 'create_venue',
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'location' => $location,
+			'name' => $name,
+			'args' => $args,
 			'result' => $result,
-		) ); die();
+		), true ) );
 		*/
 
 		// --<
@@ -469,12 +471,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			$result = eo_update_venue( $venue_id, $args );
 
 			/*
-			print_r( array(
+			error_log( print_r( array(
+				'method' => __METHOD__,
 				'venue_id' => $venue_id,
 				'venue' => $venue,
 				'result' => $result,
 				'args' => $args
-			) ); //die();
+			), true ) );
 			*/
 
 			// add actions again
@@ -930,7 +933,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// use CiviCRM to validate?
 
 		// update venue meta
-		eo_update_venue_meta( $venue_id,  '_civi_phone', esc_sql( $value ) );
+		eo_update_venue_meta( $venue_id,  '_civi_phone', esc_sql( $venue_phone ) );
 
 	}
 

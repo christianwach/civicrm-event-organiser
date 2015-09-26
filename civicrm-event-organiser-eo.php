@@ -337,7 +337,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		/*
 		error_log( print_r( array(
-			'class' => __CLASS__,
 			'method' => __METHOD__,
 			'civi_event' => $civi_event,
 		), true ) );
@@ -463,9 +462,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		);
 
 		/*
-		print_r( array(
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'post_data' => $post_data,
-			'type' => $type,
+			'type' => isset( $type ) ? $type : 'NOT SET',
 		) ); die();
 		*/
 
