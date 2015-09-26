@@ -569,10 +569,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		if ( count( $eo_to_civi ) === 0 ) return;
 
 		/*
-		print_r( array(
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'eo_to_civi' => $eo_to_civi,
 			'civi_to_eo' => $this->get_all_civi_to_eo_correspondences(),
-		) );
+		), true ) );
 		*/
 
 		// init Civi correspondence array to be stored as option
@@ -608,10 +609,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			}
 
 			/*
-			print_r( array(
+			error_log( print_r( array(
+				'method' => __METHOD__,
 				'event_id' => $event_id,
 				'eo_correspondences' => $eo_correspondences,
-			) );
+			), true ) );
 			*/
 
 			// replace our post meta
@@ -620,9 +622,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		/*
-		print_r( array(
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'civi_correspondences' => $civi_correspondences,
-		) );
+		), true ) );
 		*/
 
 		// replace our option
@@ -1062,14 +1065,14 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		/*
-		print_r( array(
-			'method' => 'occurrence_orphaned',
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'post_id' => $post_id,
 			'occurrence_id' => $occurrence_id,
 			'civi_event_id' => $civi_event_id,
 			'existing_orphans' => $existing_orphans,
 			'correspondences' => $correspondences,
-		) ); die();
+		), true ) );
 		*/
 
 		// store updated correspondences and orphans
@@ -1161,10 +1164,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// construct args for all event posts
 		$args = array(
-
 			'post_type' => 'event',
 			'numberposts' => -1,
-
 		);
 
 		// get all event posts
@@ -1204,12 +1205,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		}
 
-		print_r( array(
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'all_events' => $all_events,
 			'all_eo_events' => $all_eo_events,
 			'all_civi_events' => $all_civi_events,
 			'delete' => $delete,
-		) );
+		), true ) );
 
 		die();
 
@@ -1242,7 +1244,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				// get dates for this event
 				$dates = $this->plugin->eo->get_all_dates( $event->ID );
 
-				//print_r( $dates ); die();
+				/*
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'dates' => $dates,
+				), true ) );
+				//die();
+				*/
 
 				// update CiviEvent - or create if it doesn't exist
 				$correspondences = $this->plugin->civi->update_civi_events( $event, $dates );
@@ -1328,10 +1336,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$eo_types = $this->plugin->eo->get_event_categories();
 
 		///*
-		print_r( array(
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'civi_types' => $civi_types,
 			'eo_types' => $eo_types,
-		) ); die();
+		), true ) );
+		die();
 		//*/
 
 	}
@@ -1369,9 +1379,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		/*
 		// did we get any links?
-		print_r( array(
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'sync_categories_to_event_types links' => $links,
-		) ); //die();
+		), true ) );
+		die();
 		*/
 
 	}
@@ -1415,9 +1427,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		/*
 		// did we get any links?
-		print_r( array(
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'sync_event_types_to_categories links' => $links,
-		) ); //die();
+		), true ) );
+		die();
 		*/
 
 	}
@@ -1460,11 +1474,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 		*/
 
-		print_r( array(
+		error_log( print_r( array(
+			'method' => __METHOD__,
 			'all_venues' => $all_venues,
 			'all_locations' => $all_locations,
-		) );
-
+		), true ) );
 		die();
 
 	}
