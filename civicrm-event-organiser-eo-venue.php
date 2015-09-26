@@ -322,9 +322,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// construct args
 		$args = array(
-			//'description' => $location['description'], // can't do description yet
-			//'state' => $location['address']['county'], // can't do county yet
-			//'country' => $location['address']['country'], // can't do country yet
+			//'description' => $location['description'], // CiviCRM has no location description at present
+			//'state' => $location['address']['county'], // CiviCRM county is an ID not a string
+			//'country' => $location['address']['country'], // CiviCRM country is an ID not a string
 		);
 
 		// add street address if present
@@ -454,15 +454,33 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			// construct args
 			$args = array(
 				'name' => $venue->name, // can't update name yet (locations don't have one)
-				//'description' => $location['description'], // can't do description yet
-				'address' => $location['address']['street_address'],
-				'city' => $location['address']['city'],
-				//'state' => $location['address']['county'], // can't do county yet
-				'postcode' => $location['address']['postal_code'],
-				//'country' => $location['address']['country'], // can't do country yet
-				'latitude' => $location['address']['geo_code_1'],
-				'longtitude' => $location['address']['geo_code_2'],
+				//'description' => $location['description'], // CiviCRM has no location description at present
+				//'state' => $location['address']['county'], // CiviCRM county is an ID not a string
+				//'country' => $location['address']['country'], // CiviCRM country is an ID not a string
 			);
+
+			// add street address if present
+			if ( isset( $location['address']['street_address'] ) AND ! empty( $location['address']['street_address'] ) ) {
+				$args['address'] = $location['address']['street_address'];
+			}
+
+			// add city if present
+			if ( isset( $location['address']['city'] ) AND ! empty( $location['address']['city'] ) ) {
+				$args['city'] = $location['address']['city'];
+			}
+
+			// add postcode if present
+			if ( isset( $location['address']['postal_code'] ) AND ! empty( $location['address']['postal_code'] ) ) {
+				$args['postcode'] = $location['address']['postal_code'];
+			}
+
+			// add geocodes if present
+			if ( isset( $location['address']['geo_code_1'] ) AND ! empty( $location['address']['geo_code_1'] ) ) {
+				$args['latitude'] = $location['address']['geo_code_1'];
+			}
+			if ( isset( $location['address']['geo_code_2'] ) AND ! empty( $location['address']['geo_code_2'] ) ) {
+				$args['longtitude'] = $location['address']['geo_code_2'];
+			}
 
 			// remove actions to prevent recursion
 			remove_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10 );
