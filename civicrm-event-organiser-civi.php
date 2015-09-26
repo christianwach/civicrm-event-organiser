@@ -157,7 +157,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// kick out if not event object
 		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
 
-		///*
+		/*
 		error_log( print_r( array(
 			'method' => __METHOD__,
 			'op' => $op,
@@ -165,7 +165,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'objectId' => $objectId,
 			'objectRef' => $objectRef,
 		), true ) );
-		//*/
+		*/
 
 		// check for event_type_id, which is a mandatory field
 		if ( ! empty( $objectRef->id ) AND empty( $objectRef->event_type_id ) ) {
@@ -173,10 +173,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// this probably means that a Location has been added to the event
 			if ( ! empty( $objectRef->loc_block_id ) ) {
 
+				/*
 				error_log( print_r( array(
 					'method' => __METHOD__,
 					'updated_event' => $updated_event,
 				), true ) );
+				*/
 
 				// get full event data
 				$updated_event = $this->get_event_by_id( $objectRef->id );
@@ -255,7 +257,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// kick out if not event object
 		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
 
-		///*
+		/*
 		error_log( print_r( array(
 			'method' => __METHOD__,
 			'op' => $op,
@@ -263,7 +265,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'objectId' => $objectId,
 			'objectRef' => $objectRef,
 		), true ) );
-		//*/
+		*/
 
 	}
 
@@ -1453,12 +1455,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// get location from nested array
 		$location = array_pop( $result['values'] );
 
+		/*
 		error_log( print_r( array(
 			'method' => __METHOD__,
 			'params' => $params,
 			'result' => $result,
 			'location' => $location,
 		), true ) );
+		*/
 
 		// --<
 		return $location;
