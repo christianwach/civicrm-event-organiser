@@ -382,8 +382,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// test for created date, which may be absent
 		if ( isset( $civi_event['created_date'] ) AND ! empty( $civi_event['created_date'] ) ) {
 
-			// add it
-			$post_data['post_date'] = $civi_event['created_date'];
+			// create DateTime object
+			$datetime = new DateTime( $civi_event['created_date'], eo_get_blog_timezone() );
+
+			// add it, but format it first since Civi seems to send data in the form 20150916135435
+			$post_data['post_date'] = $datetime->format( 'Y-m-d H:i:s' );
 
 		}
 
