@@ -677,9 +677,18 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 */
 	function venue_meta_box_render( $venue ) {
 
-		// get meta box data
-		$email = eo_get_venue_meta( $venue->term_id, '_civi_email', true );
-		$phone = eo_get_venue_meta( $venue->term_id, '_civi_phone', true );
+		// init vars
+		$email = '';
+		$phone = '';
+
+		// is this an edit?
+		if ( isset( $venue->term_id ) ) {
+
+			// get meta box data
+			$email = eo_get_venue_meta( $venue->term_id, '_civi_email', true );
+			$phone = eo_get_venue_meta( $venue->term_id, '_civi_phone', true );
+
+		}
 
 		// add nonce
 		wp_nonce_field( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
