@@ -1293,7 +1293,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$location = civicrm_api( 'loc_block', 'get', $params );
 
 		// did we do okay?
-		if ( $location['is_error'] == '1' ) {
+		if ( isset( $location['is_error'] ) AND $location['is_error'] == '1' ) {
 
 			// not much else we can do here if we get an error...
 			wp_die( 'get_location 1: ' . $location['error_message'] );
@@ -1316,38 +1316,46 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// now try by location
 		// ---------------------------------------------------------------------
 
-		// construct get-by-geolocation array
-		$params = array(
-			'version' => 3,
-			'address' => array(
-				'geo_code_1' => $venue->venue_lat,
-				'geo_code_2' => $venue->venue_lng,
-			),
-			'return' => 'all',
-		);
+		// if we have a location
+		if ( ! empty( $venue->venue_lat ) AND ! empty( $venue->venue_lng ) ) {
 
-		// call API
-		$location = civicrm_api( 'loc_block', 'get', $params );
+			// construct get-by-geolocation array
+			$params = array(
+				'version' => 3,
+				'address' => array(
+					'geo_code_1' => $venue->venue_lat,
+					'geo_code_2' => $venue->venue_lng,
+				),
+				'return' => 'all',
+			);
 
-		// did we do okay?
-		if ( $location['is_error'] == '1' ) {
+			// call API
+			$location = civicrm_api( 'loc_block', 'get', $params );
 
-			// not much else we can do here if we get an error...
-			wp_die( 'get_location 2: ' . $location['error_message'] );
+			// did we do okay?
+			if ( isset( $location['is_error'] ) AND $location['is_error'] == '1' ) {
+
+				// not much else we can do here if we get an error...
+				wp_die( 'get_location 2: ' . $location['error_message'] );
+
+			}
+
+			/*
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'venue' => $venue,
+				'params' => $params,
+				'location' => $location,
+			), true ) );
+			*/
+
+			// --<
+			return $location;
 
 		}
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'venue' => $venue,
-			'params' => $params,
-			'location' => $location,
-		), true ) );
-		*/
-
-		// --<
-		return $location;
+		// fallback
+		return false;
 
 	}
 
@@ -1549,7 +1557,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		*/
 
 		// did we do okay?
-		if ( $location['is_error'] == '1' ) {
+		if ( isset( $location['is_error'] ) AND $location['is_error'] == '1' ) {
 
 			// not much else we can do here if we get an error...
 			wp_die( 'create_civi_loc_block 1: ' . $location['error_message'] );
