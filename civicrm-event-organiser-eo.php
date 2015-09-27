@@ -368,8 +368,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 			// standard post data
 			'post_title' => $civi_event['title'],
-			'post_content' => $civi_event['description'],
-			'post_excerpt' => $civi_event['summary'],
+			'post_content' => isset( $civi_event['description'] ) ? $civi_event['description'] : '',
+			'post_excerpt' => isset( $civi_event['summary']) ? $civi_event['summary'] : '',
 
 			// quick fixes for Windows which need to be present
 			'to_ping' => '',
