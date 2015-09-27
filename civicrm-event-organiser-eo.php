@@ -207,8 +207,18 @@ class CiviCRM_WP_Event_Organiser_EO {
 		) ); die();
 		*/
 
+		// prevent recursion
+		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
+		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
+		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10 );
+
 		// update our CiviCRM events (or create new if none exist)
 		$this->plugin->civi->update_civi_events( $post, $dates );
+
+		// restore hooks
+		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10, 4 );
+		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
+		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10, 4 );
 
 	}
 
