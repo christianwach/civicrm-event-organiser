@@ -491,6 +491,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			/*
 			error_log( print_r( array(
 				'method' => __METHOD__,
+				'location' => $location,
 				'venue_id' => $venue_id,
 				'venue' => $venue,
 				'result' => $result,

@@ -128,7 +128,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// in this context, a CiviEvent can only have an EO event with a
 		// single occurrence associated with it, so use first item
 		$keys = array_keys( $occurrences );
-		$occurrence_id = array_pop( $keys );
+		$occurrence_id = array_shift( $keys );
 
 		// store correspondences
 		$this->plugin->db->store_event_correspondences( $event_id, array( $occurrence_id => $objectRef->id ) );
@@ -228,7 +228,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// in this context, a CiviEvent can only have an EO event with a
 		// single occurrence associated with it, so use first item
 		$keys = array_keys( $occurrences );
-		$occurrence_id = array_pop( $keys );
+		$occurrence_id = array_shift( $keys );
 
 		// store correspondences
 		$this->plugin->db->store_event_correspondences( $event_id, array( $occurrence_id => $objectRef->id ) );
@@ -1123,16 +1123,16 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// get existing location
 		$location = $this->get_location( $venue );
 
+		/*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'venue' => $venue,
+			'location' => $location,
+		), true ) );
+		*/
+
 		// if this venue already has a CiviEvent location
-		if (
-			$location
-			AND
-			$location['is_error'] == '0'
-			AND
-			isset( $location['id'] )
-			AND
-			is_numeric( $location['id'] )
-		) {
+		if ( $location !== false ) {
 
 			// is there a record on the EO side?
 			if ( ! isset( $venue->venue_civi_id ) ) {
@@ -1158,7 +1158,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		*/
 
 		// update existing - or create one if it doesn't exist
-		$location = $this->create_civi_loc_block( $venue );
+		$location = $this->create_civi_loc_block( $venue, $location );
 
 		// --<
 		return $location;
@@ -1185,15 +1185,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$location = $this->get_location( $venue );
 
 		// did we do okay?
-		if (
-			$location
-			AND
-			$location['is_error'] == '0'
-			AND
-			isset( $location['id'] )
-			AND
-			is_numeric( $location['id'] )
-		) {
+		if ( $location !== false ) {
 
 			// delete
 			$result = $this->delete_location_by_id( $location['id'] );
@@ -1254,7 +1246,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * Gets a CiviEvent Location given an EO venue
 	 *
 	 * @param object $venue The EO venue data
-	 * @param array $location The CiviEvent location data
+	 * @param bool|array $location The CiviEvent location data (or false if not found)
 	 */
 	public function get_location( $venue ) {
 
@@ -1303,6 +1295,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		/*
 		error_log( print_r( array(
 			'method' => __METHOD__,
+			'procedure' => 'by civi_id',
 			'venue' => $venue,
 			'params' => $params,
 			'location' => $location,
@@ -1310,7 +1303,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		*/
 
 		// return the result if we get one
-		if ( absint( $location['count'] ) > 0 ) return $location;
+		if ( absint( $location['count'] ) > 0 AND is_array( $location['values'] ) ) {
+			return array_shift( $location['values'] );
+		}
 
 		// ---------------------------------------------------------------------
 		// now try by location
@@ -1343,14 +1338,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			/*
 			error_log( print_r( array(
 				'method' => __METHOD__,
+				'procedure' => 'by location',
 				'venue' => $venue,
 				'params' => $params,
 				'location' => $location,
 			), true ) );
 			*/
 
-			// --<
-			return $location;
+			// return the result if we get one
+			if ( absint( $location['count'] ) > 0 AND is_array( $location['values'] ) ) {
+				return array_shift( $location['values'] );
+			}
 
 		}
 
@@ -1461,7 +1459,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		}
 
 		// get location from nested array
-		$location = array_pop( $result['values'] );
+		$location = array_shift( $result['values'] );
 
 		/*
 		error_log( print_r( array(
@@ -1488,25 +1486,49 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * for phone. This is not a deal-breaker, but not very DRY either.
 	 *
 	 * @param object $venue The EO venue object
+	 * @param array $location The existing Civi location data
 	 * @return array $location The CiviCRM location data
 	 */
-	public function create_civi_loc_block( $venue ) {
+	public function create_civi_loc_block( $venue, $location ) {
 
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return array();
+
+		// init create/update flag
+		$op = 'create';
+
+		// if our venue already has a location
+		if (
+			isset( $venue->venue_civi_id )
+			AND
+			is_numeric( $venue->venue_civi_id )
+			AND
+			$venue->venue_civi_id > 0
+		) {
+
+			// override since we're updating
+			$op = 'update';
+
+		}
 
 		// define create array
 		$params = array(
 			'version' => 3,
 		);
 
-		// first, see if the loc_block email, phone and address already exist
+		/**
+		 * First, see if the loc_block email, phone and address already exist.
+		 *
+		 * If they don't, we need params returned that trigger their creation on
+		 * the Civi side. If they do, then we may need to update or delete them
+		 * before we include the data in the 'civicrm_api' call.
+		 */
 
 		// if we have an email
 		if ( isset( $venue->venue_civi_email ) AND ! empty( $venue->venue_civi_email ) ) {
 
 			// check email
-			$email = $this->_query_email( $venue->venue_civi_email );
+			$email = $this->maybe_update_email( $venue, $location, $op );
 
 			// add to params
 			$params['email'] = $email;
@@ -1517,7 +1539,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( isset( $venue->venue_civi_phone ) AND ! empty( $venue->venue_civi_phone ) ) {
 
 			// check phone
-			$phone = $this->_query_phone( $venue->venue_civi_phone );
+			$phone = $this->maybe_update_phone( $venue, $location, $op );
 
 			// add to params
 			$params['phone'] = $phone;
@@ -1525,19 +1547,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		}
 
 		// check address
-		$address = $this->_query_address( $venue );
+		$address = $this->maybe_update_address( $venue, $location, $op );
 
 		// add to params
 		$params['address'] = $address;
 
 		// if our venue has a location, add it
-		if (
-			isset( $venue->venue_civi_id )
-			AND
-			is_numeric( $venue->venue_civi_id )
-			AND
-			$venue->venue_civi_id > 0
-		) {
+		if ( $op == 'update' ) {
 
 			// target our known location - this will trigger an update
 			$params['id'] = $venue->venue_civi_id;
@@ -1551,7 +1567,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		error_log( print_r( array(
 			'method' => __METHOD__,
 			'venue' => $venue,
-			'create-update params' => $params,
+			'params' => $params,
 			'location' => $location,
 		), true ) );
 		*/
@@ -2512,24 +2528,58 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Query email via API
+	 * Query email via API and update if necessary.
 	 *
-	 * @param string $email
+	 * @param object $venue
+	 * @param array $location The Civi location data
+	 * @param string $op The operation (either 'create' or 'update')
 	 * @return mixed $email_data Integer if found, array if not found
 	 */
-	private function _query_email( $email ) {
+	private function maybe_update_email( $venue, $location = null, $op = 'create' ) {
 
-		// check email
-		$email_params = array(
-			'version' => 3,
-			'contact_id' => null,
-			'is_primary' => 0,
-			'location_type_id' => 1,
-			'email' => $email,
-		);
+		// if the location has an existing email
+		if ( ! is_null( $location ) AND isset( $location['email']['id'] ) ) {
+
+			// check by ID
+			$email_params = array(
+				'version' => 3,
+				'id' => $location['email']['id'],
+			);
+
+		} else {
+
+			// check by email
+			$email_params = array(
+				'version' => 3,
+				'contact_id' => null,
+				'is_primary' => 0,
+				'location_type_id' => 1,
+				'email' => $venue->venue_civi_email,
+			);
+
+		}
+
+		/*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'procedure' => 'pre-get',
+			'venue' => $venue,
+			'location' => $location,
+			'op' => $op,
+			'email_params' => $email_params,
+		), true ) );
+		*/
 
 		// query API
 		$existing_email_data = civicrm_api( 'email', 'get', $email_params );
+
+		/*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'procedure' => 'post-get',
+			'existing_email_data' => $existing_email_data,
+		), true ) );
+		*/
 
 		// did we get one?
 		if (
@@ -2539,7 +2589,32 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		) {
 
 			// get first one
-			$existing_email = $existing_email_data['values'][0];
+			$existing_email = array_shift( $existing_email_data['values'] );
+
+			// has it changed?
+			if ( $op == 'update' AND $existing_email['email'] != $venue->venue_civi_email ) {
+
+				// add API version
+				$existing_email['version'] = 3;
+
+				// add null contact ID as this seems to be required
+				$existing_email['contact_id'] = null;
+
+				// replace with updated email
+				$existing_email['email'] = $venue->venue_civi_email;
+
+				// update it
+				$existing_email = civicrm_api( 'email', 'create', $existing_email );
+
+				/*
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'procedure' => 'post-update',
+					'existing_email' => $existing_email,
+				), true ) );
+				*/
+
+			}
 
 			// get its ID
 			$email_data = $existing_email['id'];
@@ -2549,7 +2624,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// define new email
 			$email_data = array(
 				'location_type_id' => 1,
-				'email' => $email,
+				'email' => $venue->venue_civi_email,
 			);
 
 		}
@@ -2557,6 +2632,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		/*
 		error_log( print_r( array(
 			'method' => __METHOD__,
+			'procedure' => 'final',
 			'email_params' => $email_params,
 			'existing_email_data' => $existing_email_data,
 			'email_data' => $email_data,
@@ -2571,33 +2647,97 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Query phone via API
+	 * Query phone via API and update if necessary.
 	 *
-	 * @param string $phone
+	 * @param object $venue
+	 * @param array $location The Civi location data
+	 * @param string $op The operation (either 'create' or 'update')
 	 * @return mixed $phone_data Integer if found, array if not found
 	 */
-	private function _query_phone( $phone ) {
+	private function maybe_update_phone( $venue, $location = null, $op = 'create' ) {
 
 		// create numeric version of phone number
-		$numeric = preg_replace( "/[^0-9]/", '', $phone );
+		$numeric = preg_replace( "/[^0-9]/", '', $venue->venue_civi_phone );
 
-		// check phone by its numeric field
-		$phone_params = array(
-			'version' => 3,
-			'contact_id' => null,
-			'is_primary' => 0,
-			'location_type_id' => 1,
-			'phone_numeric' => $numeric,
-		);
+		// if the location has an existing email
+		if ( ! is_null( $location ) AND isset( $location['phone']['id'] ) ) {
+
+			// check by ID
+			$phone_params = array(
+				'version' => 3,
+				'id' => $location['phone']['id'],
+			);
+
+		} else {
+
+			// check phone by its numeric field
+			$phone_params = array(
+				'version' => 3,
+				'contact_id' => null,
+				//'is_primary' => 0,
+				'location_type_id' => 1,
+				'phone_numeric' => $numeric,
+			);
+
+		}
+
+		/*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'procedure' => 'pre-get',
+			'venue' => $venue,
+			'location' => $location,
+			'op' => $op,
+			'phone_params' => $phone_params,
+		), true ) );
+		*/
 
 		// query API
 		$existing_phone_data = civicrm_api( 'phone', 'get', $phone_params );
 
+		/*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'procedure' => 'post-get',
+			'existing_phone_data' => $existing_phone_data,
+		), true ) );
+		*/
+
 		// did we get one?
-		if ( $existing_phone_data['is_error'] == 0 AND $existing_phone_data['count'] > 0 ) {
+		if (
+			$existing_phone_data['is_error'] == 0 AND
+			$existing_phone_data['count'] > 0 AND
+			is_array( $existing_phone_data['values'] )
+		) {
 
 			// get first one
 			$existing_phone = array_shift( $existing_phone_data['values'] );
+
+			// has it changed?
+			if ( $op == 'update' AND $existing_phone['phone'] != $venue->venue_civi_phone ) {
+
+				// add API version
+				$existing_phone['version'] = 3;
+
+				// add null contact ID as this seems to be required
+				$existing_phone['contact_id'] = null;
+
+				// replace with updated phone
+				$existing_phone['phone'] = $venue->venue_civi_phone;
+				$existing_phone['phone_numeric'] = $numeric;
+
+				// update it
+				$existing_phone = civicrm_api( 'phone', 'create', $existing_phone );
+
+				///*
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'procedure' => 'post-update',
+					'existing_phone' => $existing_phone,
+				), true ) );
+				//*/
+
+			}
 
 			// get its ID
 			$phone_data = $existing_phone['id'];
@@ -2607,7 +2747,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// define new phone
 			$phone_data = array(
 				'location_type_id' => 1,
-				'phone' => $phone,
+				'phone' => $venue->venue_civi_phone,
 				'phone_numeric' => $numeric,
 			);
 
@@ -2616,6 +2756,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		/*
 		error_log( print_r( array(
 			'method' => __METHOD__,
+			'procedure' => 'final',
 			'phone_params' => $phone_params,
 			'existing_phone_data' => $existing_phone_data,
 			'phone_data' => $phone_data,
@@ -2630,27 +2771,71 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Query address via API
+	 * Query address via API and update if necessary.
 	 *
 	 * @param object $venue
+	 * @param array $location The Civi location data
+	 * @param string $op The operation (either 'create' or 'update')
 	 * @return mixed $address_data Integer if found, array if not found
 	 */
-	private function _query_address( $venue ) {
+	private function maybe_update_address( $venue, $location = null, $op = 'create' ) {
 
-		// check address
-		$address_params = array(
-			'version' => 3,
-			'contact_id' => null,
-			'is_primary' => 0,
-			'location_type_id' => 1,
-			'street_address' => $venue->venue_address,
-			'city' => $venue->venue_city,
-			//'county' => $venue->venue_state, // can't do county in CiviCRM yet
-			'postal_code' => $venue->venue_postcode,
-			//'country' => $venue->venue_country, // can't do country in CiviCRM yet
-			'geo_code_1' => $venue->venue_lat,
-			'geo_code_2' => $venue->venue_lng,
-		);
+		// if the location has an existing email
+		if ( ! is_null( $location ) AND isset( $location['address']['id'] ) ) {
+
+			// check by ID
+			$address_params = array(
+				'version' => 3,
+				'id' => $location['address']['id'],
+			);
+
+		} else {
+
+			// check address
+			$address_params = array(
+				'version' => 3,
+				'contact_id' => null,
+				//'is_primary' => 0,
+				'location_type_id' => 1,
+				//'county' => $venue->venue_state, // can't do county in CiviCRM yet
+				//'country' => $venue->venue_country, // can't do country in CiviCRM yet
+			);
+
+			// add street address if present
+			if ( ! empty( $venue->venue_address ) ) {
+				$address_params['street_address'] = $venue->venue_address;
+			}
+
+			// add city if present
+			if ( ! empty( $venue->venue_city ) ) {
+				$address_params['city'] = $venue->venue_city;
+			}
+
+			// add postcode if present
+			if ( ! empty( $venue->venue_postcode ) ) {
+				$address_params['postal_code'] = $venue->venue_postcode;
+			}
+
+			// add geocodes if present
+			if ( ! empty( $venue->venue_lat ) ) {
+				$address_params['geo_code_1'] = $venue->venue_lat;
+			}
+			if ( ! empty( $venue->venue_lng ) ) {
+				$address_params['geo_code_2'] = $venue->venue_lng;
+			}
+
+		}
+
+		/*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'procedure' => 'pre-get',
+			'venue' => $venue,
+			'location' => $location,
+			'op' => $op,
+			'address_params' => $address_params,
+		), true ) );
+		*/
 
 		// query API
 		$existing_address_data = civicrm_api( 'address', 'get', $address_params );
@@ -2661,6 +2846,52 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// get first one
 			$existing_address = array_shift( $existing_address_data['values'] );
 
+			/*
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'procedure' => 'maybe-update',
+				'existing_address' => $existing_address,
+			), true ) );
+			*/
+
+			// has it changed?
+			if ( $op == 'update' AND $this->is_address_changed( $venue, $existing_address ) ) {
+
+				// add API version
+				$existing_address['version'] = 3;
+
+				// add null contact ID as this seems to be required
+				$existing_address['contact_id'] = null;
+
+				// replace street address
+				$existing_address['street_address'] = $venue->venue_address;
+
+				// replace city
+				$existing_address['city'] = $venue->venue_city;
+
+				// replace postcode
+				$existing_address['postal_code'] = $venue->venue_postcode;
+
+				// replace geocodes
+				$existing_address['geo_code_1'] = $venue->venue_lat;
+				$existing_address['geo_code_2'] = $venue->venue_lng;
+
+				// can't do county in CiviCRM yet
+				// can't do country in CiviCRM yet
+
+				// update it
+				$existing_address = civicrm_api( 'address', 'create', $existing_address );
+
+				/*
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'procedure' => 'post-update',
+					'existing_address' => $existing_address,
+				), true ) );
+				*/
+
+			}
+
 			// get its ID
 			$address_data = $existing_address['id'];
 
@@ -2669,20 +2900,39 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// define new address
 			$address_data = array(
 				'location_type_id' => 1,
-				'street_address' => $venue->venue_address,
-				'city' => $venue->venue_city,
 				//'county' => $venue->venue_state, // can't do county in CiviCRM yet
-				'postal_code' => $venue->venue_postcode,
 				//'country' => $venue->venue_country, // can't do country in CiviCRM yet
-				'geo_code_1' => $venue->venue_lat,
-				'geo_code_2' => $venue->venue_lng,
 			);
+
+			// add street address if present
+			if ( ! empty( $venue->venue_address ) ) {
+				$address_data['street_address'] = $venue->venue_address;
+			}
+
+			// add city if present
+			if ( ! empty( $venue->venue_city ) ) {
+				$address_data['city'] = $venue->venue_city;
+			}
+
+			// add postcode if present
+			if ( ! empty( $venue->venue_postcode ) ) {
+				$address_data['postal_code'] = $venue->venue_postcode;
+			}
+
+			// add geocodes if present
+			if ( ! empty( $venue->venue_lat ) ) {
+				$address_data['geo_code_1'] = $venue->venue_lat;
+			}
+			if ( ! empty( $venue->venue_lng ) ) {
+				$address_data['geo_code_2'] = $venue->venue_lng;
+			}
 
 		}
 
 		/*
 		error_log( print_r( array(
 			'method' => __METHOD__,
+			'procedure' => 'final',
 			'address_params' => $address_params,
 			'existing_address_data' => $existing_address_data,
 			'address_data' => $address_data,
@@ -2691,6 +2941,55 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// --<
 		return $address_data;
+
+	}
+
+
+
+	/**
+	 * Has an address changed?
+	 *
+	 * It's worth noting that when there is no data for a property of a Civi
+	 * location, it will no exist as an entry in the data array. This is not
+	 * the case for EO venues, whose objects always contain all properties,
+	 * whether they have a value or not.
+	 *
+	 * @param object $venue The EO venue object being updated
+	 * @param array $location The existing Civi location data
+	 * @return bool $is_changed True if changed, false otherwise
+	 */
+	private function is_address_changed( $venue, $location ) {
+
+		// check street address
+		if ( ! isset( $location['street_address'] ) ) $location['street_address'] = '';
+		if ( $location['street_address'] != $venue->venue_address ) {
+			return true;
+		}
+
+		// check city
+		if ( ! isset( $location['city'] ) ) $location['city'] = '';
+		if ( $location['city'] != $venue->venue_city ) {
+			return true;
+		}
+
+		// check postcode
+		if ( ! isset( $location['postal_code'] ) ) $location['postal_code'] = '';
+		if ( $location['postal_code'] != $venue->venue_postcode ) {
+			return true;
+		}
+
+		// check geocodes
+		if ( ! isset( $location['geo_code_1'] ) ) $location['geo_code_1'] = '';
+		if ( $location['geo_code_1'] != $venue->venue_lat ) {
+			return true;
+		}
+		if ( ! isset( $location['geo_code_2'] ) ) $location['geo_code_2'] = '';
+		if ( $location['geo_code_2'] != $venue->venue_lng ) {
+			return true;
+		}
+
+		// --<
+		return false;
 
 	}
 

@@ -430,6 +430,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 				// no, let's create one
 				$venue_id = $this->plugin->eo_venue->create_venue( $location );
 
+			} else {
+
+				// yes, update it
+				$venue_id = $this->plugin->eo_venue->update_venue( $location );
+
 			}
 
 		}
