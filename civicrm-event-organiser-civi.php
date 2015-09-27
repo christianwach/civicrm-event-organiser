@@ -2163,8 +2163,32 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// get the item
 		$type = civicrm_api( 'option_value', 'getsingle', $types_params );
 
+		/*
+		[type] => Array
+			(
+				[id] => 115
+				[option_group_id] => 15
+				[label] => Meeting
+				[value] => 4
+				[name] => Meeting
+				[filter] => 0
+				[weight] => 4
+				[is_optgroup] => 0
+				[is_reserved] => 0
+				[is_active] => 1
+			)
+		*/
+
+		/*
+		error_log( print_r( array(
+			'method' => __METHOD__,
+			'types_params' => $types_params,
+			'type' => isset( $type ) ? $type : 'NOT SET',
+		), true ) );
+		*/
+
 		// error check
-		if ( $type['is_error'] == '1' ) {
+		if ( isset( $type['is_error'] ) AND $type['is_error'] == '1' ) {
 
 			trigger_error( print_r( array(
 				'method' => 'get_event_type_value',
