@@ -2524,10 +2524,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$existing_email_data = civicrm_api( 'email', 'get', $email_params );
 
 		// did we get one?
-		if ( $existing_email_data['is_error'] == 0 AND $existing_email_data['count'] > 0 ) {
+		if (
+			$existing_email_data['is_error'] == 0 AND
+			$existing_email_data['count'] > 0 AND
+			is_array( $existing_email_data['values'] )
+		) {
 
 			// get first one
-			$existing_email = array_shift( $existing_email_data['values'] );
+			$existing_email = $existing_email_data['values'][0];
 
 			// get its ID
 			$email_data = $existing_email['id'];
