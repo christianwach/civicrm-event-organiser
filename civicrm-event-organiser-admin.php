@@ -1241,6 +1241,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// did we get any?
 		if ( count( $all_events ) > 0 ) {
 
+			// prevent recursion
+			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
+			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
+			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10 );
+
 			// loop
 			foreach( $all_events AS $event ) {
 
@@ -1262,6 +1267,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				$this->store_event_correspondences( $event->ID, $correspondences );
 
 			}
+
+			// restore hooks
+			add_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10, 4 );
+			add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
+			add_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10, 4 );
 
 		}
 
