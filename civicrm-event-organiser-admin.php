@@ -1226,6 +1226,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function sync_events_to_civi() {
 
+		// this can be a lengthy process
+		$this->make_sync_uninterruptible();
+
 		// construct args for all event posts
 		$args = array(
 			'post_type' => 'event',
@@ -1272,6 +1275,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @return void
 	 */
 	public function sync_events_to_eo() {
+
+		// this can be a lengthy process
+		$this->make_sync_uninterruptible();
 
 		// get all Civi Events
 		$all_civi_events = $this->plugin->civi->get_all_civi_events();
@@ -1680,6 +1686,29 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// --<
 		return $is_network_active;
+
+	}
+
+
+
+	/**
+	 * Try and make sync processes uninterruptible
+	 *
+	 * @return void
+	 */
+	private function make_sync_uninterruptible() {
+
+		// this can be a lengthy process, so:
+		if ( ! ini_get( 'safe_mode' ) ) {
+
+			// try and override PHP timeout
+			set_time_limit( 0 );
+			ignore_user_abort( true );
+
+			// try and set a high memory limit
+			@ini_set( 'memory_limit', apply_filters( 'admin_memory_limit', '256M' ) );
+
+		}
 
 	}
 
