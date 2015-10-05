@@ -1292,25 +1292,29 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'procedure' => 'by civi_id',
-			'venue' => $venue,
-			'params' => $params,
-			'location' => $location,
-		), true ) );
-		*/
-
 		// return the result if we get one
 		if ( absint( $location['count'] ) > 0 AND is_array( $location['values'] ) ) {
+
+			/*
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'procedure' => 'found by civi_id',
+				'venue' => $venue,
+				'params' => $params,
+				'location' => $location,
+			), true ) );
+			*/
+
+			// found by ID
 			return array_shift( $location['values'] );
+
 		}
 
 		// ---------------------------------------------------------------------
 		// now try by location
 		// ---------------------------------------------------------------------
 
+		/*
 		// if we have a location
 		if ( ! empty( $venue->venue_lat ) AND ! empty( $venue->venue_lng ) ) {
 
@@ -1335,22 +1339,24 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 			}
 
-			/*
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'procedure' => 'by location',
-				'venue' => $venue,
-				'params' => $params,
-				'location' => $location,
-			), true ) );
-			*/
-
 			// return the result if we get one
 			if ( absint( $location['count'] ) > 0 AND is_array( $location['values'] ) ) {
+
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'procedure' => 'found by location',
+					'venue' => $venue,
+					'params' => $params,
+					'location' => $location,
+				), true ) );
+
+				// found by location
 				return array_shift( $location['values'] );
+
 			}
 
 		}
+		*/
 
 		// fallback
 		return false;
