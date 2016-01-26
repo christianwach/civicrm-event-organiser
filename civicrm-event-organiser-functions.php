@@ -7,6 +7,25 @@ These functions may be used in your theme files. Most rely on being called
 during The Loop. Please refer to the docblocks of each function to see usage
 instructions.
 
+
+/**
+ * The default way to load CiviCRM Registration links into EO event meta.
+ */
+//add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_registration_link' );
+
+
+
+/**
+ * Override the loading of CiviCRM Registration links into EO event meta.
+ */
+function cmw_child_theme_add_register_link() {
+	echo '<li class="hello-world">' . civicrm_event_organiser_get_register_link( $post_id ) . '</li>';
+}
+
+// action for the above
+add_action( 'eventorganiser_additional_event_meta', 'cmw_child_theme_add_register_link' );
+
+
 --------------------------------------------------------------------------------
 */
 
@@ -20,8 +39,16 @@ instructions.
  * to this function to their theme file or set it as a callback to an action in
  * The Loop.
  *
- * To do so, use for example:
+ * To do so in the default way:
+ *
  * add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_registration_link' );
+ *
+ * Or override with something like:
+ *
+ * function my_child_theme_add_register_link() {
+ *     echo '<li class="hello-world">' . civicrm_event_organiser_get_register_link( $post_id ) . '</li>';
+ * }
+ * add_action( 'eventorganiser_additional_event_meta', 'my_child_theme_add_register_link' );
  *
  * @param int $post_id The numeric ID of the WP post
  */
