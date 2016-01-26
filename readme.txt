@@ -1,33 +1,33 @@
 === CiviCRM Event Organiser ===
 Contributors: needle
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PZSKM8T5ZP3SC
-Tags: civicrm, buddypress, user, profile, xprofile, sync
+Tags: civicrm, event organiser, events, sync
 Requires at least: 3.6
-Tested up to: 3.6
-Stable tag: 0.2
+Tested up to: 4.4
+Stable tag: 0.2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-A WordPress plugin for syncing Event Organiser plugin Events with CiviCRM Events so they (will eventually) play nicely with BuddyPress Groups and Group Hierarchies. Be warned: this plugin is at a very early stage of development.
+Keep Event Organiser plugin Events in sync with CiviCRM Events.
 
 
 == Description ==
 
-A WordPress plugin for syncing Event Organiser plugin Events with CiviCRM Events so they (will eventually) play nicely with BuddyPress Groups and Group Hierarchies. Be warned: this plugin is at a very early stage of development.
+A WordPress plugin for syncing Event Organiser Events, Venues and Event Categories to their corresponding entities in CiviCRM. It also plays nicely with BuddyPress Groups and Group Hierarchies.
 
-This plugin has been developed using WordPress 3.6, BuddyPress 1.8 and CiviCRM 4.3.5.
+Be warned: this plugin is still at an early stage of development.
 
-It requires
+This plugin requires at least WordPress 3.6, BuddyPress 1.8 and CiviCRM 4.4.
+
+It requires:
+
+* Event Organiser version 2.0.2 or greater
+* Radio Buttons for Taxonomies to ensure only one event type is selected
+
+If you are using a version of CiviCRM prior to 4.6, it also requires:
 
 * the master branch of the CiviCRM WordPress plugin
 * the custom WordPress.php hook file from the CiviCRM Hook Tester repo on GitHub installed so that it overrides the built-in CiviCRM hook file.
-
-It also requires
-
-* Event Organiser version 2.0.2 or greater
-* WooDojo HTML Category Descriptions so that HTML descriptions sync
-* Radio Buttons for Taxonomies to ensure only one event type is selected
-
 
 
 

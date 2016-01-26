@@ -1,12 +1,13 @@
-<?php
-/*
+<?php /*
 --------------------------------------------------------------------------------
 Plugin Name: CiviCRM Event Organiser
-Description: A WordPress plugin for syncing Event Organiser plugin Events with CiviCRM Events so they play nicely with BuddyPress Groups and Group Hierarchies
-Version: 0.2
+Description: Sync Event Organiser Events with CiviCRM Events.
+Version: 0.2.1
 Author: Christian Wach
 Author URI: http://haystack.co.uk
-Plugin URI: http://haystack.co.uk
+Plugin URI: https://github.com/christianwach/civicrm-event-organiser
+Text Domain: civicrm-event-organiser
+Domain Path: /languages
 --------------------------------------------------------------------------------
 */
 
@@ -16,7 +17,7 @@ Plugin URI: http://haystack.co.uk
 define( 'CIVICRM_WP_EVENT_ORGANISER_DEBUG', false );
 
 // set our version here
-define( 'CIVICRM_WP_EVENT_ORGANISER_VERSION', '0.2' );
+define( 'CIVICRM_WP_EVENT_ORGANISER_VERSION', '0.2.1' );
 
 // store reference to this file
 if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_FILE' ) ) {
@@ -37,8 +38,6 @@ if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 /*
 --------------------------------------------------------------------------------
 CiviCRM_WP_Event_Organiser Class
-
-return new WP_Error('eo_error',__('Start date not provided.','eventorganiser'));
 --------------------------------------------------------------------------------
 */
 
@@ -122,6 +121,9 @@ class CiviCRM_WP_Event_Organiser {
 		// initialise
 		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue;
 
+		// load our template functions
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm-event-organiser-functions.php' );
+
 		// store references
 		$this->taxonomy->set_references( $this );
 		$this->db->set_references( $this );
@@ -196,6 +198,20 @@ global $civicrm_wp_event_organiser;
 // init plugin
 $civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
 
+
+
+/**
+ * Utility to get a reference to this plugin.
+ *
+ * @return object $civicrm_wp_event_organiser The plugin reference
+ */
+function civicrm_eo() {
+
+	// return instance
+	global $civicrm_wp_event_organiser;
+	return $civicrm_wp_event_organiser;
+
+}
 
 
 /**

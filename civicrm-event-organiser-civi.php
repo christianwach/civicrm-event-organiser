@@ -1810,6 +1810,41 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 
+	/**
+	 * Get a CiviEvent's Registration link.
+	 *
+	 * @param array $civi_event An array of data for the CiviEvent
+	 * @return string $link The URL of the CiviCRM Registration page
+	 */
+	public function get_registration_link( $civi_event ) {
+
+		// init link
+		$link = '';
+
+		// if this event has registration enabled
+		if ( isset( $civi_event['is_online_registration'] ) AND $civi_event['is_online_registration'] == '1' ) {
+
+			// init CiviCRM or bail
+			if ( ! $this->is_active() ) return $link;
+
+			// use CiviCRM to construct link
+			$link = CRM_Utils_System::url(
+				'civicrm/event/register', 'reset=1&id=' . $civi_event['id'],
+				TRUE,
+				NULL,
+				FALSE,
+				TRUE
+			);
+
+		}
+
+		// --<
+		return $link;
+
+	}
+
+
+
 	//##########################################################################
 
 
