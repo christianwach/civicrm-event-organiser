@@ -23,7 +23,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 */
-	function __construct() {
+	public function __construct() {
 
 		// is this the back end?
 		if ( is_admin() ) {
@@ -1738,7 +1738,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @return bool $is_network_active True if network activated, false otherwise
 	 */
-	function is_network_activated() {
+	public function is_network_activated() {
 
 		// only need to test once
 		static $is_network_active;

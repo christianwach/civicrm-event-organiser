@@ -70,7 +70,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 */
-	function __construct() {
+	public function __construct() {
 
 		// initialise
 		$this->initialise();

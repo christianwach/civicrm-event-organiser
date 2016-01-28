@@ -26,7 +26,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 *
 	 * @since 0.1
 	 */
-	function __construct() {
+	public function __construct() {
 
 		// add actions for plugin init on CiviCRM init
 		$this->register_hooks();

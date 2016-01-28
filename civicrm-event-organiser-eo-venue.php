@@ -23,7 +23,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 */
-	function __construct() {
+	public function __construct() {
 
 		// register hooks
 		$this->register_hooks();
@@ -706,7 +706,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @return void
 	 */
-	function venue_meta_box() {
+	public function venue_meta_box() {
 
 		// create it
 		add_meta_box(
@@ -730,7 +730,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 * @param object $venue The EO venue object
 	 * @return void
 	 */
-	function venue_meta_box_render( $venue ) {
+	public function venue_meta_box_render( $venue ) {
 
 		// init vars
 		$email = '';
@@ -782,7 +782,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 * @param string $args Additional parameters
 	 * @return array $terms Array of term objects
 	 */
-	function update_venue_meta( $terms, $post_ids, $taxonomies, $args ) {
+	public function update_venue_meta( $terms, $post_ids, $taxonomies, $args ) {
 
 		// passes taxonomies as a string inside quotes...
 		$taxonomies = explode( ',', trim( $taxonomies, "\x22\x27" ) );
@@ -801,7 +801,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 * @param string $tax Should be (an array containing) 'event-venue'
 	 * @return array $terms Array of event-venue terms
 	 */
-	function update_venue_meta_cache( $terms, $tax ) {
+	public function update_venue_meta_cache( $terms, $tax ) {
 
 		if ( is_array( $tax ) && ! in_array( 'event-venue', $tax ) ) {
 			return $terms;
