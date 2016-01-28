@@ -18,7 +18,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	/**
 	 * Initialises this object
 	 *
-	 * @return object
+	 * @since 0.1
 	 */
 	function __construct() {
 
@@ -42,9 +42,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			 add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'force_taxonomy' ), 30 );
 
 		}
-
-		// --<
-		return $this;
 
 	}
 

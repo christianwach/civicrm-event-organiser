@@ -29,15 +29,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	/**
 	 * Initialises this object
 	 *
-	 * @return object
+	 * @since 0.2.1
 	 */
 	function __construct() {
 
 		// register hooks on admin init
 		add_action( 'admin_init', array( $this, 'register_hooks' ) );
-
-		// --<
-		return $this;
 
 	}
 

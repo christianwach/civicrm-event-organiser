@@ -18,15 +18,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	/**
 	 * Initialises this object
 	 *
-	 * @return object
+	 * @since 0.1
 	 */
 	function __construct() {
 
 		// register hooks
 		$this->register_hooks();
-
-		// --<
-		return $this;
 
 	}
 

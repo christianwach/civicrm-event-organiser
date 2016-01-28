@@ -21,15 +21,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Initialises this object
 	 *
-	 * @return object
+	 * @since 0.1
 	 */
 	function __construct() {
 
 		// add actions for plugin init on CiviCRM init
 		$this->register_hooks();
-
-		// --<
-		return $this;
 
 	}
 

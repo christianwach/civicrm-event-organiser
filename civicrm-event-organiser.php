@@ -67,7 +67,7 @@ class CiviCRM_WP_Event_Organiser {
 	/**
 	 * Initialises this object
 	 *
-	 * @return object
+	 * @since 0.1
 	 */
 	function __construct() {
 
@@ -76,9 +76,6 @@ class CiviCRM_WP_Event_Organiser {
 
 		// use translation files
 		add_action( 'plugins_loaded', array( $this, 'enable_translation' ) );
-
-		// --<
-		return $this;
 
 	}
 
