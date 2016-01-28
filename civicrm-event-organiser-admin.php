@@ -1,9 +1,12 @@
-<?php /*
---------------------------------------------------------------------------------
-CiviCRM_WP_Event_Organiser_Admin Class
---------------------------------------------------------------------------------
-*/
+<?php
 
+/**
+ * CiviCRM Event Organiser Admin Class.
+ *
+ * A class that encapsulates admin functionality.
+ *
+ * @since 0.1
+ */
 class CiviCRM_WP_Event_Organiser_Admin {
 
 	/**

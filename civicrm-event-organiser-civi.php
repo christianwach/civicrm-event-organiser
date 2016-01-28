@@ -1,9 +1,12 @@
-<?php /*
---------------------------------------------------------------------------------
-CiviCRM_WP_Event_Organiser_CiviCRM Class
---------------------------------------------------------------------------------
-*/
+<?php
 
+/**
+ * CiviCRM Event Organiser CiviCRM Class.
+ *
+ * A class that encapsulates interactions with CiviCRM.
+ *
+ * @since 0.1
+ */
 class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**

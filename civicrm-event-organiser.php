@@ -35,12 +35,13 @@ if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 
 
 
-/*
---------------------------------------------------------------------------------
-CiviCRM_WP_Event_Organiser Class
---------------------------------------------------------------------------------
-*/
-
+/**
+ * CiviCRM Event Organiser Class.
+ *
+ * A class that encapsulates this plugin's functionality.
+ *
+ * @since 0.1
+ */
 class CiviCRM_WP_Event_Organiser {
 
 	/**

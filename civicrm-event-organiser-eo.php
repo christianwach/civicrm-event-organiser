@@ -1,9 +1,12 @@
-<?php /*
---------------------------------------------------------------------------------
-CiviCRM_WP_Event_Organiser_EO Class
---------------------------------------------------------------------------------
-*/
+<?php
 
+/**
+ * CiviCRM Event Organiser EO General Class.
+ *
+ * A class that encapsulates functionality generally related to Event Organiser.
+ *
+ * @since 0.1
+ */
 class CiviCRM_WP_Event_Organiser_EO {
 
 	/**

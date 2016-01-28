@@ -1,9 +1,12 @@
-<?php /*
---------------------------------------------------------------------------------
-CiviCRM_WP_Event_Organiser_EO_Venue Class
---------------------------------------------------------------------------------
-*/
+<?php
 
+/**
+ * CiviCRM Event Organiser Venues Class.
+ *
+ * A class that encapsulates functionality related to EO venues.
+ *
+ * @since 0.1
+ */
 class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	/**

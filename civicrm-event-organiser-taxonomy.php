@@ -1,20 +1,19 @@
-<?php /*
---------------------------------------------------------------------------------
-CiviCRM_WP_Event_Organiser_Taxonomy Class
---------------------------------------------------------------------------------
+<?php
 
-This class replicates the functionality of WooDojo HTML Term Description plugin
-since that plugin has now been withdrawn. It was described thus:
-
-"The WooDojo HTML term description feature adds the ability to use html in term
-descriptions, as well as a visual editor to make input easier."
-
-The difference here is that only the Event Organiser custom taxonomy for Event
-Categories is affected.
-
---------------------------------------------------------------------------------
-*/
-
+/**
+ * CiviCRM Event Organiser Taxonomy Class.
+ *
+ * This class replicates the functionality of WooDojo HTML Term Description
+ * plugin since that plugin has now been withdrawn. It was described thus:
+ *
+ * "The WooDojo HTML term description feature adds the ability to use html in
+ * term descriptions, as well as a visual editor to make input easier."
+ *
+ * The difference here is that only the Event Organiser custom taxonomy for
+ * Event Categories is affected.
+ *
+ * @since 0.2.1
+ */
 class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 	/**

@@ -1,14 +1,14 @@
-<?php /*
---------------------------------------------------------------------------------
-CiviCRM Event Organiser Template functions
---------------------------------------------------------------------------------
+<?php
 
-These functions may be used in your theme files. Most rely on being called
-during The Loop. Please refer to the docblocks of each function to see usage
-instructions.
-
---------------------------------------------------------------------------------
-*/
+/**
+ * CiviCRM Event Organiser Template functions.
+ *
+ * These functions may be used in your theme files. Most rely on being called
+ * during The Loop. Please refer to the docblocks of each function to see usage
+ * instructions.
+ *
+ * @since 0.2.2
+ */
 
 
 
