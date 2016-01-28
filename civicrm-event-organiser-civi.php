@@ -35,6 +35,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Set references to other objects
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $parent The parent object
 	 * @return void
 	 */
@@ -49,6 +51,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Register hooks on plugin init
+	 *
+	 * @since 0.1
 	 *
 	 * @return void
 	 */
@@ -74,6 +78,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Create an EO event when a CiviEvent is created
+	 *
+	 * @since 0.1
 	 *
 	 * @param string $op the type of database operation
 	 * @param string $objectName the type of object
@@ -136,6 +142,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Update an EO event when a CiviEvent is updated
+	 *
+	 * @since 0.1
 	 *
 	 * @param string $op the type of database operation
 	 * @param string $objectName the type of object
@@ -237,6 +245,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Delete an EO event when a CiviEvent is updated
 	 *
+	 * @since 0.1
+	 *
 	 * @param string $op the type of database operation
 	 * @param string $objectName the type of object
 	 * @param integer $objectId the ID of the object
@@ -271,6 +281,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Test if CiviCRM plugin is active
 	 *
+	 * @since 0.1
+	 *
 	 * @return bool
 	 */
 	public function is_active() {
@@ -287,6 +299,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Register directories that CiviCRM searches for php and template files
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $config The CiviCRM config object
 	 * @return void
@@ -319,6 +333,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Prepare a CiviEvent with data from an EO Event
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $post The WordPress post object
 	 * @return array $civi_event The basic CiviEvent data
@@ -408,6 +424,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Create CiviEvents for an EO event
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $post The WP post object
 	 * @param array $dates Array of properly formatted dates
 	 * @param array $civi_event_ids Array of new CiviEvent IDs
@@ -474,6 +492,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Update CiviEvents for an event
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $post The WP post object
 	 * @param array $dates Array of properly formatted dates
@@ -816,6 +836,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Match EO Events and CiviEvents
 	 *
+	 * @since 0.1
+	 *
 	 * @param array $dates An array of EO event occurrence data
 	 * @param array $civi_events An array of CiviEvent data
 	 * @param array $orphaned_civi_events An array of orphaned CiviEvent data
@@ -938,6 +960,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Get all CiviEvents
 	 *
+	 * @since 0.1
+	 *
 	 * @return array $events The CiviEvents data
 	 */
 	public function get_all_civi_events() {
@@ -967,6 +991,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Delete all CiviEvents WARNING only for dev purposes really!
+	 *
+	 * @since 0.1
 	 *
 	 * @param array $civi_event_ids An array of CiviEvent IDs
 	 * @return array $results An array of CiviCRM results
@@ -1005,6 +1031,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Disable a CiviEvent
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $civi_event_id The numeric ID of the CiviEvent
 	 * @return array $result A CiviCRM result array
@@ -1046,6 +1074,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Get a CiviEvent by ID
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $civi_event_id The numeric ID of the CiviEvent
 	 * @param array $event The CiviEvent location data
 	 */
@@ -1076,6 +1106,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Validate all CiviEvent data for an Event Organiser event
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param object $post The WP post object
@@ -1108,6 +1140,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Updates a CiviEvent Location given an EO venue
+	 *
+	 * @since 0.1
 	 *
 	 * @param array $venue The EO venue data
 	 * @param array $location The CiviEvent location data
@@ -1167,6 +1201,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Delete a CiviEvent Location given an EO venue.
 	 *
+	 * @since 0.1
+	 *
 	 * @param array $venue The EO venue data
 	 * @return array $result Civi API result data
 	 */
@@ -1202,6 +1238,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * Email, phone and address will still exist but not be associated as a loc_block
 	 * The next iteration of this plugin should probably refine the loc_block
 	 * sync process to take this into account.
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $location_id The numeric ID of the Civi location
 	 * @return array $result Civi API result data
@@ -1241,6 +1279,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Gets a CiviEvent Location given an EO venue
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $venue The EO venue data
 	 * @param bool|array $location The CiviEvent location data (or false if not found)
@@ -1365,6 +1405,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Get all CiviEvent Locations
 	 *
+	 * @since 0.1
+	 *
 	 * @param array $locations Array of CiviEvent location data
 	 */
 	public function get_all_locations() {
@@ -1401,6 +1443,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * WARNING: deletes all CiviEvent Locations
 	 *
+	 * @since 0.1
+	 *
 	 * @return void
 	 */
 	public function delete_all_locations() {
@@ -1431,6 +1475,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Gets a CiviEvent Location given an CiviEvent Location ID
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $loc_id The CiviEvent Location ID
 	 * @return array $location The CiviEvent Location data
@@ -1487,6 +1533,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * the email and that email already exists in the DB, it will not be found
 	 * and associated - but rather the existing email will be updated. Same goes
 	 * for phone. This is not a deal-breaker, but not very DRY either.
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $venue The EO venue object
 	 * @param array $location The existing Civi location data
@@ -1602,6 +1650,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * Get the existing participant role for a post, but fall back to the default
 	 * as set on the admin screen. fall back to false otherwise
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $post An EO event object
 	 * @return mixed $existing_id The numeric ID of the role, false if none exists
 	 */
@@ -1647,6 +1697,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Get all participant roles
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $post An EO event object
 	 * @return mixed $participant_roles Array of Civi role data, false if none exist
 	 */
@@ -1687,6 +1739,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Builds a form element for Participant Roles
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $post An EO event object
 	 * @return str $html Markup to display in the form
@@ -1768,6 +1822,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Checks the status of a CiviEvent's Registration option
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $post The WP event object
 	 * @return string $default Checkbox checked or not
 	 */
@@ -1809,6 +1865,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Get a CiviEvent's Registration link.
+	 *
+	 * @since 0.2.2
 	 *
 	 * @param array $civi_event An array of data for the CiviEvent
 	 * @return string $link The URL of the CiviCRM Registration page
@@ -1852,6 +1910,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * Unfortunately, this doesn't work because Civi does not fire hook_civicrm_pre
 	 * for this entity type. Sad face.
 	 *
+	 * @since 0.1
+	 *
 	 * @param string $op The type of database operation
 	 * @param string $objectName The type of object
 	 * @param integer $objectId The ID of the object
@@ -1883,6 +1943,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Intercept when a CiviCRM event type is toggled
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $recordBAO The CiviCRM option object
 	 * @param integer $recordID The ID of the object
 	 * @param bool $isActive Whether the item is active or not
@@ -1913,6 +1975,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Update an EO 'event-category' term when a CiviCRM event type is updated
+	 *
+	 * @since 0.1
 	 *
 	 * @param string $formName The CiviCRM form name
 	 * @param object $form The CiviCRM form object
@@ -2033,6 +2097,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Update a CiviEvent event type
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $new_term The new EO event category term
 	 * @param object $old_term The EO event category term as it was before update
 	 * @return ID $type_id The CiviCRM Event Type ID (or false on failure)
@@ -2117,6 +2183,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Delete a CiviEvent event type
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $term The EO event category term
 	 * @return mixed Civi API data array on success, false on failure
 	 */
@@ -2157,6 +2225,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Get a CiviEvent event type by term
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $term The EO event category term
 	 * @return mixed $type_id The numeric ID of the CiviEvent event type (or false on failure)
@@ -2200,6 +2270,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Get a CiviEvent event type value by type ID
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $type_id The numeric ID of the CiviEvent event type
 	 * @return mixed $value The value of the CiviEvent event type (or false on failure)
@@ -2273,6 +2345,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Get all CiviEvent event types.
 	 *
+	 * @since 0.1
+	 *
 	 * @return mixed $types CiviCRM API return array (or false on failure)
 	 */
 	public function get_event_types() {
@@ -2311,6 +2385,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Get all CiviEvent event types formatted as a dropdown list. The pseudo-ID
 	 * is actually the event type "value" rather than the event type ID.
+	 *
+	 * @since 0.1
 	 *
 	 * @return str $html Markup containing select options
 	 */
@@ -2388,6 +2464,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * Get the default event type value for a post, but fall back to the default as set
 	 * on the admin screen, fall back to false otherwise
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $post The WP event object
 	 * @return mixed $existing_id The numeric ID of the CiviEvent event type (or false if none exists)
 	 */
@@ -2442,6 +2520,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Get a CiviEvent event type by ID
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $type_id The numeric ID of a CiviEvent event type
 	 * @return array $type CiviEvent event type data
 	 */
@@ -2475,6 +2555,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Get a CiviEvent event type by "value" pseudo-ID
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $type_value The numeric value of a CiviEvent event type
 	 * @return array $type CiviEvent event type data
@@ -2510,6 +2592,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Get the CiviEvent event_types option group ID. Multiple calls
 	 * to the db are avoided by setting the static variable.
+	 *
+	 * @since 0.1
 	 *
 	 * @return array $types CiviCRM API return array (or false on failure)
 	 */
@@ -2567,6 +2651,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Query email via API and update if necessary.
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $venue
 	 * @param array $location The Civi location data
@@ -2686,6 +2772,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Query phone via API and update if necessary.
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $venue
 	 * @param array $location The Civi location data
@@ -2810,6 +2898,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Query address via API and update if necessary.
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $venue
 	 * @param array $location The Civi location data
@@ -2992,6 +3082,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * the case for EO venues, whose objects always contain all properties,
 	 * whether they have a value or not.
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $venue The EO venue object being updated
 	 * @param array $location The existing Civi location data
 	 * @return bool $is_changed True if changed, false otherwise
@@ -3035,6 +3127,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Debugging
+	 *
+	 * @since 0.1
 	 *
 	 * @param str $msg
 	 * @return void

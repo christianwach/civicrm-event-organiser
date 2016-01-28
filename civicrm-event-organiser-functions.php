@@ -31,6 +31,8 @@ instructions.
  * }
  * add_action( 'eventorganiser_additional_event_meta', 'my_child_theme_add_register_link' );
  *
+ * @since 0.2.2
+ *
  * @param int $post_id The numeric ID of the WP post
  */
 function civicrm_event_organiser_registration_link( $post_id = null ) {
@@ -42,6 +44,8 @@ function civicrm_event_organiser_registration_link( $post_id = null ) {
 /**
  * Echo the Registration link for an EO Event.
  *
+ * @since 0.2.2
+ *
  * @param int $post_id The numeric ID of the WP post
  */
 function civicrm_event_organiser_register_link( $post_id = null ) {
@@ -52,6 +56,8 @@ function civicrm_event_organiser_register_link( $post_id = null ) {
 
 /**
  * Get the Registration link for an EO Event.
+ *
+ * @since 0.2.2
  *
  * @param int $post_id The numeric ID of the WP post
  * @return string $link The HTML link to the CiviCRM Registration page
@@ -89,6 +95,8 @@ function civicrm_event_organiser_get_register_link( $post_id = null ) {
 /**
  * Echo the Registration URL for an EO Event.
  *
+ * @since 0.2.2
+ *
  * @param int $post_id The numeric ID of the WP post
  */
 function civicrm_event_organiser_register_url( $post_id = null ) {
@@ -99,6 +107,8 @@ function civicrm_event_organiser_register_url( $post_id = null ) {
 
 /**
  * Get the Registration link for an EO Event.
+ *
+ * @since 0.2.2
  *
  * @param int $post_id The numeric ID of the WP post
  * @return string $url The raw URL to the CiviCRM Registration page

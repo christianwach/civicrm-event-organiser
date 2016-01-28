@@ -35,6 +35,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Set references to other objects
 	 *
+	 * @since 0.1
+	 *
 	 * @param object $parent The parent object
 	 * @return void
 	 */
@@ -49,6 +51,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Register hooks on BuddyPress loaded
+	 *
+	 * @since 0.1
 	 *
 	 * @return void
 	 */
@@ -104,6 +108,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Utility to check if Event Organiser is present and active
 	 *
+	 * @since 0.1
+	 *
 	 * @return bool
 	 */
 	public function is_active() {
@@ -142,6 +148,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Intercept insert post and check if we're inserting an event
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param object $post The WP post object
 	 * @return void
@@ -170,6 +178,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Intercept save event
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @return void
@@ -224,6 +234,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Intercept update event
 	 *
+	 * @since 0.1
+	 *
 	 * @param array $event_data The new event data
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param array $post_data The updated post data
@@ -249,6 +261,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Intercept delete event occurrences
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @return void
@@ -298,6 +312,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Intercept delete occurrence
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param int $occurrence_id The numeric ID of the EO event occurrence
 	 * @return void
@@ -336,6 +352,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * Update and EO event, given a CiviEvent. If no EO event exists
 	 * then create one. This will NOT create sequences and is intended for the
 	 * initial migration of CiviEvents to WordPress
+	 *
+	 * @since 0.1
 	 *
 	 * @param array $civi_event An array of data for the CiviEvent
 	 * @return int $event_id The numeric ID of the event
@@ -519,6 +537,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Intercept before break occurrence
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param int $occurrence_id The numeric ID of the occurrence
 	 * @return void
@@ -561,6 +581,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Intercept after break occurrence
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param int $occurrence_id The numeric ID of the occurrence
 	 * @param int $new_event_id The numeric ID of the new WP post
@@ -601,6 +623,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Intercept before event content
 	 *
+	 * @since 0.1
+	 *
 	 * @param str $event_content The EO event content
 	 * @param str $content The content of the WP post
 	 * @return str $event_content The modified EO event content
@@ -633,6 +657,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Register event meta box
 	 *
+	 * @since 0.1
+	 *
 	 * @return void
 	 */
 	public function event_meta_box() {
@@ -653,6 +679,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Define venue meta box
+	 *
+	 * @since 0.1
 	 *
 	 * @param object $event The EO event
 	 * @return void
@@ -748,6 +776,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Get all Event Organiser dates for a given post ID
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @return array $all_dates All dates for the post
 	 */
@@ -805,6 +835,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Get all Event Organiser date objects for a given post ID
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @return array $all_dates All dates for the post, keyed by ID
 	 */
@@ -835,6 +867,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Save custom components that sync with CiviCRM
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $event_id The numeric ID of the event
 	 * @return void
 	 */
@@ -853,6 +887,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Delete custom components that sync with CiviCRM
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $event_id The numeric ID of the event
 	 * @return void
 	 */
@@ -870,6 +906,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Update event online registration value
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $event_id The numeric ID of the event
 	 * @param bool $value Whether registration is enabled or not
@@ -895,6 +933,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Get all event registration value
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @return bool $civi_reg The event registration value for the CiviEvent
 	 */
@@ -916,6 +956,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Delete event registration value for a CiviEvent
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @return void
 	 */
@@ -934,6 +976,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Update event participant role value
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $event_id The numeric ID of the event
 	 * @return void
@@ -955,6 +999,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Update event participant role value
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $event_id The numeric ID of the event
 	 * @param int $value The event participant role value for the CiviEvent
@@ -988,6 +1034,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Get event participant role value
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @return int $civi_role The event participant role value for the CiviEvent
 	 */
@@ -1009,6 +1057,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Delete event participant role value for a CiviEvent
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @return void
 	 */
@@ -1027,6 +1077,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Get event category terms
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @return array $terms The EO event category terms
@@ -1061,6 +1113,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Hook into the creation of an EO event category term
+	 *
+	 * @since 0.1
 	 *
 	 * @param array $term_id The numeric ID of the new term
 	 * @param array $tt_id The numeric ID of the new term
@@ -1098,6 +1152,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * Hook into updates to an EO event category term before the term is updated
 	 * because we need to get the corresponding CiviEvent type before the WP term
 	 * is updated.
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $term_id The numeric ID of the new term
 	 * @param string $taxonomy The taxonomy containing the term (param introduced in WP 3.7)
@@ -1142,6 +1198,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Hook into updates to an EO event category term
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $term_id The numeric ID of the edited term
 	 * @param array $tt_id The numeric ID of the edited term taxonomy
@@ -1197,6 +1255,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * Hook into deletion of an EO event category term - requires WordPress 3.5+
 	 * because of the 4th parameter
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $term_id The numeric ID of the deleted term
 	 * @param array $tt_id The numeric ID of the deleted term taxonomy
 	 * @param string $taxonomy Name of the taxonomy
@@ -1230,6 +1290,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Create an EO event category term
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $type A CiviEvent event type
 	 * @return array $result Array containing EO event category term data
@@ -1268,6 +1330,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Update an EO event category term
+	 *
+	 * @since 0.1
 	 *
 	 * @param array $new_type A CiviEvent event type
 	 * @param array $old_type A CiviEvent event type prior to the update
@@ -1336,6 +1400,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Get an EO event category term by CiviEvent event type
 	 *
+	 * @since 0.1
+	 *
 	 * @param int $type A CiviEvent event type
 	 * @return int $term_id The ID of the updated EO event category term
 	 */
@@ -1378,6 +1444,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 *
 	 * @see http://core.trac.wordpress.org/ticket/22542
 	 * @see https://core.trac.wordpress.org/changeset/24829
+	 *
+	 * @since 0.1
 	 *
 	 * @param int $term_id The ID of the term whose taxonomy we want
 	 * @param string $output Passed to get_term
@@ -1425,6 +1493,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Debugging
+	 *
+	 * @since 0.1
 	 *
 	 * @param array $msg
 	 * @return void

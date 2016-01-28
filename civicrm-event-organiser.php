@@ -84,6 +84,8 @@ class CiviCRM_WP_Event_Organiser {
 	/**
 	 * Do stuff on plugin init
 	 *
+	 * @since 0.1
+	 *
 	 * @return void
 	 */
 	public function initialise() {
@@ -135,6 +137,8 @@ class CiviCRM_WP_Event_Organiser {
 	/**
 	 * Do stuff on plugin activation
 	 *
+	 * @since 0.1
+	 *
 	 * @return void
 	 */
 	public function activate() {
@@ -145,6 +149,8 @@ class CiviCRM_WP_Event_Organiser {
 
 	/**
 	 * Do stuff on plugin deactivation
+	 *
+	 * @since 0.1
 	 *
 	 * @return void
 	 */
@@ -162,6 +168,8 @@ class CiviCRM_WP_Event_Organiser {
 	 * Load translation files
 	 * A good reference on how to implement translation in WordPress:
 	 * http://ottopress.com/2012/internationalization-youre-probably-doing-it-wrong/
+	 *
+	 * @since 0.1
 	 *
 	 * @return void
 	 */
@@ -200,6 +208,8 @@ $civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
 /**
  * Utility to get a reference to this plugin.
  *
+ * @since 0.2.2
+ *
  * @return object $civicrm_wp_event_organiser The plugin reference
  */
 function civicrm_eo() {
@@ -213,6 +223,8 @@ function civicrm_eo() {
 
 /**
  * Utility to add link to settings page
+ *
+ * @since 0.1
  *
  * @param array $links The existing links array
  * @param str $file The name of the plugin file

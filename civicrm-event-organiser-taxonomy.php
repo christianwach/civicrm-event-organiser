@@ -43,6 +43,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	/**
 	 * Set references to other objects
 	 *
+	 * @since 0.2.1
+	 *
 	 * @param object $parent The parent object
 	 * @return void
 	 */
@@ -57,6 +59,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 	/**
 	 * Register hooks on plugin init
+	 *
+	 * @since 0.2.1
 	 *
 	 * @return void
 	 */
@@ -86,6 +90,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 	/**
 	 * Add the WYSIWYG editor to the "edit" field.
+	 *
+	 * @since 0.2.1
 	 *
 	 * @param $tag The WordPress tag
 	 * @param $taxonomy The WordPress taxonomy
@@ -119,6 +125,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 	/**
 	 * Add the WYSIWYG editor to the "add" field.
+	 *
+	 * @since 0.2.1
 	 *
 	 * @param $taxonomy The WordPress taxonomy
 	 * @return void
