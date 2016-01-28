@@ -10,10 +10,12 @@
 class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	/**
-	 * Properties
+	 * Plugin (calling) object.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var object $plugin The plugin object
 	 */
-
-	// parent object
 	public $plugin;
 
 

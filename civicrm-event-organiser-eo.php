@@ -10,13 +10,21 @@
 class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
-	 * Properties
+	 * Plugin (calling) object.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var object $plugin The plugin object
 	 */
-
-	// parent object
 	public $plugin;
 
-	// assume we're updating an event
+	/**
+	 * Insert event flag.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var bool $insert_event True if inserting an event, false otherwise
+	 */
 	public $insert_event = false;
 
 

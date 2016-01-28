@@ -10,13 +10,21 @@
 class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
-	 * Properties
+	 * Plugin (calling) object.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var object $plugin The plugin object
 	 */
-
-	// parent object
 	public $plugin;
 
-	// flag for overriding sync process
+	/**
+	 * Flag for overriding sync process.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var bool $do_not_sync True if overriding, false otherwise
+	 */
 	public $do_not_sync = false;
 
 

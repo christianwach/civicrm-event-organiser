@@ -45,23 +45,49 @@ if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 class CiviCRM_WP_Event_Organiser {
 
 	/**
-	 * Properties
+	 * Admin/DB object.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var object $db The admin/db object
 	 */
-
-	// Taxonomy class
-	public $taxonomy;
-
-	// Admin/DB class
 	public $db;
 
-	// CiviCRM utilities class
+	/**
+	 * CiviCRM utilities object.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var object $civi The CiviCRM utilities object
+	 */
 	public $civi;
 
-	// Event Organiser utilities class
+	/**
+	 * Event Organiser utilities object.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var object $eo The Event Organiser utilities object
+	 */
 	public $eo;
 
-	// Event Organiser venue utilities class
+	/**
+	 * Event Organiser venue utilities object.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var object $eo_venue The Event Organiser venue utilities object
+	 */
 	public $eo_venue;
+
+	/**
+	 * Taxonomy object.
+	 *
+	 * @since 0.2.1
+	 * @access public
+	 * @var object $taxonomy The taxonomy HTML descriptions object
+	 */
+	public $taxonomy;
 
 
 
