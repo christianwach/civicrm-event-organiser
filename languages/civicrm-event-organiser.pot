@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the CiviCRM Event Organiser package.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.2.1\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.2.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
-"POT-Creation-Date: 2016-01-26 14:24:49+00:00\n"
+"POT-Creation-Date: 2016-01-28 10:04:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,140 +12,140 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: civicrm-event-organiser-admin.php:95 civicrm-event-organiser-admin.php:96
-#: civicrm-event-organiser-admin.php:108 civicrm-event-organiser-admin.php:109
-#: civicrm-event-organiser-admin.php:179
+#: civicrm-event-organiser-admin.php:99 civicrm-event-organiser-admin.php:100
+#: civicrm-event-organiser-admin.php:112 civicrm-event-organiser-admin.php:113
+#: civicrm-event-organiser-admin.php:187
 msgid "CiviCRM Event Organiser"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:158
+#: civicrm-event-organiser-admin.php:166
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:195
+#: civicrm-event-organiser-admin.php:203
 msgid "General Settings"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:197
+#: civicrm-event-organiser-admin.php:205
 msgid "The following options configure some CiviCRM and Event Organiser defaults."
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:208
+#: civicrm-event-organiser-admin.php:216
 msgid "Default CiviCRM Participant Role for Events"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:220
+#: civicrm-event-organiser-admin.php:228
 msgid "Default CiviCRM Event Type"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:235
+#: civicrm-event-organiser-admin.php:243
 msgid "Synchronisation"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:237
+#: civicrm-event-organiser-admin.php:245
 msgid "Things can be a little complicated on initial setup because there can be data in WordPress or CiviCRM or both."
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:239
+#: civicrm-event-organiser-admin.php:247
 msgid "The most robust procedure for setting up the sync between Event Organiser events and CiviEvents is to sync in the following order:"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:242
+#: civicrm-event-organiser-admin.php:250
 msgid "Event Categories with CiviCRM Event Types"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:243
+#: civicrm-event-organiser-admin.php:251
 msgid "EO Venues with CiviCRM Locations"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:244
+#: civicrm-event-organiser-admin.php:252
 msgid "EO Events with CiviEvents."
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:247
+#: civicrm-event-organiser-admin.php:255
 msgid "Your set up may require some direct manipulation of the data, but the following options should help get things moving."
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:253
+#: civicrm-event-organiser-admin.php:261
 msgid "Event Type Synchronisation"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:255
+#: civicrm-event-organiser-admin.php:263
 msgid "At present, there is no CiviCRM hook that fires when a CiviEvent event type is deleted."
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:256
+#: civicrm-event-organiser-admin.php:264
 msgid "Event types should always be deleted from the Event Category screen."
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:261
+#: civicrm-event-organiser-admin.php:269
 msgid "Synchronise Event Organiser Categories to CiviCRM Event Types"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:266
+#: civicrm-event-organiser-admin.php:274
 msgid "Synchronise CiviCRM Event Types to Event Organiser Categories"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:276
+#: civicrm-event-organiser-admin.php:284
 msgid "Venue Synchronisation"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:281
+#: civicrm-event-organiser-admin.php:289
 msgid "Synchronise Event Organiser Venues to CiviEvent Locations"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:286
+#: civicrm-event-organiser-admin.php:294
 msgid "Synchronise CiviEvent Locations to Event Organiser Venues"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:296
+#: civicrm-event-organiser-admin.php:304
 msgid "Event Synchronisation"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:301
+#: civicrm-event-organiser-admin.php:309
 msgid "Synchronise Event Organiser Events to CiviEvents"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:306
+#: civicrm-event-organiser-admin.php:314
 msgid "Synchronise CiviEvents to Event Organiser Events"
 msgstr ""
 
-#: civicrm-event-organiser-admin.php:323
+#: civicrm-event-organiser-admin.php:331
 msgid "Submit"
 msgstr ""
 
-#: civicrm-event-organiser-civi.php:397
+#: civicrm-event-organiser-civi.php:413
 msgid "You must have some CiviCRM event types defined"
 msgstr ""
 
-#: civicrm-event-organiser-eo-venue.php:333
+#: civicrm-event-organiser-eo-venue.php:353
 msgid "Location not synced. Street Address is empty."
 msgstr ""
 
-#: civicrm-event-organiser-eo-venue.php:392
+#: civicrm-event-organiser-eo-venue.php:412
 msgid "Venue not created."
 msgstr ""
 
-#: civicrm-event-organiser-eo.php:1400
+#: civicrm-event-organiser-eo.php:1468
 msgid "Empty Term"
 msgstr ""
 
-#: civicrm-event-organiser-functions.php:57
+#: civicrm-event-organiser-functions.php:71
 msgid "Register"
 msgstr ""
 
-#: civicrm-event-organiser-taxonomy.php:109
-#: civicrm-event-organiser-taxonomy.php:141
+#: civicrm-event-organiser-taxonomy.php:111
+#: civicrm-event-organiser-taxonomy.php:145
 msgctxt "Taxonomy Description"
 msgid "Description"
 msgstr ""
 
-#: civicrm-event-organiser-taxonomy.php:111
-#: civicrm-event-organiser-taxonomy.php:143
+#: civicrm-event-organiser-taxonomy.php:113
+#: civicrm-event-organiser-taxonomy.php:147
 msgid "The description is not prominent by default, however some themes may show it."
 msgstr ""
 
-#: civicrm-event-organiser.php:237
+#: civicrm-event-organiser.php:247
 msgid "Settings"
 msgstr ""
 #. Plugin Name of the plugin/theme
