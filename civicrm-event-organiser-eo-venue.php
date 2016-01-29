@@ -393,8 +393,24 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		remove_action( 'eventorganiser_insert_venue', array( $this, 'insert_venue' ), 10 );
 		remove_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10 );
 
-		// create a slug we know will be unique
-		$args['slug'] = sanitize_title( $name . '-' . $location['id'] );
+		// retrieve venue with slug-to-be-used
+		$existing_venue = eo_get_venue_by( 'slug', sanitize_title( $name ) );
+
+		/**
+		 * Check if there an existing venue with the slug about to be used. Also
+		 * allow overrides to force the creation of a unique slug.
+		 *
+		 * Force the use of a unique slug with the following code:
+		 * add_filter( 'civicrm_event_organiser_force_unique_slug', '__return_true' );
+		 *
+		 * @param bool False by default, which does not force unique slugs
+		 */
+		if ( $existing_venue OR apply_filters( 'civicrm_event_organiser_force_unique_slug', false ) ) {
+
+			// create a slug we know will be unique
+			$args['slug'] = sanitize_title( $name . '-' . $location['id'] );
+
+		}
 
 		// insert venue
 		$result = eo_insert_venue( $name, $args );
