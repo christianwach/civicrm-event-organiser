@@ -341,21 +341,16 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		 * Event Organiser will return a WP_Error object if there is already a
 		 * venue with the same name as the one being created. So, during the
 		 * sync process, it is possible that poorly-named (or partially-named)
-		 * locations will trigger this.
-		 *
-		 * We can try and create a unique name before creating the venue or we
-		 * can throw an error during the sync process to show that this is the
-		 * case. For now, then, log the error and move on.
+		 * locations will trigger this. For now, log the this and carry on.
 		 */
 		if ( empty( $location['address']['street_address'] ) ) {
 
 			// log and move on
 			error_log( print_r( array(
 				'method' => __METHOD__,
-				'message' => __( 'Location not synced. Street Address is empty.', 'civicrm-event-organiser' ),
+				'message' => __( 'Street Address is empty.', 'civicrm-event-organiser' ),
 				'location' => $location,
 			), true ) );
-			return;
 
 		}
 
@@ -399,7 +394,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		remove_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10 );
 
 		// create a slug we know will be unique
-		$args['slug'] = sanitize_title( $name . '-' . $location['id']);
+		$args['slug'] = sanitize_title( $name . '-' . $location['id'] );
 
 		// insert venue
 		$result = eo_insert_venue( $name, $args );
