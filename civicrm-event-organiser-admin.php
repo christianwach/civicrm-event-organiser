@@ -244,17 +244,19 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		echo '
 		<h3>' . __( 'Synchronisation', 'civicrm-event-organiser' ) . '</h3>
 
+		<p><strong>' . __( 'Please note: the following are not settings as such. Ticking a checkbox below and submitting the form will cause the checked sync procedure to run. It is recommended that only one procedure is run in any one go.', 'civicrm-event-organiser' ) . '</strong></p>
+
 		<p>' . __( 'Things can be a little complicated on initial setup because there can be data in WordPress or CiviCRM or both.', 'civicrm-event-organiser' ) . '</p>
 
 		<p>' . __( 'The most robust procedure for setting up the sync between Event Organiser events and CiviEvents is to sync in the following order:', 'civicrm-event-organiser' ) . '</p>
 
 		<ol>
-			<li>' . __( 'Event Categories with CiviCRM Event Types', 'civicrm-event-organiser' ) . '</li>
-			<li>' . __( 'EO Venues with CiviCRM Locations', 'civicrm-event-organiser' ) . '</li>
-			<li>' . __( 'EO Events with CiviEvents.', 'civicrm-event-organiser' ) . '</li>
+			<li>' . __( 'Only sync Event Categories with CiviCRM Event Types', 'civicrm-event-organiser' ) . '</li>
+			<li>' . __( 'Only sync EO Venues with CiviCRM Locations', 'civicrm-event-organiser' ) . '</li>
+			<li>' . __( 'Only sync EO Events with CiviEvents.', 'civicrm-event-organiser' ) . '</li>
 		</ol>
 
-		<p>' . __( 'Your set up may require some direct manipulation of the data, but the following options should help get things moving.', 'civicrm-event-organiser' ) . '</p>
+		<p>' . __( 'Your set up may require some direct manipulation of the data, but the following procedures should help get things moving.', 'civicrm-event-organiser' ) . '</p>
 
 		<hr>';
 
