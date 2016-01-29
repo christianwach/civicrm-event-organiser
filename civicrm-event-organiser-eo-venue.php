@@ -398,6 +398,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		remove_action( 'eventorganiser_insert_venue', array( $this, 'insert_venue' ), 10 );
 		remove_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10 );
 
+		// create a slug we know will be unique
+		$args['slug'] = sanitize_title( $name . '-' . $location['id']);
+
 		// insert venue
 		$result = eo_insert_venue( $name, $args );
 
