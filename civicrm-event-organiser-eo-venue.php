@@ -143,9 +143,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// check permissions
 		if ( ! $this->allow_venue_edit() ) return;
 
-		// check nonce
-		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
-
 		// save custom EO components
 		$this->_save_venue_components( $venue_id );
 
@@ -174,9 +171,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// check permissions
 		if ( ! $this->allow_venue_edit() ) return;
-
-		// check nonce
-		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
 
 		// save custom EO components
 		$this->_save_venue_components( $venue_id );
@@ -966,6 +960,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 * @return void
 	 */
 	private function _save_venue_components( $venue_id ) {
+
+		// skip if neither email nor phone is set
+		if ( ! isset( $_POST['civi_eo_venue_email'] ) AND ! isset( $_POST['civi_eo_venue_phone'] ) ) return;
+		
+		// check nonce
+		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
 
 		// save email if set...
 		if ( isset( $_POST['civi_eo_venue_email'] ) ) {
