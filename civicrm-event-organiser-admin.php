@@ -21,7 +21,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Initialises this object
+	 * Initialises this object.
 	 *
 	 * @since 0.1
 	 */
@@ -53,12 +53,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Set references to other objects
+	 * Set references to other objects.
 	 *
 	 * @since 0.1
 	 *
 	 * @param object $parent The parent object
-	 * @return void
 	 */
 	public function set_references( $parent ) {
 
@@ -74,11 +73,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Add an admin page for this plugin
+	 * Add an admin page for this plugin.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function add_admin_menu() {
 
@@ -130,11 +127,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Enqueue any styles and scripts needed by our admin page
+	 * Enqueue any styles and scripts needed by our admin page.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function add_admin_styles() {
 
@@ -152,11 +147,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Show our admin page
+	 * Show our admin page.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function admin_form() {
 
@@ -350,11 +343,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Update options as supplied by our admin form
+	 * Update options as supplied by our admin form.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function update_options() {
 
@@ -524,11 +515,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Clears all CiviEvents <-> Event Organiser event data
+	 * Clears all CiviEvents <-> Event Organiser event data.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function clear_all_correspondences() {
 
@@ -568,11 +557,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Rebuilds all CiviEvents <-> Event Organiser event data
+	 * Rebuilds all CiviEvents <-> Event Organiser event data.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function rebuild_event_correspondences() {
 
@@ -654,14 +641,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Store CiviEvents <-> Event Organiser event data
+	 * Store CiviEvents <-> Event Organiser event data.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param array $correspondences CiviEvent IDs, keyed by EO occurrence ID
 	 * @param array $unlinked CiviEvent IDs that have been orphaned from an EO event
-	 * @return void
 	 */
 	public function store_event_correspondences( $post_id, $correspondences, $unlinked = array() ) {
 
@@ -698,7 +684,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get all event correspondences
+	 * Get all event correspondences.
 	 *
 	 * @since 0.1
 	 *
@@ -723,7 +709,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get all Event Organiser events for all CiviEvents
+	 * Get all Event Organiser events for all CiviEvents.
 	 *
 	 * @since 0.1
 	 *
@@ -750,7 +736,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get all CiviEvents for all Event Organiser events
+	 * Get all CiviEvents for all Event Organiser events.
 	 *
 	 * @since 0.1
 	 *
@@ -791,13 +777,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Delete the correspondence between an Event Organiser occurrence and a CiviEvent
+	 * Delete the correspondence between an Event Organiser occurrence and a CiviEvent.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param int $occurrence_id The numeric ID of the EO event occurrence
-	 * @return void
 	 */
 	public function clear_event_correspondence( $post_id, $occurrence_id ) {
 
@@ -854,12 +839,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Delete all correspondences between an Event Organiser event and CiviEvents
+	 * Delete all correspondences between an Event Organiser event and CiviEvents.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post
-	 * @return void
 	 */
 	public function clear_event_correspondences( $post_id ) {
 
@@ -896,7 +880,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get Event Organiser event ID for a CiviEvent event ID
+	 * Get Event Organiser event ID for a CiviEvent event ID.
 	 *
 	 * @since 0.1
 	 *
@@ -932,7 +916,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get Event Organiser occurrence ID for a CiviEvent event ID
+	 * Get Event Organiser occurrence ID for a CiviEvent event ID.
 	 *
 	 * @since 0.1
 	 *
@@ -968,7 +952,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get CiviEvent IDs (keyed by occurrence ID) for an Event Organiser event ID
+	 * Get CiviEvent IDs (keyed by occurrence ID) for an Event Organiser event ID.
 	 *
 	 * @since 0.1
 	 *
@@ -991,7 +975,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get CiviEvent ID for an Event Organiser event occurrence
+	 * Get CiviEvent ID for an Event Organiser event occurrence.
 	 *
 	 * @since 0.1
 	 *
@@ -1022,13 +1006,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Store orphaned CiviEvents
+	 * Store orphaned CiviEvents.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param array $unlinked CiviEvent IDs that have been orphaned from an EO event
-	 * @return void
 	 */
 	public function store_orphaned_events( $post_id, $orphans ) {
 
@@ -1081,14 +1064,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Make a single occurrence orphaned
+	 * Make a single occurrence orphaned.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post = EO event
 	 * @param int $occurrence_id The numeric ID of the EO event occurrence
 	 * @param int $civi_event_id The numeric ID of the orphaned CiviEvent
-	 * @return void
 	 */
 	public function occurrence_orphaned( $post_id, $occurrence_id, $civi_event_id ) {
 
@@ -1125,7 +1107,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get orphaned CiviEvents by EO event ID
+	 * Get orphaned CiviEvents by EO event ID.
 	 *
 	 * @since 0.1
 	 *
@@ -1148,7 +1130,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get all Event Organiser event IDs for all orphaned CiviEvents
+	 * Get all Event Organiser event IDs for all orphaned CiviEvents.
 	 *
 	 * @since 0.1
 	 *
@@ -1164,7 +1146,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get EO event ID by orphaned CiviEvent ID
+	 * Get EO event ID by orphaned CiviEvent ID.
 	 *
 	 * @since 0.1
 	 *
@@ -1204,11 +1186,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Show values
+	 * Debugging method that shows all events.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function show_eo_civi_events() {
 
@@ -1270,11 +1250,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Sync EO events to CiviEvents
+	 * Sync EO events to CiviEvents.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function sync_events_to_civi() {
 
@@ -1332,11 +1310,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Sync CiviEvents to EO events. This will NOT create sequences
+	 * Sync CiviEvents to EO events. This will NOT create sequences.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function sync_events_to_eo() {
 
@@ -1379,7 +1355,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Disallow "no category" in EO Event category box
+	 * Disallow "no category" in EO Event category box.
 	 *
 	 * @since 0.1
 	 *
@@ -1395,11 +1371,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Show values
+	 * Debugging method to show event taxonomies.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function show_eo_civi_taxonomies() {
 
@@ -1423,11 +1397,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Sync EO event category terms to CiviEvent types
+	 * Sync EO event category terms to CiviEvent types.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function sync_categories_to_event_types() {
 
@@ -1467,11 +1439,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Sync CiviEvent types to EO event category terms
+	 * Sync CiviEvent types to EO event category terms.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function sync_event_types_to_categories() {
 
@@ -1521,11 +1491,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Show values
+	 * Debugging method to show all venues and locations.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function show_venues_locations() {
 
@@ -1566,11 +1534,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Sync venues and locations
+	 * Sync venues and locations.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function sync_venues_and_locations() {
 
@@ -1585,11 +1551,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Sync EO venues to CiviEvent locations
+	 * Sync EO venues to CiviEvent locations.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function sync_venues_to_locations() {
 
@@ -1617,11 +1581,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Sync CiviEvent locations to EO venues
+	 * Sync CiviEvent locations to EO venues.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function sync_locations_to_venues() {
 
@@ -1650,7 +1612,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get an option
+	 * Get an option.
 	 *
 	 * @since 0.1
 	 *
@@ -1681,13 +1643,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Save an option
+	 * Save an option.
 	 *
 	 * @since 0.1
 	 *
 	 * @param string $key The option name
 	 * @param mixed $value The value to save
-	 * @return void
 	 */
 	public function option_save( $key, $value ) {
 
@@ -1709,12 +1670,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Delete an option
+	 * Delete an option.
 	 *
 	 * @since 0.1
 	 *
 	 * @param string $key The option name
-	 * @return void
 	 */
 	public function option_delete( $key ) {
 
@@ -1736,7 +1696,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Test if this plugin is network activated
+	 * Test if this plugin is network activated.
 	 *
 	 * @since 0.1
 	 *
@@ -1780,11 +1740,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Try and make sync processes uninterruptible
+	 * Try and make sync processes uninterruptible.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	private function make_sync_uninterruptible() {
 

@@ -30,7 +30,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Initialises this object
+	 * Initialises this object.
 	 *
 	 * @since 0.1
 	 */
@@ -44,12 +44,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Set references to other objects
+	 * Set references to other objects.
 	 *
 	 * @since 0.1
 	 *
 	 * @param object $parent The parent object
-	 * @return void
 	 */
 	public function set_references( $parent ) {
 
@@ -61,11 +60,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Register hooks on plugin init
+	 * Register hooks on plugin init.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function register_hooks() {
 
@@ -88,7 +85,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Create an EO event when a CiviEvent is created
+	 * Create an EO event when a CiviEvent is created.
 	 *
 	 * @since 0.1
 	 *
@@ -96,7 +93,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @param string $objectName the type of object
 	 * @param integer $objectId the ID of the object
 	 * @param object $objectRef the object
-	 * @return void
 	 */
 	public function event_created( $op, $objectName, $objectId, $objectRef ) {
 
@@ -152,7 +148,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Update an EO event when a CiviEvent is updated
+	 * Update an EO event when a CiviEvent is updated.
 	 *
 	 * @since 0.1
 	 *
@@ -160,7 +156,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @param string $objectName the type of object
 	 * @param integer $objectId the ID of the object
 	 * @param object $objectRef the object
-	 * @return void
 	 */
 	public function event_updated( $op, $objectName, $objectId, $objectRef ) {
 
@@ -254,7 +249,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Delete an EO event when a CiviEvent is updated
+	 * Delete an EO event when a CiviEvent is updated.
 	 *
 	 * @since 0.1
 	 *
@@ -262,7 +257,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @param string $objectName the type of object
 	 * @param integer $objectId the ID of the object
 	 * @param object $objectRef the object
-	 * @return void
 	 */
 	public function event_deleted( $op, $objectName, $objectId, $objectRef ) {
 
@@ -290,7 +284,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Test if CiviCRM plugin is active
+	 * Test if CiviCRM plugin is active.
 	 *
 	 * @since 0.1
 	 *
@@ -309,12 +303,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Register directories that CiviCRM searches for php and template files
+	 * Register directories that CiviCRM searches for php and template files.
 	 *
 	 * @since 0.1
 	 *
 	 * @param object $config The CiviCRM config object
-	 * @return void
 	 */
 	public function register_directories( &$config ) {
 
@@ -343,7 +336,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Prepare a CiviEvent with data from an EO Event
+	 * Prepare a CiviEvent with data from an EO Event.
 	 *
 	 * @since 0.1
 	 *
@@ -433,7 +426,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Create CiviEvents for an EO event
+	 * Create CiviEvents for an EO event.
 	 *
 	 * @since 0.1
 	 *
@@ -502,7 +495,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Update CiviEvents for an event
+	 * Update CiviEvents for an event.
 	 *
 	 * @since 0.1
 	 *
@@ -845,7 +838,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Match EO Events and CiviEvents
+	 * Match EO Events and CiviEvents.
 	 *
 	 * @since 0.1
 	 *
@@ -969,7 +962,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Get all CiviEvents
+	 * Get all CiviEvents.
 	 *
 	 * @since 0.1
 	 *
@@ -1001,7 +994,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Delete all CiviEvents WARNING only for dev purposes really!
+	 * Delete all CiviEvents. WARNING only for dev purposes really!
 	 *
 	 * @since 0.1
 	 *
@@ -1041,7 +1034,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Disable a CiviEvent
+	 * Disable a CiviEvent.
 	 *
 	 * @since 0.1
 	 *
@@ -1083,7 +1076,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Get a CiviEvent by ID
+	 * Get a CiviEvent by ID.
 	 *
 	 * @since 0.1
 	 *
@@ -1116,7 +1109,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Validate all CiviEvent data for an Event Organiser event
+	 * Validate all CiviEvent data for an Event Organiser event.
 	 *
 	 * @since 0.1
 	 *
@@ -1150,7 +1143,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Updates a CiviEvent Location given an EO venue
+	 * Updates a CiviEvent Location given an EO venue.
 	 *
 	 * @since 0.1
 	 *
@@ -1289,7 +1282,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Gets a CiviEvent Location given an EO venue
+	 * Gets a CiviEvent Location given an EO venue.
 	 *
 	 * @since 0.1
 	 *
@@ -1414,7 +1407,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Get all CiviEvent Locations
+	 * Get all CiviEvent Locations.
 	 *
 	 * @since 0.1
 	 *
@@ -1452,11 +1445,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * WARNING: deletes all CiviEvent Locations
+	 * WARNING: deletes all CiviEvent Locations.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function delete_all_locations() {
 
@@ -1485,7 +1476,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Gets a CiviEvent Location given an CiviEvent Location ID
+	 * Gets a CiviEvent Location given an CiviEvent Location ID.
 	 *
 	 * @since 0.1
 	 *
@@ -1538,7 +1529,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Creates (or updates) a CiviEvent Location given an EO venue
+	 * Creates (or updates) a CiviEvent Location given an EO venue.
 	 *
 	 * The only disadvantage to this method is that, for example, if we update
 	 * the email and that email already exists in the DB, it will not be found
@@ -1659,7 +1650,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Get the existing participant role for a post, but fall back to the default
-	 * as set on the admin screen. fall back to false otherwise
+	 * as set on the admin screen. Fall back to false otherwise.
 	 *
 	 * @since 0.1
 	 *
@@ -1706,7 +1697,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Get all participant roles
+	 * Get all participant roles.
 	 *
 	 * @since 0.1
 	 *
@@ -1749,7 +1740,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Builds a form element for Participant Roles
+	 * Builds a form element for Participant Roles.
 	 *
 	 * @since 0.1
 	 *
@@ -1831,7 +1822,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Checks the status of a CiviEvent's Registration option
+	 * Checks the status of a CiviEvent's Registration option.
 	 *
 	 * @since 0.1
 	 *
@@ -1916,7 +1907,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Intercept when a CiviCRM event type is updated
+	 * Intercept when a CiviCRM event type is updated.
 	 *
 	 * Unfortunately, this doesn't work because Civi does not fire hook_civicrm_pre
 	 * for this entity type. Sad face.
@@ -1927,7 +1918,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @param string $objectName The type of object
 	 * @param integer $objectId The ID of the object
 	 * @param object $objectRef The object
-	 * @return void
 	 */
 	public function event_type_pre( $op, $objectName, $objectId, $objectRef ) {
 
@@ -1952,14 +1942,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Intercept when a CiviCRM event type is toggled
+	 * Intercept when a CiviCRM event type is toggled.
 	 *
 	 * @since 0.1
 	 *
 	 * @param object $recordBAO The CiviCRM option object
 	 * @param integer $recordID The ID of the object
 	 * @param bool $isActive Whether the item is active or not
-	 * @return void
 	 */
 	public function event_type_toggle( $recordBAO, $recordID, $isActive ) {
 
@@ -1985,13 +1974,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Update an EO 'event-category' term when a CiviCRM event type is updated
+	 * Update an EO 'event-category' term when a CiviCRM event type is updated.
 	 *
 	 * @since 0.1
 	 *
 	 * @param string $formName The CiviCRM form name
 	 * @param object $form The CiviCRM form object
-	 * @return void
 	 */
 	public function event_type_process_form( $formName, &$form ) {
 
@@ -2106,7 +2094,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Update a CiviEvent event type
+	 * Update a CiviEvent event type.
 	 *
 	 * @since 0.1
 	 *
@@ -2192,7 +2180,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Delete a CiviEvent event type
+	 * Delete a CiviEvent event type.
 	 *
 	 * @since 0.1
 	 *
@@ -2235,7 +2223,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Get a CiviEvent event type by term
+	 * Get a CiviEvent event type by term.
 	 *
 	 * @since 0.1
 	 *
@@ -2280,7 +2268,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Get a CiviEvent event type value by type ID
+	 * Get a CiviEvent event type value by type ID.
 	 *
 	 * @since 0.1
 	 *
@@ -2473,7 +2461,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	/**
 	 * Get the default event type value for a post, but fall back to the default as set
-	 * on the admin screen, fall back to false otherwise
+	 * on the admin screen, Fall back to false otherwise.
 	 *
 	 * @since 0.1
 	 *
@@ -2529,7 +2517,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Get a CiviEvent event type by ID
+	 * Get a CiviEvent event type by ID.
 	 *
 	 * @since 0.1
 	 *
@@ -2565,7 +2553,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Get a CiviEvent event type by "value" pseudo-ID
+	 * Get a CiviEvent event type by "value" pseudo-ID.
 	 *
 	 * @since 0.1
 	 *
@@ -3137,12 +3125,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Debugging
+	 * Debugging.
 	 *
 	 * @since 0.1
 	 *
 	 * @param str $msg
-	 * @return void
 	 */
 	private function _debug( $msg ) {
 

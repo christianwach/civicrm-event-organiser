@@ -92,7 +92,7 @@ class CiviCRM_WP_Event_Organiser {
 
 
 	/**
-	 * Initialises this object
+	 * Initialises this object.
 	 *
 	 * @since 0.1
 	 */
@@ -109,11 +109,9 @@ class CiviCRM_WP_Event_Organiser {
 
 
 	/**
-	 * Do stuff on plugin init
+	 * Do stuff on plugin init.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function initialise() {
 
@@ -162,11 +160,9 @@ class CiviCRM_WP_Event_Organiser {
 
 
 	/**
-	 * Do stuff on plugin activation
+	 * Do stuff on plugin activation.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function activate() {
 
@@ -175,11 +171,9 @@ class CiviCRM_WP_Event_Organiser {
 
 
 	/**
-	 * Do stuff on plugin deactivation
+	 * Do stuff on plugin deactivation.
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function deactivate() {
 
@@ -192,13 +186,12 @@ class CiviCRM_WP_Event_Organiser {
 
 
 	/**
-	 * Load translation files
+	 * Load translation files.
+	 *
 	 * A good reference on how to implement translation in WordPress:
 	 * http://ottopress.com/2012/internationalization-youre-probably-doing-it-wrong/
 	 *
 	 * @since 0.1
-	 *
-	 * @return void
 	 */
 	public function enable_translation() {
 
@@ -249,7 +242,7 @@ function civicrm_eo() {
 
 
 /**
- * Utility to add link to settings page
+ * Utility to add link to settings page.
  *
  * @since 0.1
  *

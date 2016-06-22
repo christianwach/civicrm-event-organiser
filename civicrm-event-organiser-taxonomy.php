@@ -28,7 +28,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Initialises this object
+	 * Initialises this object.
 	 *
 	 * @since 0.2.1
 	 */
@@ -42,12 +42,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Set references to other objects
+	 * Set references to other objects.
 	 *
 	 * @since 0.2.1
 	 *
 	 * @param object $parent The parent object
-	 * @return void
 	 */
 	public function set_references( $parent ) {
 
@@ -59,11 +58,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Register hooks on plugin init
+	 * Register hooks on plugin init.
 	 *
 	 * @since 0.2.1
-	 *
-	 * @return void
 	 */
 	public function register_hooks() {
 
@@ -96,7 +93,6 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @param $tag The WordPress tag
 	 * @param $taxonomy The WordPress taxonomy
-	 * @return void
 	 */
 	public function render_field_edit( $tag, $taxonomy ) {
 
@@ -130,7 +126,6 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * @since 0.2.1
 	 *
 	 * @param $taxonomy The WordPress taxonomy
-	 * @return void
 	 */
 	public function render_field_add( $taxonomy ) {
 
