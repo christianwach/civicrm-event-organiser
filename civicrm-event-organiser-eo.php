@@ -163,13 +163,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function insert_post( $post_id, $post ) {
 
-		/*
-		print_r( array(
-			'post_id' => $post_id,
-			'post' => $post,
-		) ); die();
-		*/
-
 		// kick out if not event
 		if ( $post->post_type != 'event' ) return;
 
@@ -211,15 +204,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// get event data
 		//$schedule = eo_get_event_schedule( $post_id );
 
-		/*
-		print_r( array(
-			'post_id' => $post_id,
-			'post' => $post,
-			//'schedule' => $schedule,
-			'dates' => $dates,
-		) ); die();
-		*/
-
 		// prevent recursion
 		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
 		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
@@ -250,14 +234,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function intercept_update_event( $event_data, $post_id, $post_data, $event_data ) {
 
-		/*
-		print_r( array(
-			'event_data' => $event_data,
-			'post_id' => $post_id,
-			'post_data' => $post_data,
-		) ); //die();
-		*/
-
 		// --<
 		return $event_data;
 
@@ -274,21 +250,14 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function delete_event_occurrences( $post_id ) {
 
-		/*
-		print_r( array(
-			'method' => 'delete_event_occurrences',
-			'post_id' => $post_id,
-		) ); die();
-		*/
-
-		/*
-		Once again, the question arises as to whether we should actually delete
-		the CiviEvents or set them to "disabled"... I guess this behaviour could
-		be set as a plugin option.
-
-		Also whether we should delete the correspondences or transfer them to an
-		"inactive" array of some kind.
-		*/
+		/**
+		 * Once again, the question arises as to whether we should actually delete
+		 * the CiviEvents or set them to "disabled"... I guess this behaviour could
+		 * be set as a plugin option.
+		 *
+		 * Also whether we should delete the correspondences or transfer them to an
+		 * "inactive" array of some kind.
+		 */
 
 		// get IDs from post meta
 		$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
@@ -324,14 +293,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function occurrence_deleted( $post_id, $occurrence_id ) {
 
-		/*
-		print_r( array(
-			'method' => 'occurrence_deleted',
-			'post_id' => $post_id,
-			'occurrence_id' => $occurrence_id,
-		) ); die();
-		*/
-
 		// init or die
 		if ( ! $this->is_active() ) return;
 
@@ -363,13 +324,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * @return int $event_id The numeric ID of the event
 	 */
 	public function update_event( $civi_event ) {
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'civi_event' => $civi_event,
-		), true ) );
-		*/
 
 		// define schedule
 		$event_data = array(
@@ -465,7 +419,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( isset( $civi_event['event_type_id'] ) ) {
 
 			// we have a category...
-			//print_r( $this->plugin->civi->get_event_types() ); die();
 
 			// get event type data for this pseudo-ID (actually "value")
 			$type = $this->plugin->civi->get_event_type_by_value( $civi_event['event_type_id'] );
@@ -494,14 +447,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'event-venue' => array( absint( $venue_id ) ),
 			'event-category' => $terms,
 		);
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'post_data' => $post_data,
-			'type' => isset( $type ) ? $type : 'NOT SET',
-		) ); die();
-		*/
 
 		// do we have a post ID for this event?
 		$eo_post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $civi_event['id'] );
@@ -548,25 +493,16 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function pre_break_occurrence( $post_id, $occurrence_id ) {
 
-		/*
-		// eg ( [post_id] => 31 [occurrence_id] => 2 )
-		print_r( array(
-			'method' => 'pre_break_occurrence',
-			'post_id' => $post_id,
-			'occurrence_id' => $occurrence_id,
-		) ); die();
-		*/
-
 		// init or die
 		if ( ! $this->is_active() ) return;
 
-		/*
-		At minimum, we need to prevent our '_civi_eo_civicrm_events' post meta
-		from being copied as is to the new EO event. We need to rebuild the data
-		for both EO events, excluding from the broken and adding to the new EO event.
-		We get the excluded CiviEvent before the break, remove it from the event,
-		then rebuild after - see occurrence_broken() below
-		*/
+		/**
+		 * At minimum, we need to prevent our '_civi_eo_civicrm_events' post meta
+		 * from being copied as is to the new EO event. We need to rebuild the data
+		 * for both EO events, excluding from the broken and adding to the new EO event.
+		 * We get the excluded CiviEvent before the break, remove it from the event,
+		 * then rebuild after - see occurrence_broken() below.
+		 */
 
 		// unhook eventorganiser_save_event, because that relies on $_POST
 		remove_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10 );
@@ -592,22 +528,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function occurrence_broken( $post_id, $occurrence_id, $new_event_id ) {
 
-		/*
-		print_r( array(
-			'method' => 'occurrence_broken',
-			'post_id' => $post_id,
-			'occurrence_id' => $occurrence_id,
-			'new_event_id' => $new_event_id,
-		) ); die();
-		*/
-
-		/*
-		EO transfers across all existing post meta, so we don't need to update
-		registration or event_role values.
-
-		However, because the correspondence data is also copied over, we have to
-		delete and rebuild it.
-		*/
+		/**
+		 * EO transfers across all existing post meta, so we don't need to update
+		 * registration or event_role values.
+		 *
+		 * However, because the correspondence data is also copied over, we have to
+		 * delete and rebuild it.
+		 */
 
 		// clear existing correspondences
 		$this->plugin->db->clear_event_correspondences( $new_event_id );
@@ -639,13 +566,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// let's see
 		//$this->get_participant_roles();
 
-		/*
-		print_r( array(
-			'event_content' => $event_content,
-			'content' => $content,
-		) ); die();
-		*/
-
+		// --<
 		return $event_content;
 
 	}
@@ -688,8 +609,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// add nonce
 		wp_nonce_field( 'civi_eo_event_meta_save', 'civi_eo_event_nonce_field' );
-
-		//print_r( $event ); die();
 
 		// get online registration
 		$reg_checked = $this->get_event_registration( $event->ID );
@@ -1114,14 +1033,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function intercept_create_term( $term_id, $tt_id, $taxonomy ) {
 
-		/*
-		print_r( array(
-			'term_id' => $term_id,
-			'tt_id' => $tt_id,
-			'taxonomy' => $taxonomy
-		) ); die();
-		*/
-
 		// only look for terms in the EO taxonomy
 		if ( $taxonomy != 'event-category' ) return;
 
@@ -1164,13 +1075,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
-		/*
-		print_r( array(
-			'term_id' => $term_id,
-			'term' => $term
-		) ); die();
-		*/
-
 		// error check
 		if ( is_null( $term ) ) return;
 		if ( is_wp_error( $term ) ) return;
@@ -1197,14 +1101,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function intercept_update_term( $term_id, $tt_id, $taxonomy ) {
 
-		/*
-		print_r( array(
-			'term_id' => $term_id,
-			'tt_id' => $tt_id,
-			'taxonomy' => $taxonomy,
-		) ); die();
-		*/
-
 		// only look for terms in the EO taxonomy
 		if ( $taxonomy != 'event-category' ) return;
 
@@ -1223,13 +1119,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$new_term = get_term_by( 'id', $term_id, 'event-category' );
 
 		// unhook Civi - no need because we use hook_civicrm_postProcess
-
-		/*
-		print_r( array(
-			'new_term' => $new_term,
-			'old_term' => $old_term,
-		) ); die();
-		*/
 
 		// update CiviEvent term - or create if it doesn't exist
 		$civi_event_type_id = $this->plugin->civi->update_event_type( $new_term, $old_term );
@@ -1252,15 +1141,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * @param object $deleted_term The deleted term object
 	 */
 	public function intercept_delete_term( $term, $tt_id, $taxonomy, $deleted_term ) {
-
-		/*
-		print_r( array(
-			'term_id' => $term_id,
-			'tt_id' => $tt_id,
-			'taxonomy' => $taxonomy,
-			'deleted_term' => $deleted_term,
-		) ); die();
-		*/
 
 		// only look for terms in the EO taxonomy
 		if ( $taxonomy != 'event-category' ) return;

@@ -105,16 +105,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// kick out if not event object
 		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'op' => $op,
-			'objectName' => $objectName,
-			'objectId' => $objectId,
-			'objectRef' => $objectRef,
-		), true ) );
-		*/
-
 		// update a single EO event - or create if it doesn't exist
 		$event_id = $this->plugin->eo->update_event( (array) $objectRef );
 
@@ -168,28 +158,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// kick out if not event object
 		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'op' => $op,
-			'objectName' => $objectName,
-			'objectId' => $objectId,
-			'objectRef' => $objectRef,
-		), true ) );
-		*/
-
 		// check for event_type_id, which is a mandatory field
 		if ( ! empty( $objectRef->id ) AND empty( $objectRef->event_type_id ) ) {
 
 			// this probably means that a Location has been added to the event
 			if ( ! empty( $objectRef->loc_block_id ) ) {
-
-				/*
-				error_log( print_r( array(
-					'method' => __METHOD__,
-					'updated_event' => $updated_event,
-				), true ) );
-				*/
 
 				// get full event data
 				$updated_event = $this->get_event_by_id( $objectRef->id );
@@ -199,16 +172,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 			} else {
 
-				// what's going on ehre?
-				return;
-
-				trigger_error( print_r( array(
+				// log and bail
+				error_log( print_r( array(
 					'method' => __METHOD__,
 					'op' => $op,
 					'objectName' => $objectName,
 					'objectId' => $objectId,
 					'objectRef' => $objectRef,
-				), true ), E_USER_ERROR ); die();
+				), true ) );
+
+				// --<
+				return;
 
 			}
 
@@ -249,7 +223,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Delete an EO event when a CiviEvent is updated.
+	 * Delete an EO event when a CiviEvent is deleted.
 	 *
 	 * @since 0.1
 	 *
@@ -268,16 +242,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// kick out if not event object
 		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'op' => $op,
-			'objectName' => $objectName,
-			'objectId' => $objectId,
-			'objectRef' => $objectRef,
-		), true ) );
-		*/
 
 	}
 
@@ -473,15 +437,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// add the new CiviEvent ID to array, keyed by occurrence_id
 			$correspondences[$date['occurrence_id']] = $result['id'];
 
-			/*
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'post' => $post,
-				'dates' => $dates,
-				'civi_event' => $civi_event,
-			), true ) );
-			*/
-
 		} // end dates loop
 
 		// store these in post meta
@@ -513,15 +468,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// get existing CiviEvents from post meta
 		$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post->ID );
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'post' => $post,
-			'dates' => $dates,
-			'correspondences' => $correspondences,
-		), true ) );
-		*/
 
 		// if we have none yet...
 		if ( count( $correspondences ) === 0 ) {
@@ -588,18 +534,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$civi_event = $this->prepare_civi_event( $post );
 
 		/*
-		// trace
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'post' => $post,
-			'dates' => $dates,
-			'correspondences' => $correspondences,
-			//'civi_event' => $civi_event,
-			//'civi_events' => $civi_events,
-		), true ) );
-		*/
-
-		/*
 		------------------------------------------------------------------------
 		When arrays are equal in length
 		------------------------------------------------------------------------
@@ -623,15 +557,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 				// use API to create event
 				$result = civicrm_api( 'event', 'create', $civi_event );
-
-				/*
-				// trace
-				error_log( print_r( array(
-					'method' => __METHOD__,
-					'civi_event' => $civi_event,
-					'result' => $result,
-				), true ) );
-				*/
 
 				// did we do okay?
 				if ( $result['is_error'] == '1' ) {
@@ -690,35 +615,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-		/*
-		// trace
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'dates' => $dates,
-			'correspondences' => $correspondences,
-			'orphaned' => $orphaned,
-			'orphaned_civi_events' => $orphaned_civi_events,
-		), true ) );
-		*/
-
 		// get matches between EO events and CiviEvents
 		$matches = $this->get_event_matches( $dates, $civi_events, $orphaned_civi_events );
 
 		// amend the orphans array, removing on what has been "unorphaned"
 		$orphans = array_diff( $orphaned, $matches['unorphaned'] );
-
-		/*
-		// trace
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'dates' => $dates,
-			'correspondences' => $correspondences,
-			'orphaned' => $orphaned,
-			//'orphaned_civi_events' => $orphaned_civi_events,
-			'matches' => $matches,
-			'orphans' => $orphans,
-		), true ) );
-		*/
 
 		// extract matched array
 		$matched = $matches['matched'];
@@ -1158,14 +1059,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// get existing location
 		$location = $this->get_location( $venue );
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'venue' => $venue,
-			'location' => $location,
-		), true ) );
-		*/
-
 		// if this venue already has a CiviEvent location
 		if ( $location !== false ) {
 
@@ -1183,14 +1076,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$venue->venue_civi_id = 0;
 
 		}
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'venue' => $venue,
-			'location' => $location,
-		), true ) );
-		*/
 
 		// update existing - or create one if it doesn't exist
 		$location = $this->create_civi_loc_block( $venue, $location );
@@ -1266,11 +1151,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( $result['is_error'] == '1' ) {
 
 			// not much else we can do here if we get an error...
-			trigger_error( print_r( array(
-				'method' => 'delete_location_by_id',
+			error_log( print_r( array(
+				'method' => __METHOD__,
 				'params' => $params,
 				'result' => $result,
-			), true ), E_USER_ERROR ); die();
+			), true ) );
 
 		}
 
@@ -1335,16 +1220,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// return the result if we get one
 		if ( absint( $location['count'] ) > 0 AND is_array( $location['values'] ) ) {
-
-			/*
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'procedure' => 'found by civi_id',
-				'venue' => $venue,
-				'params' => $params,
-				'location' => $location,
-			), true ) );
-			*/
 
 			// found by ID
 			return array_shift( $location['values'] );
@@ -1512,15 +1387,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// get location from nested array
 		$location = array_shift( $result['values'] );
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'params' => $params,
-			'result' => $result,
-			'location' => $location,
-		), true ) );
-		*/
-
 		// --<
 		return $location;
 
@@ -1615,15 +1481,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// call API
 		$location = civicrm_api( 'loc_block', 'create', $params );
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'venue' => $venue,
-			'params' => $params,
-			'location' => $location,
-		), true ) );
-		*/
 
 		// did we do okay?
 		if ( isset( $location['is_error'] ) AND $location['is_error'] == '1' ) {
@@ -1800,16 +1657,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'all_roles' => $all_roles,
-			'opts' => $opts,
-			'options' => $options,
-			'html' => $html,
-		), true ) );
-		*/
-
 		// return
 		return $html;
 
@@ -1839,8 +1686,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// get CiviEvents for this EO event
 		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post->ID );
-
-		//print_r( $civi_events ); die();
 
 		// did we get any?
 		if ( is_array( $civi_events ) AND count( $civi_events ) > 0 ) {
@@ -1921,16 +1766,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function event_type_pre( $op, $objectName, $objectId, $objectRef ) {
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'op' => $op,
-			'objectName' => $objectName,
-			'objectId' => $objectId,
-			'objectRef' => $objectRef,
-		), true ) );
-		*/
-
 		// target our operation
 		if ( $op != 'edit' ) return;
 
@@ -1952,22 +1787,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function event_type_toggle( $recordBAO, $recordID, $isActive ) {
 
-		/*
-
-		[recordBAO] => CRM_Core_BAO_OptionValue
-		[recordID] => 734
-		[isActive] => 1
-
-		trigger_error( print_r( array(
-			'recordBAO' => $recordBAO,
-			'recordID' => $recordID,
-			'isActive' => $isActive,
-		), true ), E_USER_ERROR ); die();
-		*/
-
-		/*
-		WordPress does not have an "Inactive" term state...
-		*/
+		/**
+		 * Example data:
+		 *
+		 * [recordBAO] => CRM_Core_BAO_OptionValue
+		 * [recordID] => 734
+		 * [isActive] => 1
+		 *
+		 * However, WordPress does not have an "Inactive" term state...
+		 */
 
 	}
 
@@ -1983,21 +1811,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function event_type_process_form( $formName, &$form ) {
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'formName' => $formName,
-			'form' => $form,
-		), true ) );
-		*/
-
-		/*
-		trigger_error( print_r( array(
-			'formName' => $formName,
-			'form' => $form,
-		), true ), E_USER_ERROR ); die();
-		*/
-
 		// kick out if not options form
 		if ( ! is_a( $form, 'CRM_Admin_Form_Options' ) ) return;
 
@@ -2009,16 +1822,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// inspect submitted values
 		$submitted_values = $form->getVar( '_submitValues' );
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'formName' => $formName,
-			//'form' => $form,
-			'type' => $type,
-			'submitted_values' => $submitted_values,
-		), true ) );
-		*/
 
 		// NOTE: we still need to address the 'is_active' option
 
@@ -2037,14 +1840,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$new_type['label'] = $submitted_values['label'];
 			$new_type['name'] = $submitted_values['label'];
 			$new_type['description'] = $submitted_values['description'];
-
-			/*
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'new_type' => $new_type,
-				'old_type' => $type,
-			), true ) );
-			*/
 
 			// unhook EO action
 			remove_action( 'edit_terms', array( $this->plugin->eo, 'intercept_pre_update_term' ), 20 );
@@ -2070,13 +1865,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				'name' => $submitted_values['label'],
 				'description' => $description,
 			);
-
-			/*
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'new_type' => $new_type,
-			), true ) );
-			*/
 
 			// unhook EO action
 			remove_action( 'created_term', array( $this->plugin->eo, 'intercept_create_term' ), 20 );
@@ -2162,14 +1950,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// --<
 			return false;
 
-			/*
-			trigger_error( print_r( array(
-				'method' => 'update_event_type',
-				//'params' => $params,
-				'type' => $type,
-			), true ), E_USER_ERROR ); die();
-			*/
-
 		}
 
 		// --<
@@ -2209,8 +1989,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// delete the event type
 		$result = civicrm_api( 'option_value', 'delete', $params );
-
-		//print_r( array( 'result' => $result ) ); die();
 
 		// error check
 		if ( $result['is_error'] == '1' ) return false;
@@ -2312,22 +2090,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			)
 		*/
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'types_params' => $types_params,
-			'type' => isset( $type ) ? $type : 'NOT SET',
-		), true ) );
-		*/
-
 		// error check
 		if ( isset( $type['is_error'] ) AND $type['is_error'] == '1' ) {
 
-			trigger_error( print_r( array(
-				'method' => 'get_event_type_value',
+			error_log( print_r( array(
+				'method' => __METHOD__,
 				'params' => $types_params,
 				'type' => $type,
-			), true ), E_USER_ERROR ); die();
+			), true ) );
 
 		}
 
@@ -2441,16 +2211,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$html = implode( "\n", $options );
 
 		}
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'result' => $result,
-			'opts' => $opts,
-			'options' => $options,
-			'html' => $html,
-		), true ) );
-		*/
 
 		// return
 		return $html;
@@ -2682,27 +2442,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'procedure' => 'pre-get',
-			'venue' => $venue,
-			'location' => $location,
-			'op' => $op,
-			'email_params' => $email_params,
-		), true ) );
-		*/
-
 		// query API
 		$existing_email_data = civicrm_api( 'email', 'get', $email_params );
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'procedure' => 'post-get',
-			'existing_email_data' => $existing_email_data,
-		), true ) );
-		*/
 
 		// did we get one?
 		if (
@@ -2729,14 +2470,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				// update it
 				$existing_email = civicrm_api( 'email', 'create', $existing_email );
 
-				/*
-				error_log( print_r( array(
-					'method' => __METHOD__,
-					'procedure' => 'post-update',
-					'existing_email' => $existing_email,
-				), true ) );
-				*/
-
 			}
 
 			// get its ID
@@ -2751,16 +2484,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			);
 
 		}
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'procedure' => 'final',
-			'email_params' => $email_params,
-			'existing_email_data' => $existing_email_data,
-			'email_data' => $email_data,
-		), true ) );
-		*/
 
 		// --<
 		return $email_data;
@@ -2806,27 +2529,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'procedure' => 'pre-get',
-			'venue' => $venue,
-			'location' => $location,
-			'op' => $op,
-			'phone_params' => $phone_params,
-		), true ) );
-		*/
-
 		// query API
 		$existing_phone_data = civicrm_api( 'phone', 'get', $phone_params );
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'procedure' => 'post-get',
-			'existing_phone_data' => $existing_phone_data,
-		), true ) );
-		*/
 
 		// did we get one?
 		if (
@@ -2854,14 +2558,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				// update it
 				$existing_phone = civicrm_api( 'phone', 'create', $existing_phone );
 
-				///*
-				error_log( print_r( array(
-					'method' => __METHOD__,
-					'procedure' => 'post-update',
-					'existing_phone' => $existing_phone,
-				), true ) );
-				//*/
-
 			}
 
 			// get its ID
@@ -2877,16 +2573,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			);
 
 		}
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'procedure' => 'final',
-			'phone_params' => $phone_params,
-			'existing_phone_data' => $existing_phone_data,
-			'phone_data' => $phone_data,
-		), true ) );
-		*/
 
 		// --<
 		return $phone_data;
@@ -2953,17 +2639,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'procedure' => 'pre-get',
-			'venue' => $venue,
-			'location' => $location,
-			'op' => $op,
-			'address_params' => $address_params,
-		), true ) );
-		*/
-
 		// query API
 		$existing_address_data = civicrm_api( 'address', 'get', $address_params );
 
@@ -2972,14 +2647,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 			// get first one
 			$existing_address = array_shift( $existing_address_data['values'] );
-
-			/*
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'procedure' => 'maybe-update',
-				'existing_address' => $existing_address,
-			), true ) );
-			*/
 
 			// has it changed?
 			if ( $op == 'update' AND $this->is_address_changed( $venue, $existing_address ) ) {
@@ -3008,14 +2675,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 				// update it
 				$existing_address = civicrm_api( 'address', 'create', $existing_address );
-
-				/*
-				error_log( print_r( array(
-					'method' => __METHOD__,
-					'procedure' => 'post-update',
-					'existing_address' => $existing_address,
-				), true ) );
-				*/
 
 			}
 
@@ -3055,16 +2714,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			}
 
 		}
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'procedure' => 'final',
-			'address_params' => $address_params,
-			'existing_address_data' => $existing_address_data,
-			'address_data' => $address_data,
-		), true ) );
-		*/
 
 		// --<
 		return $address_data;

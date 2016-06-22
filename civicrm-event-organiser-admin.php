@@ -93,27 +93,23 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			// add the admin page to the Network Settings menu
 			$page = add_submenu_page(
-
 				'settings.php',
 				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ),
 				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ),
 				'manage_options',
 				'civi_eo_admin_page',
 				array( $this, 'admin_form' )
-
 			);
 
 		} else {
 
 			// add the admin page to the Settings menu
 			$page = add_options_page(
-
 				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ),
 				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ),
 				'manage_options',
 				'civi_eo_admin_page',
 				array( $this, 'admin_form' )
-
 			);
 
 		}
@@ -430,33 +426,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			}
 
-			// debug
-			//$this->show_venues_locations();
-			//$this->show_eo_civi_events();
-			//$this->show_eo_civi_taxonomies();
-			//$this->clear_all_correspondences();
-			//print_r( $this->get_all_event_correspondences() ); die();
-
-			/*
-			// TEST DATA
-			$post_data = array(
-				'post_title' => 'The Event Title',
-				'post_content' => 'My event content goes here',
-			);
-
-			$event_data = array(
-				'start'=> new DateTime('2013-12-03 15:00', new DateTimeZone('UTC') ),
-				'end'=> new DateTime('2013-12-04 15:00', new DateTimeZone('UTC') ),
-				'schedule_last'=> new DateTime('2013-12-25 15:00', new DateTimeZone('UTC') ),
-				'frequency' => 4,
-				'all_day' => 0,
-				'schedule'=>'daily',
-			);
-
-			// use EO's API to create event
-			$event_id = eo_insert_event( $post_data, $event_data );
-			*/
-
 		}
 
 	}
@@ -468,6 +437,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/*
+	----------------------------------------------------------------------------
 	Correspondences are stored using existing data structures. This imposes some
 	limitations on us. Ideally, I suppose, this plugin would define its own table
 	for the correspondences, but the existing tables will work.
@@ -510,6 +480,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	There is an additional "orphans" array, so that when occurrences are added
 	(or added back) to a sequence, the corresponding CiviEvent may be reconnected
 	as long as none of its date and time data has changed.
+	----------------------------------------------------------------------------
 	*/
 
 
@@ -523,10 +494,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// construct args for all event posts
 		$args = array(
-
 			'post_type' => 'event',
 			'numberposts' => -1,
-
 		);
 
 		// get all event posts
@@ -573,14 +542,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// kick out if we get none
 		if ( count( $eo_to_civi ) === 0 ) return;
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'eo_to_civi' => $eo_to_civi,
-			'civi_to_eo' => $this->get_all_civi_to_eo_correspondences(),
-		), true ) );
-		*/
-
 		// init Civi correspondence array to be stored as option
 		$civi_correspondences = array();
 
@@ -613,25 +574,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			}
 
-			/*
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'event_id' => $event_id,
-				'eo_correspondences' => $eo_correspondences,
-			), true ) );
-			*/
-
 			// replace our post meta
 			update_post_meta( $event_id, '_civi_eo_civicrm_events', $eo_correspondences );
 
 		}
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'civi_correspondences' => $civi_correspondences,
-		), true ) );
-		*/
 
 		// replace our option
 		$this->option_save( 'civi_eo_civi_event_data', $civi_correspondences );
@@ -1088,17 +1034,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			unset( $correspondences[$occurrence_id] );
 		}
 
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'post_id' => $post_id,
-			'occurrence_id' => $occurrence_id,
-			'civi_event_id' => $civi_event_id,
-			'existing_orphans' => $existing_orphans,
-			'correspondences' => $correspondences,
-		), true ) );
-		*/
-
 		// store updated correspondences and orphans
 		$this->store_event_correspondences( $post_id, $correspondences, $existing_orphans );
 
@@ -1282,14 +1217,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				// get dates for this event
 				$dates = $this->plugin->eo->get_all_dates( $event->ID );
 
-				/*
-				error_log( print_r( array(
-					'method' => __METHOD__,
-					'dates' => $dates,
-				), true ) );
-				//die();
-				*/
-
 				// update CiviEvent - or create if it doesn't exist
 				$correspondences = $this->plugin->civi->update_civi_events( $event, $dates );
 
@@ -1383,14 +1310,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get all EO event category terms
 		$eo_types = $this->plugin->eo->get_event_categories();
 
-		///*
 		error_log( print_r( array(
 			'method' => __METHOD__,
 			'civi_types' => $civi_types,
 			'eo_types' => $eo_types,
 		), true ) );
 		die();
-		//*/
 
 	}
 
@@ -1424,15 +1349,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			}
 
 		}
-
-		/*
-		// did we get any links?
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'sync_categories_to_event_types links' => $links,
-		), true ) );
-		die();
-		*/
 
 	}
 
@@ -1472,15 +1388,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			}
 
 		}
-
-		/*
-		// did we get any links?
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'sync_event_types_to_categories links' => $links,
-		), true ) );
-		die();
-		*/
 
 	}
 

@@ -250,13 +250,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// get all remaining venue meta
 		$venue_meta = eo_get_venue_meta( $venue_id, '', false );
 
-		/*
-		print_r( array(
-			'venue_id' => $venue_id,
-			'venue_meta' => $venue_meta,
-		) ); die();
-		*/
-
 		// did we get a Civi location ID?
 		if (
 			isset( $venue_meta['_civi_loc_id'] )
@@ -296,14 +289,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// delete components
 		$this->_delete_venue_components( $venue_id );
 
-		/*
-		$venue_meta = eo_get_venue_meta( $venue_id, '', false );
-
-		print_r( array(
-			'venue_id' => $venue_id,
-			'venue_meta' => $venue_meta,
-		) ); die();
-		*/
+		// $venue_meta = eo_get_venue_meta( $venue_id, '', false );
 
 	}
 
@@ -407,7 +393,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// if not an error
 		if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) {
 
-			// log
+			// log and bail
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => __( 'Venue not created.', 'civicrm-event-organiser' ),
@@ -441,16 +427,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// store location ID
 		eo_update_venue_meta( $result['term_id'],  '_civi_loc_id', $location['id'] );
-
-		/*
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'location' => $location,
-			'name' => $name,
-			'args' => $args,
-			'result' => $result,
-		), true ) );
-		*/
 
 		// --<
 		return $result['term_id'];
@@ -537,17 +513,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			// insert venue
 			$result = eo_update_venue( $venue_id, $args );
 
-			/*
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'location' => $location,
-				'venue_id' => $venue_id,
-				'venue' => $venue,
-				'result' => $result,
-				'args' => $args
-			), true ) );
-			*/
-
 			// add actions again
 			add_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10, 1 );
 
@@ -566,14 +531,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			eo_update_venue_meta( $result['term_id'],  '_civi_loc_id', $location['id'] );
 
 		}
-
-		/*
-		print_r( array(
-			'action' => 'update_venue',
-			'location' => $location,
-			'result' => $result,
-		) ); die();
-		*/
 
 		// --<
 		return $result['term_id'];
@@ -610,14 +567,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// this should return a value
 		$venue_id = $wpdb->get_var( $sql );
 
-		/*
-		print_r( array(
-			'location' => $location,
-			'sql' => $sql,
-			'venue_id' => $venue_id,
-		) ); die();
-		*/
-
 		// if we get one, return it
 		if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
 
@@ -650,14 +599,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			// this should return a value
 			$venue_id = $wpdb->get_var( $sql );
 
-			/*
-			print_r( array(
-				'location' => $location,
-				'sql' => $sql,
-				'venue_id' => $venue_id,
-			) ); die();
-			*/
-
 			// if we get one, return it
 			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
 
@@ -679,14 +620,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 			// get value
 			$venue_id = $wpdb->get_var( $sql );
-
-			/*
-			print_r( array(
-				'location' => $location,
-				'sql' => $sql,
-				'venue_id' => $venue_id,
-			) ); die();
-			*/
 
 			// if we get one, return it
 			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
