@@ -13,31 +13,22 @@
 
 
 /**
- * Add an item containing the Registration link for an EO Event to the EO event meta list.
+ * Add an item containing the Registration link for an event to the EO event meta list.
  *
- * Because there have only been appropriate hooks in Event Organiser template
- * files since version 2.12.5, we leave it up to theme developers to add a call
- * to this function to their theme file or set it as a callback to an action in
- * The Loop.
- *
- * To do so in the default way:
- *
- * add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_registration_link' );
- *
- * Or override with something like:
- *
- * function my_child_theme_add_register_link() {
- *     echo '<li class="hello-world">' . civicrm_event_organiser_get_register_link( $post_id ) . '</li>';
- * }
- * add_action( 'eventorganiser_additional_event_meta', 'my_child_theme_add_register_link' );
+ * There have only been appropriate hooks in Event Organiser template files
+ * since version 2.12.5, so installs with a prior version of Event Organiser
+ * will have to manually add a call to this function in their template file(s).
  *
  * @since 0.2.2
  *
  * @param int $post_id The numeric ID of the WP post
  */
 function civicrm_event_organiser_registration_link( $post_id = null ) {
-	echo '<li>' . civicrm_event_organiser_get_register_link( $post_id ) . '</li>';
+	echo '<li class="civicrm-event-register-link">' . civicrm_event_organiser_get_register_link( $post_id ) . '</li>';
 }
+
+// add action for the above
+add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_registration_link' );
 
 
 
