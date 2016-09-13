@@ -611,7 +611,14 @@ class CiviCRM_WP_Event_Organiser_EO {
 		wp_nonce_field( 'civi_eo_event_meta_save', 'civi_eo_event_nonce_field' );
 
 		// get online registration
-		$reg_checked = $this->get_event_registration( $event->ID );
+		$is_reg_checked = $this->get_event_registration( $event->ID );
+
+		// construct checkbox status
+		$reg_checked = '';
+		if ( $is_reg_checked == 1 ) {
+			// override if registration is allowed
+			$reg_checked = ' checked="checked"';
+		}
 
 		// get participant roles
 		$roles = $this->plugin->civi->get_participant_roles_select( $event );
