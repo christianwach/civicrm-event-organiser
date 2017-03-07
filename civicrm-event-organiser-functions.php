@@ -24,7 +24,15 @@
  * @param int $post_id The numeric ID of the WP post
  */
 function civicrm_event_organiser_registration_link( $post_id = null ) {
-	echo '<li class="civicrm-event-register-link">' . civicrm_event_organiser_get_register_link( $post_id ) . '</li>';
+
+	// get link to register page
+	$link = civicrm_event_organiser_get_register_link( $post_id );
+
+	// sow it if we have one
+	if ( ! empty( $link ) ) {
+		echo '<li class="civicrm-event-register-link">' . $link . '</li>';
+	}
+
 }
 
 // add action for the above

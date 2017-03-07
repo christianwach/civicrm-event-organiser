@@ -472,6 +472,38 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
 		add_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10, 1 );
 
+		// if the event has online registration enabled
+		if (
+			isset( $civi_event['is_online_registration'] ) AND
+			$civi_event['is_online_registration'] == 1
+		) {
+
+			// save specified online registration value
+			$this->set_event_registration( $event_id, $civi_event['is_online_registration'] );
+
+		} else {
+
+			// save empty online registration value
+			$this->set_event_registration( $event_id );
+
+		}
+
+		// if the event has a participant role specified
+		if (
+			isset( $civi_event['default_role_id'] ) AND
+			! empty( $civi_event['default_role_id'] )
+		) {
+
+			// save specified participant role
+			$this->set_event_role( $event_id, $civi_event['default_role_id'] );
+
+		} else {
+
+			// set default participant role
+			$this->set_event_role( $event_id );
+
+		}
+
 		// --<
 		return $event_id;
 
@@ -599,7 +631,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 
 	/**
-	 * Define venue meta box.
+	 * Render a meta box on event edit screens.
 	 *
 	 * @since 0.1
 	 *
@@ -837,23 +869,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration( $event_id, $value = 0 ) {
 
-		// if not set
+		// if the checkbox is ticked
 		if ( isset( $_POST['civi_eo_event_reg'] ) ) {
 
-			// retrieve meta value
+			// override the meta value with the checkbox state
 			$value = absint( $_POST['civi_eo_event_reg'] );
 
 		}
 
-		// update event meta
-		update_post_meta( $event_id,  '_civi_reg', $value );
+		// go ahead and set the value
+		$this->set_event_registration( $event_id, $value );
 
 	}
 
 
 
 	/**
-	 * Get all event registration value.
+	 * Get event registration value.
 	 *
 	 * @since 0.1
 	 *
@@ -870,6 +902,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// --<
 		return absint( $civi_reg );
+
+	}
+
+
+
+	/**
+	 * Set event registration value.
+	 *
+	 * @since 0.2.3
+	 *
+	 * @param int $post_id The numeric ID of the WP post
+	 * @param bool $value Whether registration is enabled or not
+	 */
+	public function set_event_registration( $post_id, $value = 0 ) {
+
+		// update event meta
+		update_post_meta( $post_id,  '_civi_reg', $value );
 
 	}
 
