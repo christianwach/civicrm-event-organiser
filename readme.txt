@@ -3,12 +3,13 @@ Contributors: needle
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PZSKM8T5ZP3SC
 Tags: civicrm, event organiser, events, sync
 Requires at least: 3.6
-Tested up to: 4.5
-Stable tag: 0.2.3
+Tested up to: 4.7
+Stable tag: 0.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Keep Event Organiser plugin Events in sync with CiviCRM Events.
+
 
 
 == Description ==
