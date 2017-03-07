@@ -131,12 +131,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// this plugin will not work without EO
 		if ( $installed_version === false ) {
-			wp_die( '<p>Event Organiser plugin is required</p>' );
+			wp_die( '<p>' . __( 'Event Organiser plugin is required', 'civicrm-event-organiser' ) . '</p>' );
 		}
 
 		// we need version 2 at least
 		if ( $installed_version < '2' ) {
-			wp_die( '<p>Event Organiser version 2 or higher is required</p>' );
+			wp_die( '<p>' . __( 'Event Organiser version 2 or higher is required', 'civicrm-event-organiser' ) . '</p>' );
 		}
 
 		// set flag
@@ -619,7 +619,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// create it
 		add_meta_box(
 			'civi_eo_event_metabox',
-			'CiviCRM Settings',
+			__( 'CiviCRM Settings', 'civicrm-event-organiser' ),
 			array( $this, 'event_meta_box_render' ),
 			'event',
 			'side', //'normal',
@@ -677,17 +677,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 				// define sync options
 				$sync_options = '
-				<h4>CiviCRM Sync Options</h4>
+				<h4>' . __( 'CiviCRM Sync Options', 'civicrm-event-organiser' ) . '</h4>
 
-				<p class="civi_eo_event_desc">Choose whether or not to sync events and (if the sequence has changed) whether or not to delete the unused CiviEvents. If you do not delete them, they will be set to "disabled".</p>
+				<p class="civi_eo_event_desc">' . __( 'Choose whether or not to sync this event and (if the sequence has changed) whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ) . '</p>
 
 				<p>
-				<label for="civi_eo_event_sync">Sync this event with CiviCRM:</label>
+				<label for="civi_eo_event_sync">' . __( 'Sync this event with CiviCRM:', 'civicrm-event-organiser' ) . '</label>
 				<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
 				</p>
 
 				<p>
-				<label for="civi_eo_event_delete_unused">Delete unused CiviEvents:</label>
+				<label for="civi_eo_event_delete_unused">' . __( 'Delete unused CiviEvents:', 'civicrm-event-organiser' ) . '</label>
 				<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
 				</p>
 
@@ -702,19 +702,19 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// show meta box
 		echo '
-		<h4>CiviEvent Options</h4>
+		<h4>' . __( 'CiviEvent Options', 'civicrm-event-organiser' ) . '</h4>
 
-		<p class="civi_eo_event_desc">Choose whether or not the events will allow online registration. <em>NOTE</em> changing this will set the event registration for all events.</p>
+		<p class="civi_eo_event_desc">' . __( 'Choose whether or not this event allows online registration. <em>NOTE</em> changing this will set the event registration for all corresponding CiviEvents.', 'civicrm-event-organiser' ) . '</p>
 
 		<p>
-		<label for="civi_eo_event_reg">Online Registration:</label>
+		<label for="civi_eo_event_reg">' . __( 'Online Registration:', 'civicrm-event-organiser' ) . '</label>
 		<input type="checkbox" id="civi_eo_event_reg" name="civi_eo_event_reg" value="1"' . $reg_checked . ' />
 		</p>
 
-		<p class="civi_eo_event_desc">The role you select here is automatically assigned to people when they register online for this event (usually the default <em>Attendee</em> role).</p>
+		<p class="civi_eo_event_desc">' . __( 'The role you select here is automatically assigned to people when they register online for this event (usually the default <em>Attendee</em> role).', 'civicrm-event-organiser' ) . '</p>
 
 		<p>
-		<label for="civi_eo_event_role">Participant Role:</label>
+		<label for="civi_eo_event_role">' . __( 'Participant Role:', 'civicrm-event-organiser' ) . '</label>
 		<select id="civi_eo_event_role" name="civi_eo_event_role">
 			' . $roles . '
 		</select>
@@ -1386,7 +1386,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// sanity check
 		if ( empty( $term_id ) ) {
-			$error = new WP_Error('invalid_term', __('Empty Term'));
+			$error = new WP_Error( 'invalid_term', __( 'Empty Term', 'civicrm-event-organiser' ) );
 			return $error;
 		}
 

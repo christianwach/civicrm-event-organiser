@@ -1,14 +1,14 @@
-# Copyright (C) 2016 CiviCRM Event Organiser
+# Copyright (C) 2017 CiviCRM Event Organiser
 # This file is distributed under the same license as the CiviCRM Event Organiser package.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.2.2\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.2.3\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
-"POT-Creation-Date: 2016-06-22 12:31:10+00:00\n"
+"POT-Creation-Date: 2017-03-07 11:37:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2017-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
@@ -122,6 +122,14 @@ msgstr ""
 msgid "You must have some CiviCRM event types defined"
 msgstr ""
 
+#: civicrm-event-organiser-eo-venue.php:108 civicrm-event-organiser-eo.php:134
+msgid "Event Organiser plugin is required"
+msgstr ""
+
+#: civicrm-event-organiser-eo-venue.php:113 civicrm-event-organiser-eo.php:139
+msgid "Event Organiser version 2 or higher is required"
+msgstr ""
+
 #: civicrm-event-organiser-eo-venue.php:322
 msgid "Street Address is empty."
 msgstr ""
@@ -130,11 +138,59 @@ msgstr ""
 msgid "Venue not created."
 msgstr ""
 
-#: civicrm-event-organiser-eo.php:1333
+#: civicrm-event-organiser-eo-venue.php:646 civicrm-event-organiser-eo.php:622
+msgid "CiviCRM Settings"
+msgstr ""
+
+#: civicrm-event-organiser-eo-venue.php:684
+msgid "Email contact:"
+msgstr ""
+
+#: civicrm-event-organiser-eo-venue.php:689
+msgid "Phone contact:"
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:680
+msgid "CiviCRM Sync Options"
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:682
+msgid "Choose whether or not to sync this event and (if the sequence has changed) whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to \"disabled\"."
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:685
+msgid "Sync this event with CiviCRM:"
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:690
+msgid "Delete unused CiviEvents:"
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:705
+msgid "CiviEvent Options"
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:707
+msgid "Choose whether or not this event allows online registration. <em>NOTE</em> changing this will set the event registration for all corresponding CiviEvents."
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:710
+msgid "Online Registration:"
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:714
+msgid "The role you select here is automatically assigned to people when they register online for this event (usually the default <em>Attendee</em> role)."
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:717
+msgid "Participant Role:"
+msgstr ""
+
+#: civicrm-event-organiser-eo.php:1389
 msgid "Empty Term"
 msgstr ""
 
-#: civicrm-event-organiser-functions.php:71
+#: civicrm-event-organiser-functions.php:70
 msgid "Register"
 msgstr ""
 

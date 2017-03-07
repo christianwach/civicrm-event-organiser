@@ -105,12 +105,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// this plugin will not work without EO
 		if ( $installed_version === false ) {
-			wp_die( '<p>Event Organiser plugin is required</p>' );
+			wp_die( '<p>' . __( 'Event Organiser plugin is required', 'civicrm-event-organiser' ) . '</p>' );
 		}
 
 		// we need version 2 at least
 		if ( $installed_version < '2' ) {
-			wp_die( '<p>Event Organiser version 2 or higher is required</p>' );
+			wp_die( '<p>' . __( 'Event Organiser version 2 or higher is required', 'civicrm-event-organiser' ) . '</p>' );
 		}
 
 		// set flag
@@ -643,7 +643,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// create it
 		add_meta_box(
 			'civi_eo_venue_metabox',
-			'CiviCRM Settings',
+			__( 'CiviCRM Settings', 'civicrm-event-organiser' ),
 			array( $this, 'venue_meta_box_render' ),
 			'event_page_venues',
 			'side',
@@ -681,12 +681,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		echo '
 		<p>
-		<label for="civi_eo_venue_email">Email contact:</label>
+		<label for="civi_eo_venue_email">' . __( 'Email contact:', 'civicrm-event-organiser' ) . '</label>
 		<input type="text" id="civi_eo_venue_email" name="civi_eo_venue_email" value="' . esc_attr( $email ) . '" />
 		</p>
 
 		<p>
-		<label for="civi_eo_venue_phone">Phone contact:</label>
+		<label for="civi_eo_venue_phone">' . __( 'Phone contact:', 'civicrm-event-organiser' ) . '</label>
 		<input type="text" id="civi_eo_venue_phone" name="civi_eo_venue_phone" value="' . esc_attr( $phone ) . '" />
 		</p>
 		';
