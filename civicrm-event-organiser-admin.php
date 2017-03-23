@@ -107,13 +107,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function admin_menu() {
 
 		// we must be network admin in multisite
-		if ( is_multisite() AND ! is_super_admin() ) return false;
+		if ( is_multisite() AND ! is_super_admin() ) return;
 
 		// check user permissions
-		if ( ! current_user_can( 'manage_options' ) ) return false;
+		if ( ! current_user_can( 'manage_options' ) ) return;
 
 		// try and update options
-		$saved = $this->settings_update_router();
+		$this->settings_update_router();
 
 		// multisite and network activated?
 		if ( $this->is_network_activated() ) {
@@ -143,6 +143,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// add scripts and styles
 		//add_action( 'admin_print_styles-' . $this->parent_page, array( $this, 'admin_css' ) );
+		add_action( 'admin_head-'.$this->parent_page, array( $this, 'admin_head' ), 50 );
 
 		// add settings page
 		$this->settings_page = add_submenu_page(
@@ -491,29 +492,64 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function settings_update_router() {
 
-		// init result
-		$result = false;
-
-		// was the form submitted?
-		if( isset( $_POST['civi_eo_settings_submit'] ) ) {
+		// was the "Settings" form submitted?
+		if ( isset( $_POST['civi_eo_settings_submit'] ) ) {
 			$result = $this->settings_update();
 		}
 
-		/*
-	 	// was the "Stop Sync" button pressed?
-		if( isset( $_POST['civi_eo_manual_sync_stop'] ) ) {
-			delete_option( '_civi_eo_manual_sync_offset' );
+	 	// was an Event Type "Stop Sync" button pressed?
+		if ( isset( $_POST['civi_eo_tax_eo_to_civi_stop'] ) ) {
+			delete_option( '_civi_eo_tax_eo_to_civi_offset' );
 			return;
 		}
-		*/
-
-		// was the "Manual Sync" form submitted?
-		if( isset( $_POST['civi_eo_manual_sync_submit'] ) ) {
-			$result = $this->settings_do_manual_sync();
+		if ( isset( $_POST['civi_eo_tax_civi_to_eo_stop'] ) ) {
+			delete_option( '_civi_eo_tax_civi_to_eo_offset' );
+			return;
 		}
 
-		// --<
-		return $result;
+	 	// was a Venue "Stop Sync" button pressed?
+		if ( isset( $_POST['civi_eo_eo_to_civi_stop'] ) ) {
+			delete_option( '_civi_eo_eo_to_civi_offset' );
+			return;
+		}
+		if ( isset( $_POST['civi_eo_civi_to_eo_stop'] ) ) {
+			delete_option( '_civi_eo_civi_to_eo_offset' );
+			return;
+		}
+
+	 	// was an Event "Stop Sync" button pressed?
+		if ( isset( $_POST['civi_eo_event_eo_to_civi_stop'] ) ) {
+			delete_option( '_civi_eo_event_eo_to_civi_offset' );
+			return;
+		}
+		if ( isset( $_POST['civi_eo_event_civi_to_eo_stop'] ) ) {
+			delete_option( '_civi_eo_event_civi_to_eo_offset' );
+			return;
+		}
+
+		// was an Event Type "Sync Now" button pressed?
+		if ( isset( $_POST['civi_eo_tax_eo_to_civi'] ) ) {
+			$this->sync_categories_to_event_types();
+		}
+		if ( isset( $_POST['civi_eo_tax_civi_to_eo'] ) ) {
+			$this->sync_event_types_to_categories();
+		}
+
+		// was a Venue "Sync Now" button pressed?
+		if ( isset( $_POST['civi_eo_eo_to_civi'] ) ) {
+			$this->sync_venues_to_locations();
+		}
+		if ( isset( $_POST['civi_eo_civi_to_eo'] ) ) {
+			$this->sync_locations_to_venues();
+		}
+
+		// was an Event "Sync Now" button pressed?
+		if ( isset( $_POST['civi_eo_event_eo_to_civi'] ) ) {
+			$this->sync_events_to_civi();
+		}
+		if ( isset( $_POST['civi_eo_event_civi_to_eo'] ) ) {
+			$this->sync_events_to_eo();
+		}
 
 	}
 
@@ -555,61 +591,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 
-	/**
-	 * Perform manual sync procedures.
-	 *
-	 * @since 0.2.4
-	 */
-	public function settings_do_manual_sync() {
-
-		// check that we trust the source of the data
-		check_admin_referer( 'civi_eo_manual_sync_action', 'civi_eo_manual_sync_nonce' );
-
-		// init vars
-		$civi_eo_eo_to_civi = '0';
-		$civi_eo_civi_to_eo = '0';
-		$civi_eo_tax_eo_to_civi = '0';
-		$civi_eo_tax_civi_to_eo = '0';
-		$civi_eo_event_eo_to_civi = '0';
-		$civi_eo_event_civi_to_eo = '0';
-
-		// get variables
-		extract( $_POST );
-
-		// did we ask to sync events to CiviCRM?
-		if ( absint( $civi_eo_event_eo_to_civi ) === 1 ) {
-			$this->sync_events_to_civi();
-		}
-
-		// did we ask to sync events to EO?
-		if ( absint( $civi_eo_event_civi_to_eo ) === 1 ) {
-			$this->sync_events_to_eo();
-		}
-
-		// did we ask to sync venues to CiviCRM?
-		if ( absint( $civi_eo_eo_to_civi ) === 1 ) {
-			$this->sync_venues_to_locations();
-		}
-
-		// did we ask to sync locations to EO?
-		if ( absint( $civi_eo_civi_to_eo ) === 1 ) {
-			$this->sync_locations_to_venues();
-		}
-
-		// did we ask to sync categories to CiviCRM?
-		if ( absint( $civi_eo_tax_eo_to_civi ) === 1 ) {
-			$this->sync_categories_to_event_types();
-		}
-
-		// did we ask to sync categories to EO?
-		if ( absint( $civi_eo_tax_civi_to_eo ) === 1 ) {
-			$this->sync_event_types_to_categories();
-		}
-
-	}
-
-
-
 	//##########################################################################
 
 
@@ -622,7 +603,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 	(a) A CiviEvent needs to know which post ID and which occurrence ID it is synced with.
 	(b) An EO event (post) needs to know the CiviEvents which are synced with it.
-	(c) An EO occurrence needs to know which CiviEvent is is synced with
+	(c) An EO occurrence needs to know which CiviEvent it is synced with.
 
 	So, given that CiviCRM seems to have no meta storage for CiviEvents, use a
 	WordPress option to store this data. We can now query the data by CiviEvent ID
