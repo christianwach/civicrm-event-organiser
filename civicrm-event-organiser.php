@@ -257,9 +257,9 @@ function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 
 		// is this Network Admin?
 		if ( is_network_admin() ) {
-			$link = add_query_arg( array( 'page' => 'civi_eo_admin_page' ), network_admin_url( 'settings.php' ) );
+			$link = add_query_arg( array( 'page' => 'civi_eo_parent' ), network_admin_url( 'settings.php' ) );
 		} else {
-			$link = add_query_arg( array( 'page' => 'civi_eo_admin_page' ), admin_url( 'options-general.php' ) );
+			$link = add_query_arg( array( 'page' => 'civi_eo_parent' ), admin_url( 'options-general.php' ) );
 		}
 
 		// add settings link

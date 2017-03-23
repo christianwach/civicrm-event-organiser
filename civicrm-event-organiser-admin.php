@@ -18,6 +18,33 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public $plugin;
 
+	/**
+	 * Parent Page.
+	 *
+	 * @since 0.2.4
+	 * @access public
+	 * @var str $parent_page The parent page
+	 */
+	public $parent_page;
+
+	/**
+	 * Settings Page.
+	 *
+	 * @since 0.2.4
+	 * @access public
+	 * @var str $settings_page The settings page
+	 */
+	public $settings_page;
+
+	/**
+	 * Manual Sync Page.
+	 *
+	 * @since 0.2.4
+	 * @access public
+	 * @var str $sync_page The manual sync page
+	 */
+	public $sync_page;
+
 
 
 	/**
@@ -34,17 +61,17 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			if ( $this->is_network_activated() ) {
 
 				// add menu to Network submenu
-				add_action( 'network_admin_menu', array( $this, 'add_admin_menu' ), 30 );
+				add_action( 'network_admin_menu', array( $this, 'admin_menu' ), 30 );
 
 			} else {
 
-				// add menu to Network submenu
-				add_action( 'admin_menu', array( $this, 'add_admin_menu' ), 30 );
+				// add menu to Settings submenu
+				add_action( 'admin_menu', array( $this, 'admin_menu' ), 30 );
 
 			}
 
 			// override "no category" option
-			 add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'force_taxonomy' ), 30 );
+			add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'force_taxonomy' ), 30 );
 
 		}
 
@@ -73,61 +100,206 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Add an admin page for this plugin.
+	 * Add admin pages for this plugin.
 	 *
 	 * @since 0.1
 	 */
-	public function add_admin_menu() {
+	public function admin_menu() {
 
 		// we must be network admin in multisite
-		if ( is_multisite() AND ! is_super_admin() ) { return false; }
+		if ( is_multisite() AND ! is_super_admin() ) return false;
 
 		// check user permissions
-		if ( ! current_user_can( 'manage_options' ) ) { return false; }
+		if ( ! current_user_can( 'manage_options' ) ) return false;
 
 		// try and update options
-		$saved = $this->update_options();
+		$saved = $this->settings_update_router();
 
 		// multisite and network activated?
 		if ( $this->is_network_activated() ) {
 
 			// add the admin page to the Network Settings menu
-			$page = add_submenu_page(
+			$this->parent_page = add_submenu_page(
 				'settings.php',
-				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ),
-				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ),
-				'manage_options',
-				'civi_eo_admin_page',
-				array( $this, 'admin_form' )
+				__( 'CiviCRM Event Organiser: Settings', 'civicrm-event-organiser' ), // page title
+				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ), // menu title
+				'manage_options', // required caps
+				'civi_eo_parent', // slug name
+				array( $this, 'page_settings' ) // callback
 			);
 
 		} else {
 
 			// add the admin page to the Settings menu
-			$page = add_options_page(
-				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ),
-				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ),
-				'manage_options',
-				'civi_eo_admin_page',
-				array( $this, 'admin_form' )
+			$this->parent_page = add_options_page(
+				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ), // page title
+				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ), // menu title
+				'manage_options', // required caps
+				'civi_eo_parent', // slug name
+				array( $this, 'page_settings' ) // callback
 			);
 
 		}
 
-		// add styles only on our admin page, see:
-		// http://codex.wordpress.org/Function_Reference/wp_enqueue_script#Load_scripts_only_on_plugin_pages
-		//add_action( 'admin_print_styles-' . $page, array( $this, 'add_admin_styles' ) );
+		// add scripts and styles
+		//add_action( 'admin_print_styles-' . $this->parent_page, array( $this, 'admin_css' ) );
+
+		// add settings page
+		$this->settings_page = add_submenu_page(
+			'civi_eo_parent', // parent slug
+			__( 'CiviCRM Event Organiser: Settings', 'civicrm-event-organiser' ), // page title
+			__( 'Settings', 'civicrm-event-organiser' ), // menu title
+			'manage_options', // required caps
+			'civi_eo_settings', // slug name
+			array( $this, 'page_settings' ) // callback
+		);
+
+		/*
+		// add scripts and styles
+		add_action( 'admin_print_styles-'.$this->settings_page, array( $this, 'admin_css' ) );
+		*/
+		add_action( 'admin_head-'.$this->settings_page, array( $this, 'admin_head' ), 50 );
+		add_action( 'admin_head-'.$this->settings_page, array( $this, 'admin_menu_highlight' ), 50 );
+
+		// add manual sync page
+		$this->sync_page = add_submenu_page(
+			'civi_eo_parent', // parent slug
+			__( 'CiviCRM Event Organiser: Manual Sync', 'civicrm-event-organiser' ), // page title
+			__( 'Manual Sync', 'civicrm-event-organiser' ), // menu title
+			'manage_options', // required caps
+			'civi_eo_manual_sync', // slug name
+			array( $this, 'page_manual_sync' ) // callback
+		);
+
+		/*
+		// add scripts and styles
+		add_action( 'admin_print_scripts-'.$this->sync_page, array( $this, 'admin_js_sync_page' ) );
+		add_action( 'admin_print_styles-'.$this->sync_page, array( $this, 'admin_css' ) );
+		add_action( 'admin_print_styles-'.$this->sync_page, array( $this, 'admin_css_sync_page' ) );
+		*/
+		add_action( 'admin_head-'.$this->sync_page, array( $this, 'admin_head' ), 50 );
+		add_action( 'admin_head-'.$this->sync_page, array( $this, 'admin_menu_highlight' ), 50 );
 
 	}
 
 
 
 	/**
-	 * Enqueue any styles and scripts needed by our admin page.
+	 * Tell WordPress to highlight the plugin's menu item, regardless of which
+	 * actual admin screen we are on.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @global string $plugin_page
+	 * @global array $submenu
+	 */
+	public function admin_menu_highlight() {
+
+		global $plugin_page, $submenu_file;
+
+		// define subpages
+		$subpages = array(
+		 	'civi_eo_settings',
+		 	'civi_eo_manual_sync',
+		 );
+
+		// This tweaks the Settings subnav menu to show only one menu item
+		if ( in_array( $plugin_page, $subpages ) ) {
+			$plugin_page = 'civi_eo_parent';
+			$submenu_file = 'civi_eo_parent';
+		}
+
+	}
+
+
+
+	/**
+	 * Initialise plugin help.
 	 *
 	 * @since 0.1
 	 */
-	public function add_admin_styles() {
+	public function admin_head() {
+
+		// grab screen object
+		$screen = get_current_screen();
+
+		// use method in this class
+		$this->admin_help( $screen );
+
+	}
+
+
+
+	/**
+	 * Adds help copy to admin pages.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @param object $screen The existing WordPress screen object
+	 * @return object $screen The amended WordPress screen object
+	 */
+	public function admin_help( $screen ) {
+
+		// init suffix
+		$page = '';
+
+		// the page ID is different in multisite
+		if ( $this->is_network_activated() ) {
+			$page = '-network';
+		}
+
+		// init page IDs
+		$pages = array(
+			$this->settings_page . $page,
+			$this->sync_page . $page,
+		);
+
+		// kick out if not our screen
+		if ( ! in_array( $screen->id, $pages ) ) return $screen;
+
+		// add a tab - we can add more later
+		$screen->add_help_tab( array(
+			'id'      => 'civi_eo',
+			'title'   => __( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ),
+			'content' => $this->admin_help_text(),
+		));
+
+		// --<
+		return $screen;
+
+	}
+
+
+
+	/**
+	 * Get help text.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @return string $help Help formatted as HTML
+	 */
+	public function admin_help_text() {
+
+		// stub help text, to be developed further...
+		$help = '<p>' . __( 'For further information about using CiviCRM Event Organiser, please refer to the README.md that comes with this plugin.', 'civicrm-event-organiser' ) . '</p>';
+
+		// --<
+		return $help;
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
+	 * Enqueue any styles needed by our admin pages.
+	 *
+	 * @since 0.1
+	 */
+	public function admin_css() {
 
 		// add admin css
 		wp_enqueue_style(
@@ -142,12 +314,16 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 
+	//##########################################################################
+
+
+
 	/**
-	 * Show our admin page.
+	 * Show our admin settings page.
 	 *
-	 * @since 0.1
+	 * @since 0.2.4
 	 */
-	public function admin_form() {
+	public function page_settings() {
 
 		// multisite and network activated?
 		if ( $this->is_network_activated() ) {
@@ -159,10 +335,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		}
 
-		// sanitise admin page url
-		$url = $_SERVER['REQUEST_URI'];
-		$url_array = explode( '&', $url );
-		if ( is_array( $url_array ) ) { $url = $url_array[0]; }
+		// get admin page URLs
+		$urls = $this->page_get_urls();
 
 		// get all participant roles
 		$roles = $this->plugin->civi->get_participant_roles_select( $event = null );
@@ -170,262 +344,266 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get all event types
 		$types = $this->plugin->civi->get_event_types_select();
 
-		// open admin page
-		echo '
-
-		<div class="wrap" id="civi_eo_admin_wrapper">
-
-		<h1>' . __( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ) . '</h1>
-
-		<form method="post" action="' . htmlentities( $url . '&updated=true' ) . '">
-
-		' . wp_nonce_field( 'civi_eo_admin_action', 'civi_eo_nonce', true, false ) . '
-		' . wp_referer_field( false ) . '
-
-		';
-
-		// open div
-		echo '<div id="civi_eo_admin_options">
-
-		<hr>';
-
-		// show table
-		echo '
-		<h3>' . __( 'General Settings', 'civicrm-event-organiser' ) . '</h3>
-
-		<p>' . __( 'The following options configure some CiviCRM and Event Organiser defaults.', 'civicrm-event-organiser' ) . '</p>
-
-		<table class="form-table">
-
-		';
-
-		// did we get any roles?
-		if ( $roles != '' ) {
-
-			echo '
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_default_role">' . __( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ) . '</label></th>
-				<td><select id="civi_eo_event_default_role" name="civi_eo_event_default_role">' . $roles . '</select></td>
-			</tr>
-			';
-
-		}
-
-		// did we get any types?
-		if ( $types != '' ) {
-
-			echo '
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_default_type">' . __( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ) . '</label></th>
-				<td><select id="civi_eo_event_default_type" name="civi_eo_event_default_type">' . $types . '</select></td>
-			</tr>
-			';
-
-		}
-
-		// close table
-		echo '
-		</table>
-
-		<hr>';
-
-		// show blurb
-		echo '
-		<h3>' . __( 'Synchronisation', 'civicrm-event-organiser' ) . '</h3>
-
-		<p><strong>' . __( 'Please note: the following are not settings as such. Ticking a checkbox below and submitting the form will cause the checked sync procedure to run. It is recommended that only one procedure is run in any one go.', 'civicrm-event-organiser' ) . '</strong></p>
-
-		<p>' . __( 'Things can be a little complicated on initial setup because there can be data in WordPress or CiviCRM or both.', 'civicrm-event-organiser' ) . '</p>
-
-		<p>' . __( 'The most robust procedure for setting up the sync between Event Organiser events and CiviEvents is to sync in the following order:', 'civicrm-event-organiser' ) . '</p>
-
-		<ol>
-			<li>' . __( 'Only sync Event Categories with CiviCRM Event Types', 'civicrm-event-organiser' ) . '</li>
-			<li>' . __( 'Only sync EO Venues with CiviCRM Locations', 'civicrm-event-organiser' ) . '</li>
-			<li>' . __( 'Only sync EO Events with CiviEvents.', 'civicrm-event-organiser' ) . '</li>
-		</ol>
-
-		<p>' . __( 'Your set up may require some direct manipulation of the data, but the following procedures should help get things moving.', 'civicrm-event-organiser' ) . '</p>
-
-		<hr>';
-
-		// show table
-		echo '
-		<h3>' . __( 'Event Type Synchronisation', 'civicrm-event-organiser' ) . '</h3>
-
-		<p>' . __( 'At present, there is no CiviCRM hook that fires when a CiviEvent event type is deleted.', 'civicrm-event-organiser' ) . '<br />
-		<strong>' . __( 'Event types should always be deleted from the Event Category screen.', 'civicrm-event-organiser' ) . '</strong></p>
-
-		<table class="form-table">
-
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_tax_eo_to_civi">' . __( 'Synchronise Event Organiser Categories to CiviCRM Event Types', 'civicrm-event-organiser' ) . '</label></th>
-				<td><input id="civi_eo_tax_eo_to_civi" name="civi_eo_tax_eo_to_civi" value="1" type="checkbox" /></td>
-			</tr>
-
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_tax_civi_to_eo">' . __( 'Synchronise CiviCRM Event Types to Event Organiser Categories', 'civicrm-event-organiser' ) . '</label></th>
-				<td><input id="civi_eo_tax_civi_to_eo" name="civi_eo_tax_civi_to_eo" value="1" type="checkbox" /></td>
-			</tr>
-
-		</table>
-
-		<hr>';
-
-		// show table
-		echo '
-		<h3>' . __( 'Venue Synchronisation', 'civicrm-event-organiser' ) . '</h3>
-
-		<table class="form-table">
-
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_eo_to_civi">' . __( 'Synchronise Event Organiser Venues to CiviEvent Locations', 'civicrm-event-organiser' ) . '</label></th>
-				<td><input id="civi_eo_eo_to_civi" name="civi_eo_eo_to_civi" value="1" type="checkbox" /></td>
-			</tr>
-
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_civi_to_eo">' . __( 'Synchronise CiviEvent Locations to Event Organiser Venues', 'civicrm-event-organiser' ) . '</label></th>
-				<td><input id="civi_eo_civi_to_eo" name="civi_eo_civi_to_eo" value="1" type="checkbox" /></td>
-			</tr>
-
-		</table>
-
-		<hr>';
-
-		// show table
-		echo '
-		<h3>' . __( 'Event Synchronisation', 'civicrm-event-organiser' ) . '</h3>
-
-		<table class="form-table">
-
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_eo_to_civi">' . __( 'Synchronise Event Organiser Events to CiviEvents', 'civicrm-event-organiser' ) . '</label></th>
-				<td><input id="civi_eo_event_eo_to_civi" name="civi_eo_event_eo_to_civi" value="1" type="checkbox" /></td>
-			</tr>
-
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_civi_to_eo">' . __( 'Synchronise CiviEvents to Event Organiser Events', 'civicrm-event-organiser' ) . '</label></th>
-				<td><input id="civi_eo_event_civi_to_eo" name="civi_eo_event_civi_to_eo" value="1" type="checkbox" /></td>
-			</tr>
-
-		</table>
-
-		<hr>';
-
-		// close div
-		echo '
-
-		</div>';
-
-		// show submit button
-		echo '
-
-		<p class="submit">
-			<input type="submit" name="civi_eo_submit" value="' . __( 'Submit', 'civicrm-event-organiser' ) . '" class="button-primary" />
-		</p>
-
-		';
-
-		// close form
-		echo '
-
-		</form>
-
-		</div>
-		' . "\n\n\n\n";
+		// include template file
+		include( CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/settings.php' );
 
 	}
 
 
 
 	/**
-	 * Update options as supplied by our admin form.
+	 * Show our admin manual sync page.
 	 *
-	 * @since 0.1
+	 * @since 0.2.4
 	 */
-	public function update_options() {
+	public function page_manual_sync() {
+
+		// multisite and network activated?
+		if ( $this->is_network_activated() ) {
+
+			// only allow network admins through
+			if( ! is_super_admin() ) {
+				wp_die( __( 'You do not have permission to access this page.', 'civicrm-event-organiser' ) );
+			}
+
+		}
+
+		// get admin page URLs
+		$urls = $this->page_get_urls();
+
+		// get all participant roles
+		$roles = $this->plugin->civi->get_participant_roles_select( $event = null );
+
+		// get all event types
+		$types = $this->plugin->civi->get_event_types_select();
+
+		// include template file
+		include( CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/manual-sync.php' );
+
+	}
+
+
+
+	/**
+	 * Get admin page URLs.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @return array $admin_urls The array of admin page URLs
+	 */
+	public function page_get_urls() {
+
+		// only calculate once
+		if ( isset( $this->urls ) ) return $this->urls;
+
+		// init return
+		$this->urls = array();
+
+		// multisite?
+		if ( $this->is_network_activated() ) {
+
+			// get admin page URLs via our adapted method
+			$this->urls['settings'] = $this->network_menu_page_url( 'civi_eo_settings', false );
+			$this->urls['manual_sync'] = $this->network_menu_page_url( 'civi_eo_manual_sync', false );
+
+		} else {
+
+			// get admin page URLs
+			$this->urls['settings'] = menu_page_url( 'civi_eo_settings', false );
+			$this->urls['manual_sync'] = menu_page_url( 'civi_eo_manual_sync', false );
+
+		}
+
+		// --<
+		return $this->urls;
+
+	}
+
+
+
+	/**
+	 * Get the url to access a particular menu page based on the slug it was registered with.
+	 * If the slug hasn't been registered properly no url will be returned.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @param string $menu_slug The slug name to refer to this menu by (should be unique for this menu)
+	 * @param bool $echo Whether or not to echo the url - default is true
+	 * @return string $url The URL
+	 */
+	public function network_menu_page_url( $menu_slug, $echo = true ) {
+
+		global $_parent_pages;
+
+		if ( isset( $_parent_pages[$menu_slug] ) ) {
+			$parent_slug = $_parent_pages[$menu_slug];
+			if ( $parent_slug && ! isset( $_parent_pages[$parent_slug] ) ) {
+				$url = network_admin_url( add_query_arg( 'page', $menu_slug, $parent_slug ) );
+			} else {
+				$url = network_admin_url( 'admin.php?page=' . $menu_slug );
+			}
+		} else {
+			$url = '';
+		}
+
+		$url = esc_url( $url );
+
+		if ( $echo ) echo $url;
+
+		// --<
+		return $url;
+
+	}
+
+
+
+	/**
+	 * Get the URL for the form action.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @return string $target_url The URL for the admin form action
+	 */
+	public function admin_form_url_get() {
+
+		// sanitise admin page url
+		$target_url = $_SERVER['REQUEST_URI'];
+		$url_array = explode( '&', $target_url );
+		if ( $url_array ) { $target_url = htmlentities( $url_array[0] . '&updated=true' ); }
+
+		// --<
+		return $target_url;
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
+	 * Route settings updates to relevant methods.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @return bool $result True on success, false otherwise
+	 */
+	public function settings_update_router() {
+
+		// init result
+		$result = false;
 
 		// was the form submitted?
-		if( isset( $_POST['civi_eo_submit'] ) ) {
+		if( isset( $_POST['civi_eo_settings_submit'] ) ) {
+			$result = $this->settings_update();
+		}
 
-			// check that we trust the source of the data
-			check_admin_referer( 'civi_eo_admin_action', 'civi_eo_nonce' );
+		/*
+	 	// was the "Stop Sync" button pressed?
+		if( isset( $_POST['civi_eo_manual_sync_stop'] ) ) {
+			delete_option( '_civi_eo_manual_sync_offset' );
+			return;
+		}
+		*/
 
-			// rebuild broken correspondences in 0.1
-			$this->rebuild_event_correspondences();
+		// was the "Manual Sync" form submitted?
+		if( isset( $_POST['civi_eo_manual_sync_submit'] ) ) {
+			$result = $this->settings_do_manual_sync();
+		}
 
-			// init vars
-			$civi_eo_event_default_role = '0';
-			$civi_eo_eo_to_civi = '0';
-			$civi_eo_civi_to_eo = '0';
-			$civi_eo_tax_eo_to_civi = '0';
-			$civi_eo_tax_civi_to_eo = '0';
-			$civi_eo_event_eo_to_civi = '0';
-			$civi_eo_event_civi_to_eo = '0';
+		// --<
+		return $result;
 
-			// get variables
-			extract( $_POST );
+	}
 
-			// sanitise
-			$civi_eo_event_default_role = absint( $civi_eo_event_default_role );
 
-			// save option
-			$this->option_save( 'civi_eo_event_default_role', $civi_eo_event_default_role );
 
-			// sanitise
-			$civi_eo_event_default_type = absint( $civi_eo_event_default_type );
+	/**
+	 * Update plugin settings.
+	 *
+	 * @since 0.2.4
+	 */
+	public function settings_update() {
 
-			// save option
-			$this->option_save( 'civi_eo_event_default_type', $civi_eo_event_default_type );
+		// check that we trust the source of the data
+		check_admin_referer( 'civi_eo_settings_action', 'civi_eo_settings_nonce' );
 
-			// did we ask to sync events to CiviCRM?
-			if ( absint( $civi_eo_event_eo_to_civi ) === 1 ) {
+		// rebuild broken correspondences in 0.1
+		$this->rebuild_event_correspondences();
 
-				// sync EO to Civi
-				$this->sync_events_to_civi();
+		// init vars
+		$civi_eo_event_default_role = '0';
+		$civi_eo_event_default_type = '0';
 
-			}
+		// get variables
+		extract( $_POST );
 
-			// did we ask to sync events to EO?
-			if ( absint( $civi_eo_event_civi_to_eo ) === 1 ) {
+		// sanitise
+		$civi_eo_event_default_role = absint( $civi_eo_event_default_role );
 
-				// sync Civi to EO
-				$this->sync_events_to_eo();
+		// save option
+		$this->option_save( 'civi_eo_event_default_role', $civi_eo_event_default_role );
 
-			}
+		// sanitise
+		$civi_eo_event_default_type = absint( $civi_eo_event_default_type );
 
-			// did we ask to sync venues to CiviCRM?
-			if ( absint( $civi_eo_eo_to_civi ) === 1 ) {
+		// save option
+		$this->option_save( 'civi_eo_event_default_type', $civi_eo_event_default_type );
 
-				// sync EO to Civi
-				$this->sync_venues_to_locations();
+	}
 
-			}
 
-			// did we ask to sync locations to EO?
-			if ( absint( $civi_eo_civi_to_eo ) === 1 ) {
 
-				// sync Civi to EO
-				$this->sync_locations_to_venues();
+	/**
+	 * Perform manual sync procedures.
+	 *
+	 * @since 0.2.4
+	 */
+	public function settings_do_manual_sync() {
 
-			}
+		// check that we trust the source of the data
+		check_admin_referer( 'civi_eo_manual_sync_action', 'civi_eo_manual_sync_nonce' );
 
-			// did we ask to sync categories to CiviCRM?
-			if ( absint( $civi_eo_tax_eo_to_civi ) === 1 ) {
+		// init vars
+		$civi_eo_eo_to_civi = '0';
+		$civi_eo_civi_to_eo = '0';
+		$civi_eo_tax_eo_to_civi = '0';
+		$civi_eo_tax_civi_to_eo = '0';
+		$civi_eo_event_eo_to_civi = '0';
+		$civi_eo_event_civi_to_eo = '0';
 
-				// sync EO to Civi
-				$this->sync_categories_to_event_types();
+		// get variables
+		extract( $_POST );
 
-			}
+		// did we ask to sync events to CiviCRM?
+		if ( absint( $civi_eo_event_eo_to_civi ) === 1 ) {
+			$this->sync_events_to_civi();
+		}
 
-			// did we ask to sync categories to EO?
-			if ( absint( $civi_eo_tax_civi_to_eo ) === 1 ) {
+		// did we ask to sync events to EO?
+		if ( absint( $civi_eo_event_civi_to_eo ) === 1 ) {
+			$this->sync_events_to_eo();
+		}
 
-				// sync Civi to EO
-				$this->sync_event_types_to_categories();
+		// did we ask to sync venues to CiviCRM?
+		if ( absint( $civi_eo_eo_to_civi ) === 1 ) {
+			$this->sync_venues_to_locations();
+		}
 
-			}
+		// did we ask to sync locations to EO?
+		if ( absint( $civi_eo_civi_to_eo ) === 1 ) {
+			$this->sync_locations_to_venues();
+		}
 
+		// did we ask to sync categories to CiviCRM?
+		if ( absint( $civi_eo_tax_eo_to_civi ) === 1 ) {
+			$this->sync_categories_to_event_types();
+		}
+
+		// did we ask to sync categories to EO?
+		if ( absint( $civi_eo_tax_civi_to_eo ) === 1 ) {
+			$this->sync_event_types_to_categories();
 		}
 
 	}
