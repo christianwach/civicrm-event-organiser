@@ -165,10 +165,6 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 				event.preventDefault();
 			}
 
-			if ( console.log ) {
-				console.log( me.count );
-			}
-
 			// initialise progress bar
 			me.bar.progressbar({
 				value: false,
@@ -251,10 +247,6 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 
 				// callback
 				function( data, textStatus ) {
-
-					if ( console.log ) {
-						console.log( data );
-					}
 
 					// if success
 					if ( textStatus == 'success' ) {

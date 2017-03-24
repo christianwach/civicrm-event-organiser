@@ -426,11 +426,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// use API to create event
 			$result = civicrm_api( 'event', 'create', $civi_event );
 
-			// did we do okay?
+			// log failures and skip to next
 			if ( $result['is_error'] == '1' ) {
 
-				// not much else we can do here if we get an error...
-				wp_die( $result['error_message'] );
+				// log error
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'message' => $result['error_message'],
+					'civi_event' => $civi_event,
+				), true ) );
+
+				continue;
 
 			}
 
@@ -558,11 +564,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				// use API to create event
 				$result = civicrm_api( 'event', 'create', $civi_event );
 
-				// did we do okay?
+				// log failures and skip to next
 				if ( $result['is_error'] == '1' ) {
 
-					// not much else we can do here if we get an error...
-					wp_die( $result['error_message'] );
+					// log error
+					error_log( print_r( array(
+						'method' => __METHOD__,
+						'message' => $result['error_message'],
+						'civi_event' => $civi_event,
+					), true ) );
+
+					continue;
 
 				}
 
@@ -636,11 +648,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				// use API to update event
 				$result = civicrm_api( 'event', 'create', $civi_event );
 
-				// did we do okay?
+				// log failures and skip to next
 				if ( $result['is_error'] == '1' ) {
 
-					// not much else we can do here if we get an error...
-					wp_die( $result['error_message'] );
+					// log error
+					error_log( print_r( array(
+						'method' => __METHOD__,
+						'message' => $result['error_message'],
+						'civi_event' => $civi_event,
+					), true ) );
+
+					continue;
 
 				}
 
@@ -670,11 +688,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				// use API to create event
 				$result = civicrm_api( 'event', 'create', $civi_event );
 
-				// did we do okay?
+				// log failures and skip to next
 				if ( $result['is_error'] == '1' ) {
 
-					// not much else we can do here if we get an error...
-					wp_die( $result['error_message'] );
+					// log failures and skip to next
+					error_log( print_r( array(
+						'method' => __METHOD__,
+						'message' => $result['error_message'],
+						'civi_event' => $civi_event,
+					), true ) );
+
+					continue;
 
 				}
 
@@ -887,6 +911,21 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// call API
 		$events = civicrm_api( 'event', 'get', $params );
 
+		// log failures and return boolean false
+		if ( $events['is_error'] == '1' ) {
+
+			// log error
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $events['error_message'],
+				'params' => $params,
+			), true ) );
+
+			// --<
+			return false;
+
+		}
+
 		// --<
 		return $events;
 
@@ -895,7 +934,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Delete all CiviEvents. WARNING only for dev purposes really!
+	 * Delete all CiviEvents.
+	 *
+	 * WARNING: only for dev purposes really!
 	 *
 	 * @since 0.1
 	 *
@@ -923,7 +964,24 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			);
 
 			// okay, let's do it
-			$results[] = civicrm_api( 'event', 'delete', $params );
+			$result = civicrm_api( 'event', 'delete', $params );
+
+			// log failures and skip to next
+			if ( $result['is_error'] == '1' ) {
+
+				// log failures and skip to next
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'message' => $result['error_message'],
+					'params' => $params,
+				), true ) );
+
+				continue;
+
+			}
+
+			// add to return array
+			$results[] = $result;
 
 		}
 
@@ -961,11 +1019,18 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// use API to update event
 		$result = civicrm_api( 'event', 'create', $civi_event );
 
-		// did we do okay?
+		// log failures and return boolean false
 		if ( $result['is_error'] == '1' ) {
 
-			// not much else we can do here if we get an error...
-			wp_die( $result['error_message'] );
+			// log error
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $result['error_message'],
+				'civi_event' => $civi_event,
+			), true ) );
+
+			// --<
+			return false;
 
 		}
 
@@ -997,6 +1062,21 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// call API
 		$event = civicrm_api( 'event', 'getsingle', $params );
+
+		// log failures and return boolean false
+		if ( $event['is_error'] == '1' ) {
+
+			// log error
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $event['error_message'],
+				'params' => $params,
+			), true ) );
+
+			// --<
+			return false;
+
+		}
 
 		// --<
 		return $event;
@@ -1147,15 +1227,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// delete via API
 		$result = civicrm_api( 'loc_block', 'delete', $params );
 
-		// did we do okay?
+		// log failure and return boolean false
 		if ( $result['is_error'] == '1' ) {
 
-			// not much else we can do here if we get an error...
 			error_log( print_r( array(
 				'method' => __METHOD__,
+				'message' => $result['error_message'],
 				'params' => $params,
-				'result' => $result,
 			), true ) );
+
+			// --<
+			return false;
 
 		}
 
@@ -1183,7 +1265,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// try by sync ID
 		// ---------------------------------------------------------------------
 
-		// use it
+		// init a empty
 		$civi_id = 0;
 
 		// if sync ID is present
@@ -1210,11 +1292,18 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// call API
 		$location = civicrm_api( 'loc_block', 'get', $params );
 
-		// did we do okay?
-		if ( isset( $location['is_error'] ) AND $location['is_error'] == '1' ) {
+		// log failure and return boolean false
+		if ( $location['is_error'] == '1' ) {
 
-			// not much else we can do here if we get an error...
-			wp_die( 'get_location 1: ' . $location['error_message'] );
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => __( 'Could not get CiviCRM Location by ID', 'civicrm-event-organiser' ),
+				'civicrm' => $location['error_message'],
+				'params' => $params,
+			), true ) );
+
+			// --<
+			return false;
 
 		}
 
@@ -1247,11 +1336,19 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// call API
 			$location = civicrm_api( 'loc_block', 'get', $params );
 
-			// did we do okay?
+			// log error and return boolean false
 			if ( isset( $location['is_error'] ) AND $location['is_error'] == '1' ) {
 
-				// not much else we can do here if we get an error...
-				wp_die( 'get_location 2: ' . $location['error_message'] );
+				// log error
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'message' => __( 'Could not get CiviCRM Location by Lat/Long', 'civicrm-event-organiser' ),
+					'civicrm' => $location['error_message'],
+					'params' => $params,
+				), true ) );
+
+				// --<
+				return false;
 
 			}
 
@@ -1311,6 +1408,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// call API
 		$locations = civicrm_api( 'loc_block', 'get', $params );
+
+		// log failure and return boolean false
+		if ( $locations['is_error'] == '1' ) {
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $locations['error_message'],
+				'params' => $params,
+			), true ) );
+
+			// --<
+			return false;
+
+		}
 
 		// --<
 		return $locations;
@@ -1373,14 +1484,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// call API ('get' returns an array keyed by the item)
 		$result = civicrm_api( 'loc_block', 'get', $params );
 
-		// did we do okay?
+		// log failure and return boolean false
 		if ( $result['is_error'] == '1' || $result['count'] != 1 ) {
 
 			error_log( print_r( array(
 				'method' => __METHOD__,
+				'message' => $result['error_message'],
 				'params' => $params,
-				'result' => $result,
 			), true ) );
+
+			// --<
+			return false;
 
 		}
 
@@ -1485,8 +1599,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// did we do okay?
 		if ( isset( $location['is_error'] ) AND $location['is_error'] == '1' ) {
 
-			// not much else we can do here if we get an error...
-			wp_die( 'create_civi_loc_block 1: ' . $location['error_message'] );
+			// log failed location
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $location['error_message'],
+				'params' => $params,
+			), true ) );
+
+			// --<
+			return false;
 
 		}
 
@@ -1947,6 +2068,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// error check
 		if ( $type['is_error'] == '1' ) {
 
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $type['error_message'],
+				'params' => $params,
+			), true ) );
+
 			// --<
 			return false;
 
@@ -1991,7 +2118,18 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$result = civicrm_api( 'option_value', 'delete', $params );
 
 		// error check
-		if ( $result['is_error'] == '1' ) return false;
+		if ( $result['is_error'] == '1' ) {
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $result['error_message'],
+				'params' => $params,
+			), true ) );
+
+			// --<
+			return false;
+
+		}
 
 		// --<
 		return $result;
@@ -2033,7 +2171,18 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$type = civicrm_api( 'option_value', 'getsingle', $types_params );
 
 		// bail if we get an error
-		if ( isset( $type['is_error'] ) AND $type['is_error'] == '1' ) return false;
+		if ( isset( $type['is_error'] ) AND $type['is_error'] == '1' ) {
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $type['error_message'],
+				'params' => $types_params,
+			), true ) );
+
+			// --<
+			return false;
+
+		}
 
 		// sanity check ID and return if valid
 		if ( isset( $type['id'] ) AND is_numeric( $type['id'] ) AND $type['id'] > 0 ) return $type['id'];
@@ -2095,9 +2244,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 			error_log( print_r( array(
 				'method' => __METHOD__,
-				'params' => $types_params,
+				'message' => $type['error_message'],
 				'type' => $type,
+				'params' => $types_params,
 			), true ) );
+
+			// --<
+			return false;
 
 		}
 
@@ -2142,7 +2295,19 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$types = civicrm_api( 'option_value', 'get', $types_params );
 
 		// error check
-		if ( $types['is_error'] == '1' ) return false;
+		if ( $types['is_error'] == '1' ) {
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $types['error_message'],
+				'types' => $types,
+				'params' => $types_params,
+			), true ) );
+
+			// --<
+			return false;
+
+		}
 
 		// --<
 		return $types;

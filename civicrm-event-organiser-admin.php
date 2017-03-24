@@ -801,13 +801,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$data['from'] = intval( $offset );
 			$data['to'] = $data['from'] + $diff;
 
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'terms' => $terms,
-			), true ) );
-
-			/*
-			// loop
+			// sync each event term in turn
 			foreach( $terms AS $term ) {
 
 				// update CiviEvent term - or create if it doesn't exist
@@ -819,6 +813,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 					// log failed event term first
 					error_log( print_r( array(
 						'method' => __METHOD__,
+						'message' => __( 'Could not sync Event Term', 'civicrm-event-organiser' ),
 						'term' => $term,
 					), true ) );
 
@@ -827,7 +822,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				}
 
 			}
-			*/
 
 			// increment offset option
 			update_option( '_civi_eo_tax_eo_to_civi_offset', (string) $data['to'] );
@@ -839,11 +833,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			// delete the option to start from the beginning
 			delete_option( '_civi_eo_tax_eo_to_civi_offset' );
-
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'terms' => 'DONE',
-			), true ) );
 
 		}
 
@@ -921,13 +910,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$data['from'] = intval( $offset );
 			$data['to'] = $data['from'] + $diff;
 
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'types' => $types,
-			), true ) );
-
-			/*
-			// loop
+			// sync each event type in turn
 			foreach( $types['values'] AS $type ) {
 
 				// update CiviEvent term - or create if it doesn't exist
@@ -939,6 +922,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 					// log failed event type first
 					error_log( print_r( array(
 						'method' => __METHOD__,
+						'message' => __( 'Could not sync Event Type', 'civicrm-event-organiser' ),
 						'type' => $type,
 					), true ) );
 
@@ -947,7 +931,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				}
 
 			}
-			*/
 
 			// increment offset option
 			update_option( '_civi_eo_tax_civi_to_eo_offset', (string) $data['to'] );
@@ -959,11 +942,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			// delete the option to start from the beginning
 			delete_option( '_civi_eo_tax_civi_to_eo_offset' );
-
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'types' => 'DONE',
-			), true ) );
 
 		}
 
@@ -1026,7 +1004,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'venues' => $venues,
 			), true ) );
 
-			/*
 			// loop
 			foreach( $venues AS $venue ) {
 
@@ -1037,7 +1014,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				$this->plugin->eo_venue->store_civi_location( $venue->term_id, $location );
 
 			}
-			*/
 
 			// increment offset option
 			update_option( '_civi_eo_venue_eo_to_civi_offset', (string) $data['to'] );
@@ -1134,7 +1110,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'locations' => $locations,
 			), true ) );
 
-			/*
 			// loop
 			foreach( $locations['values'] AS $location ) {
 
@@ -1142,7 +1117,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				$this->plugin->eo_venue->update_venue( $location );
 
 			}
-			*/
 
 			// increment offset option
 			update_option( '_civi_eo_venue_civi_to_eo_offset', (string) $data['to'] );
@@ -1221,7 +1195,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'events' => $events,
 			), true ) );
 
-			/*
 			// prevent recursion
 			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
 			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
@@ -1245,7 +1218,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			add_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10, 4 );
 			add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
 			add_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10, 4 );
-			*/
 
 			// increment offset option
 			update_option( '_civi_eo_event_eo_to_civi_offset', (string) $data['to'] );
@@ -1342,7 +1314,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'events' => $events,
 			), true ) );
 
-			/*
 			// loop
 			foreach( $events['values'] AS $civi_event ) {
 
@@ -1361,7 +1332,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				$this->store_event_correspondences( $event_id, array( $occurrence_id => $civi_event['id'] ) );
 
 			}
-			*/
 
 			// increment offset option
 			update_option( '_civi_eo_event_civi_to_eo_offset', (string) $data['to'] );
