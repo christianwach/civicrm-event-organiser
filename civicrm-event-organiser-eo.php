@@ -1058,14 +1058,31 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// if ID is false, get all terms
 		if ( $post_id === false ) {
 
-			// construct args
-			$args = array(
-				'orderby' => 'count',
-				'hide_empty' => 0
-			);
+			// since WordPress 4.5.0, the category is specified in the arguments
+			if ( function_exists( 'unregister_taxonomy' ) ) {
 
-			// get all terms
-			$terms = get_terms( 'event-category', $args );
+				// construct args
+				$args = array(
+					'taxonomy' => 'event-category',
+					'orderby' => 'count',
+					'hide_empty' => 0
+				);
+
+				// get all terms
+				$terms = get_terms( $args );
+
+			} else {
+
+				// construct args
+				$args = array(
+					'orderby' => 'count',
+					'hide_empty' => 0
+				);
+
+				// get all terms
+				$terms = get_terms( 'event-category', $args );
+
+			}
 
 		} else {
 
