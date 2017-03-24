@@ -1434,7 +1434,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// overwrite event_disabled array
 		$this->option_save( 'civi_eo_civi_event_disabled', array() );
 
-		// overwrite EO to CIvi data
+		// overwrite EO to CiviCRM data
 		$this->option_save( 'civi_eo_civi_event_data', array() );
 
 	}
@@ -1458,7 +1458,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// kick out if we get none
 		if ( count( $eo_to_civi ) === 0 ) return;
 
-		// init Civi correspondence array to be stored as option
+		// init CiviCRM correspondence array to be stored as option
 		$civi_correspondences = array();
 
 		// loop through the data
@@ -1479,7 +1479,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				// add CiviEvent ID to EO correspondences
 				$eo_correspondences[$occurrence_id] = $civi_event_ids[$n];
 
-				// add EO event ID to Civi correspondences
+				// add EO event ID to CiviCRM correspondences
 				$civi_correspondences[$civi_event_ids[$n]] = array(
 					'post_id' => $event_id,
 					'occurrence_id' => $occurrence_id,
@@ -1557,10 +1557,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// init return
 		$correspondences = array();
 
-		// add "Civi to EO"
+		// add "CiviCRM to EO"
 		$correspondences['civi_to_eo'] = $this->get_all_civi_to_eo_correspondences();
 
-		// add "EO to Civi"
+		// add "EO to CiviCRM"
 		$correspondences['eo_to_civi'] = $this->get_all_eo_to_civi_correspondences();
 
 		// --<
@@ -2055,7 +2055,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get all EO events
 		$all_eo_events = eo_get_events();
 
-		// get all Civi Events
+		// get all CiviCRM Events
 		$all_civi_events = $this->plugin->civi->get_all_civi_events();
 
 		// init
@@ -2162,10 +2162,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// this can be a lengthy process
 		$this->make_sync_uninterruptible();
 
-		// get all Civi Events
+		// get all CiviCRM Events
 		$all_civi_events = $this->plugin->civi->get_all_civi_events();
 
-		// sync Civi to EO
+		// sync CiviCRM to EO
 		if ( count( $all_civi_events['values'] ) > 0 ) {
 
 			// loop
@@ -2323,11 +2323,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get all venues
 		$all_venues = eo_get_venues();
 
-		// get all Civi Event locations
+		// get all CiviCRM Event locations
 		$all_locations = $this->plugin->civi->get_all_locations();
 
 		/*
-		// delete all Civi Event locations
+		// delete all CiviCRM Event locations
 		$this->plugin->civi->delete_all_locations();
 
 		// clear all EO Event location IDs
@@ -2363,10 +2363,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function sync_venues_and_locations() {
 
-		// sync EO to Civi
+		// sync EO to CiviCRM
 		$this->sync_venues_to_locations();
 
-		// sync Civi to EO
+		// sync CiviCRM to EO
 		$this->sync_locations_to_venues();
 
 	}
@@ -2383,13 +2383,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get all venues
 		$all_venues = eo_get_venues();
 
-		// sync EO to Civi
+		// sync EO to CiviCRM
 		if ( count( $all_venues ) > 0 ) {
 
 			// loop
 			foreach( $all_venues AS $venue ) {
 
-				// update Civi location - or create if it doesn't exist
+				// update CiviCRM location - or create if it doesn't exist
 				$location = $this->plugin->civi->update_location( $venue );
 
 				// store in EO venue
@@ -2410,10 +2410,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function sync_locations_to_venues() {
 
-		// get all Civi Event locations
+		// get all CiviCRM Event locations
 		$all_locations = $this->plugin->civi->get_all_locations();
 
-		// sync Civi to EO
+		// sync CiviCRM to EO
 		if ( count( $all_locations['values'] ) > 0 ) {
 
 			// loop

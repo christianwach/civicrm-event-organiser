@@ -250,7 +250,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// get all remaining venue meta
 		$venue_meta = eo_get_venue_meta( $venue_id, '', false );
 
-		// did we get a Civi location ID?
+		// did we get a CiviCRM location ID?
 		if (
 			isset( $venue_meta['_civi_loc_id'] )
 			AND

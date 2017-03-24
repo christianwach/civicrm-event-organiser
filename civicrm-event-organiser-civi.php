@@ -597,7 +597,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		------------------------------------------------------------------------
 		*/
 
-		// init Civi events array
+		// init CiviCRM events array
 		$civi_events = array();
 
 		//  get CiviEvents by ID
@@ -854,7 +854,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-		// init Civi unmatched
+		// init CiviCRM unmatched
 		$unmatched_civi = array();
 
 		// find unmatched EO dates
@@ -1210,8 +1210,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $location_id The numeric ID of the Civi location
-	 * @return array $result Civi API result data
+	 * @param int $location_id The numeric ID of the CiviCRM location
+	 * @return array $result CiviCRM API result data
 	 */
 	public function delete_location_by_id( $location_id ) {
 
@@ -1519,7 +1519,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.1
 	 *
 	 * @param object $venue The EO venue object
-	 * @param array $location The existing Civi location data
+	 * @param array $location The existing CiviCRM location data
 	 * @return array $location The CiviCRM location data
 	 */
 	public function create_civi_loc_block( $venue, $location ) {
@@ -1553,7 +1553,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		 * First, see if the loc_block email, phone and address already exist.
 		 *
 		 * If they don't, we need params returned that trigger their creation on
-		 * the Civi side. If they do, then we may need to update or delete them
+		 * the CiviCRM side. If they do, then we may need to update or delete them
 		 * before we include the data in the 'civicrm_api' call.
 		 */
 
@@ -1680,7 +1680,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.1
 	 *
 	 * @param object $post An EO event object
-	 * @return mixed $participant_roles Array of Civi role data, false if none exist
+	 * @return mixed $participant_roles Array of CiviCRM role data, false if none exist
 	 */
 	public function get_participant_roles( $post = null ) {
 
@@ -2092,7 +2092,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.1
 	 *
 	 * @param object $term The EO event category term
-	 * @return mixed Civi API data array on success, false on failure
+	 * @return mixed CiviCRM API data array on success, false on failure
 	 */
 	public function delete_event_type( $term ) {
 
@@ -2579,7 +2579,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.1
 	 *
 	 * @param object $venue
-	 * @param array $location The Civi location data
+	 * @param array $location The CiviCRM location data
 	 * @param string $op The operation (either 'create' or 'update')
 	 * @return mixed $email_data Integer if found, array if not found
 	 */
@@ -2663,7 +2663,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.1
 	 *
 	 * @param object $venue
-	 * @param array $location The Civi location data
+	 * @param array $location The CiviCRM location data
 	 * @param string $op The operation (either 'create' or 'update')
 	 * @return mixed $phone_data Integer if found, array if not found
 	 */
@@ -2752,7 +2752,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.1
 	 *
 	 * @param object $venue
-	 * @param array $location The Civi location data
+	 * @param array $location The CiviCRM location data
 	 * @param string $op The operation (either 'create' or 'update')
 	 * @return mixed $address_data Integer if found, array if not found
 	 */
@@ -2890,7 +2890,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Has an address changed?
 	 *
-	 * It's worth noting that when there is no data for a property of a Civi
+	 * It's worth noting that when there is no data for a property of a CiviCRM
 	 * location, it will no exist as an entry in the data array. This is not
 	 * the case for EO venues, whose objects always contain all properties,
 	 * whether they have a value or not.
@@ -2898,7 +2898,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.1
 	 *
 	 * @param object $venue The EO venue object being updated
-	 * @param array $location The existing Civi location data
+	 * @param array $location The existing CiviCRM location data
 	 * @return bool $is_changed True if changed, false otherwise
 	 */
 	private function is_address_changed( $venue, $location ) {

@@ -338,7 +338,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// we can't tell if a CiviEvent is repeating, so only once
 			'frequency' => 1,
 
-			// Civi does not have "all day"
+			// CiviCRM does not have "all day"
 			'all_day' => 0,
 
 			// we can't tell if a CiviEvent is repeating
@@ -367,7 +367,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// create DateTime object
 			$datetime = new DateTime( $civi_event['created_date'], eo_get_blog_timezone() );
 
-			// add it, but format it first since Civi seems to send data in the form 20150916135435
+			// add it, but format it first since CiviCRM seems to send data in the form 20150916135435
 			$post_data['post_date'] = $datetime->format( 'Y-m-d H:i:s' );
 
 		}
@@ -1115,12 +1115,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// get term object
 		$term = get_term_by( 'id', $term_id, 'event-category' );
 
-		// unhook Civi - no need because we use hook_civicrm_postProcess
+		// unhook CiviCRM - no need because we use hook_civicrm_postProcess
 
 		// update CiviEvent term - or create if it doesn't exist
 		$civi_event_type_id = $this->plugin->civi->update_event_type( $term );
 
-		// rehook Civi?
+		// rehook CiviCRM?
 
 	}
 
@@ -1194,12 +1194,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// get current term object
 		$new_term = get_term_by( 'id', $term_id, 'event-category' );
 
-		// unhook Civi - no need because we use hook_civicrm_postProcess
+		// unhook CiviCRM - no need because we use hook_civicrm_postProcess
 
 		// update CiviEvent term - or create if it doesn't exist
 		$civi_event_type_id = $this->plugin->civi->update_event_type( $new_term, $old_term );
 
-		// rehook Civi?
+		// rehook CiviCRM?
 
 	}
 
@@ -1221,12 +1221,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// only look for terms in the EO taxonomy
 		if ( $taxonomy != 'event-category' ) return;
 
-		// unhook Civi - no need because there is no hook to catch event type deletes
+		// unhook CiviCRM - no need because there is no hook to catch event type deletes
 
 		// delete CiviEvent term if it exists
 		$civi_event_type_id = $this->plugin->civi->delete_event_type( $deleted_term );
 
-		// rehook Civi?
+		// rehook CiviCRM?
 
 	}
 
@@ -1254,12 +1254,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'description'=> $description,
 		);
 
-		// unhook Civi - no need because we use hook_civicrm_postProcess
+		// unhook CiviCRM - no need because we use hook_civicrm_postProcess
 
 		// insert it
 		$result = wp_insert_term( $type['label'], 'event-category', $args );
 
-		// rehook Civi?
+		// rehook CiviCRM?
 
 		// if all goes well, we get: array( 'term_id' => 12, 'term_taxonomy_id' => 34 )
 		// if something goes wrong, we get a WP_Error object
@@ -1323,12 +1323,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'description'=> $description,
 		);
 
-		// unhook Civi - no need because we use hook_civicrm_postProcess
+		// unhook CiviCRM - no need because we use hook_civicrm_postProcess
 
 		// update term
 		$result = wp_update_term( $term_id, 'event-category', $args );
 
-		// rehook Civi?
+		// rehook CiviCRM?
 
 		// if all goes well, we get: array( 'term_id' => 12, 'term_taxonomy_id' => 34 )
 		// if something goes wrong, we get a WP_Error object
