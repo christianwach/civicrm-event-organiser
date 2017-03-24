@@ -801,6 +801,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$data['from'] = intval( $offset );
 			$data['to'] = $data['from'] + $diff;
 
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'terms' => $terms,
+			), true ) );
+
 			// sync each event term in turn
 			foreach( $terms AS $term ) {
 
@@ -833,6 +838,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			// delete the option to start from the beginning
 			delete_option( '_civi_eo_tax_eo_to_civi_offset' );
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'terms' => 'DONE',
+			), true ) );
 
 		}
 
@@ -1105,11 +1115,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$data['from'] = intval( $offset );
 			$data['to'] = $data['from'] + $diff;
 
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'locations' => $locations,
-			), true ) );
-
 			// loop
 			foreach( $locations['values'] AS $location ) {
 
@@ -1128,11 +1133,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			// delete the option to start from the beginning
 			delete_option( '_civi_eo_venue_civi_to_eo_offset' );
-
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'locations' => 'DONE',
-			), true ) );
 
 		}
 
@@ -1309,11 +1309,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$data['from'] = intval( $offset );
 			$data['to'] = $data['from'] + $diff;
 
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'events' => $events,
-			), true ) );
-
 			// loop
 			foreach( $events['values'] AS $civi_event ) {
 
@@ -1343,11 +1338,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			// delete the option to start from the beginning
 			delete_option( '_civi_eo_event_civi_to_eo_offset' );
-
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'events' => 'DONE',
-			), true ) );
 
 		}
 
