@@ -45,6 +45,19 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public $sync_page;
 
+	/**
+	 * How many items to process per AJAX request.
+	 *
+	 * @since 0.2.4
+	 * @access public
+	 * @var object $step_counts The array of item counts to process per AJAX request
+	 */
+	public $step_counts = array(
+		'tax' => 2, // EO category terms & CiviCRM event types
+		'venue' => 2, // EO venues & CiviCRM locations
+		'event' => 1, // EO events & CiviCRM events
+	);
+
 
 
 	/**
@@ -72,6 +85,14 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			// override "no category" option
 			add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'force_taxonomy' ), 30 );
+
+			// add AJAX handlers
+			add_action( 'wp_ajax_sync_categories_to_types', array( $this, 'stepped_sync_categories_to_types' ) );
+			add_action( 'wp_ajax_sync_types_to_categories', array( $this, 'stepped_sync_types_to_categories' ) );
+			add_action( 'wp_ajax_sync_venues_to_locations', array( $this, 'stepped_sync_venues_to_locations' ) );
+			add_action( 'wp_ajax_sync_locations_to_venues', array( $this, 'stepped_sync_locations_to_venues' ) );
+			add_action( 'wp_ajax_sync_events_eo_to_civi', array( $this, 'stepped_sync_events_eo_to_civi' ) );
+			add_action( 'wp_ajax_sync_events_civi_to_eo', array( $this, 'stepped_sync_events_civi_to_eo' ) );
 
 		}
 
@@ -141,9 +162,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		}
 
-		// add scripts and styles
-		//add_action( 'admin_print_styles-' . $this->parent_page, array( $this, 'admin_css' ) );
-		add_action( 'admin_head-'.$this->parent_page, array( $this, 'admin_head' ), 50 );
+		// add utilities
+		add_action( 'admin_head-' . $this->parent_page, array( $this, 'admin_head' ), 50 );
 
 		// add settings page
 		$this->settings_page = add_submenu_page(
@@ -155,12 +175,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			array( $this, 'page_settings' ) // callback
 		);
 
-		/*
-		// add scripts and styles
-		add_action( 'admin_print_styles-'.$this->settings_page, array( $this, 'admin_css' ) );
-		*/
-		add_action( 'admin_head-'.$this->settings_page, array( $this, 'admin_head' ), 50 );
-		add_action( 'admin_head-'.$this->settings_page, array( $this, 'admin_menu_highlight' ), 50 );
+		// add utilities
+		add_action( 'admin_head-' . $this->settings_page, array( $this, 'admin_head' ), 50 );
+		add_action( 'admin_head-' . $this->settings_page, array( $this, 'admin_menu_highlight' ), 50 );
 
 		// add manual sync page
 		$this->sync_page = add_submenu_page(
@@ -172,14 +189,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			array( $this, 'page_manual_sync' ) // callback
 		);
 
-		/*
 		// add scripts and styles
-		add_action( 'admin_print_scripts-'.$this->sync_page, array( $this, 'admin_js_sync_page' ) );
-		add_action( 'admin_print_styles-'.$this->sync_page, array( $this, 'admin_css' ) );
-		add_action( 'admin_print_styles-'.$this->sync_page, array( $this, 'admin_css_sync_page' ) );
-		*/
-		add_action( 'admin_head-'.$this->sync_page, array( $this, 'admin_head' ), 50 );
-		add_action( 'admin_head-'.$this->sync_page, array( $this, 'admin_menu_highlight' ), 50 );
+		add_action( 'admin_print_styles-' . $this->sync_page, array( $this, 'admin_css_sync_page' ) );
+		add_action( 'admin_print_scripts-' . $this->sync_page, array( $this, 'admin_js_sync_page' ) );
+
+		// add utilities
+		add_action( 'admin_head-' . $this->sync_page, array( $this, 'admin_head' ), 50 );
+		add_action( 'admin_head-' . $this->sync_page, array( $this, 'admin_menu_highlight' ), 50 );
 
 	}
 
@@ -296,19 +312,138 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Enqueue any styles needed by our admin pages.
+	 * Enqueue any styles needed by our admin "Manual Sync" page.
 	 *
-	 * @since 0.1
+	 * @since 0.2.4
 	 */
-	public function admin_css() {
+	public function admin_css_sync_page() {
 
 		// add admin css
 		wp_enqueue_style(
-			'civi_eo_admin_style',
-			CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/css/admin.css',
+			'civi_eo_manual_sync_css',
+			plugins_url( 'assets/css/civi-eo-manual-sync.css', CIVICRM_WP_EVENT_ORGANISER_FILE ),
 			null,
 			CIVICRM_WP_EVENT_ORGANISER_VERSION,
 			'all' // media
+		);
+
+	}
+
+
+
+	/**
+	 * Enqueue required scripts on the "Manual Sync" page.
+	 *
+	 * @since 0.2.4
+	 */
+	public function admin_js_sync_page() {
+
+		// enqueue javascript
+		wp_enqueue_script(
+			'civi_eo_manual_sync_js',
+			plugins_url( 'assets/js/civi-eo-manual-sync.js', CIVICRM_WP_EVENT_ORGANISER_FILE ),
+			array( 'jquery', 'jquery-ui-core', 'jquery-ui-progressbar' ),
+			CIVICRM_WP_EVENT_ORGANISER_VERSION // version
+		);
+
+		// get all CiviEvent types and error check
+		$all_types = $this->plugin->civi->get_event_types();
+		if ( $all_types === false ) $all_types['values'] = array();
+
+		// get all EO event category terms
+		$all_terms = $this->plugin->eo->get_event_categories();
+
+		// get all Civi Event locations and error check
+		$all_locations = $this->plugin->civi->get_all_locations();
+		if ( $all_locations['is_error'] == '1' ) $all_locations['values'] = array();
+
+		// get all EO venues
+		$all_venues = eo_get_venues();
+
+		// get all Civi Events and error check
+		$all_civi_events = $this->plugin->civi->get_all_civi_events();
+		if ( $all_civi_events['is_error'] == '1' ) $all_civi_events['values'] = array();
+
+		// get all EO Events
+		$all_eo_events = get_posts( array( 'post_type' => 'event', 'numberposts' => -1 ) );
+
+		// init localisation
+		$localisation = array(
+
+			// CiviCRM event types
+			'event_types' => array(
+				'total' => __( '{{total}} event types to sync...', 'civicrm-event-organiser' ),
+				'current' => __( 'Processing event types {{from}} to {{to}}', 'civicrm-event-organiser' ),
+				'complete' => __( 'Processing event types {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
+				'count' => count( $all_types['values'] ),
+			),
+
+			// Event Organiser categories
+			'categories' => array(
+				'total' => __( '{{total}} categories to sync...', 'civicrm-event-organiser' ),
+				'current' => __( 'Processing categories {{from}} to {{to}}', 'civicrm-event-organiser' ),
+				'complete' => __( 'Processing categories {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
+				'count' => count( $all_terms ),
+			),
+
+			// CiviCRM locations
+			'locations' => array(
+				'total' => __( '{{total}} locations to sync...', 'civicrm-event-organiser' ),
+				'current' => __( 'Processing locations {{from}} to {{to}}', 'civicrm-event-organiser' ),
+				'complete' => __( 'Processing locations {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
+				'count' => count( $all_locations['values'] ),
+			),
+
+			// Event Organiser venues
+			'venues' => array(
+				'total' => __( '{{total}} venues to sync...', 'civicrm-event-organiser' ),
+				'current' => __( 'Processing venues {{from}} to {{to}}', 'civicrm-event-organiser' ),
+				'complete' => __( 'Processing venues {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
+				'count' => count( $all_venues ),
+			),
+
+			// CiviCRM events
+			'civi_events' => array(
+				'total' => __( '{{total}} events to sync...', 'civicrm-event-organiser' ),
+				'current' => __( 'Processing events {{from}} to {{to}}', 'civicrm-event-organiser' ),
+				'complete' => __( 'Processing events {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
+				'count' => count( $all_civi_events['values'] ),
+			),
+
+			// Event Organiser events
+			'eo_events' => array(
+				'total' => __( '{{total}} events to sync...', 'civicrm-event-organiser' ),
+				'current' => __( 'Processing events {{from}} to {{to}}', 'civicrm-event-organiser' ),
+				'complete' => __( 'Processing events {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
+				'count' => count( $all_eo_events ),
+			),
+
+			// strings common to all
+			'common' => array(
+				'done' => __( 'All done!', 'civicrm-event-organiser' ),
+			),
+
+		);
+
+		// init settings
+		$settings = array(
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'step_tax' => $this->step_counts['tax'],
+			'step_venue' => $this->step_counts['venue'],
+			'step_event' => $this->step_counts['event'],
+		);
+
+		// localisation array
+		$vars = array(
+			'localisation' => $localisation,
+			'settings' => $settings,
+		);
+
+		// localise the WordPress way
+		wp_localize_script(
+			'civi_eo_manual_sync_js',
+			'CiviCRM_Event_Organiser_Settings',
+			$vars
 		);
 
 	}
@@ -508,12 +643,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 	 	// was a Venue "Stop Sync" button pressed?
-		if ( isset( $_POST['civi_eo_eo_to_civi_stop'] ) ) {
-			delete_option( '_civi_eo_eo_to_civi_offset' );
+		if ( isset( $_POST['civi_eo_venue_eo_to_civi_stop'] ) ) {
+			delete_option( '_civi_eo_venue_eo_to_civi_offset' );
 			return;
 		}
-		if ( isset( $_POST['civi_eo_civi_to_eo_stop'] ) ) {
-			delete_option( '_civi_eo_civi_to_eo_offset' );
+		if ( isset( $_POST['civi_eo_venue_civi_to_eo_stop'] ) ) {
+			delete_option( '_civi_eo_venue_civi_to_eo_offset' );
 			return;
 		}
 
@@ -529,26 +664,26 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// was an Event Type "Sync Now" button pressed?
 		if ( isset( $_POST['civi_eo_tax_eo_to_civi'] ) ) {
-			$this->sync_categories_to_event_types();
+			$this->stepped_sync_categories_to_types();
 		}
 		if ( isset( $_POST['civi_eo_tax_civi_to_eo'] ) ) {
-			$this->sync_event_types_to_categories();
+			$this->stepped_sync_types_to_categories();
 		}
 
 		// was a Venue "Sync Now" button pressed?
-		if ( isset( $_POST['civi_eo_eo_to_civi'] ) ) {
-			$this->sync_venues_to_locations();
+		if ( isset( $_POST['civi_eo_venue_eo_to_civi'] ) ) {
+			$this->stepped_sync_venues_to_locations();
 		}
-		if ( isset( $_POST['civi_eo_civi_to_eo'] ) ) {
-			$this->sync_locations_to_venues();
+		if ( isset( $_POST['civi_eo_venue_civi_to_eo'] ) ) {
+			$this->stepped_sync_locations_to_venues();
 		}
 
 		// was an Event "Sync Now" button pressed?
 		if ( isset( $_POST['civi_eo_event_eo_to_civi'] ) ) {
-			$this->sync_events_to_civi();
+			$this->stepped_sync_events_eo_to_civi();
 		}
 		if ( isset( $_POST['civi_eo_event_civi_to_eo'] ) ) {
-			$this->sync_events_to_eo();
+			$this->stepped_sync_events_civi_to_eo();
 		}
 
 	}
@@ -586,6 +721,668 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// save option
 		$this->option_save( 'civi_eo_event_default_type', $civi_eo_event_default_type );
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
+	 * Stepped synchronisation of EO category terms to CiviCRM event types.
+	 *
+	 * @since 0.2.4
+	 */
+	public function stepped_sync_categories_to_types() {
+
+		// init AJAX return
+		$data = array();
+
+		// if the offset value doesn't exist
+		if ( 'fgffgs' == get_option( '_civi_eo_tax_eo_to_civi_offset', 'fgffgs' ) ) {
+
+			// start at the beginning
+			$offset = 0;
+			add_option( '_civi_eo_tax_eo_to_civi_offset', '0' );
+
+		} else {
+
+			// use the existing value
+			$offset = intval( get_option( '_civi_eo_tax_eo_to_civi_offset', '0' ) );
+
+		}
+
+		// since WordPress 4.5.0, the category is specified in the arguments
+		if ( function_exists( 'unregister_taxonomy' ) ) {
+
+			// construct args
+			$args = array(
+				'taxonomy' => 'event-category',
+				'orderby' => 'count',
+				'hide_empty' => 0,
+				'number' => $this->step_counts['tax'],
+				'offset' => $offset,
+			);
+
+			// get all terms
+			$terms = get_terms( $args );
+
+		} else {
+
+			// construct args
+			$args = array(
+				'orderby' => 'count',
+				'hide_empty' => 0,
+				'number' => $this->step_counts['tax'],
+				'offset' => $offset,
+			);
+
+			// get all terms
+			$terms = get_terms( 'event-category', $args );
+
+		}
+
+		// if we get results
+		if ( count( $terms ) > 0 ) {
+
+			// set finished flag
+			$data['finished'] = 'false';
+
+			// are there less items than the step count?
+			if ( count( $terms ) < $this->step_counts['tax'] ) {
+				$diff = count( $terms );
+			} else {
+				$diff = $this->step_counts['tax'];
+			}
+
+			// set from and to flags
+			$data['from'] = intval( $offset );
+			$data['to'] = $data['from'] + $diff;
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'terms' => $terms,
+			), true ) );
+
+			/*
+			// loop
+			foreach( $terms AS $term ) {
+
+				// update CiviEvent term - or create if it doesn't exist
+				$civi_event_type_id = $this->plugin->civi->update_event_type( $term );
+
+				// next on failure
+				if ( $civi_event_type_id === false ) {
+
+					// log failed event term first
+					error_log( print_r( array(
+						'method' => __METHOD__,
+						'term' => $term,
+					), true ) );
+
+					continue;
+
+				}
+
+			}
+			*/
+
+			// increment offset option
+			update_option( '_civi_eo_tax_eo_to_civi_offset', (string) $data['to'] );
+
+		} else {
+
+			// set finished flag
+			$data['finished'] = 'true';
+
+			// delete the option to start from the beginning
+			delete_option( '_civi_eo_tax_eo_to_civi_offset' );
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'terms' => 'DONE',
+			), true ) );
+
+		}
+
+		// send data to browser
+		$this->send_data( $data );
+
+	}
+
+
+
+	/**
+	 * Stepped synchronisation of CiviCRM event types to EO category terms.
+	 *
+	 * @since 0.2.4
+	 */
+	public function stepped_sync_types_to_categories() {
+
+		// init AJAX return
+		$data = array();
+
+		// if the offset value doesn't exist
+		if ( 'fgffgs' == get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) {
+
+			// start at the beginning
+			$offset = 0;
+			add_option( '_civi_eo_tax_civi_to_eo_offset', '0' );
+
+		} else {
+
+			// use the existing value
+			$offset = intval( get_option( '_civi_eo_tax_civi_to_eo_offset', '0' ) );
+
+		}
+
+		// get option group ID and error check
+		$opt_group_id = $this->plugin->civi->get_event_types_optgroup_id();
+		if ( $opt_group_id !== false ) {
+
+			// get event types (descriptions will be present if not null)
+			$types = civicrm_api( 'option_value', 'get', array(
+				'option_group_id' => $opt_group_id,
+				'version' => 3,
+				'options' => array(
+					'limit' => $this->step_counts['tax'],
+					'offset' => $offset,
+					'sort' => 'weight ASC',
+				),
+			) );
+
+		} else {
+
+			// do not allow progress
+			$types['is_error'] = 1;
+
+		}
+
+		// if we get results
+		if (
+			$types['is_error'] == 0 AND
+			isset( $types['values'] ) AND
+			count( $types['values'] ) > 0
+		) {
+
+			// set finished flag
+			$data['finished'] = 'false';
+
+			// are there less items than the step count?
+			if ( count( $types['values'] ) < $this->step_counts['tax'] ) {
+				$diff = count( $types['values'] );
+			} else {
+				$diff = $this->step_counts['tax'];
+			}
+
+			// set from and to flags
+			$data['from'] = intval( $offset );
+			$data['to'] = $data['from'] + $diff;
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'types' => $types,
+			), true ) );
+
+			/*
+			// loop
+			foreach( $types['values'] AS $type ) {
+
+				// update CiviEvent term - or create if it doesn't exist
+				$eo_term_id = $this->plugin->eo->update_term( $type );
+
+				// next on failure
+				if ( $eo_term_id === false ) {
+
+					// log failed event type first
+					error_log( print_r( array(
+						'method' => __METHOD__,
+						'type' => $type,
+					), true ) );
+
+					continue;
+
+				}
+
+			}
+			*/
+
+			// increment offset option
+			update_option( '_civi_eo_tax_civi_to_eo_offset', (string) $data['to'] );
+
+		} else {
+
+			// set finished flag
+			$data['finished'] = 'true';
+
+			// delete the option to start from the beginning
+			delete_option( '_civi_eo_tax_civi_to_eo_offset' );
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'types' => 'DONE',
+			), true ) );
+
+		}
+
+		// send data to browser
+		$this->send_data( $data );
+
+	}
+
+
+
+	/**
+	 * Stepped synchronisation of EO venues to CiviCRM locations.
+	 *
+	 * @since 0.2.4
+	 */
+	public function stepped_sync_venues_to_locations() {
+
+		// init AJAX return
+		$data = array();
+
+		// if the offset value doesn't exist
+		if ( 'fgffgs' == get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) {
+
+			// start at the beginning
+			$offset = 0;
+			add_option( '_civi_eo_venue_eo_to_civi_offset', '0' );
+
+		} else {
+
+			// use the existing value
+			$offset = intval( get_option( '_civi_eo_venue_eo_to_civi_offset', '0' ) );
+
+		}
+
+		// get venues
+		$venues = eo_get_venues( array(
+			'number' => $this->step_counts['venue'],
+			'offset' => $offset,
+		) );
+
+		// if we get results
+		if ( count( $venues ) > 0 ) {
+
+			// set finished flag
+			$data['finished'] = 'false';
+
+			// are there less items than the step count?
+			if ( count( $venues ) < $this->step_counts['venue'] ) {
+				$diff = count( $venues );
+			} else {
+				$diff = $this->step_counts['venue'];
+			}
+
+			// set from and to flags
+			$data['from'] = intval( $offset );
+			$data['to'] = $data['from'] + $diff;
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'venues' => $venues,
+			), true ) );
+
+			/*
+			// loop
+			foreach( $venues AS $venue ) {
+
+				// update Civi location - or create if it doesn't exist
+				$location = $this->plugin->civi->update_location( $venue );
+
+				// store in EO venue
+				$this->plugin->eo_venue->store_civi_location( $venue->term_id, $location );
+
+			}
+			*/
+
+			// increment offset option
+			update_option( '_civi_eo_venue_eo_to_civi_offset', (string) $data['to'] );
+
+		} else {
+
+			// set finished flag
+			$data['finished'] = 'true';
+
+			// delete the option to start from the beginning
+			delete_option( '_civi_eo_venue_eo_to_civi_offset' );
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'venues' => 'DONE',
+			), true ) );
+
+		}
+
+		// send data to browser
+		$this->send_data( $data );
+
+	}
+
+
+
+	/**
+	 * Stepped synchronisation of CiviCRM locations to EO venues.
+	 *
+	 * @since 0.2.4
+	 */
+	public function stepped_sync_locations_to_venues() {
+
+		// init AJAX return
+		$data = array();
+
+		// if the offset value doesn't exist
+		if ( 'fgffgs' == get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) {
+
+			// start at the beginning
+			$offset = 0;
+			add_option( '_civi_eo_venue_civi_to_eo_offset', '0' );
+
+		} else {
+
+			// use the existing value
+			$offset = intval( get_option( '_civi_eo_venue_civi_to_eo_offset', '0' ) );
+
+		}
+
+		// init CiviCRM
+		if ( $this->plugin->civi->is_active() ) {
+
+			// get CiviCRM locations
+			$locations = civicrm_api( 'loc_block', 'get', array(
+				'version' => '3',
+				'return' => 'all',
+				'options' => array(
+					'limit' => $this->step_counts['tax'],
+					'offset' => $offset,
+				),
+			));
+
+		} else {
+
+			// do not allow progress
+			$locations['is_error'] = 1;
+
+		}
+
+		// if we get results
+		if (
+			$locations['is_error'] == 0 AND
+			isset( $locations['values'] ) AND
+			count( $locations['values'] ) > 0
+		) {
+
+			// set finished flag
+			$data['finished'] = 'false';
+
+			// are there less items than the step count?
+			if ( count( $locations['values'] ) < $this->step_counts['venue'] ) {
+				$diff = count( $locations['values'] );
+			} else {
+				$diff = $this->step_counts['venue'];
+			}
+
+			// set from and to flags
+			$data['from'] = intval( $offset );
+			$data['to'] = $data['from'] + $diff;
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'locations' => $locations,
+			), true ) );
+
+			/*
+			// loop
+			foreach( $locations['values'] AS $location ) {
+
+				// update EO venue - or create if it doesn't exist
+				$this->plugin->eo_venue->update_venue( $location );
+
+			}
+			*/
+
+			// increment offset option
+			update_option( '_civi_eo_venue_civi_to_eo_offset', (string) $data['to'] );
+
+		} else {
+
+			// set finished flag
+			$data['finished'] = 'true';
+
+			// delete the option to start from the beginning
+			delete_option( '_civi_eo_venue_civi_to_eo_offset' );
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'locations' => 'DONE',
+			), true ) );
+
+		}
+
+		// send data to browser
+		$this->send_data( $data );
+
+	}
+
+
+
+	/**
+	 * Stepped synchronisation of EO events to CiviCRM events.
+	 *
+	 * @since 0.2.4
+	 */
+	public function stepped_sync_events_eo_to_civi() {
+
+		// init AJAX return
+		$data = array();
+
+		// if the offset value doesn't exist
+		if ( 'fgffgs' == get_option( '_civi_eo_event_eo_to_civi_offset', 'fgffgs' ) ) {
+
+			// start at the beginning
+			$offset = 0;
+			add_option( '_civi_eo_event_eo_to_civi_offset', '0' );
+
+		} else {
+
+			// use the existing value
+			$offset = intval( get_option( '_civi_eo_event_eo_to_civi_offset', '0' ) );
+
+		}
+
+		// get events
+		$events = eo_get_events( array(
+			'numberposts' => $this->step_counts['event'],
+			'offset' => $offset,
+		) );
+
+		// if we get results
+		if ( count( $events ) > 0 ) {
+
+			// set finished flag
+			$data['finished'] = 'false';
+
+			// are there less items than the step count?
+			if ( count( $events ) < $this->step_counts['event'] ) {
+				$diff = count( $events );
+			} else {
+				$diff = $this->step_counts['event'];
+			}
+
+			// set from and to flags
+			$data['from'] = intval( $offset );
+			$data['to'] = $data['from'] + $diff;
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'events' => $events,
+			), true ) );
+
+			/*
+			// prevent recursion
+			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
+			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
+			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10 );
+
+			// loop
+			foreach( $events AS $event ) {
+
+				// get dates for this event
+				$dates = $this->plugin->eo->get_all_dates( $event->ID );
+
+				// update CiviEvent - or create if it doesn't exist
+				$correspondences = $this->plugin->civi->update_civi_events( $event, $dates );
+
+				// store correspondences
+				$this->store_event_correspondences( $event->ID, $correspondences );
+
+			}
+
+			// restore hooks
+			add_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10, 4 );
+			add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
+			add_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10, 4 );
+			*/
+
+			// increment offset option
+			update_option( '_civi_eo_event_eo_to_civi_offset', (string) $data['to'] );
+
+		} else {
+
+			// set finished flag
+			$data['finished'] = 'true';
+
+			// delete the option to start from the beginning
+			delete_option( '_civi_eo_event_eo_to_civi_offset' );
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'events' => 'DONE',
+			), true ) );
+
+		}
+
+		// send data to browser
+		$this->send_data( $data );
+
+	}
+
+
+
+	/**
+	 * Stepped synchronisation of CiviCRM events to EO events.
+	 *
+	 * @since 0.2.4
+	 */
+	public function stepped_sync_events_civi_to_eo() {
+
+		// init AJAX return
+		$data = array();
+
+		// if the offset value doesn't exist
+		if ( 'fgffgs' == get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) {
+
+			// start at the beginning
+			$offset = 0;
+			add_option( '_civi_eo_event_civi_to_eo_offset', '0' );
+
+		} else {
+
+			// use the existing value
+			$offset = intval( get_option( '_civi_eo_event_civi_to_eo_offset', '0' ) );
+
+		}
+
+		// init CiviCRM
+		if ( $this->plugin->civi->is_active() ) {
+
+			// get CiviCRM events
+			$events = civicrm_api( 'event', 'get', array(
+				'version' => 3,
+				'is_template' => 0,
+				'options' => array(
+					'limit' => $this->step_counts['event'],
+					'offset' => $offset,
+				),
+			) );
+
+		} else {
+
+			// do not allow progress
+			$events['is_error'] = 1;
+
+		}
+
+		// if we get results
+		if (
+			$events['is_error'] == 0 AND
+			isset( $events['values'] ) AND
+			count( $events['values'] ) > 0
+		) {
+
+			// set finished flag
+			$data['finished'] = 'false';
+
+			// are there less items than the step count?
+			if ( count( $events['values'] ) < $this->step_counts['event'] ) {
+				$diff = count( $events['values'] );
+			} else {
+				$diff = $this->step_counts['event'];
+			}
+
+			// set from and to flags
+			$data['from'] = intval( $offset );
+			$data['to'] = $data['from'] + $diff;
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'events' => $events,
+			), true ) );
+
+			/*
+			// loop
+			foreach( $events['values'] AS $civi_event ) {
+
+				// update a single EO event - or create if it doesn't exist
+				$event_id = $this->plugin->eo->update_event( $civi_event );
+
+				// get occurrences
+				$occurrences = eo_get_the_occurrences_of( $event_id );
+
+				// in this context, a CiviEvent can only have an EO event with a
+				// single occurrence associated with it, so use first item
+				$keys = array_keys( $occurrences );
+				$occurrence_id = array_pop( $keys );
+
+				// store correspondences
+				$this->store_event_correspondences( $event_id, array( $occurrence_id => $civi_event['id'] ) );
+
+			}
+			*/
+
+			// increment offset option
+			update_option( '_civi_eo_event_civi_to_eo_offset', (string) $data['to'] );
+
+		} else {
+
+			// set finished flag
+			$data['finished'] = 'true';
+
+			// delete the option to start from the beginning
+			delete_option( '_civi_eo_event_civi_to_eo_offset' );
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'events' => 'DONE',
+			), true ) );
+
+		}
+
+		// send data to browser
+		$this->send_data( $data );
 
 	}
 
@@ -1827,6 +2624,33 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	}
 
 
+
+	/**
+	 * Send JSON data to the browser.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @param array $data The data to send.
+	 */
+	private function send_data( $data ) {
+
+		// is this an AJAX request?
+		if ( defined( 'DOING_AJAX' ) AND DOING_AJAX ) {
+
+			// set reasonable headers
+			header('Content-type: text/plain');
+			header("Cache-Control: no-cache");
+			header("Expires: -1");
+
+			// echo
+			echo json_encode( $data );
+
+			// die
+			exit();
+
+		}
+
+	}
 
 } // class ends
 

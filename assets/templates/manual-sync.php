@@ -42,8 +42,16 @@
 			</tr>
 
 			<tr valign="top">
+				<td colspan="2" class="progress-bar-hidden"><div id="progress-bar-tax-eo-to-civi"><div class="progress-label"></div></div></td>
+			</tr>
+
+			<tr valign="top">
 				<th scope="row"><label for="civi_eo_tax_civi_to_eo"><?php _e( 'CiviCRM Event Types to Event Organiser Categories', 'civicrm-event-organiser' ); ?></label></th>
 				<td><input type="submit" id="civi_eo_tax_civi_to_eo" name="civi_eo_tax_civi_to_eo" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_tax_civi_to_eo_stop" name="civi_eo_tax_civi_to_eo_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+			</tr>
+
+			<tr valign="top">
+				<td colspan="2" class="progress-bar-hidden"><div id="progress-bar-tax-civi-to-eo"><div class="progress-label"></div></div></td>
 			</tr>
 
 		</table>
@@ -55,13 +63,21 @@
 		<table class="form-table">
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_eo_to_civi"><?php _e( 'Event Organiser Venues to CiviEvent Locations', 'civicrm-event-organiser' ); ?></label></th>
-				<td><input type="submit" id="civi_eo_eo_to_civi" name="civi_eo_eo_to_civi" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_eo_to_civi_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_eo_to_civi_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_eo_to_civi_stop" name="civi_eo_eo_to_civi_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+				<th scope="row"><label for="civi_eo_venue_eo_to_civi"><?php _e( 'Event Organiser Venues to CiviEvent Locations', 'civicrm-event-organiser' ); ?></label></th>
+				<td><input type="submit" id="civi_eo_venue_eo_to_civi" name="civi_eo_venue_eo_to_civi" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_venue_eo_to_civi_stop" name="civi_eo_venue_eo_to_civi_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_civi_to_eo"><?php _e( 'CiviEvent Locations to Event Organiser Venues', 'civicrm-event-organiser' ); ?></label></th>
-				<td><input type="submit" id="civi_eo_civi_to_eo" name="civi_eo_civi_to_eo" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_civi_to_eo_stop" name="civi_eo_civi_to_eo_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+				<td colspan="2" class="progress-bar-hidden"><div id="progress-bar-venue-eo-to-civi"><div class="progress-label"></div></div></td>
+			</tr>
+
+			<tr valign="top">
+				<th scope="row"><label for="civi_eo_venue_civi_to_eo"><?php _e( 'CiviEvent Locations to Event Organiser Venues', 'civicrm-event-organiser' ); ?></label></th>
+				<td><input type="submit" id="civi_eo_venue_civi_to_eo" name="civi_eo_venue_civi_to_eo" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_venue_civi_to_eo_stop" name="civi_eo_venue_civi_to_eo_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+			</tr>
+
+			<tr valign="top">
+				<td colspan="2" class="progress-bar-hidden"><div id="progress-bar-venue-civi-to-eo"><div class="progress-label"></div></div></td>
 			</tr>
 
 		</table>
@@ -78,13 +94,19 @@
 			</tr>
 
 			<tr valign="top">
+				<td colspan="2" class="progress-bar-hidden"><div id="progress-bar-event-eo-to-civi"><div class="progress-label"></div></div></td>
+			</tr>
+
+			<tr valign="top">
 				<th scope="row"><label for="civi_eo_event_civi_to_eo"><?php _e( 'CiviEvents to Event Organiser Events', 'civicrm-event-organiser' ); ?></label></th>
 				<td><input type="submit" id="civi_eo_event_civi_to_eo" name="civi_eo_event_civi_to_eo" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_event_civi_to_eo_stop" name="civi_eo_event_civi_to_eo_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
 			</tr>
 
-		</table>
+			<tr valign="top">
+				<td colspan="2" class="progress-bar-hidden"><div id="progress-bar-event-civi-to-eo"><div class="progress-label"></div></div></td>
+			</tr>
 
-		<div id="progress-bar"><div class="progress-label"></div></div>
+		</table>
 
 	</form>
 
