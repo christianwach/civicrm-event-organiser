@@ -1064,7 +1064,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$event = civicrm_api( 'event', 'getsingle', $params );
 
 		// log failures and return boolean false
-		if ( $event['is_error'] == '1' ) {
+		if ( isset( $event['is_error'] ) AND $event['is_error'] == '1' ) {
 
 			// log error
 			error_log( print_r( array(

@@ -1166,10 +1166,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		}
 
-		// get events
+		// get "primary" events (i.e. not ordered by occurrence)
 		$events = eo_get_events( array(
 			'numberposts' => $this->step_counts['event'],
 			'offset' => $offset,
+			'group_events_by' => 'series',
 		) );
 
 		// if we get results
@@ -1189,11 +1190,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$data['from'] = intval( $offset );
 			$data['to'] = $data['from'] + $diff;
 
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'events' => $events,
-			), true ) );
-
 			// prevent recursion
 			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
 			remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
@@ -1206,10 +1202,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				$dates = $this->plugin->eo->get_all_dates( $event->ID );
 
 				// update CiviEvent - or create if it doesn't exist
-				$correspondences = $this->plugin->civi->update_civi_events( $event, $dates );
-
-				// store correspondences
-				$this->store_event_correspondences( $event->ID, $correspondences );
+				$this->plugin->civi->update_civi_events( $event, $dates );
 
 			}
 
