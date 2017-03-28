@@ -22,7 +22,7 @@ This plugin requires at least WordPress 3.6, BuddyPress 1.8 and CiviCRM 4.4.
 
 It requires:
 
-* Event Organiser version 2.0.2 or greater
+* Event Organiser version 3.0 or greater
 * Radio Buttons for Taxonomies to ensure only one event type is selected
 
 If you are using a version of CiviCRM prior to 4.6, it also requires:

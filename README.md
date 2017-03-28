@@ -15,7 +15,7 @@ This plugin requires at least *WordPress 3.6*, *CiviCRM 4.4* and (optionally) *B
 
 It requires:
 
-* [Event Organiser](http://wordpress.org/plugins/event-organiser/) version 2.0.2 or greater
+* [Event Organiser](http://wordpress.org/plugins/event-organiser/) version 3.0 or greater
 * [Radio Buttons for Taxonomies](http://wordpress.org/plugins/radio-buttons-for-taxonomies/) to ensure only one event type is selected
 
 If you are using a version of *CiviCRM* prior to 4.6, it also requires:
