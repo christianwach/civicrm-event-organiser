@@ -2054,15 +2054,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-		// error check
+		// trigger update if we don't find an existing type
 		if ( $type_id !== false ) {
-
-			// trigger update
 			$params['id'] = $type_id;
-
 		}
 
-		// create the event type
+		// create (or update) the event type
 		$type = civicrm_api( 'option_value', 'create', $params );
 
 		// error check
@@ -2076,6 +2073,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 			// --<
 			return false;
+
+		} else {
+
+			// success, grab type ID
+			if ( isset( $type['id'] ) AND is_numeric( $type['id'] ) AND $type['id'] > 0 ) {
+				$type_id = intval( $type['id'] );
+			}
 
 		}
 
@@ -2173,11 +2177,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// bail if we get an error
 		if ( isset( $type['is_error'] ) AND $type['is_error'] == '1' ) {
 
+			/*
+			 * Sometimes we want to log failures, but not usually. When no type
+			 * is found, it's not an error as such; it can just mean there's no
+			 * existing event type. Uncomment the error logging code to see
+			 * what's going on.
+			 */
+
+			/*
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $type['error_message'],
 				'params' => $types_params,
 			), true ) );
+			*/
 
 			// --<
 			return false;
