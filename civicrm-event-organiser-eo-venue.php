@@ -145,6 +145,20 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// get full venue
 		$venue = eo_get_venue_by( 'id', $venue_id );
 
+		/*
+		 * Manually add venue metadata because since EO version 3.0 it is
+		 * no longer added by default to the venue object.
+		 */
+		$address  = eo_get_venue_address( $venue_id );
+		$venue->venue_address  = isset( $address['address'] ) ? $address['address'] : '';
+		$venue->venue_postal   = isset( $address['postcode'] ) ? $address['postcode'] : '';
+		$venue->venue_postcode = isset( $address['postcode'] ) ? $address['postcode'] : '';
+		$venue->venue_city     = isset( $address['city'] ) ? $address['city'] : '';
+		$venue->venue_country  = isset( $address['country'] ) ? $address['country'] : '';
+		$venue->venue_state    = isset( $address['state'] ) ? $address['state'] : '';
+		$venue->venue_lat = number_format( floatval( eo_get_venue_lat( $venue_id ) ), 6 );
+		$venue->venue_lng = number_format( floatval( eo_get_venue_lng( $venue_id ) ), 6 );
+
 		// create CiviEvent location
 		$location = $this->plugin->civi->update_location( $venue );
 
@@ -172,6 +186,20 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// get full venue
 		$venue = eo_get_venue_by( 'id', $venue_id );
+
+		/*
+		 * Manually add venue metadata because since EO version 3.0 it is
+		 * no longer added by default to the venue object.
+		 */
+		$address  = eo_get_venue_address( $venue_id );
+		$venue->venue_address  = isset( $address['address'] ) ? $address['address'] : '';
+		$venue->venue_postal   = isset( $address['postcode'] ) ? $address['postcode'] : '';
+		$venue->venue_postcode = isset( $address['postcode'] ) ? $address['postcode'] : '';
+		$venue->venue_city     = isset( $address['city'] ) ? $address['city'] : '';
+		$venue->venue_country  = isset( $address['country'] ) ? $address['country'] : '';
+		$venue->venue_state    = isset( $address['state'] ) ? $address['state'] : '';
+		$venue->venue_lat = number_format( floatval( eo_get_venue_lat( $venue_id ) ), 6 );
+		$venue->venue_lng = number_format( floatval( eo_get_venue_lng( $venue_id ) ), 6 );
 
 		// update CiviEvent location
 		$location = $this->plugin->civi->update_location( $venue );
