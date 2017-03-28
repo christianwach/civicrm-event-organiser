@@ -696,11 +696,11 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 
 	/*
-	----------------------------------------------------------------------------
-	The next two methods have been adapted from Event Organiser so we can add
-	our custom data to the venue object when standard EO functions are called
-	----------------------------------------------------------------------------
-	*/
+	 * -------------------------------------------------------------------------
+	 * The next two methods have been adapted from Event Organiser so we can add
+	 * our custom data to the venue object when standard EO functions are called
+	 * -------------------------------------------------------------------------
+	 */
 
 	/**
 	 * Updates venue meta cache when an event's venue is retrieved.

@@ -616,6 +616,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function event_meta_box() {
 
+		// init CiviCRM or die
+		if ( ! $this->plugin->civi->is_active() ) return;
+
 		// respect CiviCRM permissions
 		if ( ! CRM_Core_Permission::check( 'access CiviEvent' ) ) return;
 

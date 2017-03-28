@@ -53,8 +53,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @var object $step_counts The array of item counts to process per AJAX request
 	 */
 	public $step_counts = array(
-		'tax' => 2, // EO category terms & CiviCRM event types
-		'venue' => 2, // EO venues & CiviCRM locations
+		'tax' => 5, // EO category terms & CiviCRM event types
+		'venue' => 5, // EO venues & CiviCRM locations
 		'event' => 1, // EO events & CiviCRM events
 	);
 
@@ -999,13 +999,27 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$data['from'] = intval( $offset );
 			$data['to'] = $data['from'] + $diff;
 
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'venues' => $venues,
-			), true ) );
-
 			// loop
 			foreach( $venues AS $venue ) {
+
+				/*
+				 * Manually add venue metadata because since EO version 3.0 it is
+				 * no longer added by default to the venue object.
+				 *
+				 * @see https://github.com/stephenharris/Event-Organiser/commit/646220b336ba9c49d12bd17f5992e1391d0b411f
+				 */
+				$venue_id = (int) $venue->term_id;
+				$address  = eo_get_venue_address( $venue_id );
+
+				$venue->venue_address  = isset( $address['address'] ) ? $address['address'] : '';
+				$venue->venue_postal   = isset( $address['postcode'] ) ? $address['postcode'] : '';
+				$venue->venue_postcode = isset( $address['postcode'] ) ? $address['postcode'] : '';
+				$venue->venue_city     = isset( $address['city'] ) ? $address['city'] : '';
+				$venue->venue_country  = isset( $address['country'] ) ? $address['country'] : '';
+				$venue->venue_state    = isset( $address['state'] ) ? $address['state'] : '';
+
+				$venue->venue_lat = number_format( floatval( eo_get_venue_lat( $venue_id ) ), 6 );
+				$venue->venue_lng = number_format( floatval( eo_get_venue_lng( $venue_id ) ), 6 );
 
 				// update Civi location - or create if it doesn't exist
 				$location = $this->plugin->civi->update_location( $venue );
@@ -1025,11 +1039,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			// delete the option to start from the beginning
 			delete_option( '_civi_eo_venue_eo_to_civi_offset' );
-
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'venues' => 'DONE',
-			), true ) );
 
 		}
 

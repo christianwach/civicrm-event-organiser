@@ -1563,8 +1563,18 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// check email
 			$email = $this->maybe_update_email( $venue, $location, $op );
 
-			// add to params
-			$params['email'] = $email;
+			// if we get a new email
+			if ( is_array( $email ) ) {
+
+				// add to params
+				$params['email'] = $email;
+
+			} else {
+
+				// add existing ID to params
+				$params['email_id'] = $email;
+
+			}
 
 		}
 
@@ -1574,16 +1584,36 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// check phone
 			$phone = $this->maybe_update_phone( $venue, $location, $op );
 
-			// add to params
-			$params['phone'] = $phone;
+			// if we get a new phone
+			if ( is_array( $phone ) ) {
+
+				// add to params
+				$params['phone'] = $phone;
+
+			} else {
+
+				// add existing ID to params
+				$params['phone_id'] = $phone;
+
+			}
 
 		}
 
 		// check address
 		$address = $this->maybe_update_address( $venue, $location, $op );
 
-		// add to params
-		$params['address'] = $address;
+		// if we get a new address
+		if ( is_array( $address ) ) {
+
+			// add to params
+			$params['address'] = $address;
+
+		} else {
+
+			// add existing ID to params
+			$params['address_id'] = $address;
+
+		}
 
 		// if our venue has a location, add it
 		if ( $op == 'update' ) {
@@ -2771,7 +2801,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	private function maybe_update_address( $venue, $location = null, $op = 'create' ) {
 
-		// if the location has an existing email
+		// if the location has an existing address
 		if ( ! is_null( $location ) AND isset( $location['address']['id'] ) ) {
 
 			// check by ID
