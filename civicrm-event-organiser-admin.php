@@ -1222,11 +1222,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// delete the option to start from the beginning
 			delete_option( '_civi_eo_event_eo_to_civi_offset' );
 
-			error_log( print_r( array(
-				'method' => __METHOD__,
-				'events' => 'DONE',
-			), true ) );
-
 		}
 
 		// send data to browser
