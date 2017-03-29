@@ -116,37 +116,37 @@ class CiviCRM_WP_Event_Organiser {
 	public function initialise() {
 
 		// load our Taxonomy class
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm-event-organiser-taxonomy.php' );
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-taxonomy.php' );
 
 		// initialise
 		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy;
 
 		// load our Admin/DB class
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm-event-organiser-admin.php' );
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-admin.php' );
 
 		// initialise
 		$this->db = new CiviCRM_WP_Event_Organiser_Admin;
 
 		// load our CiviCRM utility functions class
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm-event-organiser-civi.php' );
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-civi.php' );
 
 		// initialise
 		$this->civi = new CiviCRM_WP_Event_Organiser_CiviCRM;
 
 		// load our Event Organiser utility functions class
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm-event-organiser-eo.php' );
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo.php' );
 
 		// initialise
 		$this->eo = new CiviCRM_WP_Event_Organiser_EO;
 
 		// load our Event Organiser Venue utility functions class
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm-event-organiser-eo-venue.php' );
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo-venue.php' );
 
 		// initialise
 		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue;
 
 		// load our template functions
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm-event-organiser-functions.php' );
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-functions.php' );
 
 		// store references
 		$this->taxonomy->set_references( $this );
