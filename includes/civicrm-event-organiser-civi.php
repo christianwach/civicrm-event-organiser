@@ -2186,8 +2186,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			return $link;
 		}
 
-		// if this event has registration enabled
-		if ( isset( $civi_event['participant_listing_id'] ) AND $civi_event['participant_listing_id'] == '1' ) {
+		// if this event has participant listings enabled
+		if (
+			isset( $civi_event['participant_listing_id'] ) AND
+			is_numeric( $civi_event['participant_listing_id'] ) AND
+			absint( $civi_event['participant_listing_id'] ) > 0
+		) {
 
 			// init CiviCRM or bail
 			if ( ! $this->is_active() ) return $link;
