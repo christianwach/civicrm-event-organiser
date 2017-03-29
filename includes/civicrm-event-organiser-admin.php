@@ -185,7 +185,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get current screen
 		$screen = get_current_screen();
 
-		// bail if on our settings page
+		// bail if on our settings page (or parent)
+		if ( false !== strpos( $screen->id, 'civi_eo_parent') ) return;
 		if ( false !== strpos( $screen->id, 'civi_eo_settings') ) return;
 
 		// get URLs
