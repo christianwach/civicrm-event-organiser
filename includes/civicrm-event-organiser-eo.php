@@ -185,9 +185,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function intercept_save_event( $post_id ) {
 
-		// get post data
-		$post = get_post( $post_id );
-
 		// save custom EO event components
 		$this->_save_event_components( $post_id );
 
@@ -197,6 +194,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// is our checkbox checked?
 		if ( ! isset( $_POST['civi_eo_event_sync'] ) ) return;
 		if ( $_POST['civi_eo_event_sync'] != 1 ) return;
+
+		// get post data
+		$post = get_post( $post_id );
 
 		// get all dates
 		$dates = $this->get_all_dates( $post_id );
@@ -314,9 +314,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 
 	/**
-	 * Update and EO event, given a CiviEvent. If no EO event exists then create
-	 * one. This will NOT create sequences and is intended for the initial migration
-	 * of CiviEvents to WordPress.
+	 * Update an EO event, given a CiviEvent.
+	 *
+	 * If no EO event exists then create one. This will NOT create sequences and
+	 * is intended for the initial migration of CiviEvents to WordPress.
 	 *
 	 * @since 0.1
 	 *

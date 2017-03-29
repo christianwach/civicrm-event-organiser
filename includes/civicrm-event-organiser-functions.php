@@ -133,7 +133,7 @@ function civicrm_event_organiser_get_registration_links( $post_id = null ) {
 		$dates = $plugin->eo->get_all_dates( $post_id );
 
 		// start counter
-		$counter = 0;
+		$counter = -1;
 
 	}
 
@@ -145,6 +145,9 @@ function civicrm_event_organiser_get_registration_links( $post_id = null ) {
 
 		// get link for the registration page
 		$url = $plugin->civi->get_registration_link( $civi_event );
+
+		// increment date counter
+		$counter++;
 
 		// skip to next if empty
 		if ( empty( $url ) ) continue;
@@ -168,9 +171,6 @@ function civicrm_event_organiser_get_registration_links( $post_id = null ) {
 				__( 'Register for %s', 'civicrm-event-organiser' ),
 				eo_format_event_occurrence( $post_id, $dates[$counter]['occurrence_id'] )
 			);
-
-			// increment date counter
-			$counter++;
 
 		} else {
 			$text = __( 'Register', 'civicrm-event-organiser' );
@@ -225,8 +225,8 @@ function civicrm_event_organiser_participant_links( $post_id = null ) {
 		// top and tail
 		$list = '<li class="civicrm-event-participant-link">' . $list . '</li>' . "\n";
 
-		// handle multiple occurrences
-		if ( count( $links ) > 1 ) {
+		// handle recurring events
+		if ( eo_recurs() ) {
 
 			// wrap in unordered list
 			$list = '<ul class="civicrm-event-participant-links">' . $list . '</ul>';
@@ -238,7 +238,7 @@ function civicrm_event_organiser_participant_links( $post_id = null ) {
 			echo '<strong>' . __( 'Participant Links', 'civicrm-event-organiser' ) . ':</strong>';
 
 			// show links
-			echo $links;
+			echo $list;
 
 			// finish up
 			echo '</li>' . "\n";
@@ -303,7 +303,7 @@ function civicrm_event_organiser_get_participant_links( $post_id = null ) {
 		$dates = $plugin->eo->get_all_dates( $post_id );
 
 		// start counter
-		$counter = 0;
+		$counter = -1;
 
 	}
 
@@ -315,6 +315,9 @@ function civicrm_event_organiser_get_participant_links( $post_id = null ) {
 
 		// get link for the participants page
 		$url = $plugin->civi->get_participants_link( $civi_event );
+
+		// increment date counter
+		$counter++;
 
 		// skip to next if empty
 		if ( empty( $url ) ) continue;
@@ -338,9 +341,6 @@ function civicrm_event_organiser_get_participant_links( $post_id = null ) {
 				__( 'Participants for %s', 'civicrm-event-organiser' ),
 				eo_format_event_occurrence( $post_id, $dates[$counter]['occurrence_id'] )
 			);
-
-			// increment date counter
-			$counter++;
 
 		} else {
 			$text = __( 'Participants', 'civicrm-event-organiser' );
