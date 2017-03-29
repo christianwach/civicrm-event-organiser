@@ -140,6 +140,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Update an EO event when a CiviEvent is updated.
 	 *
+	 * Only CiviEvents that are in a one-to-one correspondence with an Event
+	 * Organiser event can update that Event Organiser event. CiviEvents which
+	 * are part of an Event Organiser sequence can be updated, but no data will
+	 * be synced across to the Event Organiser event.
+	 *
 	 * @since 0.1
 	 *
 	 * @param string $op the type of database operation
@@ -158,51 +163,25 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// kick out if not event object
 		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
 
-		// check for event_type_id, which is a mandatory field
-		if ( ! empty( $objectRef->id ) AND empty( $objectRef->event_type_id ) ) {
+		// bail if this CiviEvent is part of an EO sequence
+		if ( $this->plugin->db->is_civi_event_in_eo_sequence( $objectId ) ) return;
 
-			// this probably means that a Location has been added to the event
-			if ( ! empty( $objectRef->loc_block_id ) ) {
+		// get full event data
+		$updated_event = $this->get_event_by_id( $objectId );
 
-				// get full event data
-				$updated_event = $this->get_event_by_id( $objectRef->id );
-
-				// update the EO event
-				$event_id = $this->plugin->eo->update_event( $updated_event );
-
-			} else {
-
-				// log and bail
-				error_log( print_r( array(
-					'method' => __METHOD__,
-					'op' => $op,
-					'objectName' => $objectName,
-					'objectId' => $objectId,
-					'objectRef' => $objectRef,
-				), true ) );
-
-				// --<
-				return;
-
-			}
-
-		} else {
-
-			// update a single EO event - or create if it doesn't exist
-			$event_id = $this->plugin->eo->update_event( (array) $objectRef );
-
-		}
+		// update the EO event
+		$event_id = $this->plugin->eo->update_event( $updated_event );
 
 		// kick out if not event object
 		if ( is_wp_error( $event_id ) ) {
 
-			// log error
+			// log error first
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'error' => $event_id->get_error_message(),
 			), true ) );
 
-			// kick out
+			// bail
 			return;
 
 		}
@@ -216,7 +195,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$occurrence_id = array_shift( $keys );
 
 		// store correspondences
-		$this->plugin->db->store_event_correspondences( $event_id, array( $occurrence_id => $objectRef->id ) );
+		$this->plugin->db->store_event_correspondences( $event_id, array( $occurrence_id => $objectId ) );
 
 	}
 
