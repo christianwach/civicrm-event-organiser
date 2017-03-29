@@ -427,7 +427,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$result = civicrm_api( 'event', 'create', $civi_event );
 
 			// log failures and skip to next
-			if ( $result['is_error'] == '1' ) {
+			if ( isset( $result['is_error'] ) AND $result['is_error'] == '1' ) {
 
 				// log error
 				error_log( print_r( array(
@@ -439,6 +439,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				continue;
 
 			}
+
+			// enable registration if selected
+			$this->enable_registration( array_pop( $result['values'] ) );
 
 			// add the new CiviEvent ID to array, keyed by occurrence_id
 			$correspondences[$date['occurrence_id']] = $result['id'];
@@ -487,48 +490,45 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		}
 
 		/*
-		------------------------------------------------------------------------
-
-		The logic for updating is as follows:
-
-		Event sequences can only be generated from EO, so any CiviEvents that are
-		part of a sequence must have been generated automatically.
-
-		Since CiviEvents will only be generated when the "Create CiviEvents"
-		checkbox is ticked (and only those with 'publish_posts' caps can see the
-		checkbox) we assume that this is the definitive set of events.
-
-		Any further changes work thusly:
-
-		We have already got the correspondence array, so retrieve the CiviEvents.
-		The correspondence array is already sorted by start date, so the CiviEvents
-		will be too.
-
-		If the length of the two event arrays is identical, we assume that the
-		sequences correspond and update the CiviEvents with the details of the
-		EO events.
-
-		Next, we match by date and time. Any CiviEvents that match have their
-		info updated since we assume their correspondence remains unaltered.
-
-		Any additions to the EO event are treated as new CiviEvents and are added
-		to CiviCRM. Any removals are treated as if the event has been cancelled
-		and the CiviEvent is set to 'disabled' rather than deleted. This is to
-		preserve any data that may have been collected for the removed event.
-
-		The bottom line is: make sure your sequences are right before hitting
-		the Publish button and be wary of making further changes.
-
-		Things get a bit more complicated when a sequence is split, but it's not
-		too bad. This functionality will be handled by the EO 'occurrence' hooks
-		when I get round to it.
-
-		Also, note the inline comment discussing what to do with CiviEvents that
-		have been "orphaned" from the sequence. The current need is to retain the
-		CiviEvent, since there may be associated data.
-
-		------------------------------------------------------------------------
-		*/
+		 * The logic for updating is as follows:
+		 *
+		 * Event sequences can only be generated from EO, so any CiviEvents that
+		 * are part of a sequence must have been generated automatically.
+		 *
+		 * Since CiviEvents will only be generated when the "Create CiviEvents"
+		 * checkbox is ticked (and only those with 'publish_posts' caps can see
+		 * the checkbox) we assume that this is the definitive set of events.
+		 *
+		 * Any further changes work thusly:
+		 *
+		 * We already have the correspondence array, so retrieve the CiviEvents.
+		 * The correspondence array is already sorted by start date, so the
+		 * CiviEvents will be too.
+		 *
+		 * If the length of the two event arrays is identical, we assume the
+		 * sequences correspond and update the CiviEvents with the details of
+		 * the EO events.
+		 *
+		 * Next, we match by date and time. Any CiviEvents that match have their
+		 * info updated since we assume their correspondence remains unaltered.
+		 *
+		 * Any additions to the EO event are treated as new CiviEvents and are
+		 * added to CiviCRM. Any removals are treated as if the event has been
+		 * cancelled and the CiviEvent is set to 'disabled' rather than deleted.
+		 * This is to preserve any data that may have been collected for the
+		 * removed event.
+		 *
+		 * The bottom line is: make sure your sequences are right before hitting
+		 * the Publish button and be wary of making further changes.
+		 *
+		 * Things get a bit more complicated when a sequence is split, but it's
+		 * not too bad. This functionality will eventually be handled by the EO
+		 * 'occurrence' hooks when I get round to it.
+		 *
+		 * Also, note the inline comment discussing what to do with CiviEvents
+		 * that have been "orphaned" from the sequence. The current need is to
+		 * retain the CiviEvent, since there may be associated data.
+		 */
 
 		// start with new correspondence array
 		$new_correspondences = array();
@@ -539,11 +539,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// prepare CiviEvent
 		$civi_event = $this->prepare_civi_event( $post );
 
-		/*
-		------------------------------------------------------------------------
-		When arrays are equal in length
-		------------------------------------------------------------------------
-		*/
+		// ---------------------------------------------------------------------
+		// When arrays are equal in length
+		// ---------------------------------------------------------------------
 
 		// do the arrays have the same length?
 		if ( count( $dates ) === count( $correspondences ) ) {
@@ -578,6 +576,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 				}
 
+				// enable registration if selected
+				$this->enable_registration( array_pop( $result['values'] ) );
+
 				// add the CiviEvent ID to array, keyed by occurrence_id
 				$new_correspondences[$date['occurrence_id']] = $result['id'];
 
@@ -591,11 +592,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		}
 
-		/*
-		------------------------------------------------------------------------
-		When arrays are NOT equal in length, we MUST have correspondences
-		------------------------------------------------------------------------
-		*/
+		// ---------------------------------------------------------------------
+		// When arrays are NOT equal in length, we MUST have correspondences
+		// ---------------------------------------------------------------------
 
 		// init CiviCRM events array
 		$civi_events = array();
@@ -662,6 +661,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 				}
 
+				// enable registration if selected
+				$this->enable_registration( array_pop( $result['values'] ) );
+
 				// add to new correspondence array
 				$new_correspondences[$occurrence_id] = $civi_id;
 
@@ -701,6 +703,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 					continue;
 
 				}
+
+				// enable registration if selected
+				$this->enable_registration( array_pop( $result['values'] ) );
 
 				// add the CiviEvent ID to array, keyed by occurrence_id
 				$new_correspondences[$eo_date['occurrence_id']] = $result['id'];
@@ -1766,9 +1771,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// first, get all participant_roles
 		$all_roles = $this->get_participant_roles();
 
-		// init an array
-		$opts = array();
-
 		// did we get any?
 		if ( $all_roles['is_error'] == '0' AND count( $all_roles['values'] ) > 0 ) {
 
@@ -1893,6 +1895,245 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// --<
 		return $link;
+
+	}
+
+
+
+	/**
+	 * Enable a CiviEvent's registration form.
+	 *
+	 * Just setting the 'is_online_registration' flag on an event is not enough
+	 * to generate a valid Online Registration form in CiviCRM. There also needs
+	 * to be a default "UF Group" associated with the event - for example the
+	 * one that is supplied with a fresh installation of CiviCRM - it's called
+	 * "Your Registration Info". This always seems to have ID = 12 but since it
+	 * can be deleted that cannot be relied upon.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @param array $civi_event An array of data representing a CiviEvent
+	 */
+	public function enable_registration( $civi_event ) {
+
+		// does this event have online registration?
+		if ( $civi_event['is_online_registration'] == 1 ) {
+
+			// bail if this event already has a registration profile
+			if ( $this->has_registration_profile( $civi_event ) ) return;
+
+			// get default registration profile
+			$profile_id = $this->get_registration_profile();
+
+			// add default profile...
+			$params = array(
+				'version' => 3,
+				'module' => 'CiviEvent',
+				'entity_table' => 'civicrm_event',
+				'entity_id' => $civi_event['id'],
+				'uf_group_id' => $profile_id,
+				'is_active' => 1,
+				'weight' => 1,
+				'sequential' => 1,
+			);
+
+			// call API
+			$result = civicrm_api( 'uf_join', 'create', $params );
+
+			// test for errors
+			if ( isset( $result['is_error'] ) AND $result['is_error'] == '1' ) {
+
+				// log error
+				error_log( print_r( array(
+					'method' => __METHOD__,
+					'message' => $result['error_message'],
+					'civi_event' => $civi_event,
+					'params' => $params,
+				), true ) );
+
+			}
+
+		}
+
+	}
+
+
+
+	/**
+	 * Check if a CiviEvent has a registration form profile set.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @param array $civi_event An array of data representing a CiviEvent
+	 * @return bool $has_profile True if the CiviEvent has a profile set, false otherwise
+	 */
+	public function has_registration_profile( $civi_event ) {
+
+		// define query params
+		$params = array(
+			'version' => 3,
+			'entity_table' => 'civicrm_event',
+			'entity_id' => $civi_event['id'],
+			'sequential' => 1,
+		);
+
+		// query via API
+		$result = civicrm_api( 'uf_join', 'get', $params );
+
+		// return true if we found one
+		if ( $result['is_error'] == '0' AND count( $result['values'] ) > 0 ) {
+			return true;
+		}
+
+		// --<
+		return false;
+
+	}
+
+
+
+	/**
+	 * Get the default registration form profile for an EO event.
+	 *
+	 * Falls back to the default as set on the plugin settings screen.
+	 * Falls back to false otherwise.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @param object $post An EO event object
+	 * @return int|bool $profile_id The default registration form profile ID, false on failure
+	 */
+	public function get_registration_profile( $post = null ) {
+
+		// init with impossible ID
+		$profile_id = false;
+
+		// do we have a default set?
+		$default = $this->plugin->db->option_get( 'civi_eo_event_default_profile' );
+
+		// override with default value if we have one
+		if ( $default !== '' AND is_numeric( $default ) ) {
+			$profile_id = absint( $default );
+		}
+
+		// if we have a post
+		if ( isset( $post ) AND is_object( $post ) ) {
+
+			// TODO: add dropdown to EO event metabox
+
+		}
+
+		// --<
+		return $profile_id;
+
+	}
+
+
+
+	/**
+	 * Get all CiviEvent registration form profiles.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @return mixed $result CiviCRM API return array (or false on failure)
+	 */
+	public function get_registration_profiles() {
+
+		// bail if we fail to init CiviCRM
+		if ( ! $this->is_active() ) return false;
+
+		// define params
+		$params = array(
+			'version' => 3,
+		);
+
+		// get them via API
+		$result = civicrm_api( 'uf_group', 'get', $params );
+
+		// error check
+		if ( isset( $result['is_error'] ) AND $result['is_error'] == '1' ) {
+
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $result['error_message'],
+				'result' => $result,
+				'params' => $params,
+			), true ) );
+
+			// --<
+			return false;
+
+		}
+
+		// --<
+		return $result;
+
+	}
+
+
+
+	/**
+	 * Get all CiviEvent registration form profiles formatted as a dropdown list.
+	 *
+	 * @since 0.2.4
+	 *
+	 * @return str $html Markup containing select options
+	 */
+	public function get_registration_profiles_select() {
+
+		// init return
+		$html = '';
+
+		// init CiviCRM or bail
+		if ( ! $this->is_active() ) return $html;
+
+		// get all profiles
+		$result = $this->get_registration_profiles();
+
+		// did we get any?
+		if (
+			$result !== false AND
+			$result['is_error'] == '0' AND
+			count( $result['values'] ) > 0
+		) {
+
+			// get the values array
+			$profiles = $result['values'];
+
+			// init options
+			$options = array();
+
+			// get existing profile ID
+			$existing_id = $this->get_registration_profile();
+
+			// loop
+			foreach( $profiles AS $key => $profile ) {
+
+				// get profile value
+				$profile_id = absint( $profile['id'] );
+
+				// init selected
+				$selected = '';
+
+				// set selected if this value is the same as the default
+				if ( $existing_id === $profile_id ) {
+					$selected = ' selected="selected"';
+				}
+
+				// construct option
+				$options[] = '<option value="' . $profile_id . '"' . $selected . '>' .
+								esc_html( $profile['title'] ) .
+							 '</option>';
+
+			}
+
+			// create html
+			$html = implode( "\n", $options );
+
+		}
+
+		// --<
+		return $html;
 
 	}
 
@@ -2375,14 +2616,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return $html;
 
-		// init an array
-		$opts = array();
-
 		// get all event types
 		$result = $this->get_event_types();
 
 		// did we get any?
-		if ( $result['is_error'] == '0' AND count( $result['values'] ) > 0 ) {
+		if (
+			$result !== false AND
+			$result['is_error'] == '0' AND
+			count( $result['values'] ) > 0
+		) {
 
 			// get the values array
 			$types = $result['values'];

@@ -37,6 +37,20 @@
 			</tr>
 		<?php endif; ?>
 
+		<?php if ( $profiles != '' ) : ?>
+			<tr valign="top">
+				<th scope="row"><label for="civi_eo_event_default_profile"><?php _e( 'Default CiviCRM Event Registration Profile', 'civicrm-event-organiser' ); ?></label></th>
+				<td>
+					<select id="civi_eo_event_default_profile" name="civi_eo_event_default_profile">
+						<?php echo $profiles; ?>
+					</select>
+					<?php if ( $profile_required ) : ?>
+						<p class="description"><?php _e( 'Please select a default Profile for Event Registration Pages.' ); ?></p>
+					<?php endif; ?>
+				</td>
+			</tr>
+		<?php endif; ?>
+
 		</table>
 
 		<hr>

@@ -19,6 +19,15 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public $plugin;
 
 	/**
+	 * Plugin version.
+	 *
+	 * @since 0.2.4
+	 * @access public
+	 * @var str $plugin_version The plugin version (numeric string)
+	 */
+	public $plugin_version;
+
+	/**
 	 * Parent Page.
 	 *
 	 * @since 0.2.4
@@ -94,6 +103,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			add_action( 'wp_ajax_sync_events_eo_to_civi', array( $this, 'stepped_sync_events_eo_to_civi' ) );
 			add_action( 'wp_ajax_sync_events_civi_to_eo', array( $this, 'stepped_sync_events_civi_to_eo' ) );
 
+			// initialise
+			add_action( 'plugins_loaded', array( $this, 'initialise' ) );
+
 		}
 
 	}
@@ -111,6 +123,96 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// store
 		$this->plugin = $parent;
+
+	}
+
+
+
+	/**
+	 * Perform initialisation tasks.
+	 *
+	 * @since 0.2.4
+	 */
+	public function initialise() {
+
+		// assign plugin version
+		$this->plugin_version = $this->option_get( 'civi_eo_version', false );
+
+		// do upgrade tasks
+		$this->upgrade_tasks();
+
+		// has there been a change of version?
+		if ( $this->plugin_version != CIVICRM_WP_EVENT_ORGANISER_VERSION ) {
+
+			// store version for later reference
+			$this->store_version();
+
+		}
+
+	}
+
+
+
+	/**
+	 * Utility to add a message to admin pages when an upgrade is required.
+	 *
+	 * @since 0.2.4
+	 */
+	public function upgrade_tasks() {
+
+		// check for possibly missing default profile setting
+		if ( 'fgffgs' == $this->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
+
+			// let's show an admin notice
+			add_action( 'admin_notices', array( $this, 'upgrade_alert' ) );
+
+		}
+
+	}
+
+
+
+	/**
+	 * Utility to add a message to admin pages when an upgrade is required.
+	 *
+	 * @since 0.2.4
+	 */
+	public function upgrade_alert() {
+
+		// check user permissions
+		if ( ! current_user_can( 'manage_options' ) ) return;
+
+		// get current screen
+		$screen = get_current_screen();
+
+		// bail if on our settings page
+		if ( false !== strpos( $screen->id, 'civi_eo_settings') ) return;
+
+		// get URLs
+		$urls = $this->page_get_urls();
+
+		// construct message
+		$message = sprintf(
+			__( 'CiviCRM Event Organiser has been updated and needs your attention. Please visit the <a href="%s">Settings Page</a>.', 'civicrm-event-organiser' ),
+			$urls['settings']
+		);
+
+		// show it
+		echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p></div>';
+
+	}
+
+
+
+	/**
+	 * Store the plugin version.
+	 *
+	 * @since 0.2.4
+	 */
+	public function store_version() {
+
+		// store version
+		$this->option_save( 'civi_eo_version', CIVICRM_WP_EVENT_ORGANISER_VERSION );
 
 	}
 
@@ -471,6 +573,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		}
 
+		// check for possibly missing default profile setting
+		$profile_required = false;
+		if ( 'fgffgs' == $this->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
+			$profile_required = true;
+		}
+
 		// get admin page URLs
 		$urls = $this->page_get_urls();
 
@@ -479,6 +587,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// get all event types
 		$types = $this->plugin->civi->get_event_types_select();
+
+		// get all event registration profiles
+		$profiles = $this->plugin->civi->get_registration_profiles_select();
 
 		// include template file
 		include( CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/settings.php' );
@@ -629,7 +740,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// was the "Settings" form submitted?
 		if ( isset( $_POST['civi_eo_settings_submit'] ) ) {
-			$result = $this->settings_update();
+			$this->settings_update();
+			return;
 		}
 
 	 	// was an Event Type "Stop Sync" button pressed?
@@ -706,6 +818,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// init vars
 		$civi_eo_event_default_role = '0';
 		$civi_eo_event_default_type = '0';
+		$civi_eo_event_default_profile = '0';
 
 		// get variables
 		extract( $_POST );
@@ -721,6 +834,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// save option
 		$this->option_save( 'civi_eo_event_default_type', $civi_eo_event_default_type );
+
+		// sanitise
+		$civi_eo_event_default_profile = absint( $civi_eo_event_default_profile );
+
+		// save option
+		$this->option_save( 'civi_eo_event_default_profile', $civi_eo_event_default_profile );
 
 	}
 
