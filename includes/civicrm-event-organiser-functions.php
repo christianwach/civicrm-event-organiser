@@ -126,17 +126,6 @@ function civicrm_event_organiser_get_registration_links( $post_id = null ) {
 	// did we get more than one?
 	$multiple = ( count( $civi_events ) > 1 ) ? true : false;
 
-	// if multiple
-	if ( $multiple ) {
-
-		// get all dates for this event
-		$dates = $plugin->eo->get_all_dates( $post_id );
-
-		// start counter
-		$counter = -1;
-
-	}
-
 	// loop through them
 	foreach( $civi_events AS $civi_event_id ) {
 
@@ -145,9 +134,6 @@ function civicrm_event_organiser_get_registration_links( $post_id = null ) {
 
 		// get link for the registration page
 		$url = $plugin->civi->get_registration_link( $civi_event );
-
-		// increment date counter
-		$counter++;
 
 		// skip to next if empty
 		if ( empty( $url ) ) continue;
@@ -166,10 +152,13 @@ function civicrm_event_organiser_get_registration_links( $post_id = null ) {
 		// set different link text for single and multiple occurrences
 		if ( $multiple ) {
 
+			// get occurrence ID for this CiviEvent
+			$occurrence_id = $plugin->db->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
+
 			// define text
 			$text = sprintf(
 				__( 'Register for %s', 'civicrm-event-organiser' ),
-				eo_format_event_occurrence( $post_id, $dates[$counter]['occurrence_id'] )
+				eo_format_event_occurrence( $post_id, $occurrence_id )
 			);
 
 		} else {
@@ -296,17 +285,6 @@ function civicrm_event_organiser_get_participant_links( $post_id = null ) {
 	// did we get more than one?
 	$multiple = ( count( $civi_events ) > 1 ) ? true : false;
 
-	// if multiple
-	if ( $multiple ) {
-
-		// get all dates for this event
-		$dates = $plugin->eo->get_all_dates( $post_id );
-
-		// start counter
-		$counter = -1;
-
-	}
-
 	// loop through them
 	foreach( $civi_events AS $civi_event_id ) {
 
@@ -315,9 +293,6 @@ function civicrm_event_organiser_get_participant_links( $post_id = null ) {
 
 		// get link for the participants page
 		$url = $plugin->civi->get_participants_link( $civi_event );
-
-		// increment date counter
-		$counter++;
 
 		// skip to next if empty
 		if ( empty( $url ) ) continue;
@@ -336,10 +311,13 @@ function civicrm_event_organiser_get_participant_links( $post_id = null ) {
 		// set different link text for single and multiple occurrences
 		if ( $multiple ) {
 
+			// get occurrence ID for this CiviEvent
+			$occurrence_id = $plugin->db->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
+
 			// define text
 			$text = sprintf(
 				__( 'Participants for %s', 'civicrm-event-organiser' ),
-				eo_format_event_occurrence( $post_id, $dates[$counter]['occurrence_id'] )
+				eo_format_event_occurrence( $post_id, $occurrence_id )
 			);
 
 		} else {
