@@ -1970,6 +1970,42 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 
+	/**
+	 * Check if a CiviEvent is part of an Event Organiser event sequence.
+	 *
+	 * @since 0.3
+	 *
+	 * @param int $civi_event_id The CiviEvent ID
+	 * @return bool True if CiviEvent is part of an EO event sequence, false otherwise
+	 */
+	public function is_civi_event_in_eo_sequence( $civi_event_id ) {
+
+		// get the EO event ID for this CiviEvent
+		$eo_post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $civi_event_id );
+
+		// if there is one
+		if ( $eo_post_id !== false ) {
+
+			// get the corresponding CiviEvents
+			$civi_event_ids = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $eo_post_id );
+
+			// does the EO event have multiple CiviEvents?
+			if ( count( $civi_event_ids ) > 1 ) {
+
+				// yes, this CiviEvent is part of a series
+				return true;
+
+			}
+
+		}
+
+		// fallback
+		return false;
+
+	}
+
+
+
 	//##########################################################################
 
 
