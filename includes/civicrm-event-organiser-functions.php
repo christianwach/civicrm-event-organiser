@@ -75,8 +75,8 @@ function civicrm_event_organiser_registration_links( $post_id = null ) {
 		// top and tail
 		$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
 
-		// wrap in unordered list if multiple
-		if ( count( $links ) > 1 ) {
+		// wrap in unordered list if EO event recurs
+		if ( eo_recurs() ) {
 			$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
 		}
 
