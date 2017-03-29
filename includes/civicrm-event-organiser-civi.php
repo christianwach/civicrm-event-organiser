@@ -295,6 +295,31 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 
+	/**
+	 * Check a CiviCRM permission.
+	 *
+	 * @since 0.3
+	 *
+	 * @param str $permission The permission string
+	 * @return bool True if allowed, false otherwise
+	 */
+	public function check_permission( $permission ) {
+
+		// deny if CiviCRM is not active
+		if ( ! $this->is_active() ) return false;
+
+		// check CiviCRM permissions
+		if ( ! CRM_Core_Permission::check( $permission ) ) {
+			return false;
+		}
+
+		// fallback
+		return true;
+
+	}
+
+
+
 	//##########################################################################
 
 
@@ -2134,6 +2159,52 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// --<
 		return $html;
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
+	 * Get a CiviEvent's Participants link.
+	 *
+	 * @since 0.3
+	 *
+	 * @param array $civi_event An array of data for the CiviEvent
+	 * @return string $link The URL of the CiviCRM Participants page
+	 */
+	public function get_participants_link( $civi_event ) {
+
+		// init link
+		$link = '';
+
+		// check permission
+		if ( ! $this->plugin->civi->check_permission( 'view event participants' ) ) {
+			return $link;
+		}
+
+		// if this event has registration enabled
+		if ( isset( $civi_event['participant_listing_id'] ) AND $civi_event['participant_listing_id'] == '1' ) {
+
+			// init CiviCRM or bail
+			if ( ! $this->is_active() ) return $link;
+
+			// use CiviCRM to construct link
+			$link = CRM_Utils_System::url(
+				'civicrm/event/participant', 'reset=1&id=' . $civi_event['id'],
+				TRUE,
+				NULL,
+				FALSE,
+				TRUE
+			);
+
+		}
+
+		// --<
+		return $link;
 
 	}
 

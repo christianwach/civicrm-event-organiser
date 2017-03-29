@@ -146,6 +146,9 @@ function civicrm_event_organiser_get_registration_links( $post_id = null ) {
 		// get link for the registration page
 		$url = $plugin->civi->get_registration_link( $civi_event );
 
+		// skip to next if empty
+		if ( empty( $url ) ) continue;
+
 		/**
 		 * Filter registration URL.
 		 *
@@ -174,9 +177,7 @@ function civicrm_event_organiser_get_registration_links( $post_id = null ) {
 		}
 
 		// construct link if we get one
-		if ( ! empty( $url ) ) {
-			$link = '<a class="civicrm-event-organiser-register-link" href="' . $url . '">' . $text . '</a>';
-		}
+		$link = '<a class="civicrm-event-organiser-register-link" href="' . $url . '">' . $text . '</a>';
 
 		/**
 		 * Filter registration link.
@@ -189,6 +190,176 @@ function civicrm_event_organiser_get_registration_links( $post_id = null ) {
 		 * @param int $post_id The numeric ID of the WP post
 		 */
 		$links[] = apply_filters( 'civicrm_event_organiser_registration_link', $link, $url, $text, $post_id );
+
+	}
+
+	// --<
+	return $links;
+
+}
+
+
+
+//##############################################################################
+
+
+
+/**
+ * Add a list of Participant links for an event to the EO event meta list.
+ *
+ * @since 0.3
+ *
+ * @param int $post_id The numeric ID of the WP post
+ */
+function civicrm_event_organiser_participant_links( $post_id = null ) {
+
+	// get links array
+	$links = civicrm_event_organiser_get_participant_links( $post_id );
+
+	// show them if we have any
+	if ( ! empty( $links ) ) {
+
+		// combine into list
+		$list = implode( '</li>' . "\n" . '<li class="civicrm-event-participant-link">', $links );
+
+		// top and tail
+		$list = '<li class="civicrm-event-participant-link">' . $list . '</li>' . "\n";
+
+		// handle multiple occurrences
+		if ( count( $links ) > 1 ) {
+
+			// wrap in unordered list
+			$list = '<ul class="civicrm-event-participant-links">' . $list . '</ul>';
+
+			// open a list item
+			echo '<li class="civicrm-event-participant-links">';
+
+			// show a title
+			echo '<strong>' . __( 'Participant Links', 'civicrm-event-organiser' ) . ':</strong>';
+
+			// show links
+			echo $links;
+
+			// finish up
+			echo '</li>' . "\n";
+
+		} else {
+
+			// show links list
+			echo $list;
+
+		}
+
+	}
+
+}
+
+// add action for the above
+add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_participant_links' );
+
+
+
+/**
+ * Get the Participant links for an EO Event.
+ *
+ * @since 0.3
+ *
+ * @param int $post_id The numeric ID of the WP post
+ * @return array $links The HTML links to the CiviCRM Participant pages
+ */
+function civicrm_event_organiser_get_participant_links( $post_id = null ) {
+
+	// init return
+	$links = array();
+
+	// bail if no CiviCRM init function
+	if ( ! function_exists( 'civi_wp' ) ) return $links;
+
+	// try and init CiviCRM
+	if ( ! civi_wp()->initialize() ) return $links;
+
+	// need the post ID
+	$post_id = absint( empty( $post_id ) ? get_the_ID() : $post_id );
+
+	// bail if not present
+	if( empty( $post_id ) ) return $links;
+
+	// get plugin reference
+	$plugin = civicrm_eo();
+
+	// get CiviEvents
+	$civi_events = $plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
+
+	// sanity check
+	if ( empty( $civi_events ) ) return $links;
+
+	// did we get more than one?
+	$multiple = ( count( $civi_events ) > 1 ) ? true : false;
+
+	// if multiple
+	if ( $multiple ) {
+
+		// get all dates for this event
+		$dates = $plugin->eo->get_all_dates( $post_id );
+
+		// start counter
+		$counter = 0;
+
+	}
+
+	// loop through them
+	foreach( $civi_events AS $civi_event_id ) {
+
+		// get the full CiviEvent
+		$civi_event = $plugin->civi->get_event_by_id( $civi_event_id );
+
+		// get link for the participants page
+		$url = $plugin->civi->get_participants_link( $civi_event );
+
+		// skip to next if empty
+		if ( empty( $url ) ) continue;
+
+		/**
+		 * Filter participant URL.
+		 *
+		 * @since 0.3
+		 *
+		 * @param string $url The raw URL to the CiviCRM Registration page
+		 * @param array $civi_event The array of data that represents a CiviEvent
+		 * @param int $post_id The numeric ID of the WP post
+		 */
+		$url = apply_filters( 'civicrm_event_organiser_participant_url', $url, $civi_event, $post_id );
+
+		// set different link text for single and multiple occurrences
+		if ( $multiple ) {
+
+			// define text
+			$text = sprintf(
+				__( 'Participants for %s', 'civicrm-event-organiser' ),
+				eo_format_event_occurrence( $post_id, $dates[$counter]['occurrence_id'] )
+			);
+
+			// increment date counter
+			$counter++;
+
+		} else {
+			$text = __( 'Participants', 'civicrm-event-organiser' );
+		}
+
+		// construct link if we get one
+		$link = '<a class="civicrm-event-organiser-participant-link" href="' . $url . '">' . $text . '</a>';
+
+		/**
+		 * Filter participant link.
+		 *
+		 * @since 0.3
+		 *
+		 * @param string $link The HTML link to the CiviCRM Participant page
+		 * @param string $url The raw URL to the CiviCRM Participant page
+		 * @param string $text The text content of the link
+		 * @param int $post_id The numeric ID of the WP post
+		 */
+		$links[] = apply_filters( 'civicrm_event_organiser_participant_link', $link, $url, $text, $post_id );
 
 	}
 

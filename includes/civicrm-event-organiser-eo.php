@@ -616,11 +616,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function event_meta_box() {
 
-		// init CiviCRM or die
-		if ( ! $this->plugin->civi->is_active() ) return;
-
-		// respect CiviCRM permissions
-		if ( ! CRM_Core_Permission::check( 'access CiviEvent' ) ) return;
+		// check permission
+		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) return;
 
 		// create it
 		add_meta_box(
@@ -727,6 +724,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 		</p>
 
 		';
+
+		/**
+		 * Broadcast end of metabox.
+		 *
+		 * @since 0.3
+		 */
+		do_action( 'civicrm_event_organiser_event_meta_box_after' );
 
 	}
 
