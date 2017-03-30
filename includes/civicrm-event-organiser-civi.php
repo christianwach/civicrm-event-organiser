@@ -2290,7 +2290,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	public function event_type_process_form( $formName, &$form ) {
 
 		// kick out if not options form
-		if ( ! is_a( $form, 'CRM_Admin_Form_Options' ) ) return;
+		if ( ! ( $form instanceof CRM_Admin_Form_Options ) ) return;
 
 		// kick out if not event type form
 		if ( 'event_type' != $form->getVar( '_gName' ) ) return;
