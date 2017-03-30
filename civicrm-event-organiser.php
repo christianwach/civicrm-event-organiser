@@ -13,9 +13,6 @@ Domain Path: /languages
 
 
 
-// set our debug flag here
-define( 'CIVICRM_WP_EVENT_ORGANISER_DEBUG', false );
-
 // set our version here
 define( 'CIVICRM_WP_EVENT_ORGANISER_VERSION', '0.3' );
 

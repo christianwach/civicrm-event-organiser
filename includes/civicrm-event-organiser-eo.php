@@ -1576,29 +1576,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 
 
-	//##########################################################################
-
-
-
-	/**
-	 * Debugging.
-	 *
-	 * @since 0.1
-	 *
-	 * @param array $msg
-	 */
-	private function _debug( $msg ) {
-
-		// add to internal array
-		$this->messages[] = $msg;
-
-		// do we want output?
-		if ( CIVICRM_WP_EVENT_ORGANISER_DEBUG ) print_r( $msg );
-
-	}
-
-
-
 } // class ends
 
 
