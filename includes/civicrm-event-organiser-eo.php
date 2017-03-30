@@ -521,6 +521,16 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
+		/**
+		 * Broadcast end of EO event update.
+		 *
+		 * @since 0.3.2
+		 *
+		 * @param int $event_id The numeric ID of the EO event
+		 * @param array $civi_event An array of data for the CiviEvent
+		 */
+		do_action( 'civicrm_event_organiser_eo_event_updated', $event_id, $civi_event );
+
 		// --<
 		return $event_id;
 
