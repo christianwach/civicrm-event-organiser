@@ -774,8 +774,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * Broadcast end of metabox.
 		 *
 		 * @since 0.3
+		 *
+		 * @param object $event The EO event object
 		 */
-		do_action( 'civicrm_event_organiser_event_meta_box_after' );
+		do_action( 'civicrm_event_organiser_event_meta_box_after', $event );
 
 	}
 
