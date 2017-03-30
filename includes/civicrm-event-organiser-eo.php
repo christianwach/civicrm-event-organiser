@@ -316,8 +316,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Update an EO event, given a CiviEvent.
 	 *
-	 * If no EO event exists then create one. This will NOT create sequences and
-	 * is intended for the initial migration of CiviEvents to WordPress.
+	 * If no EO event exists then create one. Please note that this method will
+	 * NOT create sequences for the time being.
 	 *
 	 * @since 0.1
 	 *
@@ -505,15 +505,14 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
-		// if the event has a registration profile specified
-		if (
-			isset( $civi_event['participant_listing_id'] ) AND
-			! empty( $civi_event['participant_listing_id'] ) AND
-			is_numeric( $civi_event['participant_listing_id'] )
-		) {
+		// get registration profile
+		$existing_profile = $this->plugin->civi->has_registration_profile( $civi_event );
+
+		// does this event have a registration profile?
+		if ( $existing_profile !== false ) {
 
 			// save specified registration profile
-			$this->set_event_registration_profile( $event_id, $civi_event['default_role_id'] );
+			$this->set_event_registration_profile( $event_id, $existing_profile['uf_group_id'] );
 
 		} else {
 
@@ -701,8 +700,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 				// define sync options
 				$sync_options = '
-				<h4>' . __( 'CiviCRM Sync Options', 'civicrm-event-organiser' ) . '</h4>
-
 				<p class="civi_eo_event_desc">' . __( 'Choose whether or not to sync this event and (if the sequence has changed) whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ) . '</p>
 
 				<p>
@@ -714,6 +711,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 				<label for="civi_eo_event_delete_unused">' . __( 'Delete unused CiviEvents:', 'civicrm-event-organiser' ) . '</label>
 				<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
 				</p>
+
+				<hr />
 
 				';
 

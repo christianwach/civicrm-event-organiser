@@ -324,8 +324,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$civi_event['summary'] = strip_tags( $post->post_excerpt );
 		$civi_event['created_date'] = $post->post_date;
 		$civi_event['is_public'] = 1;
-		$civi_event['is_active'] = 1;
 		$civi_event['participant_listing_id'] = NULL;
+
+		// if the event is in draft mode, set as 'inactive'
+		if ( $post->post_status == 'draft' ) {
+			$civi_event['is_active'] = 0;
+		} else {
+			$civi_event['is_active'] = 1;
+		}
 
 		// get venue for this event
 		$venue_id = eo_get_venue( $post->ID );
@@ -1940,9 +1946,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			);
 
 			// trigger update if this event already has a registration profile
-			$existing_profile_id = $this->has_registration_profile( $civi_event );
-			if ( $existing_profile_id !== false ) {
-				$params['id'] = $existing_profile_id;
+			$existing_profile = $this->has_registration_profile( $civi_event );
+			if ( $existing_profile !== false ) {
+				$params['id'] = $existing_profile['id'];
 			}
 
 			// call API
@@ -1973,7 +1979,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.2.4
 	 *
 	 * @param array $civi_event An array of data representing a CiviEvent
-	 * @return int|bool $has_profile The profile ID if the CiviEvent has one, false otherwise
+	 * @return array|bool $result The profile data if the CiviEvent has one, false otherwise
 	 */
 	public function has_registration_profile( $civi_event ) {
 
@@ -1988,13 +1994,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// query via API
 		$result = civicrm_api( 'uf_join', 'getsingle', $params );
 
-		// return ID if we found one
-		if ( $result['is_error'] == '0' AND count( $result['values'] ) > 0 ) {
-			return $result['id'];
+		// return false if we don't find one
+		if (
+			isset( $result['is_error'] ) AND
+			$result['is_error'] == '1' AND
+			$result['count'] == '0'
+		) {
+			return false;
 		}
 
 		// --<
-		return false;
+		return $result;
 
 	}
 
