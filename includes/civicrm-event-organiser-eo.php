@@ -665,10 +665,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// get online registration
 		$is_reg_checked = $this->get_event_registration( $event->ID );
 
-		// construct checkbox status
+		// init checkbox status
 		$reg_checked = '';
+
+		// override if registration is allowed
 		if ( $is_reg_checked == 1 ) {
-			// override if registration is allowed
 			$reg_checked = ' checked="checked"';
 		}
 
@@ -687,12 +688,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// do not allow sync by default
 			$can_be_synced = false;
 
-			// does this event have a category set?
+			// allow sync if this event has a category set
 			if ( has_term( '', $taxonomy = 'event-category', $event ) ) {
-
-				// allow sync
 				$can_be_synced = true;
-
 			}
 
 			// does the EO event have enough data for us to sync?
@@ -716,6 +714,16 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 				';
 
+			} else {
+
+				// show helpful message
+				$sync_options = '
+				<p class="civi_eo_event_desc">' . __( 'You will be able to sync this event to CiviCRM when you have set an event category.', 'civicrm-event-organiser' ) . '</p>
+
+				<hr />
+
+				';
+
 			}
 
 		}
@@ -727,7 +735,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		echo '
 		<h4>' . __( 'CiviEvent Options', 'civicrm-event-organiser' ) . '</h4>
 
-		<p class="civi_eo_event_desc">' . __( '<em>NOTE:</em> changing these options will set them for all corresponding CiviEvents.', 'civicrm-event-organiser' ) . '</p>
+		<p class="civi_eo_event_desc">' . __( '<strong>NOTE:</strong> these options will be set for <em>all corresponding CiviEvents</em> when you sync this event to CiviCRM.', 'civicrm-event-organiser' ) . '</p>
 
 		<hr />
 
