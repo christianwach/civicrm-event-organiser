@@ -21,12 +21,10 @@
 
 		<p><?php _e( 'The following options configure some CiviCRM and Event Organiser defaults.', 'civicrm-event-organiser' ); ?></p>
 
-		<table class="form-table">
-
 		<?php
 
 		/**
-		 * Start of Settings table.
+		 * Before Settings table.
 		 *
 		 * @since 0.3.1
 		 */
@@ -34,46 +32,70 @@
 
 		?>
 
-		<?php if ( $roles != '' ) : ?>
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_default_role"><?php _e( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ); ?></label></th>
-				<td><select id="civi_eo_event_default_role" name="civi_eo_event_default_role"><?php echo $roles; ?></select></td>
-			</tr>
-		<?php endif; ?>
+		<table class="form-table">
 
-		<?php if ( $types != '' ) : ?>
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_default_type"><?php _e( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ); ?></label></th>
-				<td><select id="civi_eo_event_default_type" name="civi_eo_event_default_type"><?php echo $types; ?></select></td>
-			</tr>
-		<?php endif; ?>
+			<?php
 
-		<?php if ( $profiles != '' ) : ?>
-			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_default_profile"><?php _e( 'Default CiviCRM Event Registration Profile', 'civicrm-event-organiser' ); ?></label></th>
-				<td>
-					<select id="civi_eo_event_default_profile" name="civi_eo_event_default_profile">
-						<?php echo $profiles; ?>
-					</select>
-					<?php if ( $profile_required ) : ?>
-						<p class="description"><?php _e( 'Please select a default Profile for Event Registration Pages.' ); ?></p>
-					<?php endif; ?>
-				</td>
-			</tr>
-		<?php endif; ?>
+			/**
+			 * Start of Settings table rows.
+			 *
+			 * @since 0.3.2
+			 */
+			do_action( 'civicrm_event_organiser_settings_table_first_row' );
+
+			?>
+
+			<?php if ( $roles != '' ) : ?>
+				<tr valign="top">
+					<th scope="row"><label for="civi_eo_event_default_role"><?php _e( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ); ?></label></th>
+					<td><select id="civi_eo_event_default_role" name="civi_eo_event_default_role"><?php echo $roles; ?></select></td>
+				</tr>
+			<?php endif; ?>
+
+			<?php if ( $types != '' ) : ?>
+				<tr valign="top">
+					<th scope="row"><label for="civi_eo_event_default_type"><?php _e( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ); ?></label></th>
+					<td><select id="civi_eo_event_default_type" name="civi_eo_event_default_type"><?php echo $types; ?></select></td>
+				</tr>
+			<?php endif; ?>
+
+			<?php if ( $profiles != '' ) : ?>
+				<tr valign="top">
+					<th scope="row"><label for="civi_eo_event_default_profile"><?php _e( 'Default CiviCRM Event Registration Profile', 'civicrm-event-organiser' ); ?></label></th>
+					<td>
+						<select id="civi_eo_event_default_profile" name="civi_eo_event_default_profile">
+							<?php echo $profiles; ?>
+						</select>
+						<?php if ( $profile_required ) : ?>
+							<p class="description"><?php _e( 'Please select a default Profile for Event Registration Pages.' ); ?></p>
+						<?php endif; ?>
+					</td>
+				</tr>
+			<?php endif; ?>
+
+			<?php
+
+			/**
+			 * End of Settings table rows.
+			 *
+			 * @since 0.3.2
+			 */
+			do_action( 'civicrm_event_organiser_settings_table_last_row' );
+
+			?>
+
+		</table>
 
 		<?php
 
 		/**
-		 * End of Settings table.
+		 * After Settings table.
 		 *
 		 * @since 0.3.1
 		 */
 		do_action( 'civicrm_event_organiser_after_settings_table' );
 
 		?>
-
-		</table>
 
 		<hr>
 
