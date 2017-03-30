@@ -847,7 +847,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		 *
 		 * @since 0.3.1
 		 */
-		do_action( 'civicrm_event_organiser_event_settings_updated' );
+		do_action( 'civicrm_event_organiser_settings_updated' );
 
 	}
 
