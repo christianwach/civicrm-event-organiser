@@ -392,8 +392,16 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// assign event type value
 		$civi_event['event_type_id'] = $type_value;
 
-		// --<
-		return $civi_event;
+		/**
+		 * Filter prepared CiviEvent.
+		 *
+		 * @since 0.3.1
+		 *
+		 * @param array $civi_event The array of data for the CiviEvent
+		 * @param object $post The WP post object
+		 * @return array $civi_event The modified array of data for the CiviEvent
+		 */
+		return apply_filters( 'civicrm_event_organiser_prepared_civi_event', $civi_event, $post );
 
 	}
 
