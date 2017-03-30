@@ -894,6 +894,15 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// save registration profile
 		$this->update_event_registration_profile( $event_id );
 
+		/**
+		 * Broadcast end of componenents update.
+		 *
+		 * @since 0.3.2
+		 *
+		 * @param int $event_id The numeric ID of the EO event
+		 */
+		do_action( 'civicrm_event_organiser_event_components_updated', $event_id );
+
 	}
 
 
