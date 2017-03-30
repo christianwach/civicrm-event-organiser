@@ -842,6 +842,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// save option
 		$this->option_save( 'civi_eo_event_default_profile', $civi_eo_event_default_profile );
 
+		/**
+		 * Broadcast end of settings update.
+		 *
+		 * @since 0.3.1
+		 */
+		do_action( 'civicrm_event_organiser_event_settings_updated' );
+
 	}
 
 
