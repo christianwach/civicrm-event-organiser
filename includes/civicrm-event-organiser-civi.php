@@ -445,7 +445,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			}
 
 			// enable registration if selected
-			$this->enable_registration( array_pop( $result['values'] ) );
+			$this->enable_registration( array_pop( $result['values'] ), $post );
 
 			// add the new CiviEvent ID to array, keyed by occurrence_id
 			$correspondences[$date['occurrence_id']] = $result['id'];
@@ -581,7 +581,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				}
 
 				// enable registration if selected
-				$this->enable_registration( array_pop( $result['values'] ) );
+				$this->enable_registration( array_pop( $result['values'] ), $post );
 
 				// add the CiviEvent ID to array, keyed by occurrence_id
 				$new_correspondences[$date['occurrence_id']] = $result['id'];
@@ -666,7 +666,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				}
 
 				// enable registration if selected
-				$this->enable_registration( array_pop( $result['values'] ) );
+				$this->enable_registration( array_pop( $result['values'] ), $post );
 
 				// add to new correspondence array
 				$new_correspondences[$occurrence_id] = $civi_id;
@@ -709,7 +709,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				}
 
 				// enable registration if selected
-				$this->enable_registration( array_pop( $result['values'] ) );
+				$this->enable_registration( array_pop( $result['values'] ), $post );
 
 				// add the CiviEvent ID to array, keyed by occurrence_id
 				$new_correspondences[$eo_date['occurrence_id']] = $result['id'];
@@ -1917,19 +1917,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.2.4
 	 *
 	 * @param array $civi_event An array of data representing a CiviEvent
+	 * @param object $post The WP post object
 	 */
-	public function enable_registration( $civi_event ) {
+	public function enable_registration( $civi_event, $post = null ) {
 
 		// does this event have online registration?
 		if ( $civi_event['is_online_registration'] == 1 ) {
 
-			// bail if this event already has a registration profile
-			if ( $this->has_registration_profile( $civi_event ) ) return;
+			// get specified registration profile
+			$profile_id = $this->get_registration_profile( $post );
 
-			// get default registration profile
-			$profile_id = $this->get_registration_profile();
-
-			// add default profile...
+			// construct profile params
 			$params = array(
 				'version' => 3,
 				'module' => 'CiviEvent',
@@ -1940,6 +1938,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				'weight' => 1,
 				'sequential' => 1,
 			);
+
+			// trigger update if this event already has a registration profile
+			$existing_profile_id = $this->has_registration_profile( $civi_event );
+			if ( $existing_profile_id !== false ) {
+				$params['id'] = $existing_profile_id;
+			}
 
 			// call API
 			$result = civicrm_api( 'uf_join', 'create', $params );
@@ -1969,7 +1973,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.2.4
 	 *
 	 * @param array $civi_event An array of data representing a CiviEvent
-	 * @return bool $has_profile True if the CiviEvent has a profile set, false otherwise
+	 * @return int|bool $has_profile The profile ID if the CiviEvent has one, false otherwise
 	 */
 	public function has_registration_profile( $civi_event ) {
 
@@ -1982,11 +1986,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		);
 
 		// query via API
-		$result = civicrm_api( 'uf_join', 'get', $params );
+		$result = civicrm_api( 'uf_join', 'getsingle', $params );
 
-		// return true if we found one
+		// return ID if we found one
 		if ( $result['is_error'] == '0' AND count( $result['values'] ) > 0 ) {
-			return true;
+			return $result['id'];
 		}
 
 		// --<
@@ -2023,7 +2027,16 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// if we have a post
 		if ( isset( $post ) AND is_object( $post ) ) {
 
-			// TODO: add dropdown to EO event metabox
+			// get stored value
+			$stored_id = $this->plugin->eo->get_event_registration_profile( $post->ID );
+
+			// did we get one?
+			if ( $stored_id !== '' AND is_numeric( $stored_id ) AND $stored_id > 0 ) {
+
+				// override with stored value
+				$profile_id = absint( $stored_id );
+
+			}
 
 		}
 
@@ -2081,9 +2094,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 *
 	 * @since 0.2.4
 	 *
+	 * @param object $post An EO event object
 	 * @return str $html Markup containing select options
 	 */
-	public function get_registration_profiles_select() {
+	public function get_registration_profiles_select( $post = null ) {
 
 		// init return
 		$html = '';
@@ -2108,7 +2122,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$options = array();
 
 			// get existing profile ID
-			$existing_id = $this->get_registration_profile();
+			$existing_id = $this->get_registration_profile( $post );
 
 			// loop
 			foreach( $profiles AS $key => $profile ) {

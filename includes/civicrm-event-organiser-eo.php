@@ -505,6 +505,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
+		// if the event has a registration profile specified
+		if (
+			isset( $civi_event['participant_listing_id'] ) AND
+			! empty( $civi_event['participant_listing_id'] ) AND
+			is_numeric( $civi_event['participant_listing_id'] )
+		) {
+
+			// save specified registration profile
+			$this->set_event_registration_profile( $event_id, $civi_event['default_role_id'] );
+
+		} else {
+
+			// set default registration profile
+			$this->set_event_registration_profile( $event_id );
+
+		}
+
 		// --<
 		return $event_id;
 
@@ -659,6 +676,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// get participant roles
 		$roles = $this->plugin->civi->get_participant_roles_select( $event );
 
+		// get registration profiles
+		$profiles = $this->plugin->civi->get_registration_profiles_select( $event );
+
 		// init sync options
 		$sync_options = '';
 
@@ -708,12 +728,18 @@ class CiviCRM_WP_Event_Organiser_EO {
 		echo '
 		<h4>' . __( 'CiviEvent Options', 'civicrm-event-organiser' ) . '</h4>
 
-		<p class="civi_eo_event_desc">' . __( 'Choose whether or not this event allows online registration. <em>NOTE</em> changing this will set the event registration for all corresponding CiviEvents.', 'civicrm-event-organiser' ) . '</p>
+		<p class="civi_eo_event_desc">' . __( '<em>NOTE:</em> changing these options will set them for all corresponding CiviEvents.', 'civicrm-event-organiser' ) . '</p>
+
+		<hr />
+
+		<p class="civi_eo_event_desc">' . __( 'Choose whether or not this event allows online registration.', 'civicrm-event-organiser' ) . '</p>
 
 		<p>
 		<label for="civi_eo_event_reg">' . __( 'Online Registration:', 'civicrm-event-organiser' ) . '</label>
 		<input type="checkbox" id="civi_eo_event_reg" name="civi_eo_event_reg" value="1"' . $reg_checked . ' />
 		</p>
+
+		<hr />
 
 		<p class="civi_eo_event_desc">' . __( 'The role you select here is automatically assigned to people when they register online for this event (usually the default <em>Attendee</em> role).', 'civicrm-event-organiser' ) . '</p>
 
@@ -721,6 +747,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 		<label for="civi_eo_event_role">' . __( 'Participant Role:', 'civicrm-event-organiser' ) . '</label>
 		<select id="civi_eo_event_role" name="civi_eo_event_role">
 			' . $roles . '
+		</select>
+		</p>
+
+		<hr />
+
+		<p class="civi_eo_event_desc">' . __( 'The profile you select here is assigned to the online registration form for this event and overrides the default set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ) . '</p>
+
+		<p>
+		<label for="civi_eo_event_profile">' . __( 'Registration Profile:', 'civicrm-event-organiser' ) . '</label>
+		<select id="civi_eo_event_profile" name="civi_eo_event_profile">
+			' . $profiles . '
 		</select>
 		</p>
 
@@ -846,6 +883,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// save participant role
 		$this->update_event_role( $event_id );
+
+		// save registration profile
+		$this->update_event_registration_profile( $event_id );
 
 	}
 
@@ -1044,6 +1084,104 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// delete the meta value
 		delete_post_meta( $post_id, '_civi_role' );
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
+	 * Update event registration profile value.
+	 *
+	 * @since 0.3.1
+	 *
+	 * @param int $event_id The numeric ID of the event
+	 */
+	public function update_event_registration_profile( $event_id ) {
+
+		// kick out if not set
+		if ( ! isset( $_POST['civi_eo_event_profile'] ) ) return;
+
+		// retrieve meta value
+		$profile_id = absint( $_POST['civi_eo_event_profile'] );
+
+		// update event meta
+		update_post_meta( $event_id,  '_civi_registration_profile', $profile_id );
+
+	}
+
+
+
+	/**
+	 * Update event registration profile value.
+	 *
+	 * @since 0.3.1
+	 *
+	 * @param int $event_id The numeric ID of the event
+	 * @param int $profile_id The event registration profile ID for the CiviEvent
+	 */
+	public function set_event_registration_profile( $event_id, $profile_id = null ) {
+
+		// if not set
+		if ( is_null( $profile_id ) ) {
+
+			// do we have a default set?
+			$default = $this->plugin->db->option_get( 'civi_eo_event_default_profile' );
+
+			// did we get one?
+			if ( $default !== '' AND is_numeric( $default ) ) {
+
+				// override with default value
+				$profile_id = absint( $default );
+
+			}
+
+		}
+
+		// update event meta
+		update_post_meta( $event_id,  '_civi_registration_profile', $profile_id );
+
+	}
+
+
+
+	/**
+	 * Get event registration profile value.
+	 *
+	 * @since 0.3.1
+	 *
+	 * @param int $post_id The numeric ID of the WP post
+	 * @return int $profile_id The event registration profile ID for the CiviEvent
+	 */
+	public function get_event_registration_profile( $post_id ) {
+
+		// get the meta value
+		$profile_id = get_post_meta( $post_id, '_civi_registration_profile', true );
+
+		// if it's not yet set it will be an empty string, so cast as number
+		if ( $profile_id === '' ) { $profile_id = 0; }
+
+		// --<
+		return absint( $profile_id );
+
+	}
+
+
+
+	/**
+	 * Delete event registration profile value for a CiviEvent.
+	 *
+	 * @since 0.3.1
+	 *
+	 * @param int $post_id The numeric ID of the WP post
+	 */
+	public function clear_event_registration_profile( $post_id ) {
+
+		// delete the meta value
+		delete_post_meta( $post_id, '_civi_registration_profile' );
 
 	}
 
