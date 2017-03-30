@@ -23,6 +23,17 @@
 
 		<table class="form-table">
 
+		<?php
+
+		/**
+		 * Start of Settings table.
+		 *
+		 * @since 0.3.1
+		 */
+		do_action( 'civicrm_event_organiser_before_settings_table' );
+
+		?>
+
 		<?php if ( $roles != '' ) : ?>
 			<tr valign="top">
 				<th scope="row"><label for="civi_eo_event_default_role"><?php _e( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ); ?></label></th>
@@ -50,6 +61,17 @@
 				</td>
 			</tr>
 		<?php endif; ?>
+
+		<?php
+
+		/**
+		 * End of Settings table.
+		 *
+		 * @since 0.3.1
+		 */
+		do_action( 'civicrm_event_organiser_after_settings_table' );
+
+		?>
 
 		</table>
 
