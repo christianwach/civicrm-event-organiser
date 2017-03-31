@@ -376,12 +376,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// assume the CiviEvent is live
 		$post_data['post_status'] = 'publish';
 
-		// is the event active?
+		// make the EO event a draft if the CiviEvent is not active
 		if ( $civi_event['is_active'] == 0 ) {
-
-			// make the CiviEvent unpublished
 			$post_data['post_status'] = 'draft';
-
 		}
 
 		// init venue as undefined
@@ -398,17 +395,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// get corresponding EO venue ID
 			$venue_id = $this->plugin->eo_venue->get_venue_id( $location );
 
-			// did we get one?
+			// if we get a match, create/update venue
 			if ( $venue_id === false ) {
-
-				// no, let's create one
 				$venue_id = $this->plugin->eo_venue->create_venue( $location );
-
 			} else {
-
-				// yes, update it
 				$venue_id = $this->plugin->eo_venue->update_venue( $location );
-
 			}
 
 		}
@@ -456,70 +447,64 @@ class CiviCRM_WP_Event_Organiser_EO {
 		remove_action( 'wp_insert_post', array( $this, 'insert_post' ), 10 );
 		remove_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10 );
 
-		// did we get a post ID?
+		// use EO's API to create/update an event
 		if ( $eo_post_id === false ) {
-
-			// use EO's API to create event
 			$event_id = eo_insert_event( $post_data, $event_data );
-
 		} else {
-
-			// use EO's API to update event
 			$event_id = eo_update_event( $eo_post_id, $post_data, $event_data );
-
 		}
 
 		// re-add hooks
 		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
 		add_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10, 1 );
 
-		// if the event has online registration enabled
+		// save event meta if the event has online registration enabled
 		if (
 			isset( $civi_event['is_online_registration'] ) AND
 			$civi_event['is_online_registration'] == 1
 		) {
-
-			// save specified online registration value
 			$this->set_event_registration( $event_id, $civi_event['is_online_registration'] );
-
 		} else {
-
-			// save empty online registration value
 			$this->set_event_registration( $event_id );
-
 		}
 
-		// if the event has a participant role specified
+		// save event meta if the event has a participant role specified
 		if (
 			isset( $civi_event['default_role_id'] ) AND
 			! empty( $civi_event['default_role_id'] )
 		) {
-
-			// save specified participant role
 			$this->set_event_role( $event_id, $civi_event['default_role_id'] );
-
 		} else {
-
-			// set default participant role
 			$this->set_event_role( $event_id );
-
 		}
 
-		// get registration profile
-		$existing_profile = $this->plugin->civi->has_registration_profile( $civi_event );
+		/*
+		 * Syncing Registration Profiles presents us with some issues: when this
+		 * method is called from an update to a CiviEvent via the CiviCRM admin
+		 * interface, we cannot determine what the new Registration Profile is.
+		 * This is because Registration Profiles are updated *after* the
+		 * CiviEvent has been saved in `CRM_Event_Form_ManageEvent_Registration`
+		 * and `CRM_Event_BAO_Event::add($params)` has been called.
+		 *
+		 * Nor can we hook into `civicrm_post` to catch updates to UF_Join items
+		 * because the hook does not fire in class CRM_Core_BAO_UFJoin.
+		 *
+		 * This leaves us with only a few options: (a) We assume that the update
+		 * is being done via the CiviCRM admin interface and hook into
+		 * `civicrm_postProcess` or (b) we find a WordPress hook that fires
+		 * after this process has completed and use that instead. To do so, we
+		 * would need to know some information about the event that is being
+		 * processed right now.
+		 */
 
-		// does this event have a registration profile?
-		if ( $existing_profile !== false ) {
+		// save some data
+		$this->sync_data = array(
+			'event_id' => $event_id,
+			'civi_event' => $civi_event,
+		);
 
-			// save specified registration profile
-			$this->set_event_registration_profile( $event_id, $existing_profile['uf_group_id'] );
-
-		} else {
-
-			// set default registration profile
-			$this->set_event_registration_profile( $event_id );
-
-		}
+		// let's hook into postProcess for now
+		add_action( 'civicrm_postProcess', array( $this, 'maybe_update_event_registration_profile' ), 10, 2 );
 
 		/**
 		 * Broadcast end of EO event update.
@@ -1210,6 +1195,47 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// delete the meta value
 		delete_post_meta( $post_id, '_civi_registration_profile' );
+
+	}
+
+
+
+	/**
+	 * Maybe update an EO event's Registration Profile.
+	 *
+	 * This is a callback from `civicrm_postProcess` as defined in
+	 * `$this->update_event()` above. It's purpose is to act after a delay so
+	 * that the Registration Profile has been saved.
+	 *
+	 * We don't need any data from the form because we can query for the value
+	 * of the Registration Profile. Perhaps not as efficient, but let's look at
+	 * whether it's worth inspecting the form later.
+	 *
+	 * @since 0.3.3
+	 *
+	 * @param string $formName The name of the form
+	 * @param object $form The form object
+	 */
+	public function maybe_update_event_registration_profile( $formName, &$form ) {
+
+		// kick out if not a CiviEvent Online Registration form
+		if ( $formName != 'CRM_Event_Form_ManageEvent_Registration' ) return;
+
+		// bail if we don't have our sync data
+		if ( ! isset( $this->sync_data ) ) return;
+
+		// get registration profile
+		$existing_profile = $this->plugin->civi->has_registration_profile( $this->sync_data['civi_event'] );
+
+		// save event meta if this event have a registration profile specified
+		if ( $existing_profile !== false ) {
+			$this->set_event_registration_profile( $this->sync_data['event_id'], $existing_profile['uf_group_id'] );
+		} else {
+			$this->set_event_registration_profile( $this->sync_data['event_id'] );
+		}
+
+		// clear saved data
+		unset( $this->sync_data );
 
 	}
 
