@@ -1928,6 +1928,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * "Your Registration Info". This always seems to have ID = 12 but since it
 	 * can be deleted that cannot be relied upon.
 	 *
+	 * We are only dealing with the profile included at the top of the page, so
+	 * need to specify `weight = 1` to save that profile.
+	 *
 	 * @since 0.2.4
 	 *
 	 * @param array $civi_event An array of data representing a CiviEvent
@@ -1984,6 +1987,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Check if a CiviEvent has a registration form profile set.
 	 *
+	 * We are only dealing with the profile included at the top of the page, so
+	 * need to specify `weight = 1` to retrieve just that profile.
+	 *
 	 * @since 0.2.4
 	 *
 	 * @param array $civi_event An array of data representing a CiviEvent
@@ -1996,6 +2002,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'version' => 3,
 			'entity_table' => 'civicrm_event',
 			'entity_id' => $civi_event['id'],
+			'weight' => 1,
 			'sequential' => 1,
 		);
 
