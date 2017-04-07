@@ -25,25 +25,42 @@
  */
 function civicrm_event_organiser_register_links( $post_id = null ) {
 
-	// handle recurring events
-	if ( eo_recurs() ) {
+	// get links array
+	$links = civicrm_event_organiser_get_register_links( $post_id );
 
-		// open a list item
-		echo '<li class="civicrm-event-register-links">';
+	// show them if we have any
+	if ( ! empty( $links ) ) {
 
-		// show a title
-		echo '<strong>' . __( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
+		// combine into list
+		$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
 
-		// show links
-		civicrm_event_organiser_registration_links( $post_id );
+		// top and tail
+		$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
 
-		// finish up
-		echo '</li>' . "\n";
+		// is it recurring?
+		if ( eo_recurs() ) {
 
-	} else {
+			// wrap in unordered list
+			$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
 
-		// just show link
-		civicrm_event_organiser_registration_links( $post_id );
+			// open a list item
+			echo '<li class="civicrm-event-register-links">';
+
+			// show a title
+			echo '<strong>' . __( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
+
+			// show links
+			echo $list;
+
+			// finish up
+			echo '</li>' . "\n";
+
+		} else {
+
+			// show link
+			echo $list . "\n";
+
+		}
 
 	}
 
@@ -55,41 +72,6 @@ add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_reg
 
 
 /**
- * Echo the Registration links for an EO Event.
- *
- * @since 0.3
- *
- * @param int $post_id The numeric ID of the WP post
- */
-function civicrm_event_organiser_registration_links( $post_id = null ) {
-
-	// get links array
-	$links = civicrm_event_organiser_get_registration_links( $post_id );
-
-	// show them if we have any
-	if ( ! empty( $links ) ) {
-
-		// combine into list
-		$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
-
-		// top and tail
-		$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
-
-		// wrap in unordered list if EO event recurs
-		if ( eo_recurs() ) {
-			$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
-		}
-
-		// print to screen
-		echo $list . "\n";
-
-	}
-
-}
-
-
-
-/**
  * Get the Registration links for an EO Event.
  *
  * @since 0.3
@@ -97,7 +79,7 @@ function civicrm_event_organiser_registration_links( $post_id = null ) {
  * @param int $post_id The numeric ID of the WP post
  * @return array $links The HTML links to the CiviCRM Registration pages
  */
-function civicrm_event_organiser_get_registration_links( $post_id = null ) {
+function civicrm_event_organiser_get_register_links( $post_id = null ) {
 
 	// init return
 	$links = array();
