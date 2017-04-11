@@ -185,6 +185,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// get current screen
 		$screen = get_current_screen();
 
+		// prevent warning if screen not defined
+		if ( empty( $screen ) ) return;
+
 		// bail if on our settings page (or parent)
 		if ( false !== strpos( $screen->id, 'civi_eo_parent') ) return;
 		if ( false !== strpos( $screen->id, 'civi_eo_settings') ) return;
@@ -342,6 +345,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// grab screen object
 		$screen = get_current_screen();
+
+		// prevent warning if screen not defined
+		if ( empty( $screen ) ) return;
 
 		// use method in this class
 		$this->admin_help( $screen );
