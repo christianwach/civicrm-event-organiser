@@ -1919,6 +1919,62 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
+	 * Check if Registration is closed for a given CiviEvent.
+	 *
+	 * How this seems to work in CiviCRM is as follows: if the CiviEvent does not
+	 * have "Registration Start Date" or "Registration End Date" specifically set,
+	 * then it is assumed that registration opens when the CiviEvent is created and
+	 * closes when the event is over.
+	 *
+	 * As a result, we check for the existence of "Registration Start Date" and
+	 * "Registration End Date" first, then fall back to the CiviEvent's dates if
+	 * they are not set.
+	 *
+	 * @since 0.3.4
+	 *
+	 * @param array $civi_event The array of data that represents a CiviEvent
+	 * @return bool $closed True if registration is closed, false otherwise
+	 */
+	public function is_registration_closed( $civi_event ) {
+
+		// assume closed
+		$closed = true;
+
+		// gotta have a reference to now
+		$now = new DateTime( 'now', eo_get_blog_timezone() );
+
+		// is registration open yet?
+		if ( isset( $civi_event['registration_start_date'] ) ) {
+			$start = new DateTime( $civi_event['registration_start_date'], eo_get_blog_timezone() );
+		} else {
+			$start = new DateTime( $civi_event['created_date'], eo_get_blog_timezone() );
+		}
+
+		// bail early if not started yet
+		if ( $now < $start ) {
+			return $closed;
+		}
+
+		// is registration closed yet?
+		if ( isset( $civi_event['registration_end_date'] ) ) {
+			$end = new DateTime( $civi_event['registration_end_date'], eo_get_blog_timezone() );
+		} else {
+			$end = new DateTime( $civi_event['end_date'], eo_get_blog_timezone() );
+		}
+
+		// bail if already ended
+		if ( $end < $now ) {
+			return $closed;
+		}
+
+		// if we reach here, it's open
+		return false;
+
+	}
+
+
+
+	/**
 	 * Enable a CiviEvent's registration form.
 	 *
 	 * Just setting the 'is_online_registration' flag on an event is not enough
