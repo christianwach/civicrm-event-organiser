@@ -2243,56 +2243,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Get a CiviEvent's Participants link.
-	 *
-	 * @since 0.3
-	 *
-	 * @param array $civi_event An array of data for the CiviEvent
-	 * @return string $link The URL of the CiviCRM Participants page
-	 */
-	public function get_participants_link( $civi_event ) {
-
-		// init link
-		$link = '';
-
-		// check permission
-		if ( ! $this->plugin->civi->check_permission( 'view event participants' ) ) {
-			return $link;
-		}
-
-		// if this event has participant listings enabled
-		if (
-			isset( $civi_event['participant_listing_id'] ) AND
-			is_numeric( $civi_event['participant_listing_id'] ) AND
-			absint( $civi_event['participant_listing_id'] ) > 0
-		) {
-
-			// init CiviCRM or bail
-			if ( ! $this->is_active() ) return $link;
-
-			// use CiviCRM to construct link
-			$link = CRM_Utils_System::url(
-				'civicrm/event/participant', 'reset=1&id=' . $civi_event['id'],
-				TRUE,
-				NULL,
-				FALSE,
-				TRUE
-			);
-
-		}
-
-		// --<
-		return $link;
-
-	}
-
-
-
-	//##########################################################################
-
-
-
-	/**
 	 * Intercept when a CiviCRM event type is updated.
 	 *
 	 * Unfortunately, this doesn't work because Civi does not fire hook_civicrm_pre
