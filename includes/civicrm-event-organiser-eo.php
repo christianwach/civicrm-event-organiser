@@ -76,7 +76,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10, 1 );
 
 		// intercept update event (though by misuse of a filter)
-		add_filter( 'eventorganiser_update_event_event_data', array( $this, 'intercept_update_event' ), 10, 4 );
+		//add_filter( 'eventorganiser_update_event_event_data', array( $this, 'intercept_update_event' ), 10, 3 );
 
 		// intercept delete event occurrences (which is the preferred way to hook into event deletion)
 		add_action( 'eventorganiser_delete_event_occurrences', array( $this, 'delete_event_occurrences' ), 10, 1 );
@@ -224,15 +224,19 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Intercept update event.
 	 *
+	 * Disabled because it's unused. Also, there appears to be some confusion
+	 * regarding the filter signature in EO itself.
+	 *
+	 * @see https://github.com/stephenharris/Event-Organiser/blob/develop/includes/event.php#L76
+	 *
 	 * @since 0.1
 	 *
 	 * @param array $event_data The new event data
 	 * @param int $post_id The numeric ID of the WP post
 	 * @param array $post_data The updated post data
-	 * @param array $event_data The updated event data
-	 * @return array $event_data Always pass back the updated event data
+	 * @return array $event_data The updated event data
 	 */
-	public function intercept_update_event( $event_data, $post_id, $post_data, $event_data ) {
+	public function intercept_update_event( $event_data, $post_id, $post_data ) {
 
 		// --<
 		return $event_data;
