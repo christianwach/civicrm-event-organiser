@@ -48,14 +48,22 @@
 			<?php if ( $roles != '' ) : ?>
 				<tr valign="top">
 					<th scope="row"><label for="civi_eo_event_default_role"><?php _e( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ); ?></label></th>
-					<td><select id="civi_eo_event_default_role" name="civi_eo_event_default_role"><?php echo $roles; ?></select></td>
+					<td>
+						<select id="civi_eo_event_default_role" name="civi_eo_event_default_role">
+							<?php echo $roles; ?>
+						</select>
+					</td>
 				</tr>
 			<?php endif; ?>
 
 			<?php if ( $types != '' ) : ?>
 				<tr valign="top">
 					<th scope="row"><label for="civi_eo_event_default_type"><?php _e( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ); ?></label></th>
-					<td><select id="civi_eo_event_default_type" name="civi_eo_event_default_type"><?php echo $types; ?></select></td>
+					<td>
+						<select id="civi_eo_event_default_type" name="civi_eo_event_default_type">
+							<?php echo $types; ?>
+						</select>
+					</td>
 				</tr>
 			<?php endif; ?>
 
