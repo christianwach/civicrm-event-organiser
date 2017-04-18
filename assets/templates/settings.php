@@ -75,6 +75,7 @@
 						<select id="civi_eo_event_default_profile" name="civi_eo_event_default_profile">
 							<?php echo $profiles; ?>
 						</select>
+						<p class="description"><?php _e( 'Event Registration Pages require a Profile in order to display correctly.' ); ?></p>
 						<?php if ( $profile_required ) : ?>
 							<p class="description"><?php _e( 'Please select a default Profile for Event Registration Pages.' ); ?></p>
 						<?php endif; ?>
