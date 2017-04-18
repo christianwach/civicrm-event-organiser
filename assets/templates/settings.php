@@ -52,6 +52,7 @@
 						<select id="civi_eo_event_default_role" name="civi_eo_event_default_role">
 							<?php echo $roles; ?>
 						</select>
+						<p class="description"><?php _e( 'This will be the Participant Role that is set for Event Registrations when there is a Registration Profile that does not contain a Participant Role selector.' ); ?></p>
 					</td>
 				</tr>
 			<?php endif; ?>
