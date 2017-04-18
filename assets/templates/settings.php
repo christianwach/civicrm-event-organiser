@@ -45,6 +45,17 @@
 
 			?>
 
+			<?php if ( $types != '' ) : ?>
+				<tr valign="top">
+					<th scope="row"><label for="civi_eo_event_default_type"><?php _e( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ); ?></label></th>
+					<td>
+						<select id="civi_eo_event_default_type" name="civi_eo_event_default_type">
+							<?php echo $types; ?>
+						</select>
+					</td>
+				</tr>
+			<?php endif; ?>
+
 			<?php if ( $roles != '' ) : ?>
 				<tr valign="top">
 					<th scope="row"><label for="civi_eo_event_default_role"><?php _e( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ); ?></label></th>
@@ -53,17 +64,6 @@
 							<?php echo $roles; ?>
 						</select>
 						<p class="description"><?php _e( 'This will be the Participant Role that is set for Event Registrations when there is a Registration Profile that does not contain a Participant Role selector.' ); ?></p>
-					</td>
-				</tr>
-			<?php endif; ?>
-
-			<?php if ( $types != '' ) : ?>
-				<tr valign="top">
-					<th scope="row"><label for="civi_eo_event_default_type"><?php _e( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ); ?></label></th>
-					<td>
-						<select id="civi_eo_event_default_type" name="civi_eo_event_default_type">
-							<?php echo $types; ?>
-						</select>
 					</td>
 				</tr>
 			<?php endif; ?>
