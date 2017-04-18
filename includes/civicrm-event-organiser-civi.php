@@ -1751,7 +1751,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$opt_values = array(
 			'version' =>'3',
 			'is_active' => 1,
-			'option_group_id' => $participant_role['id']
+			'option_group_id' => $participant_role['id'],
+			'options' => array(
+				'sort' => 'weight ASC',
+			),
 		);
 		$participant_roles = civicrm_api( 'OptionValue', 'get', $opt_values );
 
