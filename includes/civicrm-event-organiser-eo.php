@@ -734,20 +734,27 @@ class CiviCRM_WP_Event_Organiser_EO {
 		echo '
 		<h4>' . __( 'CiviEvent Options', 'civicrm-event-organiser' ) . '</h4>
 
-		<p class="civi_eo_event_desc">' . __( '<strong>NOTE:</strong> these options will be set for <em>all corresponding CiviEvents</em> when you sync this event to CiviCRM.', 'civicrm-event-organiser' ) . '</p>
+		<p class="civi_eo_event_desc">' . __( '<strong>NOTE:</strong> these options will be set for <em>all corresponding CiviEvents</em> when you sync this event to CiviCRM. Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ) . '</p>
 
 		<hr />
 
-		<p class="civi_eo_event_desc">' . __( 'Choose whether or not this event allows online registration.', 'civicrm-event-organiser' ) . '</p>
-
 		<p>
-		<label for="civi_eo_event_reg">' . __( 'Online Registration:', 'civicrm-event-organiser' ) . '</label>
+		<label for="civi_eo_event_reg">' . __( 'Enable Online Registration:', 'civicrm-event-organiser' ) . '</label>
 		<input type="checkbox" id="civi_eo_event_reg" name="civi_eo_event_reg" value="1"' . $reg_checked . ' />
 		</p>
 
 		<hr />
 
-		<p class="civi_eo_event_desc">' . __( 'The role you select here is automatically assigned to people when they register online for this event (usually the default <em>Attendee</em> role).', 'civicrm-event-organiser' ) . '</p>
+		<p>
+		<label for="civi_eo_event_profile">' . __( 'Online Registration Profile:', 'civicrm-event-organiser' ) . '</label>
+		<select id="civi_eo_event_profile" name="civi_eo_event_profile">
+			' . $profiles . '
+		</select>
+		</p>
+
+		<p class="description">' . __( 'The profile assigned to the online registration form.', 'civicrm-event-organiser' ) . '</p>
+
+		<hr />
 
 		<p>
 		<label for="civi_eo_event_role">' . __( 'Participant Role:', 'civicrm-event-organiser' ) . '</label>
@@ -756,16 +763,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		</select>
 		</p>
 
-		<hr />
-
-		<p class="civi_eo_event_desc">' . __( 'The profile you select here is assigned to the online registration form for this event and overrides the default set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ) . '</p>
-
-		<p>
-		<label for="civi_eo_event_profile">' . __( 'Registration Profile:', 'civicrm-event-organiser' ) . '</label>
-		<select id="civi_eo_event_profile" name="civi_eo_event_profile">
-			' . $profiles . '
-		</select>
-		</p>
+		<p class="description">' . __( 'This role is automatically assigned to people when they register online for this event and where the registration profile does not allow a role to be selected.', 'civicrm-event-organiser' ) . '</p>
 
 		';
 
