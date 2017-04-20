@@ -280,20 +280,31 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.3
 	 *
 	 * @param str $permission The permission string
-	 * @return bool True if allowed, false otherwise
+	 * @return bool $permitted True if allowed, false otherwise
 	 */
 	public function check_permission( $permission ) {
 
-		// deny if CiviCRM is not active
+		// always deny if CiviCRM is not active
 		if ( ! $this->is_active() ) return false;
 
+		// deny by default
+		$permitted = false;
+
 		// check CiviCRM permissions
-		if ( ! CRM_Core_Permission::check( $permission ) ) {
-			return false;
+		if ( CRM_Core_Permission::check( $permission ) ) {
+			$permitted = true;
 		}
 
-		// fallback
-		return true;
+		/**
+		 * Return permission but allow overrides.
+		 *
+		 * @since 0.3.4
+		 *
+		 * @param bool $permitted True if allowed, false otherwise
+		 * @param str $permission The CiviCRM permission string
+		 * @return bool $permitted True if allowed, false otherwise
+		 */
+		return apply_filters( 'civicrm_event_organiser_permitted', $permitted, $permission );
 
 	}
 
