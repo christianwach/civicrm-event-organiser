@@ -22,4 +22,4 @@ Then go to **Settings > CiviCRM Event Organiser** and define the default **Gener
 
 The **Manual Sync** settings allow you to do an initial sync if there is existing event information to from CiviCRM. It is recommended to run the **CiviCRM Event Types to Event Organiser Categories** so that the Event Types in CiviCRM match the Event Categories in Event Organiser.
 
-Once completed you can no add and sync [events](/events).
+Once completed you can now add and sync [events](./events.md).

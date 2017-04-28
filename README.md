@@ -42,5 +42,5 @@ If you have cloned the code from GitHub, it is assumed that you know what you're
 
 ### Using CiviCRM Event Organiser
 
-* Initial [settings](/settings)
-* [Events](/events) on your website
+* Initial [settings](/docs/settings.md)
+* Add [Events](/docs/events.md) on your website
