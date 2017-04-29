@@ -1,0 +1,10 @@
+site_name: CiviCRM Event Organiser
+repo_url: https://github.com/christianwach/civicrm-event-organiser
+theme: material
+markdown_extensions:
+pages:
+- Introduction: index.md
+- Settings: settings.md
+- Events: events.md
+- Developer docs:
+  - Contribute: dev/contribute.md
