@@ -1994,13 +1994,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function is_civi_event_in_eo_sequence( $civi_event_id ) {
 
 		// get the EO event ID for this CiviEvent
-		$eo_post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $civi_event_id );
+		$eo_post_id = $this->get_eo_event_id_by_civi_event_id( $civi_event_id );
 
 		// if there is one
 		if ( $eo_post_id !== false ) {
 
 			// get the corresponding CiviEvents
-			$civi_event_ids = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $eo_post_id );
+			$civi_event_ids = $this->get_civi_event_ids_by_eo_event_id( $eo_post_id );
 
 			// does the EO event have multiple CiviEvents?
 			if ( count( $civi_event_ids ) > 1 ) {
