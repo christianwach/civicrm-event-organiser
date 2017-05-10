@@ -109,6 +109,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// intercept term deletion
 		add_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20, 4 );
 
+		// ensure that  does not show the "No Category" radio button
+		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'skip_null_term' ), 20, 2 );
+
 	}
 
 
@@ -1628,6 +1631,27 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// --<
 		return get_term( $term_id, $taxonomy, $output, $filter );
+
+	}
+
+
+
+	/**
+	 * Never let Radio Buttons for Taxonomies filter get_terms() to add a null
+	 * term because CiviCRM requires an event to have a term.
+	 *
+	 * @since 0.3.5
+	 *
+	 * @param bool $set True if null term is to be set, false otherwise
+	 * @return bool $set True if null term is to be set, false otherwise
+	 */
+	public function skip_null_term( $set ) {
+
+		// a class property is passed in, so set that
+		$set = 0;
+
+		// --<
+		return $set;
 
 	}
 
