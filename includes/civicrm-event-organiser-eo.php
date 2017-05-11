@@ -1684,6 +1684,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// only clear Event Organiser category
 		if ( $r['taxonomy'] != 'event-category' ) return $output;
 
+		// only once please, in case further dropdowns are rendered
+		remove_filter( 'wp_dropdown_cats', array( $this, 'terms_dropdown_clear' ), 20 );
+
 		// clear
 		return '';
 
