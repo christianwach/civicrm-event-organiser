@@ -97,7 +97,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		//add_filter( 'eventorganiser_pre_event_content', array( $this, 'pre_event_content' ), 10, 2 );
 
 		// add our event meta box
-		add_action( 'add_meta_boxes_event', array( $this, 'event_meta_box' ), 11 );
+		add_action( 'add_meta_boxes_event', array( $this, 'event_meta_boxes' ), 11 );
 
 		// intercept new term creation
 		add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
@@ -632,11 +632,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 
 	/**
-	 * Register event meta box.
+	 * Register event meta boxes.
 	 *
 	 * @since 0.1
 	 */
-	public function event_meta_box() {
+	public function event_meta_boxes() {
 
 		// check permission
 		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) return;
