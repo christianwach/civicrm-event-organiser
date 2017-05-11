@@ -1663,7 +1663,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Trigger hiding of "Parent Category" dropdown in metaboxes.
 	 *
-	 * @since 0.5
+	 * @since 0.3.5
 	 */
 	public function terms_dropdown_intercept() {
 
@@ -1677,7 +1677,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Always hide "Parent Category" dropdown in metaboxes.
 	 *
-	 * @since 0.5
+	 * @since 0.3.5
 	 */
 	public function terms_dropdown_clear( $output, $r ) {
 
