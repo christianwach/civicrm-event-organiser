@@ -1119,6 +1119,39 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 
+	/**
+	 * Get a CiviEvent's "Info & Settings" link.
+	 *
+	 * @since 0.3.6
+	 *
+	 * @param int $civi_event_id The numeric ID of the CiviEvent
+	 * @return string $link The URL of the CiviCRM "Info & Settings" page
+	 */
+	public function get_settings_link( $civi_event_id ) {
+
+		// init link
+		$link = '';
+
+		// init CiviCRM or bail
+		if ( ! $this->is_active() ) return $link;
+
+		// use CiviCRM to construct link
+		$link = CRM_Utils_System::url(
+			'civicrm/event/manage/settings',
+			'reset=1&action=update&id=' . $civi_event_id,
+			TRUE,
+			NULL,
+			FALSE,
+			FALSE
+		);
+
+		// --<
+		return $link;
+
+	}
+
+
+
 	//##########################################################################
 
 

@@ -641,7 +641,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// check permission
 		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) return;
 
-		// create it
+		// create CiviCRM Settings and Sync metabox
 		add_meta_box(
 			'civi_eo_event_metabox',
 			__( 'CiviCRM Settings', 'civicrm-event-organiser' ),
@@ -649,6 +649,15 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'event',
 			'side', //'normal',
 			'core' //'high'
+		);
+
+		// create CiviCRM Settings and Sync metabox
+		add_meta_box(
+			'civi_eo_event_links_metabox',
+			__( 'Edit Events in CiviCRM', 'civicrm-event-organiser' ),
+			array( $this, 'event_links_meta_box_render' ),
+			'event',
+			'normal'
 		);
 
 	}
@@ -781,6 +790,71 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * @param object $event The EO event object
 		 */
 		do_action( 'civicrm_event_organiser_event_meta_box_after', $event );
+
+	}
+
+
+
+	/**
+	 * Render a meta box on event edit screens with links to CiviEvents.
+	 *
+	 * @since 0.3.6
+	 *
+	 * @param object $event The EO event
+	 */
+	public function event_links_meta_box_render( $event ) {
+
+		// get linked CiviEvents
+		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event->ID );
+
+		// bail if we get none
+		if ( empty( $civi_events ) ) return;
+
+		// init links
+		$links = array();
+
+		// show them
+		foreach( $civi_events AS $civi_event_id ) {
+
+			// get link
+			$link = $this->plugin->civi->get_settings_link( $civi_event_id );
+
+			// get CiviEvent
+			$civi_event = $this->plugin->civi->get_event_by_id( $civi_event_id );
+
+			// get DateTime object
+			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
+			$timestamp = $start->getTimestamp();
+
+			// construct date and time
+			$date = date_i18n( get_option('date_format'), $timestamp );
+			$time = date_i18n( get_option('time_format'), $timestamp );
+
+			// construct link content
+			$content = $date . ' ' . $time;
+
+			// wrap in anchor
+			$content = '<a href="' . esc_url( $link ) . '">' . esc_html( $content ) . '</a>';
+
+			// prefix with helpful text
+			$content = __( 'Info &amp; Settings for', 'civicrm-event-organiser' ) . ': ' . $content;
+
+			// add to array
+			$links[] = $content;
+
+		}
+
+		// show list
+		echo '<ul><li>' . implode( '</li><li>', $links ) . '</li></p>';
+
+		/**
+		 * Broadcast end of metabox.
+		 *
+		 * @since 0.3.6
+		 *
+		 * @param object $event The EO event object
+		 */
+		do_action( 'civicrm_event_organiser_event_links_meta_box_after', $event );
 
 	}
 
