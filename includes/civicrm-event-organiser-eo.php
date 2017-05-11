@@ -109,8 +109,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// intercept term deletion
 		add_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20, 4 );
 
-		// ensure that  does not show the "No Category" radio button
+		// filter Radio Buttons for Taxonomies null term insertion
 		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'skip_null_term' ), 20, 2 );
+
+		// hide "Parent Category" dropdown in event category metaboxes
+		add_action( 'add_meta_boxes_event', array( $this, 'terms_dropdown_intercept' ), 3 );
 
 	}
 
@@ -1652,6 +1655,37 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// --<
 		return $set;
+
+	}
+
+
+
+	/**
+	 * Trigger hiding of "Parent Category" dropdown in metaboxes.
+	 *
+	 * @since 0.5
+	 */
+	public function terms_dropdown_intercept() {
+
+		// trigger emptying of dropdown
+		add_filter( 'wp_dropdown_cats', array( $this, 'terms_dropdown_clear' ), 20, 2 );
+
+	}
+
+
+
+	/**
+	 * Always hide "Parent Category" dropdown in metaboxes.
+	 *
+	 * @since 0.5
+	 */
+	public function terms_dropdown_clear( $output, $r ) {
+
+		// only clear Event Organiser category
+		if ( $r['taxonomy'] != 'event-category' ) return $output;
+
+		// clear
+		return '';
 
 	}
 
