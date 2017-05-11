@@ -97,7 +97,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		//add_filter( 'eventorganiser_pre_event_content', array( $this, 'pre_event_content' ), 10, 2 );
 
 		// add our event meta box
-		add_action( 'add_meta_boxes', array( $this, 'event_meta_box' ) );
+		add_action( 'add_meta_boxes_event', array( $this, 'event_meta_box' ), 11 );
 
 		// intercept new term creation
 		add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
@@ -647,8 +647,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 			__( 'CiviCRM Settings', 'civicrm-event-organiser' ),
 			array( $this, 'event_meta_box_render' ),
 			'event',
-			'side', //'normal',
-			'core' //'high'
+			'side', // column: options are 'normal' and 'side'
+			'core' // vertical placement: options are 'core', 'high', 'low'
 		);
 
 		// create CiviCRM Settings and Sync metabox
@@ -657,7 +657,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 			__( 'Edit Events in CiviCRM', 'civicrm-event-organiser' ),
 			array( $this, 'event_links_meta_box_render' ),
 			'event',
-			'normal'
+			'normal', // column: options are 'normal' and 'side'
+			'high' // vertical placement: options are 'core', 'high', 'low'
 		);
 
 	}
