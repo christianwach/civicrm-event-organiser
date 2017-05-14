@@ -2422,12 +2422,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		if ( $this->is_network_activated() ) {
 
 			// delete site option
-			delete_site_option( $key, $value );
+			delete_site_option( $key );
 
 		} else {
 
 			// delete option
-			delete_option( $key, $value );
+			delete_option( $key );
 
 		}
 
