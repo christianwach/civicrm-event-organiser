@@ -1537,12 +1537,14 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'description'=> $description,
 		);
 
-		// unhook CiviCRM - no need because we use hook_civicrm_postProcess
+		// unhook listener
+		remove_action( 'created_term', array( $this, 'intercept_create_term' ), 20 );
 
 		// insert it
 		$result = wp_insert_term( $type['label'], 'event-category', $args );
 
-		// rehook CiviCRM?
+		// rehook listener
+		add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
 
 		// if all goes well, we get: array( 'term_id' => 12, 'term_taxonomy_id' => 34 )
 		// if something goes wrong, we get a WP_Error object
@@ -1606,12 +1608,16 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'description'=> $description,
 		);
 
-		// unhook CiviCRM - no need because we use hook_civicrm_postProcess
+		// unhook listeners
+		remove_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20 );
+		remove_action( 'edited_term', array( $this, 'intercept_update_term' ), 20 );
 
 		// update term
 		$result = wp_update_term( $term_id, 'event-category', $args );
 
-		// rehook CiviCRM?
+		// rehook listeners
+		add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 2 );
+		add_action( 'edited_term', array( $this, 'intercept_update_term' ), 20, 3 );
 
 		// if all goes well, we get: array( 'term_id' => 12, 'term_taxonomy_id' => 34 )
 		// if something goes wrong, we get a WP_Error object

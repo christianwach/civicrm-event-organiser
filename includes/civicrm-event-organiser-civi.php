@@ -2379,16 +2379,16 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$new_type['name'] = $submitted_values['label'];
 			$new_type['description'] = $submitted_values['description'];
 
-			// unhook EO action
+			// unhook listeners
 			remove_action( 'edit_terms', array( $this->plugin->eo, 'intercept_pre_update_term' ), 20 );
-			remove_action( 'edited_term', array( $this->plugin->eo, 'intercept_pre_update_term' ), 20 );
+			remove_action( 'edited_term', array( $this->plugin->eo, 'intercept_update_term' ), 20 );
 
 			// update EO term - or create if it doesn't exist
 			$result = $this->plugin->eo->update_term( $new_type, $type );
 
-			// rehook EO actions
-			add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 1 );
-			add_action( 'edited_term', array( $this, 'intercept_update_term' ), 20, 3 );
+			// rehook listeners
+			add_action( 'edit_terms', array( $this->plugin->eo, 'intercept_pre_update_term' ), 20, 2 );
+			add_action( 'edited_term', array( $this->plugin->eo, 'intercept_update_term' ), 20, 3 );
 
 		} else {
 
@@ -2404,14 +2404,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				'description' => $description,
 			);
 
-			// unhook EO action
+			// unhook listener
 			remove_action( 'created_term', array( $this->plugin->eo, 'intercept_create_term' ), 20 );
 
 			// create EO term
 			$result = $this->plugin->eo->create_term( $new_type );
 
-			// rehook EO actions
-			add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
+			// rehook listener
+			add_action( 'created_term', array( $this->plugin->eo, 'intercept_create_term' ), 20, 3 );
 
 		}
 
