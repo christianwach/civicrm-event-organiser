@@ -1142,7 +1142,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			TRUE,
 			NULL,
 			FALSE,
-			FALSE
+			FALSE,
+			TRUE
 		);
 
 		// --<
