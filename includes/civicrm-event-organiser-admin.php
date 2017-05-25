@@ -160,6 +160,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function upgrade_tasks() {
 
+		// bail if this is a new install
+		if ( $this->plugin_version === false ) return;
+
 		// check for possibly missing default profile setting
 		if ( 'fgffgs' == $this->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
 
@@ -197,7 +200,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// construct message
 		$message = sprintf(
-			__( 'CiviCRM Event Organiser has been updated and needs your attention. Please visit the <a href="%s">Settings Page</a>.', 'civicrm-event-organiser' ),
+			__( 'CiviCRM Event Organiser needs your attention. Please visit the <a href="%s">Settings Page</a>.', 'civicrm-event-organiser' ),
 			$urls['settings']
 		);
 
