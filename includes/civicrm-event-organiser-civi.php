@@ -85,6 +85,94 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
+	 * Test if CiviCRM plugin is active.
+	 *
+	 * @since 0.1
+	 *
+	 * @return bool
+	 */
+	public function is_active() {
+
+		// bail if no CiviCRM init function
+		if ( ! function_exists( 'civi_wp' ) ) return false;
+
+		// try and init CiviCRM
+		return civi_wp()->initialize();
+
+	}
+
+
+
+	/**
+	 * Register directories that CiviCRM searches for php and template files.
+	 *
+	 * @since 0.1
+	 *
+	 * @param object $config The CiviCRM config object
+	 */
+	public function register_directories( &$config ) {
+
+		// init CiviCRM or die
+		if ( ! $this->is_active() ) return;
+
+		// define our custom path
+		$custom_path = CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm_custom_templates';
+
+		// get template instance
+		$template = CRM_Core_Smarty::singleton();
+
+		// add our custom template directory
+		$template->addTemplateDir( $custom_path );
+
+		// register template directories
+		$template_include_path = $custom_path . PATH_SEPARATOR . get_include_path();
+		set_include_path( $template_include_path );
+
+	}
+
+
+
+	/**
+	 * Check a CiviCRM permission.
+	 *
+	 * @since 0.3
+	 *
+	 * @param str $permission The permission string
+	 * @return bool $permitted True if allowed, false otherwise
+	 */
+	public function check_permission( $permission ) {
+
+		// always deny if CiviCRM is not active
+		if ( ! $this->is_active() ) return false;
+
+		// deny by default
+		$permitted = false;
+
+		// check CiviCRM permissions
+		if ( CRM_Core_Permission::check( $permission ) ) {
+			$permitted = true;
+		}
+
+		/**
+		 * Return permission but allow overrides.
+		 *
+		 * @since 0.3.4
+		 *
+		 * @param bool $permitted True if allowed, false otherwise
+		 * @param str $permission The CiviCRM permission string
+		 * @return bool $permitted True if allowed, false otherwise
+		 */
+		return apply_filters( 'civicrm_event_organiser_permitted', $permitted, $permission );
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
 	 * Create an EO event when a CiviEvent is created.
 	 *
 	 * @since 0.1
@@ -221,90 +309,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// kick out if not event object
 		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) return;
-
-	}
-
-
-
-	/**
-	 * Test if CiviCRM plugin is active.
-	 *
-	 * @since 0.1
-	 *
-	 * @return bool
-	 */
-	public function is_active() {
-
-		// bail if no CiviCRM init function
-		if ( ! function_exists( 'civi_wp' ) ) return false;
-
-		// try and init CiviCRM
-		return civi_wp()->initialize();
-
-	}
-
-
-
-	/**
-	 * Register directories that CiviCRM searches for php and template files.
-	 *
-	 * @since 0.1
-	 *
-	 * @param object $config The CiviCRM config object
-	 */
-	public function register_directories( &$config ) {
-
-		// init CiviCRM or die
-		if ( ! $this->is_active() ) return;
-
-		// define our custom path
-		$custom_path = CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm_custom_templates';
-
-		// get template instance
-		$template = CRM_Core_Smarty::singleton();
-
-		// add our custom template directory
-		$template->addTemplateDir( $custom_path );
-
-		// register template directories
-		$template_include_path = $custom_path . PATH_SEPARATOR . get_include_path();
-		set_include_path( $template_include_path );
-
-	}
-
-
-
-	/**
-	 * Check a CiviCRM permission.
-	 *
-	 * @since 0.3
-	 *
-	 * @param str $permission The permission string
-	 * @return bool $permitted True if allowed, false otherwise
-	 */
-	public function check_permission( $permission ) {
-
-		// always deny if CiviCRM is not active
-		if ( ! $this->is_active() ) return false;
-
-		// deny by default
-		$permitted = false;
-
-		// check CiviCRM permissions
-		if ( CRM_Core_Permission::check( $permission ) ) {
-			$permitted = true;
-		}
-
-		/**
-		 * Return permission but allow overrides.
-		 *
-		 * @since 0.3.4
-		 *
-		 * @param bool $permitted True if allowed, false otherwise
-		 * @param str $permission The CiviCRM permission string
-		 * @return bool $permitted True if allowed, false otherwise
-		 */
-		return apply_filters( 'civicrm_event_organiser_permitted', $permitted, $permission );
 
 	}
 
