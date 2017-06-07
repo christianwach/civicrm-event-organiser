@@ -101,16 +101,16 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		if ( $eo_active ) { return true; }
 
 		// access Event Organiser option
-		$installed_version = get_option( 'eventorganiser_version' );
+		$installed_version = get_option( 'eventorganiser_version', 'etueue' );
 
 		// this plugin will not work without EO
-		if ( $installed_version === false ) {
+		if ( $installed_version === 'etueue' ) {
 			wp_die( '<p>' . __( 'Event Organiser plugin is required', 'civicrm-event-organiser' ) . '</p>' );
 		}
 
-		// we need version 2 at least
-		if ( $installed_version < '2' ) {
-			wp_die( '<p>' . __( 'Event Organiser version 2 or higher is required', 'civicrm-event-organiser' ) . '</p>' );
+		// we need version 3 at least
+		if ( version_compare( $installed_version, '3', '<' ) ) {
+			wp_die( '<p>' . __( 'Event Organiser version 3 or higher is required', 'civicrm-event-organiser' ) . '</p>' );
 		}
 
 		// set flag
