@@ -1611,16 +1611,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$op = 'update';
 		}
 
-		// user must be logged in
-		if ( ! is_user_logged_in() ) return false;
-
-		// get current user
-		$current_user = wp_get_current_user();
-
 		// define initial params array
 		$params = array(
 			'version' => 3,
-			'contact_id' => $current_user->ID,
 		);
 
 		/**
