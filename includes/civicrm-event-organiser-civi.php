@@ -1602,23 +1602,25 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// init create/update flag
 		$op = 'create';
 
-		// if our venue already has a location
+		// update if our venue already has a location
 		if (
-			isset( $venue->venue_civi_id )
-			AND
-			is_numeric( $venue->venue_civi_id )
-			AND
+			isset( $venue->venue_civi_id ) AND
+			is_numeric( $venue->venue_civi_id ) AND
 			$venue->venue_civi_id > 0
 		) {
-
-			// override since we're updating
 			$op = 'update';
-
 		}
 
-		// define create array
+		// user must be logged in
+		if ( ! is_user_logged_in() ) return false;
+
+		// get current user
+		$current_user = wp_get_current_user();
+
+		// define initial params array
 		$params = array(
 			'version' => 3,
+			'contact_id' => $current_user->ID,
 		);
 
 		/**
