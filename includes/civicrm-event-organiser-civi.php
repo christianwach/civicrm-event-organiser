@@ -1970,7 +1970,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 *
 	 * How this seems to work in CiviCRM is as follows: if the CiviEvent does not
 	 * have "Registration Start Date" or "Registration End Date" specifically set,
-	 * then it is assumed that registration opens when the CiviEvent is created and
+	 * then it is assumed that registration opens when the CiviEvent begins and
 	 * closes when the event is over.
 	 *
 	 * As a result, we check for the existence of "Registration Start Date" and
@@ -1994,7 +1994,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( isset( $civi_event['registration_start_date'] ) ) {
 			$start = new DateTime( $civi_event['registration_start_date'], eo_get_blog_timezone() );
 		} else {
-			$start = new DateTime( $civi_event['created_date'], eo_get_blog_timezone() );
+			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
 		}
 
 		// bail early if not started yet
