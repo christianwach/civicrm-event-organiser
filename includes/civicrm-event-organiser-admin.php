@@ -14,7 +14,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $plugin The plugin object
+	 * @var object $plugin The plugin object.
 	 */
 	public $plugin;
 
@@ -23,7 +23,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var str $plugin_version The plugin version (numeric string)
+	 * @var str $plugin_version The plugin version. (numeric string)
 	 */
 	public $plugin_version;
 
@@ -32,7 +32,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var str $parent_page The parent page
+	 * @var str $parent_page The parent page.
 	 */
 	public $parent_page;
 
@@ -41,7 +41,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var str $settings_page The settings page
+	 * @var str $settings_page The settings page.
 	 */
 	public $settings_page;
 
@@ -50,7 +50,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var str $sync_page The manual sync page
+	 * @var str $sync_page The manual sync page.
 	 */
 	public $sync_page;
 
@@ -59,7 +59,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var object $step_counts The array of item counts to process per AJAX request
+	 * @var object $step_counts The array of item counts to process per AJAX request.
 	 */
 	public $step_counts = array(
 		'tax' => 5, // EO category terms & CiviCRM event types
@@ -117,7 +117,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $parent The parent object
+	 * @param object $parent The parent object.
 	 */
 	public function set_references( $parent ) {
 
@@ -316,8 +316,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 *
-	 * @global string $plugin_page
-	 * @global array $submenu
+	 * @global string $plugin_page The current plugin page.
+	 * @global array $submenu_file The referenced submenu file.
 	 */
 	public function admin_menu_highlight() {
 
@@ -364,8 +364,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 *
-	 * @param object $screen The existing WordPress screen object
-	 * @return object $screen The amended WordPress screen object
+	 * @param object $screen The existing WordPress screen object.
+	 * @return object $screen The amended WordPress screen object.
 	 */
 	public function admin_help( $screen ) {
 
@@ -405,7 +405,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 *
-	 * @return string $help Help formatted as HTML
+	 * @return string $help Help formatted as HTML.
 	 */
 	public function admin_help_text() {
 
@@ -646,7 +646,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 *
-	 * @return array $admin_urls The array of admin page URLs
+	 * @return array $admin_urls The array of admin page URLs.
 	 */
 	public function page_get_urls() {
 
@@ -684,9 +684,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 *
-	 * @param string $menu_slug The slug name to refer to this menu by (should be unique for this menu)
-	 * @param bool $echo Whether or not to echo the url - default is true
-	 * @return string $url The URL
+	 * @param string $menu_slug The slug name to refer to this menu by. (should be unique for this menu)
+	 * @param bool $echo Whether or not to echo the url - default is true.
+	 * @return string $url The URL of the menu page.
 	 */
 	public function network_menu_page_url( $menu_slug, $echo = true ) {
 
@@ -719,7 +719,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 *
-	 * @return string $target_url The URL for the admin form action
+	 * @return string $target_url The URL for the admin form action.
 	 */
 	public function admin_form_url_get() {
 
@@ -743,8 +743,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * Route settings updates to relevant methods.
 	 *
 	 * @since 0.2.4
-	 *
-	 * @return bool $result True on success, false otherwise
 	 */
 	public function settings_update_router() {
 
@@ -1476,51 +1474,51 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/*
-	----------------------------------------------------------------------------
-	Correspondences are stored using existing data structures. This imposes some
-	limitations on us. Ideally, I suppose, this plugin would define its own table
-	for the correspondences, but the existing tables will work.
-
-	(a) A CiviEvent needs to know which post ID and which occurrence ID it is synced with.
-	(b) An EO event (post) needs to know the CiviEvents which are synced with it.
-	(c) An EO occurrence needs to know which CiviEvent it is synced with.
-
-	So, given that CiviCRM seems to have no meta storage for CiviEvents, use a
-	WordPress option to store this data. We can now query the data by CiviEvent ID
-	and retrieve post ID and occurrence ID. The array looks like:
-
-	array(
-		$civi_event_id => array(
-			'post_id' => $post_id,
-			'occurrence_id' => $occurrence_id,
-		),
-		$civi_event_id => array(
-			'post_id' => $post_id,
-			'occurrence_id' => $occurrence_id,
-		),
-		...
-	)
-
-	In the reverse situation, we store an array of correspondences as post meta.
-	We will need to know the post ID to get it. The array looks like:
-
-	array(
-		$occurrence_id => $civi_event_id,
-		$occurrence_id => $civi_event_id,
-		$occurrence_id => $civi_event_id,
-		...
-	)
-
-	In practice, however, if the sequence changes, then EO regenerates the
-	occurrences anyway, so our correspondences need to be rebuilt when that
-	happens. This makes the occurrence_id linkage useful only when sequences are
-	broken.
-
-	There is an additional "orphans" array, so that when occurrences are added
-	(or added back) to a sequence, the corresponding CiviEvent may be reconnected
-	as long as none of its date and time data has changed.
-	----------------------------------------------------------------------------
-	*/
+	 * -------------------------------------------------------------------------
+	 * Correspondences are stored using existing data structures. This imposes some
+	 * limitations on us. Ideally, I suppose, this plugin would define its own table
+	 * for the correspondences, but the existing tables will work.
+	 *
+	 * (a) A CiviEvent needs to know which post ID and which occurrence ID it is synced with.
+	 * (b) An EO event (post) needs to know the CiviEvents which are synced with it.
+	 * (c) An EO occurrence needs to know which CiviEvent it is synced with.
+	 *
+	 * So, given that CiviCRM seems to have no meta storage for CiviEvents, use a
+	 * WordPress option to store this data. We can now query the data by CiviEvent ID
+	 * and retrieve post ID and occurrence ID. The array looks like:
+	 *
+	 * array(
+	 *     $civi_event_id => array(
+	 *         'post_id' => $post_id,
+	 *         'occurrence_id' => $occurrence_id,
+	 *     ),
+	 *     $civi_event_id => array(
+	 *         'post_id' => $post_id,
+	 *         'occurrence_id' => $occurrence_id,
+	 *     ),
+	 *     ...
+	 * )
+	 *
+	 * In the reverse situation, we store an array of correspondences as post meta.
+	 * We will need to know the post ID to get it. The array looks like:
+	 *
+	 * array(
+	 *     $occurrence_id => $civi_event_id,
+	 *     $occurrence_id => $civi_event_id,
+	 *     $occurrence_id => $civi_event_id,
+	 *     ...
+	 * )
+	 *
+	 * In practice, however, if the sequence changes, then EO regenerates the
+	 * occurrences anyway, so our correspondences need to be rebuilt when that
+	 * happens. This makes the occurrence_id linkage useful only when sequences are
+	 * broken.
+	 *
+	 * There is an additional "orphans" array, so that when occurrences are added
+	 * (or added back) to a sequence, the corresponding CiviEvent may be reconnected
+	 * as long as none of its date and time data has changed.
+	 * -------------------------------------------------------------------------
+	 */
 
 
 
@@ -1630,9 +1628,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post
-	 * @param array $correspondences CiviEvent IDs, keyed by EO occurrence ID
-	 * @param array $unlinked CiviEvent IDs that have been orphaned from an EO event
+	 * @param int $post_id The numeric ID of the WP post.
+	 * @param array $correspondences CiviEvent IDs, keyed by EO occurrence ID.
+	 * @param array $unlinked CiviEvent IDs that have been orphaned from an EO event.
 	 */
 	public function store_event_correspondences( $post_id, $correspondences, $unlinked = array() ) {
 
@@ -1673,7 +1671,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @return array $correspondences All CiviEvent - Event Organiser correspondences
+	 * @return array $correspondences All CiviEvent - Event Organiser correspondences.
 	 */
 	public function get_all_event_correspondences() {
 
@@ -1698,7 +1696,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @return array $eo_event_data all CiviEvent IDs
+	 * @return array $eo_event_data The array of all Event Organiser event IDs.
 	 */
 	public function get_all_civi_to_eo_correspondences() {
 
@@ -1725,7 +1723,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @return array $civi_event_data All CiviEvent IDs
+	 * @return array $eo_event_data The array of all CiviEvent IDs.
 	 */
 	public function get_all_eo_to_civi_correspondences() {
 
@@ -1766,8 +1764,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post
-	 * @param int $occurrence_id The numeric ID of the EO event occurrence
+	 * @param int $post_id The numeric ID of the WP post.
+	 * @param int $occurrence_id The numeric ID of the Event Organiser event occurrence.
 	 */
 	public function clear_event_correspondence( $post_id, $occurrence_id ) {
 
@@ -1828,7 +1826,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post
+	 * @param int $post_id The numeric ID of the WP post.
 	 */
 	public function clear_event_correspondences( $post_id ) {
 
@@ -1869,8 +1867,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $civi_event_id The numeric ID of a CiviEvent event
-	 * @return mixed $eo_event_id The numeric ID of the Event Organiser event (or false on failure)
+	 * @param int $civi_event_id The numeric ID of a CiviEvent event.
+	 * @return int|bool $eo_event_id The numeric ID of the Event Organiser event, or false on failure.
 	 */
 	public function get_eo_event_id_by_civi_event_id( $civi_event_id ) {
 
@@ -1905,8 +1903,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $civi_event_id The numeric ID of a CiviEvent event
-	 * @return mixed $eo_occurrence_id The numeric ID of the Event Organiser occurrence (or false on failure)
+	 * @param int $civi_event_id The numeric ID of a CiviEvent event.
+	 * @return int|bool $eo_occurrence_id The numeric ID of the Event Organiser occurrence, or false on failure.
 	 */
 	public function get_eo_occurrence_id_by_civi_event_id( $civi_event_id ) {
 
@@ -1941,8 +1939,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post
-	 * @return array $civi_event_ids All CiviEvent IDs for the post, keyed by occurrence ID
+	 * @param int $post_id The numeric ID of the WP post.
+	 * @return array $civi_event_ids All CiviEvent IDs for the post, keyed by occurrence ID.
 	 */
 	public function get_civi_event_ids_by_eo_event_id( $post_id ) {
 
@@ -1964,9 +1962,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post
-	 * @param int $occurrence_id The numeric ID of the EO event occurrence
-	 * @return mixed $civi_event_id The CiviEvent ID (or false otherwise)
+	 * @param int $post_id The numeric ID of the WP post.
+	 * @param int $occurrence_id The numeric ID of the EO event occurrence.
+	 * @return mixed $civi_event_id The CiviEvent ID, or false otherwise.
 	 */
 	public function get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id ) {
 
@@ -1991,8 +1989,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.3
 	 *
-	 * @param int $civi_event_id The CiviEvent ID
-	 * @return bool True if CiviEvent is part of an EO event sequence, false otherwise
+	 * @param int $civi_event_id The CiviEvent ID.
+	 * @return bool True if CiviEvent is part of an EO event sequence, false otherwise.
 	 */
 	public function is_civi_event_in_eo_sequence( $civi_event_id ) {
 
@@ -2031,8 +2029,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post
-	 * @param array $unlinked CiviEvent IDs that have been orphaned from an EO event
+	 * @param int $post_id The numeric ID of the WP post.
+	 * @param array $unlinked The CiviEvent IDs that have been orphaned from an EO event.
 	 */
 	public function store_orphaned_events( $post_id, $orphans ) {
 
@@ -2089,9 +2087,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post = EO event
-	 * @param int $occurrence_id The numeric ID of the EO event occurrence
-	 * @param int $civi_event_id The numeric ID of the orphaned CiviEvent
+	 * @param int $post_id The numeric ID of the WP post = EO event.
+	 * @param int $occurrence_id The numeric ID of the EO event occurrence.
+	 * @param int $civi_event_id The numeric ID of the orphaned CiviEvent.
 	 */
 	public function occurrence_orphaned( $post_id, $occurrence_id, $civi_event_id ) {
 
@@ -2121,8 +2119,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post = EO event
-	 * @return array $civi_event_ids Array of orphaned CiviEvent IDs
+	 * @param int $post_id The numeric ID of the WP post = EO event.
+	 * @return array $civi_event_ids Array of orphaned CiviEvent IDs.
 	 */
 	public function get_orphaned_events_by_eo_event_id( $post_id ) {
 
@@ -2144,7 +2142,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @return array $civi_event_disabled All CiviEvent IDs
+	 * @return array $civi_event_disabled All CiviEvent IDs.
 	 */
 	public function get_eo_event_ids_for_orphans() {
 
@@ -2160,8 +2158,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $civi_event_id The numeric ID of the CiviEvent
-	 * @return int $eo_event_id The numeric ID of the WP post = EO event
+	 * @param int $civi_event_id The numeric ID of the CiviEvent.
+	 * @return int $eo_event_id The numeric ID of the WP post = EO event.
 	 */
 	public function get_eo_event_id_by_orphaned_event_id( $civi_event_id ) {
 
@@ -2297,6 +2295,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			'civi_types' => $civi_types,
 			'eo_types' => $eo_types,
 		), true ) );
+
 		die();
 
 	}
@@ -2344,6 +2343,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			'all_venues' => $all_venues,
 			'all_locations' => $all_locations,
 		), true ) );
+
 		die();
 
 	}
@@ -2359,9 +2359,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param string $key The option name
-	 * @param mixed $default The default option value if none exists
-	 * @return mixed $value
+	 * @param string $key The option name.
+	 * @param mixed $default The default option value if none exists.
+	 * @return mixed $value The value of the requested option.
 	 */
 	public function option_get( $key, $default = null ) {
 
@@ -2390,8 +2390,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param string $key The option name
-	 * @param mixed $value The value to save
+	 * @param string $key The option name.
+	 * @param mixed $value The value to save.
 	 */
 	public function option_save( $key, $value ) {
 
@@ -2417,7 +2417,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param string $key The option name
+	 * @param string $key The option name.
 	 */
 	public function option_delete( $key ) {
 
@@ -2443,7 +2443,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @return bool $is_network_active True if network activated, false otherwise
+	 * @return bool $is_network_active True if network activated, false otherwise.
 	 */
 	public function is_network_activated() {
 

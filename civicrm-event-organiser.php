@@ -46,7 +46,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $db The admin/db object
+	 * @var object $db The admin/db object.
 	 */
 	public $db;
 
@@ -55,7 +55,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $civi The CiviCRM utilities object
+	 * @var object $civi The CiviCRM utilities object.
 	 */
 	public $civi;
 
@@ -64,7 +64,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $eo The Event Organiser utilities object
+	 * @var object $eo The Event Organiser utilities object.
 	 */
 	public $eo;
 
@@ -73,7 +73,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $eo_venue The Event Organiser venue utilities object
+	 * @var object $eo_venue The Event Organiser venue utilities object.
 	 */
 	public $eo_venue;
 
@@ -82,7 +82,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.2.1
 	 * @access public
-	 * @var object $taxonomy The taxonomy HTML descriptions object
+	 * @var object $taxonomy The taxonomy HTML descriptions object.
 	 */
 	public $taxonomy;
 
@@ -260,7 +260,7 @@ $civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
  *
  * @since 0.2.2
  *
- * @return object $civicrm_wp_event_organiser The plugin reference
+ * @return object $civicrm_wp_event_organiser The plugin reference.
  */
 function civicrm_eo() {
 
@@ -277,9 +277,9 @@ function civicrm_eo() {
  *
  * @since 0.1
  *
- * @param array $links The existing links array
- * @param str $file The name of the plugin file
- * @return array $links The modified links array
+ * @param array $links The existing links array.
+ * @param str $file The name of the plugin file.
+ * @return array $links The modified links array.
  */
 function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 

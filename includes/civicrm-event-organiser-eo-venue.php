@@ -14,14 +14,14 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $plugin The plugin object
+	 * @var object $plugin The plugin object.
 	 */
 	public $plugin;
 
 
 
 	/**
-	 * Initialises this object
+	 * Initialises this object.
 	 *
 	 * @since 0.1
 	 */
@@ -39,7 +39,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $parent The parent object
+	 * @param object $parent The parent object.
 	 */
 	public function set_references( $parent ) {
 
@@ -92,7 +92,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @return bool True if EO present and active, false otherwise
+	 * @return bool $eo_active True if EO present and active, false otherwise.
 	 */
 	public function is_active() {
 
@@ -132,7 +132,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
+	 * @param int $venue_id The numeric ID of the venue.
 	 */
 	public function insert_venue( $venue_id ) {
 
@@ -174,7 +174,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
+	 * @param int $venue_id The numeric ID of the venue.
 	 */
 	public function save_venue( $venue_id ) {
 
@@ -216,10 +216,10 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $term The term object of the venue
-	 * @param int $tt_id The numeric ID of the venue term taxonomy
-	 * @param string $taxonomy The deleted term's taxonomy name
-	 * @param object $deleted_term The deleted term object of the venue
+	 * @param object $term The term object of the venue.
+	 * @param int $tt_id The numeric ID of the venue term taxonomy.
+	 * @param string $taxonomy The deleted term's taxonomy name.
+	 * @param object $deleted_term The deleted term object of the venue.
 	 */
 	public function delete_venue_term( $term, $tt_id, $taxonomy, $deleted_term ) {
 
@@ -240,9 +240,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $term The term object of the venue
-	 * @param int $tt_id The numeric ID of the venue term taxonomy
-	 * @param object $deleted_term The deleted term object of the venue
+	 * @param object $term The term object of the venue.
+	 * @param int $tt_id The numeric ID of the venue term taxonomy.
+	 * @param object $deleted_term The deleted term object of the venue.
 	 */
 	public function delete_venue( $term, $tt_id, $deleted_term ) {
 
@@ -261,7 +261,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $deleted_term The term object of the venue
+	 * @param object $deleted_term The term object of the venue.
 	 */
 	public function delete_venue_meta( $deleted_term ) {
 
@@ -307,7 +307,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
+	 * @param int $venue_id The numeric ID of the venue.
 	 */
 	public function deleted_venue( $venue_id ) {
 
@@ -328,8 +328,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $location The CiviEvent location data
-	 * @return int $term_id The numeric ID of the venue
+	 * @param array $location The CiviEvent location data.
+	 * @return int $term_id The numeric ID of the venue.
 	 */
 	public function create_venue( $location ) {
 
@@ -402,7 +402,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		 * Force the use of a unique slug with the following code:
 		 * add_filter( 'civicrm_event_organiser_force_unique_slug', '__return_true' );
 		 *
-		 * @param bool False by default, which does not force unique slugs
+		 * @param bool False by default, which does not force unique slugs.
 		 */
 		if ( $existing_venue OR apply_filters( 'civicrm_event_organiser_force_unique_slug', false ) ) {
 
@@ -468,8 +468,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $location The CiviEvent location data
-	 * @return int $term_id The numeric ID of the venue
+	 * @param array $location The CiviEvent location data.
+	 * @return int $term_id The numeric ID of the venue.
 	 */
 	public function update_venue( $location ) {
 
@@ -572,8 +572,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $location the CiviEvent location data
-	 * @return int $venue_id The numeric ID of the venue
+	 * @param array $location The CiviEvent location data.
+	 * @return int $venue_id The numeric ID of the venue.
 	 */
 	public function get_venue_id( $location ) {
 
@@ -687,7 +687,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $venue The EO venue object
+	 * @param object $venue The EO venue object.
 	 */
 	public function venue_meta_box_render( $venue ) {
 
@@ -735,11 +735,11 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $terms Array of terms
-	 * @param array $post_ids Array of post IDs
-	 * @param string $taxonomies Should be (an array containing) 'event-venue'
-	 * @param string $args Additional parameters
-	 * @return array $terms Array of term objects
+	 * @param array $terms Array of terms.
+	 * @param array $post_ids Array of post IDs.
+	 * @param string $taxonomies Should be (an array containing) 'event-venue'.
+	 * @param string $args Additional parameters.
+	 * @return array $terms Array of term objects.
 	 */
 	public function update_venue_meta( $terms, $post_ids, $taxonomies, $args ) {
 
@@ -756,9 +756,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $terms Array of terms
-	 * @param string $tax Should be (an array containing) 'event-venue'
-	 * @return array $terms Array of event-venue terms
+	 * @param array $terms Array of terms.
+	 * @param string $tax Should be (an array containing) 'event-venue'.
+	 * @return array $terms Array of event-venue terms.
 	 */
 	public function update_venue_meta_cache( $terms, $tax ) {
 
@@ -823,7 +823,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
+	 * @param int $venue_id The numeric ID of the venue.
 	 */
 	public function store_civi_location( $venue_id, $civi_loc_block ) {
 
@@ -844,7 +844,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
+	 * @param int $venue_id The numeric ID of the venue.
+	 * @return int $loc_block_id The numeric ID of the CiviCRM loc_block.
 	 */
 	public function get_civi_location( $venue_id ) {
 
@@ -863,7 +864,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
+	 * @param int $venue_id The numeric ID of the venue.
 	 */
 	public function clear_civi_location( $venue_id ) {
 
@@ -902,7 +903,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
+	 * @param int $venue_id The numeric ID of the venue.
 	 */
 	private function _save_venue_components( $venue_id ) {
 
@@ -931,7 +932,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
+	 * @param int $venue_id The numeric ID of the venue.
 	 */
 	private function _delete_venue_components( $venue_id ) {
 
@@ -946,7 +947,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
+	 * @param int $venue_id The numeric ID of the venue.
 	 */
 	public function clear_venue_components( $venue_id ) {
 
@@ -963,8 +964,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
-	 * @param str $venue_email The email associated with the venue
+	 * @param int $venue_id The numeric ID of the venue.
+	 * @param str $venue_email The email associated with the venue.
 	 */
 	public function update_venue_email( $venue_id, $venue_email ) {
 
@@ -986,8 +987,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the venue
-	 * @param str $venue_phone The phone number associated with the venue
+	 * @param int $venue_id The numeric ID of the venue.
+	 * @param str $venue_phone The phone number associated with the venue.
 	 */
 	public function update_venue_phone( $venue_id, $venue_phone ) {
 

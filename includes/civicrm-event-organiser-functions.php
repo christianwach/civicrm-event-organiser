@@ -21,7 +21,7 @@
  *
  * @since 0.3
  *
- * @param int $post_id The numeric ID of the WP post
+ * @param int $post_id The numeric ID of the WP post.
  */
 function civicrm_event_organiser_register_links( $post_id = null ) {
 
@@ -76,8 +76,8 @@ add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_reg
  *
  * @since 0.3
  *
- * @param int $post_id The numeric ID of the WP post
- * @return array $links The HTML links to the CiviCRM Registration pages
+ * @param int $post_id The numeric ID of the WP post.
+ * @return array $links The HTML links to the CiviCRM Registration pages.
  */
 function civicrm_event_organiser_get_register_links( $post_id = null ) {
 
@@ -128,9 +128,9 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		 *
 		 * @since 0.3
 		 *
-		 * @param string $url The raw URL to the CiviCRM Registration page
-		 * @param array $civi_event The array of data that represents a CiviEvent
-		 * @param int $post_id The numeric ID of the WP post
+		 * @param string $url The raw URL to the CiviCRM Registration page.
+		 * @param array $civi_event The array of data that represents a CiviEvent.
+		 * @param int $post_id The numeric ID of the WP post.
 		 */
 		$url = apply_filters( 'civicrm_event_organiser_registration_url', $url, $civi_event, $post_id );
 
@@ -158,10 +158,10 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		 *
 		 * @since 0.3
 		 *
-		 * @param string $link The HTML link to the CiviCRM Registration page
-		 * @param string $url The raw URL to the CiviCRM Registration page
-		 * @param string $text The text content of the link
-		 * @param int $post_id The numeric ID of the WP post
+		 * @param string $link The HTML link to the CiviCRM Registration page.
+		 * @param string $url The raw URL to the CiviCRM Registration page.
+		 * @param string $text The text content of the link.
+		 * @param int $post_id The numeric ID of the WP post.
 		 */
 		$links[] = apply_filters( 'civicrm_event_organiser_registration_link', $link, $url, $text, $post_id );
 
