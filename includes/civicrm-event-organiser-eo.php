@@ -78,8 +78,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// intercept update event (though by misuse of a filter)
 		//add_filter( 'eventorganiser_update_event_event_data', array( $this, 'intercept_update_event' ), 10, 3 );
 
+		// intercept before delete post
+		add_action( 'before_delete_post', array( $this, 'intercept_before_delete_post' ), 10, 1 );
+
 		// intercept delete event occurrences (which is the preferred way to hook into event deletion)
-		add_action( 'eventorganiser_delete_event_occurrences', array( $this, 'delete_event_occurrences' ), 10, 1 );
+		add_action( 'eventorganiser_delete_event_occurrences', array( $this, 'delete_event_occurrences' ), 10, 2 );
 
 		// intercept before break occurrence
 		add_action( 'eventorganiser_pre_break_occurrence', array( $this, 'pre_break_occurrence' ), 10, 2 );
@@ -191,14 +194,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function intercept_save_event( $post_id ) {
 
-		$e = new Exception;
-		$trace = $e->getTraceAsString();
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'post_id' => $post_id,
-			'backtrace' => $trace,
-		), true ) );
-
 		// save custom EO event components
 		$this->_save_event_components( $post_id );
 
@@ -260,13 +255,57 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 
 	/**
+	 * Intercept before delete post.
+	 *
+	 * @since 0.4
+	 *
+	 * @param int $post_id The numeric ID of the WP post.
+	 */
+	public function intercept_before_delete_post( $post_id ) {
+
+		// get post data
+		$post = get_post( $post_id );
+
+		// bail if not an event
+		if ( $post->post_type != 'event' ) return;
+
+		// get correspondences from post meta to use once the event has been deleted
+		$this->saved_correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
+
+	}
+
+
+
+	/**
 	 * Intercept delete event occurrences.
+	 *
+	 * There is an ambiguity as to when this method is called, because it will
+	 * be called when an Event Organiser event is deleted AND when an existing
+	 * event has its date(s) changed.
+	 *
+	 * If the date(s) have been changed without "Sync this event with CiviCRM"
+	 * selected, then the next time the event is updated, the changed dates will
+	 * be handled by CiviCRM_WP_Event_Organiser_CiviCRM::event_updated()
+	 *
+	 * If "Sync this event with CiviCRM" is selected during the event update and
+	 * the date(s) have been changed, then this method is called during the
+	 * update process.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post.
+	 * @param array|bool $occurrence_ids An array of occurrence IDs to be deleted, or false if all occurrences are to be removed.
 	 */
-	public function delete_event_occurrences( $post_id ) {
+	public function delete_event_occurrences( $post_id, $occurrence_ids ) {
+
+		// if an event is not being deleted
+		if ( ! doing_action( 'delete_post' ) ) {
+
+			// bail if our sync checkbox is not checked
+			if ( ! isset( $_POST['civi_eo_event_sync'] ) ) return;
+			if ( $_POST['civi_eo_event_sync'] != 1 ) return;
+
+		}
 
 		/*
 		 * Once again, the question arises as to whether we should actually delete
@@ -277,25 +316,53 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * "inactive" array of some kind.
 		 */
 
-		// get IDs from post meta
-		$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
+		// prevent recursion
+		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
+		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
+		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10 );
 
-		// loop through them
-		foreach ( $correspondences AS $civi_event_id ) {
+		// are we deleting an event?
+		if ( doing_action( 'delete_post' ) AND isset( $this->saved_correspondences ) ) {
 
-			// disable CiviEvent
-			$return = $this->plugin->civi->disable_civi_event( $civi_event_id );
+			// yes: get IDs from saved post meta
+			$correspondences = $this->saved_correspondences;
+
+		} else {
+
+			// get IDs from post meta
+			$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
 
 		}
 
+		// loop through them
+		foreach ( $correspondences AS $occurrence_id => $civi_event_id ) {
+
+			// is this occurrence being deleted?
+			if ( $occurrence_ids === false OR in_array( $occurrence_id, $occurrence_ids ) ) {
+
+				// disable corresponding CiviEvent
+				$return = $this->plugin->civi->disable_civi_event( $civi_event_id );
+
+			}
+
+		}
+
+		// restore hooks
+		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10, 4 );
+		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
+		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10, 4 );
+
 		// TODO - decide if we delete CiviEvents...
 		return;
+
+		// bail if an event is not being deleted
+		if ( ! doing_action( 'delete_post' ) ) return;
 
 		// delete those CiviCRM events - not used at present
 		//$this->plugin->civi->delete_civi_events( $correspondences );
 
 		// delete our stored CiviCRM event IDs
-		$this->plugin->db->clear_event_correspondences( $post_id );
+		//$this->plugin->db->clear_event_correspondences( $post_id );
 
 	}
 
