@@ -502,15 +502,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function update_civi_events( $post, $dates ) {
 
-		$e = new Exception;
-		$trace = $e->getTraceAsString();
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'post' => $post,
-			'dates' => $dates,
-			'backtrace' => $trace,
-		), true ) );
-
 		// init CiviCRM or die
 		if ( ! $this->is_active() ) return false;
 

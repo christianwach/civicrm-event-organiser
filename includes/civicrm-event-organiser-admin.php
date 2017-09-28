@@ -2251,8 +2251,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			'delete' => $delete,
 		), true ) );
 
-		die();
-
 	}
 
 
@@ -2295,8 +2293,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			'civi_types' => $civi_types,
 			'eo_types' => $eo_types,
 		), true ) );
-
-		die();
 
 	}
 
@@ -2343,8 +2339,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			'all_venues' => $all_venues,
 			'all_locations' => $all_locations,
 		), true ) );
-
-		die();
 
 	}
 
