@@ -617,8 +617,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post.
-	 * @param int $occurrence_id The numeric ID of the occurrence.
+	 * @param int $post_id The numeric ID of the original parent event.
+	 * @param int $occurrence_id The numeric ID of the occurrence being broken.
 	 */
 	public function pre_break_occurrence( $post_id, $occurrence_id ) {
 
@@ -642,6 +642,30 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// remove it from the correspondences for this post
 		$this->plugin->db->clear_event_correspondence( $post_id, $occurrence_id );
 
+		// do not copy across the '_civi_eo_civicrm_events' meta
+		add_filter( 'eventorganiser_breaking_occurrence_exclude_meta', array( $this, 'occurrence_exclude_meta' ), 10, 1 );
+
+	}
+
+
+
+	/**
+	 * When an occurrence is broken, do not copy the '_civi_eo_civicrm_events'
+	 * meta data.
+	 *
+	 * @since 0.4
+	 *
+	 * @param array $ignore_meta The existing array of meta keys to be ignored.
+	 * @return array $ignore_meta The modified array of meta keys to be ignored.
+	 */
+	public function occurrence_exclude_meta( $ignore_meta ) {
+
+		// add our meta key
+		$ignore_meta[] = '_civi_eo_civicrm_events';
+
+		// --<
+		return $ignore_meta;
+
 	}
 
 
@@ -657,16 +681,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function occurrence_broken( $post_id, $occurrence_id, $new_event_id ) {
 
-		/**
+		/*
 		 * EO transfers across all existing post meta, so we don't need to update
-		 * registration or event_role values.
+		 * registration or event_role values (for example).
 		 *
-		 * However, because the correspondence data is also copied over, we have to
-		 * delete and rebuild it.
+		 * We prevent the correspondence data from being copied over by filtering
+		 * EO's "ignore array", which means we have to rebuild it here.
 		 */
-
-		// clear existing correspondences
-		$this->plugin->db->clear_event_correspondences( $new_event_id );
 
 		// build new correspondences array
 		$correspondences = array( $occurrence_id => $this->temp_civi_event_id );

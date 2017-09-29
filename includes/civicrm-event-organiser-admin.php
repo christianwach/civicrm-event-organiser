@@ -1700,16 +1700,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function get_all_civi_to_eo_correspondences() {
 
-		// store once
-		static $eo_event_data;
-
-		// have we done this?
-		if ( ! isset( $eo_event_data ) ) {
-
-			// get option
-			$eo_event_data = $this->option_get( 'civi_eo_civi_event_data', array() );
-
-		}
+		// get option
+		$eo_event_data = $this->option_get( 'civi_eo_civi_event_data', array() );
 
 		// --<
 		return $eo_event_data;
