@@ -2000,6 +2000,21 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
 		}
 
+		/**
+		 * Filter the start date.
+		 *
+		 * This filter can be used (for example) to force "Register" links to appear
+		 * on the front end by passing back a DateTime object for the CiviEvent's
+		 * 'created_date'. It's better to set the actual dates, of course.
+		 *
+		 * @since 0.4
+		 *
+		 * @param obj $start The starting DateTime object for a CiviEvent.
+		 * @param array $civi_event The array of data that represents a CiviEvent.
+		 * @return obj $start The modified starting DateTime object for a CiviEvent.
+		 */
+		$start = apply_filters( 'civicrm_event_organiser_registration_start_date', $start, $civi_event );
+
 		// bail early if not started yet
 		if ( $now < $start ) {
 			return $closed;
