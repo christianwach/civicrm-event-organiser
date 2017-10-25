@@ -1,7 +1,7 @@
 <?php
 
 /**
- * CiviCRM Event Organiser Taxonomy Class.
+ * CiviCRM Event Organiser Term_Description Class.
  *
  * This class replicates the functionality of WooDojo HTML Term Description
  * plugin since that plugin has now been withdrawn. It was described thus:
@@ -14,7 +14,7 @@
  *
  * @since 0.2.1
  */
-class CiviCRM_WP_Event_Organiser_Taxonomy {
+class CiviCRM_WP_Event_Organiser_Term_Description {
 
 	/**
 	 * Plugin (calling) object.
