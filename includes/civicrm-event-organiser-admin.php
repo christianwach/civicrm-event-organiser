@@ -76,37 +76,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function __construct() {
 
-		// is this the back end?
-		if ( is_admin() ) {
-
-			// multisite?
-			if ( $this->is_network_activated() ) {
-
-				// add menu to Network submenu
-				add_action( 'network_admin_menu', array( $this, 'admin_menu' ), 30 );
-
-			} else {
-
-				// add menu to Settings submenu
-				add_action( 'admin_menu', array( $this, 'admin_menu' ), 30 );
-
-			}
-
-			// override "no category" option
-			add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'force_taxonomy' ), 30 );
-
-			// add AJAX handlers
-			add_action( 'wp_ajax_sync_categories_to_types', array( $this, 'stepped_sync_categories_to_types' ) );
-			add_action( 'wp_ajax_sync_types_to_categories', array( $this, 'stepped_sync_types_to_categories' ) );
-			add_action( 'wp_ajax_sync_venues_to_locations', array( $this, 'stepped_sync_venues_to_locations' ) );
-			add_action( 'wp_ajax_sync_locations_to_venues', array( $this, 'stepped_sync_locations_to_venues' ) );
-			add_action( 'wp_ajax_sync_events_eo_to_civi', array( $this, 'stepped_sync_events_eo_to_civi' ) );
-			add_action( 'wp_ajax_sync_events_civi_to_eo', array( $this, 'stepped_sync_events_civi_to_eo' ) );
-
-			// initialise
-			add_action( 'plugins_loaded', array( $this, 'initialise' ) );
-
-		}
+		// initialise
+		add_action( 'civicrm_wp_event_organiser_loaded', array( $this, 'initialise' ) );
 
 	}
 
@@ -148,6 +119,44 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$this->store_version();
 
 		}
+
+		// register hooks
+		$this->register_hooks();
+
+	}
+
+
+
+	/**
+	 * Register hooks on plugin init.
+	 *
+	 * @since 0.4.1
+	 */
+	public function register_hooks() {
+
+		// multisite?
+		if ( $this->is_network_activated() ) {
+
+			// add menu to Network submenu
+			add_action( 'network_admin_menu', array( $this, 'admin_menu' ), 30 );
+
+		} else {
+
+			// add menu to Settings submenu
+			add_action( 'admin_menu', array( $this, 'admin_menu' ), 30 );
+
+		}
+
+		// override "no category" option
+		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'force_taxonomy' ), 30 );
+
+		// add AJAX handlers
+		add_action( 'wp_ajax_sync_categories_to_types', array( $this, 'stepped_sync_categories_to_types' ) );
+		add_action( 'wp_ajax_sync_types_to_categories', array( $this, 'stepped_sync_types_to_categories' ) );
+		add_action( 'wp_ajax_sync_venues_to_locations', array( $this, 'stepped_sync_venues_to_locations' ) );
+		add_action( 'wp_ajax_sync_locations_to_venues', array( $this, 'stepped_sync_locations_to_venues' ) );
+		add_action( 'wp_ajax_sync_events_eo_to_civi', array( $this, 'stepped_sync_events_eo_to_civi' ) );
+		add_action( 'wp_ajax_sync_events_civi_to_eo', array( $this, 'stepped_sync_events_civi_to_eo' ) );
 
 	}
 
@@ -203,6 +212,26 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			__( 'CiviCRM Event Organiser needs your attention. Please visit the <a href="%s">Settings Page</a>.', 'civicrm-event-organiser' ),
 			$urls['settings']
 		);
+
+		// show it
+		echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p></div>';
+
+	}
+
+
+
+	/**
+	 * Utility to add a message to admin pages when Event Organiser is not found.
+	 *
+	 * @since 0.4.1
+	 */
+	public function dependency_alert() {
+
+		// check user permissions
+		if ( ! current_user_can( 'manage_options' ) ) return;
+
+		// construct message
+		$message = __( 'CiviCRM Event Organiser requires Event Organiser version 3 or higher.', 'civicrm-event-organiser' );
 
 		// show it
 		echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p></div>';

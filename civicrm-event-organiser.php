@@ -124,6 +124,16 @@ class CiviCRM_WP_Event_Organiser {
 		// set up objects and references
 		$this->setup_objects();
 
+		/**
+		 * Broadcast that this plugin is now loaded.
+		 *
+		 * This action is used internally by this plugin to initialise its objects
+		 * and ensures that all includes and setup has occurred beforehand.
+		 *
+		 * @since 0.4.1
+		 */
+		do_action( 'civicrm_wp_event_organiser_loaded' );
+
 	}
 
 

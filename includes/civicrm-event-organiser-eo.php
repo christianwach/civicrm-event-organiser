@@ -36,8 +36,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function __construct() {
 
-		// register hooks
-		$this->register_hooks();
+		// add Event Organiser hooks when plugin is loaded
+		add_action( 'civicrm_wp_event_organiser_loaded', array( $this, 'register_hooks' ) );
 
 	}
 
@@ -133,23 +133,26 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// only check once
 		static $eo_active = false;
-		if ( $eo_active ) { return true; }
+		if ( $eo_active ) return true;
 
 		// access Event Organiser option
 		$installed_version = get_option( 'eventorganiser_version', 'etueue' );
 
-		// this plugin will not work without EO
-		if ( $installed_version === 'etueue' ) {
-			wp_die( '<p>' . __( 'Event Organiser plugin is required', 'civicrm-event-organiser' ) . '</p>' );
-		}
+		// this plugin will not work without Event Organiser v3+
+		if ( $installed_version === 'etueue' OR version_compare( $installed_version, '3', '<' ) ) {
 
-		// we need version 3 at least
-		if ( version_compare( $installed_version, '3', '<' ) ) {
-			wp_die( '<p>' . __( 'Event Organiser version 3 or higher is required', 'civicrm-event-organiser' ) . '</p>' );
-		}
+			// let's show an admin notice
+			add_action( 'admin_notices', array( $this->plugin->db, 'dependency_alert' ) );
 
-		// set flag
-		$eo_active = true;
+			// set flag
+			$eo_active = false;
+
+		} else {
+
+			// set flag
+			$eo_active = true;
+
+		}
 
 		// --<
 		return $eo_active;

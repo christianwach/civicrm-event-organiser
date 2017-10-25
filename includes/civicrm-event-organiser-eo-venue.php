@@ -27,8 +27,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 */
 	public function __construct() {
 
-		// register hooks
-		$this->register_hooks();
+		// add hooks when plugin is loaded
+		add_action( 'civicrm_wp_event_organiser_loaded', array( $this, 'register_hooks' ) );
 
 	}
 
@@ -58,7 +58,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function register_hooks() {
 
 		// check for Event Organiser
-		if ( ! $this->is_active() ) return;
+		if ( ! $this->plugin->eo->is_active() ) return;
 
 		// intercept create venue
 		add_action( 'eventorganiser_insert_venue', array( $this, 'insert_venue' ), 10, 1 );
@@ -82,42 +82,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// intercept terms after EO does
 		add_filter( 'get_terms', array( $this, 'update_venue_meta_cache' ), 20, 2 );
 		add_filter( 'get_event-venue', array( $this, 'update_venue_meta_cache' ), 20, 2 );
-
-	}
-
-
-
-	/**
-	 * Utility to check if Event Organiser is present and active.
-	 *
-	 * @since 0.1
-	 *
-	 * @return bool $eo_active True if EO present and active, false otherwise.
-	 */
-	public function is_active() {
-
-		// only check once
-		static $eo_active = false;
-		if ( $eo_active ) { return true; }
-
-		// access Event Organiser option
-		$installed_version = get_option( 'eventorganiser_version', 'etueue' );
-
-		// this plugin will not work without EO
-		if ( $installed_version === 'etueue' ) {
-			wp_die( '<p>' . __( 'Event Organiser plugin is required', 'civicrm-event-organiser' ) . '</p>' );
-		}
-
-		// we need version 3 at least
-		if ( version_compare( $installed_version, '3', '<' ) ) {
-			wp_die( '<p>' . __( 'Event Organiser version 3 or higher is required', 'civicrm-event-organiser' ) . '</p>' );
-		}
-
-		// set flag
-		$eo_active = true;
-
-		// --<
-		return $eo_active;
 
 	}
 
