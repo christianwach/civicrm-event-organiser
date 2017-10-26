@@ -488,11 +488,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		);
 
 		// get all CiviEvent types and error check
-		$all_types = $this->plugin->civi->get_event_types();
+		$all_types = $this->plugin->taxonomy->get_event_types();
 		if ( $all_types === false ) $all_types['values'] = array();
 
 		// get all EO event category terms
-		$all_terms = $this->plugin->eo->get_event_categories();
+		$all_terms = $this->plugin->taxonomy->get_event_categories();
 
 		// get all Civi Event locations and error check
 		$all_locations = $this->plugin->civi->get_all_locations();
@@ -625,7 +625,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$roles = $this->plugin->civi->get_participant_roles_select( $event = null );
 
 		// get all event types
-		$types = $this->plugin->civi->get_event_types_select();
+		$types = $this->plugin->taxonomy->get_event_types_select();
 
 		// get all event registration profiles
 		$profiles = $this->plugin->civi->get_registration_profiles_select();
@@ -661,7 +661,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$roles = $this->plugin->civi->get_participant_roles_select( $event = null );
 
 		// get all event types
-		$types = $this->plugin->civi->get_event_types_select();
+		$types = $this->plugin->taxonomy->get_event_types_select();
 
 		// include template file
 		include( CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/manual-sync.php' );
@@ -968,7 +968,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			foreach( $terms AS $term ) {
 
 				// update CiviEvent term - or create if it doesn't exist
-				$civi_event_type_id = $this->plugin->civi->update_event_type( $term );
+				$civi_event_type_id = $this->plugin->taxonomy->update_event_type( $term );
 
 				// next on failure
 				if ( $civi_event_type_id === false ) {
@@ -1031,7 +1031,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// get option group ID and error check
-		$opt_group_id = $this->plugin->civi->get_event_types_optgroup_id();
+		$opt_group_id = $this->plugin->taxonomy->get_event_types_optgroup_id();
 		if ( $opt_group_id !== false ) {
 
 			// get event types (descriptions will be present if not null)
@@ -1077,7 +1077,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			foreach( $types['values'] AS $type ) {
 
 				// update CiviEvent term - or create if it doesn't exist
-				$eo_term_id = $this->plugin->eo->update_term( $type );
+				$eo_term_id = $this->plugin->taxonomy->update_term( $type );
 
 				// next on failure
 				if ( $eo_term_id === false ) {
@@ -2304,10 +2304,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function show_eo_civi_taxonomies() {
 
 		// get all CiviEvent types
-		$civi_types = $this->plugin->civi->get_event_types();
+		$civi_types = $this->plugin->taxonomy->get_event_types();
 
 		// get all EO event category terms
-		$eo_types = $this->plugin->eo->get_event_categories();
+		$eo_types = $this->plugin->taxonomy->get_event_categories();
 
 		error_log( print_r( array(
 			'method' => __METHOD__,

@@ -78,6 +78,15 @@ class CiviCRM_WP_Event_Organiser {
 	public $eo_venue;
 
 	/**
+	 * Taxonomy Sync object.
+	 *
+	 * @since 0.4.2
+	 * @access public
+	 * @var object $taxonomy The taxonomy sync object.
+	 */
+	public $taxonomy;
+
+	/**
 	 * Term Description object.
 	 *
 	 * @since 0.2.1
@@ -151,14 +160,17 @@ class CiviCRM_WP_Event_Organiser {
 		// load our Admin/DB class
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-admin.php' );
 
-		// load our CiviCRM utility functions class
+		// load our CiviCRM class
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-civi.php' );
 
-		// load our Event Organiser utility functions class
+		// load our Event Organiser class
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo.php' );
 
-		// load our Event Organiser Venue utility functions class
+		// load our Event Organiser Venue Sync class
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo-venue.php' );
+
+		// load our Taxonomy Sync class
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-taxonomy.php' );
 
 		// load our template functions
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-functions.php' );
@@ -184,6 +196,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->civi = new CiviCRM_WP_Event_Organiser_CiviCRM;
 		$this->eo = new CiviCRM_WP_Event_Organiser_EO;
 		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue;
+		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy;
 
 		// store references
 		$this->term_html->set_references( $this );
@@ -191,6 +204,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->civi->set_references( $this );
 		$this->eo->set_references( $this );
 		$this->eo_venue->set_references( $this );
+		$this->taxonomy->set_references( $this );
 
 		// we're done
 		$done = true;
