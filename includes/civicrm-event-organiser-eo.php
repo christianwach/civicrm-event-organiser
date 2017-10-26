@@ -783,46 +783,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// show checkbox to people who can publish posts
 		if ( current_user_can( 'publish_posts' ) ) {
 
-			// do not allow sync by default
-			$can_be_synced = false;
+			// define sync options
+			$sync_options = '
+			<p class="civi_eo_event_desc">' . __( 'Choose whether or not to sync this event and (if the sequence has changed) whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ) . '</p>
 
-			// allow sync if this event has a category set
-			if ( has_term( '', $taxonomy = 'event-category', $event ) ) {
-				$can_be_synced = true;
-			}
+			<p>
+			<label for="civi_eo_event_sync">' . __( 'Sync this event with CiviCRM:', 'civicrm-event-organiser' ) . '</label>
+			<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
+			</p>
 
-			// does the EO event have enough data for us to sync?
-			if ( $can_be_synced ) {
+			<p>
+			<label for="civi_eo_event_delete_unused">' . __( 'Delete unused CiviEvents:', 'civicrm-event-organiser' ) . '</label>
+			<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
+			</p>
 
-				// define sync options
-				$sync_options = '
-				<p class="civi_eo_event_desc">' . __( 'Choose whether or not to sync this event and (if the sequence has changed) whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ) . '</p>
+			<hr />
 
-				<p>
-				<label for="civi_eo_event_sync">' . __( 'Sync this event with CiviCRM:', 'civicrm-event-organiser' ) . '</label>
-				<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
-				</p>
-
-				<p>
-				<label for="civi_eo_event_delete_unused">' . __( 'Delete unused CiviEvents:', 'civicrm-event-organiser' ) . '</label>
-				<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
-				</p>
-
-				<hr />
-
-				';
-
-			} else {
-
-				// show helpful message
-				$sync_options = '
-				<p class="civi_eo_event_desc">' . __( 'You will be able to sync this event to CiviCRM when you have set an event category.', 'civicrm-event-organiser' ) . '</p>
-
-				<hr />
-
-				';
-
-			}
+			';
 
 		}
 
