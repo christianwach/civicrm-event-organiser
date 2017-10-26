@@ -74,6 +74,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// hide "Parent Category" dropdown in event category metaboxes
 		add_action( 'add_meta_boxes_event', array( $this, 'terms_dropdown_intercept' ), 3 );
 
+		// ensure new events have the default term checked
+		add_filter( 'wp_terms_checklist_args', array( $this, 'term_default_checked' ), 10, 2 );
+
 		// intercept CiviCRM event type enable/disable
 		//add_action( 'civicrm_enableDisable', array( $this, 'event_type_toggle' ), 10, 3 );
 
@@ -530,6 +533,63 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// clear
 		return '';
+
+	}
+
+
+
+	/**
+	 * Make sure new EO Events have the default term checked if no term has been
+	 * chosen - e.g. on the "Add New Event" screen.
+	 *
+	 * @since 0.4.2
+	 *
+	 * @param array $args An array of arguments.
+	 * @param int $post_id The post ID.
+	 */
+	public function term_default_checked( $args, $post_id ) {
+
+		// only modify Event Organiser category
+		if ( $args['taxonomy'] != 'event-category' ) return $args;
+
+		// if this is a post
+		if ( $post_id ) {
+
+			// get existing terms
+			$args['selected_cats'] = wp_get_object_terms(
+				$post_id,
+				$args['taxonomy'],
+				array_merge( $args, array( 'fields' => 'ids' ) )
+			);
+
+			// bail if a category is already set
+			if ( ! empty( $args['selected_cats'] ) ) return $args;
+
+		}
+
+		// get the default event type value
+		$type_value = $this->get_default_event_type_value();
+
+		// bail if something went wrong
+		if ( $type_value === false ) return $args;
+
+		// get the event type data
+		$type = $this->get_event_type_by_value( $type_value );
+
+		// bail if something went wrong
+		if ( $type === false ) return $args;
+
+		// get corresponding term ID
+		$term_id = $this->get_term_id( $type );
+
+		// bail if something went wrong
+		if ( $term_id === false ) return $args;
+
+		// set argument
+		$args['selected_cats'] = array( $term_id );
+
+		// --<
+		return $args;
 
 	}
 
