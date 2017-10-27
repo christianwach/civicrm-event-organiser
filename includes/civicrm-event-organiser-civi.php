@@ -194,9 +194,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( is_wp_error( $event_id ) ) {
 
 			// log error
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'error' => $event_id->get_error_message(),
+				'backtrace' => $trace,
 			), true ) );
 
 			// kick out
@@ -258,9 +261,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( is_wp_error( $event_id ) ) {
 
 			// log error first
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'error' => $event_id->get_error_message(),
+				'backtrace' => $trace,
 			), true ) );
 
 			// bail
@@ -457,10 +463,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			if ( isset( $result['is_error'] ) AND $result['is_error'] == '1' ) {
 
 				// log error
+				$e = new Exception;
+				$trace = $e->getTraceAsString();
 				error_log( print_r( array(
 					'method' => __METHOD__,
 					'message' => $result['error_message'],
 					'civi_event' => $civi_event,
+					'backtrace' => $trace,
 				), true ) );
 
 				continue;
@@ -593,10 +602,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				if ( $result['is_error'] == '1' ) {
 
 					// log error
+					$e = new Exception;
+					$trace = $e->getTraceAsString();
 					error_log( print_r( array(
 						'method' => __METHOD__,
 						'message' => $result['error_message'],
 						'civi_event' => $civi_event,
+						'backtrace' => $trace,
 					), true ) );
 
 					continue;
@@ -678,10 +690,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				if ( $result['is_error'] == '1' ) {
 
 					// log error
+					$e = new Exception;
+					$trace = $e->getTraceAsString();
 					error_log( print_r( array(
 						'method' => __METHOD__,
 						'message' => $result['error_message'],
 						'civi_event' => $civi_event,
+						'backtrace' => $trace,
 					), true ) );
 
 					continue;
@@ -721,10 +736,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				if ( $result['is_error'] == '1' ) {
 
 					// log failures and skip to next
+					$e = new Exception;
+					$trace = $e->getTraceAsString();
 					error_log( print_r( array(
 						'method' => __METHOD__,
 						'message' => $result['error_message'],
 						'civi_event' => $civi_event,
+						'backtrace' => $trace,
 					), true ) );
 
 					continue;
@@ -947,10 +965,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( $events['is_error'] == '1' ) {
 
 			// log error
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $events['error_message'],
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -1002,10 +1023,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			if ( $result['is_error'] == '1' ) {
 
 				// log failures and skip to next
+				$e = new Exception;
+				$trace = $e->getTraceAsString();
 				error_log( print_r( array(
 					'method' => __METHOD__,
 					'message' => $result['error_message'],
 					'params' => $params,
+					'backtrace' => $trace,
 				), true ) );
 
 				continue;
@@ -1055,10 +1079,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( $result['is_error'] == '1' ) {
 
 			// log error
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'civi_event' => $civi_event,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -1099,10 +1126,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( isset( $event['is_error'] ) AND $event['is_error'] == '1' ) {
 
 			// log error
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $event['error_message'],
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -1299,10 +1329,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// log failure and return boolean false
 		if ( $result['is_error'] == '1' ) {
 
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -1364,11 +1397,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// log failure and return boolean false
 		if ( $location['is_error'] == '1' ) {
 
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => __( 'Could not get CiviCRM Location by ID', 'civicrm-event-organiser' ),
 				'civicrm' => $location['error_message'],
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -1409,11 +1445,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			if ( isset( $location['is_error'] ) AND $location['is_error'] == '1' ) {
 
 				// log error
+				$e = new Exception;
+				$trace = $e->getTraceAsString();
 				error_log( print_r( array(
 					'method' => __METHOD__,
 					'message' => __( 'Could not get CiviCRM Location by Lat/Long', 'civicrm-event-organiser' ),
 					'civicrm' => $location['error_message'],
 					'params' => $params,
+					'backtrace' => $trace,
 				), true ) );
 
 				// --<
@@ -1424,12 +1463,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// return the result if we get one
 			if ( absint( $location['count'] ) > 0 AND is_array( $location['values'] ) ) {
 
+				$e = new Exception;
+				$trace = $e->getTraceAsString();
 				error_log( print_r( array(
 					'method' => __METHOD__,
 					'procedure' => 'found by location',
 					'venue' => $venue,
 					'params' => $params,
 					'location' => $location,
+					'backtrace' => $trace,
 				), true ) );
 
 				// found by location
@@ -1481,10 +1523,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// log failure and return boolean false
 		if ( $locations['is_error'] == '1' ) {
 
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $locations['error_message'],
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -1556,10 +1601,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// log failure and return boolean false
 		if ( $result['is_error'] == '1' || $result['count'] != 1 ) {
 
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -1694,10 +1742,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		if ( isset( $location['is_error'] ) AND $location['is_error'] == '1' ) {
 
 			// log failed location
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $location['error_message'],
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -2084,11 +2135,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			if ( isset( $result['is_error'] ) AND $result['is_error'] == '1' ) {
 
 				// log error
+				$e = new Exception;
+				$trace = $e->getTraceAsString();
 				error_log( print_r( array(
 					'method' => __METHOD__,
 					'message' => $result['error_message'],
 					'civi_event' => $civi_event,
 					'params' => $params,
+					'backtrace' => $trace,
 				), true ) );
 
 			}
@@ -2210,11 +2264,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// error check
 		if ( isset( $result['is_error'] ) AND $result['is_error'] == '1' ) {
 
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'result' => $result,
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<

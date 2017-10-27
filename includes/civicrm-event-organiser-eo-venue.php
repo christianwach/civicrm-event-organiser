@@ -309,10 +309,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		if ( empty( $location['address']['street_address'] ) ) {
 
 			// log and move on
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => __( 'Street Address is empty.', 'civicrm-event-organiser' ),
 				'location' => $location,
+				'backtrace' => $trace,
 			), true ) );
 
 		}
@@ -386,11 +389,14 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) {
 
 			// log and bail
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => __( 'Venue not created.', 'civicrm-event-organiser' ),
 				'result' => $result,
 				'location' => $location,
+				'backtrace' => $trace,
 			), true ) );
 			return;
 

@@ -792,10 +792,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// error check
 		if ( $type['is_error'] == '1' ) {
 
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $type['error_message'],
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -851,10 +854,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// error check
 		if ( $result['is_error'] == '1' ) {
 
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'params' => $params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -912,10 +918,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			 */
 
 			/*
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $type['error_message'],
 				'params' => $types_params,
+				'backtrace' => $trace,
 			), true ) );
 			*/
 
@@ -982,11 +991,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// error check
 		if ( isset( $type['is_error'] ) AND $type['is_error'] == '1' ) {
 
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $type['error_message'],
 				'type' => $type,
 				'params' => $types_params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<
@@ -1037,11 +1049,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// error check
 		if ( $types['is_error'] == '1' ) {
 
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $types['error_message'],
 				'types' => $types,
 				'params' => $types_params,
+				'backtrace' => $trace,
 			), true ) );
 
 			// --<

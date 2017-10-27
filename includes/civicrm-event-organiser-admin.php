@@ -974,10 +974,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				if ( $civi_event_type_id === false ) {
 
 					// log failed event term first
+					$e = new Exception;
+					$trace = $e->getTraceAsString();
 					error_log( print_r( array(
 						'method' => __METHOD__,
 						'message' => __( 'Could not sync Event Term', 'civicrm-event-organiser' ),
 						'term' => $term,
+						'backtrace' => $trace,
 					), true ) );
 
 					continue;
@@ -1083,10 +1086,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				if ( $eo_term_id === false ) {
 
 					// log failed event type first
+					$e = new Exception;
+					$trace = $e->getTraceAsString();
 					error_log( print_r( array(
 						'method' => __METHOD__,
 						'message' => __( 'Could not sync Event Type', 'civicrm-event-organiser' ),
 						'type' => $type,
+						'backtrace' => $trace,
 					), true ) );
 
 					continue;
