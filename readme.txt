@@ -1,6 +1,6 @@
 === CiviCRM Event Organiser ===
 Contributors: needle
-Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PZSKM8T5ZP3SC
+Donate link: https://www.paypal.me/interactivist
 Tags: civicrm, event organiser, events, sync
 Requires at least: 4.4
 Tested up to: 4.8
