@@ -294,7 +294,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// define description if present
 		$description = isset( $type['description'] ) ? $type['description'] : '';
 
-		// construst args
+		// construct args
 		$args = array(
 			'slug' => sanitize_title( $type['name'] ),
 			'description'=> $description,
