@@ -69,7 +69,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		add_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20, 4 );
 
 		// filter Radio Buttons for Taxonomies null term insertion
-		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'skip_null_term' ), 20, 2 );
+		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'skip_null_term' ), 20, 1 );
+		add_filter( 'radio_buttons_for_taxonomies_no_term_event-category', array( $this, 'skip_null_term' ), 20, 1 );
 
 		// hide "Parent Category" dropdown in event category metaboxes
 		add_action( 'add_meta_boxes_event', array( $this, 'terms_dropdown_intercept' ), 3 );
