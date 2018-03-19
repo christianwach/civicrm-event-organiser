@@ -445,14 +445,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
-		// assume the CiviEvent is live
-		$post_data['post_status'] = 'publish';
-
-		// make the EO event a draft if the CiviEvent is not active
-		if ( $civi_event['is_active'] == 0 ) {
-			$post_data['post_status'] = 'draft';
-		}
-
 		// init venue as undefined
 		$venue_id = 0;
 
@@ -512,8 +504,27 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'event-category' => $terms,
 		);
 
+		// assume the CiviEvent is live
+		$post_data['post_status'] = 'publish';
+
 		// do we have a post ID for this event?
 		$eo_post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $civi_event['id'] );
+
+		// if the event already exists
+		if ( $eo_post_id !== false ) {
+
+			// get event data
+			$eo_event = get_post( $eo_post_id );
+
+			// set existing post status
+			$post_data['post_status'] = $eo_event->post_status;
+
+		}
+
+		// make the EO event a draft if the CiviEvent is not active
+		if ( $civi_event['is_active'] == 0 ) {
+			$post_data['post_status'] = 'draft';
+		}
 
 		// remove hooks
 		remove_action( 'wp_insert_post', array( $this, 'insert_post' ), 10 );
