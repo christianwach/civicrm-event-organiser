@@ -504,26 +504,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'event-category' => $terms,
 		);
 
-		// assume the CiviEvent is live
+		// default to published
 		$post_data['post_status'] = 'publish';
-
-		// do we have a post ID for this event?
-		$eo_post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $civi_event['id'] );
-
-		// if the event already exists
-		if ( $eo_post_id !== false ) {
-
-			// get event data
-			$eo_event = get_post( $eo_post_id );
-
-			// set existing post status
-			$post_data['post_status'] = $eo_event->post_status;
-
-		}
 
 		// make the EO event a draft if the CiviEvent is not active
 		if ( $civi_event['is_active'] == 0 ) {
 			$post_data['post_status'] = 'draft';
+		}
+
+		// do we have a post ID for this event?
+		$eo_post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $civi_event['id'] );
+
+		// regardless of CiviEvent status: if the EO event is private, keep it that way
+		if ( $eo_post_id !== false ) {
+			$eo_event = get_post( $eo_post_id );
+			if ( $eo_event->post_status == 'private' ) {
+				$post_data['post_status'] = $eo_event->post_status;
+			}
 		}
 
 		// remove hooks
