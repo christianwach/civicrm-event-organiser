@@ -2016,14 +2016,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	/**
 	 * Check if Registration is closed for a given CiviEvent.
 	 *
-	 * How this seems to work in CiviCRM is as follows: if the CiviEvent does not
-	 * have "Registration Start Date" or "Registration End Date" specifically set,
-	 * then it is assumed that registration opens when the CiviEvent begins and
-	 * closes when the event is over.
+	 * How this works in CiviCRM is as follows: if a CiviEvent has "Registration
+	 * Start Date" and "Registration End Date" set, then registration is open
+	 * if now() is between those two datetimes. There is a special case to check
+	 * for - when an event has ended but "Registration End Date" is specifically
+	 * set to allow registration after the event has ended.
 	 *
-	 * As a result, we check for the existence of "Registration Start Date" and
-	 * "Registration End Date" first, then fall back to the CiviEvent's dates if
-	 * they are not set.
+	 * @see CRM_Event_BAO_Event::validRegistrationDate()
 	 *
 	 * @since 0.3.4
 	 *
@@ -2032,53 +2031,81 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function is_registration_closed( $civi_event ) {
 
-		// assume closed
-		$closed = true;
+		// bail if online registration is not enabled
+		if ( ! isset( $civi_event['is_online_registration'] ) ) return true;
+		if ( $civi_event['is_online_registration'] != 1 ) return true;
 
 		// gotta have a reference to now
 		$now = new DateTime( 'now', eo_get_blog_timezone() );
 
-		// is registration open yet?
-		if ( isset( $civi_event['registration_start_date'] ) ) {
-			$start = new DateTime( $civi_event['registration_start_date'], eo_get_blog_timezone() );
-		} else {
-			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
+		// init registration start
+		$reg_start = false;
+
+		// override with registration start date if set
+		if ( ! empty( $civi_event['registration_start_date'] ) ) {
+			$reg_start = new DateTime( $civi_event['registration_start_date'], eo_get_blog_timezone() );
 		}
 
 		/**
-		 * Filter the start date.
-		 *
-		 * This filter can be used (for example) to force "Register" links to appear
-		 * on the front end by passing back a DateTime object for the CiviEvent's
-		 * 'created_date'. It's better to set the actual dates, of course.
+		 * Filter the registration start date.
 		 *
 		 * @since 0.4
 		 *
-		 * @param obj $start The starting DateTime object for a CiviEvent.
+		 * @param obj $reg_start The starting DateTime object for registration.
 		 * @param array $civi_event The array of data that represents a CiviEvent.
-		 * @return obj $start The modified starting DateTime object for a CiviEvent.
+		 * @return obj $reg_start The modified starting DateTime object for registration.
 		 */
-		$start = apply_filters( 'civicrm_event_organiser_registration_start_date', $start, $civi_event );
+		$reg_start = apply_filters( 'civicrm_event_organiser_registration_start_date', $reg_start, $civi_event );
 
-		// bail early if not started yet
-		if ( $now < $start ) {
-			return $closed;
+		// init registration end
+		$reg_end = false;
+
+		// override with registration end date if set
+		if ( ! empty( $civi_event['registration_end_date'] ) ) {
+			$reg_end = new DateTime( $civi_event['registration_end_date'], eo_get_blog_timezone() );
 		}
 
-		// is registration closed yet?
-		if ( isset( $civi_event['registration_end_date'] ) ) {
-			$end = new DateTime( $civi_event['registration_end_date'], eo_get_blog_timezone() );
-		} else {
-			$end = new DateTime( $civi_event['end_date'], eo_get_blog_timezone() );
+		/**
+		 * Filter the registration end date.
+		 *
+		 * @since 0.4.2
+		 *
+		 * @param obj $reg_end The ending DateTime object for registration.
+		 * @param array $civi_event The array of data that represents a CiviEvent.
+		 * @return obj $reg_end The modified ending DateTime object for registration.
+		 */
+		$reg_end = apply_filters( 'civicrm_event_organiser_registration_end_date', $reg_end, $civi_event );
+
+		// init event end
+		$event_end = false;
+
+		// override with event end date if set
+		if ( ! empty( $civi_event['end_date'] ) ) {
+			$event_end = new DateTime( $civi_event['end_date'], eo_get_blog_timezone() );
 		}
 
-		// bail if already ended
-		if ( $end < $now ) {
-			return $closed;
+		// assume open
+		$open = true;
+
+		// check if started yet
+		if ( $reg_start AND $reg_start >= $now ) {
+			$open = false;
+
+		// check if already ended
+		} elseif ( $reg_end AND $reg_end < $now ) {
+			$open = false;
+
+		// if the event has ended, registration may still be specifically open
+		} elseif ( $event_end AND $event_end < $now AND $reg_end === false ) {
+			$open = false;
+
 		}
 
-		// if we reach here, it's open
-		return false;
+		// flip for appropriate value
+		$closed = ! $open;
+
+		// --<
+		return $closed;
 
 	}
 
