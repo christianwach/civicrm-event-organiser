@@ -254,6 +254,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// get full event data
 		$updated_event = $this->get_event_by_id( $objectId );
 
+		// bail if not found
+		if ( $updated_event === false ) return;
+
 		// update the EO event
 		$event_id = $this->plugin->eo->update_event( $updated_event );
 
@@ -641,8 +644,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		//  get CiviEvents by ID
 		foreach ( $correspondences AS $occurrence_id => $civi_event_id ) {
 
+			// get full CiviEvent
+			$full_civi_event = $this->get_event_by_id( $civi_event_id );
+
+			// continue if not found
+			if ( $full_civi_event === false ) continue;
+
 			// add CiviEvent to array
-			$civi_events[] = $this->get_event_by_id( $civi_event_id );
+			$civi_events[] = $full_civi_event;
 
 		}
 
@@ -658,8 +667,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			//  get CiviEvents by ID
 			foreach ( $orphaned AS $civi_event_id ) {
 
+				// get full CiviEvent
+				$orphaned_civi_event = $this->get_event_by_id( $civi_event_id );
+
+				// continue if not found
+				if ( $orphaned_civi_event === false ) continue;
+
 				// add CiviEvent to array
-				$orphaned_civi_events[] = $this->get_event_by_id( $civi_event_id );
+				$orphaned_civi_events[] = $orphaned_civi_event;
 
 			}
 
@@ -1106,7 +1121,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.1
 	 *
 	 * @param int $civi_event_id The numeric ID of the CiviEvent.
-	 * @param array $event The CiviEvent location data.
+	 * @return array|bool $event The CiviEvent location data, or false if not found.
 	 */
 	public function get_event_by_id( $civi_event_id ) {
 
@@ -1960,7 +1975,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$civi_event = $this->get_event_by_id( array_shift( $civi_events ) );
 
 			// did we do okay?
-			if ( $civi_event['is_error'] == '0' AND $civi_event['is_online_registration'] == '1' ) {
+			if ( $civi_event !== false AND $civi_event['is_error'] == '0' AND $civi_event['is_online_registration'] == '1' ) {
 
 				// set checkbox to ticked
 				$default = ' checked="checked"';

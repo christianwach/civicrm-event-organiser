@@ -891,6 +891,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// get CiviEvent
 			$civi_event = $this->plugin->civi->get_event_by_id( $civi_event_id );
 
+			// continue if not found
+			if ( $civi_event === false ) continue;
+
 			// get DateTime object
 			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
 			$timestamp = $start->getTimestamp();

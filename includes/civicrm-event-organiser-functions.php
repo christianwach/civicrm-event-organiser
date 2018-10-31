@@ -114,6 +114,9 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		// get the full CiviEvent
 		$civi_event = $plugin->civi->get_event_by_id( $civi_event_id );
 
+		// continue if not found
+		if ( $civi_event === false ) continue;
+
 		// skip to next if registration is not open
 		if ( $plugin->civi->is_registration_closed( $civi_event ) ) continue;
 
