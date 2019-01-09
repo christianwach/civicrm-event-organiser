@@ -34,7 +34,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 */
 	public function __construct() {
 
-		// register hooks on admin init
+		// Register hooks on admin init.
 		add_action( 'admin_init', array( $this, 'register_hooks' ) );
 
 	}
@@ -50,7 +50,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 */
 	public function set_references( $parent ) {
 
-		// store
+		// Store reference.
 		$this->plugin = $parent;
 
 	}
@@ -64,17 +64,17 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 */
 	public function register_hooks() {
 
-		// look for an existing WooDojo HTML Term Description install
+		// Look for an existing WooDojo HTML Term Description install.
 		if ( class_exists( 'WooDojo_HTML_Term_Description' ) ) return;
 
-		// bail if user doesn't have the "unfiltered_html" capability
+		// Bail if user doesn't have the "unfiltered_html" capability.
 		if ( ! current_user_can( 'unfiltered_html' ) ) return;
 
-		// allow HTML in term descriptions
+		// Allow HTML in term descriptions.
 		remove_filter( 'pre_term_description', 'wp_filter_kses' );
 		remove_filter( 'term_description', 'wp_kses_data' );
 
-		// add TinyMCE to the Event Organiser taxonomy
+		// Add TinyMCE to the Event Organiser taxonomy.
 		add_action( 'event-category_edit_form_fields', array( $this, 'render_field_edit' ), 1, 2 );
 		add_action( 'event-category_add_form_fields', array( $this, 'render_field_add' ), 1, 1 );
 
@@ -161,7 +161,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 
 
 
-} // class ends
+} // Class ends.
 
 
 

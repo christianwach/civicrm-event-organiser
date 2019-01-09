@@ -13,23 +13,23 @@ NOTES
 
 
 
-// kick out if uninstall not called from WordPress
+// Kick out if uninstall not called from WordPress.
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit();
 
 
 
-// access plugin
+// Access plugin.
 global $civicrm_wp_event_organiser;
 
-// delete version
+// Delete version.
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_version' );
 
-// delete defaults
+// Delete defaults.
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_profile' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_role' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_type' );
 
-// delete data arrays
+// Delete data arrays.
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_civi_event_disabled' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_civi_event_data' );
 

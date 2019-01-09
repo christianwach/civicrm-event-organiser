@@ -34,7 +34,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 	 */
 	CiviCRM_Event_Organiser_Manual_Sync.settings = new function() {
 
-		// prevent reference collisions
+		// Prevent reference collisions.
 		var me = this;
 
 		/**
@@ -46,10 +46,10 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		 */
 		this.init = function() {
 
-			// init localisation
+			// Init localisation.
 			me.init_localisation();
 
-			// init settings
+			// Init settings.
 			me.init_settings();
 
 		};
@@ -65,7 +65,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 
 		};
 
-		// init localisation array
+		// Init localisation array.
 		me.localisation = [];
 
 		/**
@@ -91,7 +91,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 			return me.localisation[key][identifier];
 		};
 
-		// init settings array
+		// Init settings array.
 		me.settings = [];
 
 		/**
@@ -128,29 +128,29 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 	 */
 	function ProgressBar( options ) {
 
-		// private var prevents reference collisions
+		// Private var prevents reference collisions.
 		var me = this;
 
-		// assign properties
+		// Assign properties.
 		me.bar = $(options.bar);
 		me.label = $(options.label);
 
-		// assign labels
+		// Assign labels.
 		me.label_init = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( options.key, 'total' );
 		me.label_current = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( options.key, 'current' );
 		me.label_complete = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( options.key, 'complete' );
 		me.label_done = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( 'common', 'done' );
 
-		// get count
+		// Get count.
 		me.count = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( options.key, 'count' );
 
-		// the triggering button
+		// The triggering button.
 		me.button = $(options.button);
 
-		// the step setting
+		// The step setting.
 		me.step = options.step;
 
-		// the WordPress AJAX mthod token
+		// The WordPress AJAX mthod token.
 		me.action = options.action;
 
 		/**
@@ -160,24 +160,24 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		 */
 		me.button.on( 'click', function( event ) {
 
-			// prevent form submission
+			// Prevent form submission.
 			if ( event.preventDefault ) {
 				event.preventDefault();
 			}
 
-			// initialise progress bar
+			// Initialise progress bar.
 			me.bar.progressbar({
 				value: false,
 				max: me.count
 			});
 
-			// show progress bar if not already shown
+			// Show progress bar if not already shown.
 			me.bar.show();
 
-			// initialise progress bar label
+			// Initialise progress bar label.
 			me.label.html( me.label_init.replace( '{{total}}', me.count ) );
 
-			// send
+			// Send.
 			me.send();
 
 		});
@@ -191,32 +191,32 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		 */
 		this.update = function( data ) {
 
-			// declare vars
+			// Declare vars.
 			var val;
 
-			// are we still in progress?
+			// Are we still in progress?
 			if ( data.finished == 'false' ) {
 
-				// get current value of progress bar
+				// Get current value of progress bar.
 				val = me.bar.progressbar( 'value' ) || 0;
 
-				// update progress bar label
+				// Update progress bar label.
 				me.label.html(
 					me.label_complete.replace( '{{from}}', data.from ).replace( '{{to}}', data.to )
 				);
 
-				// update progress bar
+				// Update progress bar.
 				me.bar.progressbar( 'value', val + CiviCRM_Event_Organiser_Manual_Sync.settings.get_setting( me.step ) );
 
-				// trigger next batch
+				// Trigger next batch.
 				me.send();
 
 			} else {
 
-				// update progress bar label
+				// Update progress bar label.
 				me.label.html( me.label_done );
 
-				// hide the progress bar
+				// Hide the progress bar.
 				setTimeout(function () {
 					me.bar.hide();
 				}, 2000 );
@@ -232,31 +232,31 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		 */
 		this.send = function() {
 
-			// use jQuery post
+			// Use jQuery post.
 			$.post(
 
-				// URL to post to
+				// URL to post to.
 				CiviCRM_Event_Organiser_Manual_Sync.settings.get_setting( 'ajax_url' ),
 
 				{
 
-					// token received by WordPress
+					// Token received by WordPress.
 					action: me.action
 
 				},
 
-				// callback
+				// Callback.
 				function( data, textStatus ) {
 
-					// if success
+					// If success.
 					if ( textStatus == 'success' ) {
 
-						// update progress bar
+						// Update progress bar.
 						me.update( data );
 
 					} else {
 
-						// show error
+						// Show error.
 						if ( console.log ) {
 							console.log( textStatus );
 						}
@@ -265,7 +265,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 
 				},
 
-				// expected format
+				// Expected format.
 				'json'
 
 			);
@@ -281,7 +281,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 	 */
 	CiviCRM_Event_Organiser_Manual_Sync.progress_bar = new function() {
 
-		// prevent reference collisions
+		// Prevent reference collisions.
 		var me = this;
 
 		/**
@@ -304,7 +304,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		 */
 		this.dom_ready = function() {
 
-			// set up instance
+			// Set up instance.
 			me.setup();
 
 		};
@@ -316,7 +316,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		 */
 		this.setup = function() {
 
-			// EO Category Terms to CiviCRM Event Types
+			// EO Category Terms to CiviCRM Event Types.
 			me.tax_eo_to_civi = new ProgressBar({
 				bar: '#progress-bar-tax-eo-to-civi',
 				label: '#progress-bar-tax-eo-to-civi .progress-label',
@@ -326,7 +326,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 				action: 'sync_categories_to_types'
 			});
 
-			// CiviCRM Event Types to EO Category Terms
+			// CiviCRM Event Types to EO Category Terms.
 			me.tax_civi_to_eo = new ProgressBar({
 				bar: '#progress-bar-tax-civi-to-eo',
 				label: '#progress-bar-tax-civi-to-eo .progress-label',
@@ -336,7 +336,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 				action: 'sync_types_to_categories'
 			});
 
-			// EO Venues to CiviCRM Locations
+			// EO Venues to CiviCRM Locations.
 			me.venue_eo_to_civi = new ProgressBar({
 				bar: '#progress-bar-venue-eo-to-civi',
 				label: '#progress-bar-venue-eo-to-civi .progress-label',
@@ -346,7 +346,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 				action: 'sync_venues_to_locations'
 			});
 
-			// CiviCRM Locations to EO Venues
+			// CiviCRM Locations to EO Venues.
 			me.venue_civi_to_eo = new ProgressBar({
 				bar: '#progress-bar-venue-civi-to-eo',
 				label: '#progress-bar-venue-civi-to-eo .progress-label',
@@ -356,7 +356,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 				action: 'sync_locations_to_venues'
 			});
 
-			// EO Events to CiviCRM Events
+			// EO Events to CiviCRM Events.
 			me.event_eo_to_civi = new ProgressBar({
 				bar: '#progress-bar-event-eo-to-civi',
 				label: '#progress-bar-event-eo-to-civi .progress-label',
@@ -366,7 +366,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 				action: 'sync_events_eo_to_civi'
 			});
 
-			// CiviCRM Events to EO Events
+			// CiviCRM Events to EO Events.
 			me.event_civi_to_eo = new ProgressBar({
 				bar: '#progress-bar-event-civi-to-eo',
 				label: '#progress-bar-event-civi-to-eo .progress-label',
@@ -380,10 +380,10 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 
 	};
 
-	// init settings
+	// Init settings.
 	CiviCRM_Event_Organiser_Manual_Sync.settings.init();
 
-	// init Progress Bar
+	// Init Progress Bar.
 	CiviCRM_Event_Organiser_Manual_Sync.progress_bar.init();
 
 } )( jQuery );
@@ -397,13 +397,13 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
  */
 jQuery(document).ready(function($) {
 
-	// The DOM is loaded now
+	// The DOM is loaded now.
 	CiviCRM_Event_Organiser_Manual_Sync.settings.dom_ready();
 
-	// The DOM is loaded now
+	// The DOM is loaded now.
 	CiviCRM_Event_Organiser_Manual_Sync.progress_bar.dom_ready();
 
-}); // end document.ready()
+}); // End document.ready()
 
 
 

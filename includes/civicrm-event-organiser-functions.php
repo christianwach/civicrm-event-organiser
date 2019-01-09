@@ -25,39 +25,39 @@
  */
 function civicrm_event_organiser_register_links( $post_id = null ) {
 
-	// get links array
+	// Get links array.
 	$links = civicrm_event_organiser_get_register_links( $post_id );
 
-	// show them if we have any
+	// Show them if we have any.
 	if ( ! empty( $links ) ) {
 
-		// combine into list
+		// Combine into list.
 		$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
 
-		// top and tail
+		// Top and tail.
 		$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
 
-		// is it recurring?
+		// Is it recurring?
 		if ( eo_recurs() ) {
 
-			// wrap in unordered list
+			// Wrap in unordered list.
 			$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
 
-			// open a list item
+			// Open a list item.
 			echo '<li class="civicrm-event-register-links">';
 
-			// show a title
+			// Show a title.
 			echo '<strong>' . __( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
 
-			// show links
+			// Show links.
 			echo $list;
 
-			// finish up
+			// Finish up.
 			echo '</li>' . "\n";
 
 		} else {
 
-			// show link
+			// Show link.
 			echo $list . "\n";
 
 		}
@@ -66,7 +66,7 @@ function civicrm_event_organiser_register_links( $post_id = null ) {
 
 }
 
-// add action for the above
+// Add action for the above.
 add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_register_links' );
 
 
@@ -81,49 +81,49 @@ add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_reg
  */
 function civicrm_event_organiser_get_register_links( $post_id = null ) {
 
-	// init return
+	// Init return.
 	$links = array();
 
-	// bail if no CiviCRM init function
+	// Bail if no CiviCRM init function.
 	if ( ! function_exists( 'civi_wp' ) ) return $links;
 
-	// try and init CiviCRM
+	// Try and init CiviCRM.
 	if ( ! civi_wp()->initialize() ) return $links;
 
-	// need the post ID
+	// Need the post ID.
 	$post_id = absint( empty( $post_id ) ? get_the_ID() : $post_id );
 
-	// bail if not present
+	// Bail if not present.
 	if( empty( $post_id ) ) return $links;
 
-	// get plugin reference
+	// Get plugin reference.
 	$plugin = civicrm_eo();
 
-	// get CiviEvents
+	// Get CiviEvents.
 	$civi_events = $plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
 
-	// sanity check
+	// Sanity check.
 	if ( empty( $civi_events ) ) return $links;
 
-	// did we get more than one?
+	// Did we get more than one?
 	$multiple = ( count( $civi_events ) > 1 ) ? true : false;
 
-	// loop through them
+	// Loop through them.
 	foreach( $civi_events AS $civi_event_id ) {
 
-		// get the full CiviEvent
+		// Get the full CiviEvent.
 		$civi_event = $plugin->civi->get_event_by_id( $civi_event_id );
 
-		// continue if not found
+		// Continue if not found.
 		if ( $civi_event === false ) continue;
 
-		// skip to next if registration is not open
+		// Skip to next if registration is not open.
 		if ( $plugin->civi->is_registration_closed( $civi_event ) ) continue;
 
-		// get link for the registration page
+		// Get link for the registration page.
 		$url = $plugin->civi->get_registration_link( $civi_event );
 
-		// skip to next if empty
+		// Skip to next if empty.
 		if ( empty( $url ) ) continue;
 
 		/**
@@ -137,13 +137,13 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		 */
 		$url = apply_filters( 'civicrm_event_organiser_registration_url', $url, $civi_event, $post_id );
 
-		// set different link text for single and multiple occurrences
+		// Set different link text for single and multiple occurrences.
 		if ( $multiple ) {
 
-			// get occurrence ID for this CiviEvent
+			// Get occurrence ID for this CiviEvent.
 			$occurrence_id = $plugin->db->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
 
-			// define text
+			// Define text.
 			$text = sprintf(
 				__( 'Register for %s', 'civicrm-event-organiser' ),
 				eo_format_event_occurrence( $post_id, $occurrence_id )
@@ -153,7 +153,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 			$text = __( 'Register', 'civicrm-event-organiser' );
 		}
 
-		// construct link if we get one
+		// Construct link if we get one.
 		$link = '<a class="civicrm-event-organiser-register-link" href="' . $url . '">' . $text . '</a>';
 
 		/**

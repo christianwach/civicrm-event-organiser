@@ -13,19 +13,19 @@ Domain Path: /languages
 
 
 
-// set our version here
+// Set our version here.
 define( 'CIVICRM_WP_EVENT_ORGANISER_VERSION', '0.4.3' );
 
-// store reference to this file
+// Store reference to this file.
 if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_FILE' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_FILE', __FILE__ );
 }
 
-// store URL to this plugin's directory
+// Store URL to this plugin's directory.
 if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_URL' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_URL', plugin_dir_url( CIVICRM_WP_EVENT_ORGANISER_FILE ) );
 }
-// store PATH to this plugin's directory
+// Store PATH to this plugin's directory.
 if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_PATH', plugin_dir_path( CIVICRM_WP_EVENT_ORGANISER_FILE ) );
 }
@@ -104,10 +104,10 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public function __construct() {
 
-		// use translation files
+		// Use translation files.
 		add_action( 'plugins_loaded', array( $this, 'enable_translation' ) );
 
-		// initialise
+		// Initialise.
 		add_action( 'plugins_loaded', array( $this, 'initialise' ) );
 
 	}
@@ -121,16 +121,16 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public function initialise() {
 
-		// bail if Event Organiser plugin is not present
+		// Bail if Event Organiser plugin is not present.
 		if ( ! defined( 'EVENT_ORGANISER_VER' ) ) return;
 
-		// bail if CiviCRM plugin is not present
+		// Bail if CiviCRM plugin is not present.
 		if ( ! function_exists( 'civi_wp' ) ) return;
 
-		// include files
+		// Include files.
 		$this->include_files();
 
-		// set up objects and references
+		// Set up objects and references.
 		$this->setup_objects();
 
 		/**
@@ -154,25 +154,25 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public function include_files() {
 
-		// load our Term Description class
+		// Load our Term Description class.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-term-html.php' );
 
-		// load our Admin/DB class
+		// Load our Admin/DB class.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-admin.php' );
 
-		// load our CiviCRM class
+		// Load our CiviCRM class.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-civi.php' );
 
-		// load our Event Organiser class
+		// Load our Event Organiser class.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo.php' );
 
-		// load our Event Organiser Venue Sync class
+		// Load our Event Organiser Venue Sync class.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo-venue.php' );
 
-		// load our Taxonomy Sync class
+		// Load our Taxonomy Sync class.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-taxonomy.php' );
 
-		// load our template functions
+		// Load our template functions.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-functions.php' );
 
 	}
@@ -186,11 +186,11 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public function setup_objects() {
 
-		// only do this once
+		// Only do this once.
 		static $done;
 		if ( isset( $done ) AND $done === true ) return;
 
-		// initialise objects
+		// Initialise objects.
 		$this->term_html = new CiviCRM_WP_Event_Organiser_Term_Description;
 		$this->db = new CiviCRM_WP_Event_Organiser_Admin;
 		$this->civi = new CiviCRM_WP_Event_Organiser_CiviCRM;
@@ -198,7 +198,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue;
 		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy;
 
-		// store references
+		// Store references.
 		$this->term_html->set_references( $this );
 		$this->db->set_references( $this );
 		$this->civi->set_references( $this );
@@ -206,7 +206,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo_venue->set_references( $this );
 		$this->taxonomy->set_references( $this );
 
-		// we're done
+		// We're done.
 		$done = true;
 
 	}
@@ -249,16 +249,16 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public function enable_translation() {
 
-		// not used, as there are no translations as yet
+		// Not used, as there are no translations as yet.
 		load_plugin_textdomain(
 
-			// unique name
+			// Unique name.
 			'civicrm-event-organiser',
 
-			// deprecated argument
+			// Deprecated argument.
 			false,
 
-			// relative path to directory containing translation files
+			// Relative path to directory containing translation files.
 			dirname( plugin_basename( __FILE__ ) ) . '/languages/'
 
 		);
@@ -267,14 +267,14 @@ class CiviCRM_WP_Event_Organiser {
 
 
 
-} // class ends
+} // Class ends.
 
 
 
-// declare as global
+// Declare as global.
 global $civicrm_wp_event_organiser;
 
-// init plugin
+// Init plugin.
 $civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
 
 
@@ -288,7 +288,7 @@ $civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
  */
 function civicrm_eo() {
 
-	// return instance
+	// Return instance.
 	global $civicrm_wp_event_organiser;
 	return $civicrm_wp_event_organiser;
 
@@ -307,23 +307,23 @@ function civicrm_eo() {
  */
 function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 
-	// bail if Event Organiser plugin is not present
+	// Bail if Event Organiser plugin is not present.
 	if ( ! defined( 'EVENT_ORGANISER_VER' ) ) return $links;
 
-	// bail if CiviCRM plugin is not present
+	// Bail if CiviCRM plugin is not present.
 	if ( ! function_exists( 'civi_wp' ) ) return $links;
 
-	// add settings link
+	// Add settings link.
 	if ( $file == plugin_basename( dirname( __FILE__ ) . '/civicrm-event-organiser.php' ) ) {
 
-		// is this Network Admin?
+		// Is this Network Admin?
 		if ( is_network_admin() ) {
 			$link = add_query_arg( array( 'page' => 'civi_eo_parent' ), network_admin_url( 'settings.php' ) );
 		} else {
 			$link = add_query_arg( array( 'page' => 'civi_eo_parent' ), admin_url( 'options-general.php' ) );
 		}
 
-		// add settings link
+		// Add settings link.
 		$links[] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'Settings', 'civicrm-event-organiser' ) . '</a>';
 
 	}
@@ -333,7 +333,7 @@ function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 
 }
 
-// add filters for the above
+// Add filters for the above.
 add_filter( 'network_admin_plugin_action_links', 'civicrm_wp_event_organiser_plugin_action_links', 10, 2 );
 add_filter( 'plugin_action_links', 'civicrm_wp_event_organiser_plugin_action_links', 10, 2 );
 

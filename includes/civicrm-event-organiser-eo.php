@@ -36,7 +36,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function __construct() {
 
-		// add Event Organiser hooks when plugin is loaded
+		// Add Event Organiser hooks when plugin is loaded.
 		add_action( 'civicrm_wp_event_organiser_loaded', array( $this, 'register_hooks' ) );
 
 	}
@@ -52,7 +52,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function set_references( $parent ) {
 
-		// store
+		// Store reference.
 		$this->plugin = $parent;
 
 	}
@@ -66,40 +66,40 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function register_hooks() {
 
-		// check for Event Organiser
+		// Check for Event Organiser.
 		if ( ! $this->is_active() ) return;
 
-		// intercept insert post
+		// Intercept insert post.
 		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
 
-		// intercept save event
+		// Intercept save event.
 		add_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10, 1 );
 
-		// intercept update event (though by misuse of a filter)
+		// Intercept update event - though by misuse of a filter.
 		//add_filter( 'eventorganiser_update_event_event_data', array( $this, 'intercept_update_event' ), 10, 3 );
 
-		// intercept before delete post
+		// Intercept before delete post.
 		add_action( 'before_delete_post', array( $this, 'intercept_before_delete_post' ), 10, 1 );
 
-		// intercept delete event occurrences (which is the preferred way to hook into event deletion)
+		// Intercept delete event occurrences - which is the preferred way to hook into event deletion.
 		add_action( 'eventorganiser_delete_event_occurrences', array( $this, 'delete_event_occurrences' ), 10, 2 );
 
-		// intercept before break occurrence
+		// Intercept before break occurrence
 		add_action( 'eventorganiser_pre_break_occurrence', array( $this, 'pre_break_occurrence' ), 10, 2 );
 
-		// there's no hook for 'eventorganiser_delete_event_occurrence', which moves the occurrence
-		// to the 'exclude' array of the date sequence
+		// There's no hook for 'eventorganiser_delete_event_occurrence', which moves the occurrence.
+		// To the 'exclude' array of the date sequence
 
-		// intercept after break occurrence
+		// Intercept after break occurrence.
 		add_action( 'eventorganiser_occurrence_broken', array( $this, 'occurrence_broken' ), 10, 3 );
 
-		// intercept "Delete Occurrence" in admin calendar
+		// Intercept "Delete Occurrence" in admin calendar.
 		add_action( 'eventorganiser_admin_calendar_occurrence_deleted', array( $this, 'occurrence_deleted' ), 10, 2 );
 
-		// debug
+		// Debug.
 		//add_filter( 'eventorganiser_pre_event_content', array( $this, 'pre_event_content' ), 10, 2 );
 
-		// add our event meta box
+		// Add our event meta box.
 		add_action( 'add_meta_boxes_event', array( $this, 'event_meta_boxes' ), 11 );
 
 	}
@@ -115,25 +115,25 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function is_active() {
 
-		// only check once
+		// Only check once.
 		static $eo_active = false;
 		if ( $eo_active ) return true;
 
-		// access Event Organiser option
+		// Access Event Organiser option.
 		$installed_version = get_option( 'eventorganiser_version', 'etueue' );
 
-		// this plugin will not work without Event Organiser v3+
+		// This plugin will not work without Event Organiser v3+.
 		if ( $installed_version === 'etueue' OR version_compare( $installed_version, '3', '<' ) ) {
 
-			// let's show an admin notice
+			// Let's show an admin notice.
 			add_action( 'admin_notices', array( $this->plugin->db, 'dependency_alert' ) );
 
-			// set flag
+			// Set flag.
 			$eo_active = false;
 
 		} else {
 
-			// set flag
+			// Set flag.
 			$eo_active = true;
 
 		}
@@ -159,13 +159,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function insert_post( $post_id, $post ) {
 
-		// kick out if not event
+		// Kick out if not event.
 		if ( $post->post_type != 'event' ) return;
 
-		// set flag
+		// Set flag.
 		$this->insert_event = true;
 
-		// check the validity of our CiviCRM options
+		// Check the validity of our CiviCRM options.
 		$success = $this->plugin->civi->validate_civi_options( $post_id, $post );
 
 	}
@@ -181,34 +181,34 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function intercept_save_event( $post_id ) {
 
-		// save custom EO event components
+		// Save custom EO event components.
 		$this->_save_event_components( $post_id );
 
-		// sync checkbox is only shown to people who can publish posts
+		// Sync checkbox is only shown to people who can publish posts.
 		if ( ! current_user_can( 'publish_posts' ) ) return;
 
-		// is our checkbox checked?
+		// Is our checkbox checked?
 		if ( ! isset( $_POST['civi_eo_event_sync'] ) ) return;
 		if ( $_POST['civi_eo_event_sync'] != 1 ) return;
 
-		// get post data
+		// Get post data.
 		$post = get_post( $post_id );
 
-		// get all dates
+		// Get all dates.
 		$dates = $this->get_all_dates( $post_id );
 
-		// get event data
+		// Get event data.
 		//$schedule = eo_get_event_schedule( $post_id );
 
-		// prevent recursion
+		// Prevent recursion.
 		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
 		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
 		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10 );
 
-		// update our CiviCRM events (or create new if none exist)
+		// Update our CiviCRM events - or create new if none exist.
 		$this->plugin->civi->update_civi_events( $post, $dates );
 
-		// restore hooks
+		// Restore hooks.
 		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10, 4 );
 		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
 		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10, 4 );
@@ -250,13 +250,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function intercept_before_delete_post( $post_id ) {
 
-		// get post data
+		// Get post data.
 		$post = get_post( $post_id );
 
-		// bail if not an event
+		// Bail if not an event.
 		if ( $post->post_type != 'event' ) return;
 
-		// get correspondences from post meta to use once the event has been deleted
+		// Get correspondences from post meta to use once the event has been deleted.
 		$this->saved_correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
 
 	}
@@ -285,10 +285,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function delete_event_occurrences( $post_id, $occurrence_ids ) {
 
-		// if an event is not being deleted
+		// If an event is not being deleted
 		if ( ! doing_action( 'delete_post' ) ) {
 
-			// bail if our sync checkbox is not checked
+			// Bail if our sync checkbox is not checked
 			if ( ! isset( $_POST['civi_eo_event_sync'] ) ) return;
 			if ( $_POST['civi_eo_event_sync'] != 1 ) return;
 
@@ -303,52 +303,52 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * "inactive" array of some kind.
 		 */
 
-		// prevent recursion
+		// Prevent recursion.
 		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
 		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
 		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10 );
 
-		// are we deleting an event?
+		// Are we deleting an event?
 		if ( doing_action( 'delete_post' ) AND isset( $this->saved_correspondences ) ) {
 
-			// yes: get IDs from saved post meta
+			// Yes: get IDs from saved post meta.
 			$correspondences = $this->saved_correspondences;
 
 		} else {
 
-			// get IDs from post meta
+			// Get IDs from post meta.
 			$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
 
 		}
 
-		// loop through them
+		// Loop through them.
 		foreach ( $correspondences AS $occurrence_id => $civi_event_id ) {
 
-			// is this occurrence being deleted?
+			// Is this occurrence being deleted?
 			if ( $occurrence_ids === false OR in_array( $occurrence_id, $occurrence_ids ) ) {
 
-				// disable corresponding CiviEvent
+				// Disable corresponding CiviEvent.
 				$return = $this->plugin->civi->disable_civi_event( $civi_event_id );
 
 			}
 
 		}
 
-		// restore hooks
+		// Restore hooks.
 		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10, 4 );
 		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
 		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10, 4 );
 
-		// TODO - decide if we delete CiviEvents...
+		// TODO: Decide if we delete CiviEvents.
 		return;
 
-		// bail if an event is not being deleted
+		// Bail if an event is not being deleted.
 		if ( ! doing_action( 'delete_post' ) ) return;
 
-		// delete those CiviCRM events - not used at present
+		// Delete those CiviCRM events - not used at present.
 		//$this->plugin->civi->delete_civi_events( $correspondences );
 
-		// delete our stored CiviCRM event IDs
+		// Delete our stored CiviCRM event IDs.
 		//$this->plugin->db->clear_event_correspondences( $post_id );
 
 	}
@@ -365,16 +365,16 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function occurrence_deleted( $post_id, $occurrence_id ) {
 
-		// init or die
+		// Init or die.
 		if ( ! $this->is_active() ) return;
 
-		// get CiviEvent ID from post meta
+		// Get CiviEvent ID from post meta.
 		$civi_event_id = $this->plugin->db->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
 
-		// disable CiviEvent
+		// Disable CiviEvent.
 		$return = $this->plugin->civi->disable_civi_event( $civi_event_id );
 
-		// convert occurrence to orphaned
+		// Convert occurrence to orphaned.
 		$this->plugin->db->occurrence_orphaned( $post_id, $occurrence_id, $civi_event_id );
 
 	}
@@ -398,68 +398,68 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event( $civi_event ) {
 
-		// define schedule
+		// Define schedule.
 		$event_data = array(
 
-			// start date
+			// Start date.
 			'start' => new DateTime( $civi_event['start_date'], eo_get_blog_timezone() ),
 
-			// end date and end of schedule are the same
+			// End date and end of schedule are the same.
 			'end' => new DateTime( $civi_event['end_date'], eo_get_blog_timezone() ),
 			'schedule_last' => new DateTime( $civi_event['end_date'], eo_get_blog_timezone() ),
 
-			// we can't tell if a CiviEvent is repeating, so only once
+			// We can't tell if a CiviEvent is repeating, so only once.
 			'frequency' => 1,
 
-			// CiviCRM does not have "all day"
+			// CiviCRM does not have "all day".
 			'all_day' => 0,
 
-			// we can't tell if a CiviEvent is repeating
+			// We can't tell if a CiviEvent is repeating.
 			'schedule' => 'once',
 
 		);
 
-		// define post
+		// Define post.
 		$post_data = array(
 
-			// standard post data
+			// Standard post data.
 			'post_title' => $civi_event['title'],
 			'post_content' => isset( $civi_event['description'] ) ? $civi_event['description'] : '',
 			'post_excerpt' => isset( $civi_event['summary']) ? $civi_event['summary'] : '',
 
-			// quick fixes for Windows which need to be present
+			// Quick fixes for Windows which need to be present.
 			'to_ping' => '',
 			'pinged' => '',
 			'post_content_filtered' => '',
 
 		);
 
-		// test for created date, which may be absent
+		// Test for created date, which may be absent.
 		if ( isset( $civi_event['created_date'] ) AND ! empty( $civi_event['created_date'] ) ) {
 
-			// create DateTime object
+			// Create DateTime object.
 			$datetime = new DateTime( $civi_event['created_date'], eo_get_blog_timezone() );
 
-			// add it, but format it first since CiviCRM seems to send data in the form 20150916135435
+			// Add it, but format it first since CiviCRM seems to send data in the form 20150916135435.
 			$post_data['post_date'] = $datetime->format( 'Y-m-d H:i:s' );
 
 		}
 
-		// init venue as undefined
+		// Init venue as undefined.
 		$venue_id = 0;
 
-		// get location ID
+		// Get location ID.
 		if ( isset( $civi_event['loc_block_id'] ) ) {
 
-			// we have a location...
+			// We have a location...
 
-			// get location data
+			// Get location data.
 			$location = $this->plugin->civi->get_location_by_id( $civi_event['loc_block_id'] );
 
-			// get corresponding EO venue ID
+			// Get corresponding EO venue ID.
 			$venue_id = $this->plugin->eo_venue->get_venue_id( $location );
 
-			// if we get a match, create/update venue
+			// If we get a match, create/update venue.
 			if ( $venue_id === false ) {
 				$venue_id = $this->plugin->eo_venue->create_venue( $location );
 			} else {
@@ -468,54 +468,54 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
-		// init category as undefined
+		// Init category as undefined.
 		$terms = array();
 
-		// get location ID
+		// Get location ID.
 		if ( isset( $civi_event['event_type_id'] ) ) {
 
-			// we have a category...
+			// We have a category...
 
-			// get event type data for this pseudo-ID (actually "value")
+			// Get event type data for this pseudo-ID (actually "value").
 			$type = $this->plugin->taxonomy->get_event_type_by_value( $civi_event['event_type_id'] );
 
-			// does this type have an existing term?
+			// Does this type have an existing term?
 			$term_id = $this->plugin->taxonomy->get_term_id( $type );
 
-			// if not...
+			// If not.
 			if ( $term_id === false ) {
 
-				// create one
+				// Create one.
 				$term = $this->plugin->taxonomy->create_term( $type );
 
-				// assign term ID
+				// Assign term ID.
 				$term_id = $term['term_id'];
 
 			}
 
-			// define as array
+			// Define as array.
 			$terms = array( absint( $term_id ) );
 
 		}
 
-		// add to post data
+		// Add to post data.
 		$post_data['tax_input'] = array(
 			'event-venue' => array( absint( $venue_id ) ),
 			'event-category' => $terms,
 		);
 
-		// default to published
+		// Default to published.
 		$post_data['post_status'] = 'publish';
 
-		// make the EO event a draft if the CiviEvent is not active
+		// Make the EO event a draft if the CiviEvent is not active.
 		if ( $civi_event['is_active'] == 0 ) {
 			$post_data['post_status'] = 'draft';
 		}
 
-		// do we have a post ID for this event?
+		// Do we have a post ID for this event?
 		$eo_post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $civi_event['id'] );
 
-		// regardless of CiviEvent status: if the EO event is private, keep it that way
+		// Regardless of CiviEvent status: if the EO event is private, keep it that way.
 		if ( $eo_post_id !== false ) {
 			$eo_event = get_post( $eo_post_id );
 			if ( $eo_event->post_status == 'private' ) {
@@ -523,22 +523,22 @@ class CiviCRM_WP_Event_Organiser_EO {
 			}
 		}
 
-		// remove hooks
+		// Remove hooks.
 		remove_action( 'wp_insert_post', array( $this, 'insert_post' ), 10 );
 		remove_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10 );
 
-		// use EO's API to create/update an event
+		// Use EO's API to create/update an event.
 		if ( $eo_post_id === false ) {
 			$event_id = eo_insert_event( $post_data, $event_data );
 		} else {
 			$event_id = eo_update_event( $eo_post_id, $post_data, $event_data );
 		}
 
-		// re-add hooks
+		// Re-add hooks.
 		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
 		add_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10, 1 );
 
-		// save event meta if the event has online registration enabled
+		// Save event meta if the event has online registration enabled.
 		if (
 			isset( $civi_event['is_online_registration'] ) AND
 			$civi_event['is_online_registration'] == 1
@@ -548,7 +548,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$this->set_event_registration( $event_id );
 		}
 
-		// save event meta if the event has a participant role specified
+		// Save event meta if the event has a participant role specified.
 		if (
 			isset( $civi_event['default_role_id'] ) AND
 			! empty( $civi_event['default_role_id'] )
@@ -577,13 +577,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * processed right now.
 		 */
 
-		// save some data
+		// Save some data.
 		$this->sync_data = array(
 			'event_id' => $event_id,
 			'civi_event' => $civi_event,
 		);
 
-		// let's hook into postProcess for now
+		// Let's hook into postProcess for now.
 		add_action( 'civicrm_postProcess', array( $this, 'maybe_update_event_registration_profile' ), 10, 2 );
 
 		/**
@@ -617,7 +617,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function pre_break_occurrence( $post_id, $occurrence_id ) {
 
-		// init or die
+		// Init or die.
 		if ( ! $this->is_active() ) return;
 
 		/*
@@ -628,16 +628,16 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * then rebuild after - see occurrence_broken() below.
 		 */
 
-		// unhook eventorganiser_save_event, because that relies on $_POST
+		// Unhook eventorganiser_save_event, because that relies on $_POST.
 		remove_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10 );
 
-		// get the CiviEvent that this occurrence is synced with
+		// Get the CiviEvent that this occurrence is synced with.
 		$this->temp_civi_event_id = $this->plugin->db->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
 
-		// remove it from the correspondences for this post
+		// Remove it from the correspondences for this post.
 		$this->plugin->db->clear_event_correspondence( $post_id, $occurrence_id );
 
-		// do not copy across the '_civi_eo_civicrm_events' meta
+		// Do not copy across the '_civi_eo_civicrm_events' meta.
 		add_filter( 'eventorganiser_breaking_occurrence_exclude_meta', array( $this, 'occurrence_exclude_meta' ), 10, 1 );
 
 	}
@@ -655,7 +655,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function occurrence_exclude_meta( $ignore_meta ) {
 
-		// add our meta key
+		// Add our meta key.
 		$ignore_meta[] = '_civi_eo_civicrm_events';
 
 		// --<
@@ -684,10 +684,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * EO's "ignore array", which means we have to rebuild it here.
 		 */
 
-		// build new correspondences array
+		// Build new correspondences array.
 		$correspondences = array( $occurrence_id => $this->temp_civi_event_id );
 
-		// store new correspondences
+		// Store new correspondences.
 		$this->plugin->db->store_event_correspondences( $new_event_id, $correspondences );
 
 	}
@@ -705,10 +705,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function pre_event_content( $event_content, $content ) {
 
-		// init or die
+		// Init or die.
 		if ( ! $this->is_active() ) return $event_content;
 
-		// let's see
+		// Let's see.
 		//$this->get_participant_roles();
 
 		// --<
@@ -729,27 +729,27 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function event_meta_boxes() {
 
-		// check permission
+		// Check permission.
 		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) return;
 
-		// create CiviCRM Settings and Sync metabox
+		// Create CiviCRM Settings and Sync metabox.
 		add_meta_box(
 			'civi_eo_event_metabox',
 			__( 'CiviCRM Settings', 'civicrm-event-organiser' ),
 			array( $this, 'event_meta_box_render' ),
 			'event',
-			'side', // column: options are 'normal' and 'side'
-			'core' // vertical placement: options are 'core', 'high', 'low'
+			'side', // Column: options are 'normal' and 'side'.
+			'core' // Vertical placement: options are 'core', 'high', 'low'.
 		);
 
-		// create CiviCRM Settings and Sync metabox
+		// Create CiviCRM Settings and Sync metabox.
 		add_meta_box(
 			'civi_eo_event_links_metabox',
 			__( 'Edit Events in CiviCRM', 'civicrm-event-organiser' ),
 			array( $this, 'event_links_meta_box_render' ),
 			'event',
-			'normal', // column: options are 'normal' and 'side'
-			'high' // vertical placement: options are 'core', 'high', 'low'
+			'normal', // Column: options are 'normal' and 'side'.
+			'high' // Vertical placement: options are 'core', 'high', 'low'.
 		);
 
 	}
@@ -765,33 +765,33 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function event_meta_box_render( $event ) {
 
-		// add nonce
+		// Add nonce.
 		wp_nonce_field( 'civi_eo_event_meta_save', 'civi_eo_event_nonce_field' );
 
-		// get online registration
+		// Get online registration.
 		$is_reg_checked = $this->get_event_registration( $event->ID );
 
-		// init checkbox status
+		// Init checkbox status.
 		$reg_checked = '';
 
-		// override if registration is allowed
+		// Override if registration is allowed.
 		if ( $is_reg_checked == 1 ) {
 			$reg_checked = ' checked="checked"';
 		}
 
-		// get participant roles
+		// Get participant roles.
 		$roles = $this->plugin->civi->get_participant_roles_select( $event );
 
-		// get registration profiles
+		// Get registration profiles.
 		$profiles = $this->plugin->civi->get_registration_profiles_select( $event );
 
-		// init sync options
+		// Init sync options.
 		$sync_options = '';
 
-		// show checkbox to people who can publish posts
+		// Show checkbox to people who can publish posts.
 		if ( current_user_can( 'publish_posts' ) ) {
 
-			// define sync options
+			// Define sync options.
 			$sync_options = '
 			<p class="civi_eo_event_desc">' . __( 'Choose whether or not to sync this event and (if the sequence has changed) whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ) . '</p>
 
@@ -811,10 +811,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
-		// show sync options, if allowed
+		// Show sync options, if allowed.
 		echo $sync_options;
 
-		// show meta box
+		// Show meta box.
 		echo '
 		<h4>' . __( 'CiviEvent Options', 'civicrm-event-organiser' ) . '</h4>
 
@@ -873,50 +873,50 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function event_links_meta_box_render( $event ) {
 
-		// get linked CiviEvents
+		// Get linked CiviEvents.
 		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event->ID );
 
-		// bail if we get none
+		// Bail if we get none.
 		if ( empty( $civi_events ) ) return;
 
-		// init links
+		// Init links.
 		$links = array();
 
-		// show them
+		// Show them.
 		foreach( $civi_events AS $civi_event_id ) {
 
-			// get link
+			// Get link.
 			$link = $this->plugin->civi->get_settings_link( $civi_event_id );
 
-			// get CiviEvent
+			// Get CiviEvent.
 			$civi_event = $this->plugin->civi->get_event_by_id( $civi_event_id );
 
-			// continue if not found
+			// Continue if not found.
 			if ( $civi_event === false ) continue;
 
-			// get DateTime object
+			// Get DateTime object.
 			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
 			$timestamp = $start->getTimestamp();
 
-			// construct date and time
+			// Construct date and time.
 			$date = date_i18n( get_option('date_format'), $timestamp );
 			$time = date_i18n( get_option('time_format'), $timestamp );
 
-			// construct link content
+			// Construct link content.
 			$content = $date . ' ' . $time;
 
-			// wrap in anchor
+			// Wrap in anchor.
 			$content = '<a href="' . esc_url( $link ) . '">' . esc_html( $content ) . '</a>';
 
-			// prefix with helpful text
+			// Prefix with helpful text.
 			$content = __( 'Info &amp; Settings for', 'civicrm-event-organiser' ) . ': ' . $content;
 
-			// add to array
+			// Add to array.
 			$links[] = $content;
 
 		}
 
-		// show list
+		// Show list.
 		echo '<ul><li>' . implode( '</li><li>', $links ) . '</li></p>';
 
 		/**
@@ -946,10 +946,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function get_all_dates( $post_id ) {
 
-		// init dates
+		// Init dates.
 		$all_dates = array();
 
-		// get all dates
+		// Get all dates.
 		$all_event_dates = new WP_Query( array(
 			'post_type' => 'event',
 			'posts_per_page' => -1,
@@ -957,33 +957,33 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'group_events_by' => 'occurrence'
 		));
 
-		// if we have some
+		// If we have some.
 		if( $all_event_dates->have_posts() ) {
 
-			// loop through them
+			// Loop through them.
 			while( $all_event_dates->have_posts() ) {
 
-				// get the post
+				// Get the post.
 				$all_event_dates->the_post();
 
-				// access post
+				// Access post.
 				global $post;
 
-				// init
+				// Init.
 				$date = array();
 
-				// add to our array, formatted for CiviCRM
+				// Add to our array, formatted for CiviCRM.
 				$date['occurrence_id'] = $post->occurrence_id;
 				$date['start'] = eo_get_the_start( 'Y-m-d H:i:s' );
 				$date['end'] = eo_get_the_end( 'Y-m-d H:i:s' );
 				$date['human'] = eo_get_the_start( 'g:ia, M jS, Y' );
 
-				// add to our array
+				// Add to our array.
 				$all_dates[] = $date;
 
 			}
 
-			// reset post data
+			// Reset post data.
 			wp_reset_postdata();
 
 		}
@@ -1005,10 +1005,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function get_date_objects( $post_id ) {
 
-		// get schedule
+		// Get schedule.
 		$schedule = eo_get_event_schedule( $post_id );
 
-		// if we have some dates
+		// If we have some dates.
 		if( isset( $schedule['_occurrences'] ) AND count( $schedule['_occurrences'] ) > 0 ) {
 
 			// --<
@@ -1036,13 +1036,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	private function _save_event_components( $event_id ) {
 
-		// save online registration
+		// Save online registration.
 		$this->update_event_registration( $event_id );
 
-		// save participant role
+		// Save participant role.
 		$this->update_event_role( $event_id );
 
-		// save registration profile
+		// Save registration profile.
 		$this->update_event_registration_profile( $event_id );
 
 		/**
@@ -1067,7 +1067,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	private function _delete_event_components( $event_id ) {
 
-		// EO garbage-collects when it deletes a event, so no need
+		// EO garbage-collects when it deletes a event, so no need.
 
 	}
 
@@ -1087,15 +1087,15 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration( $event_id, $value = 0 ) {
 
-		// if the checkbox is ticked
+		// If the checkbox is ticked.
 		if ( isset( $_POST['civi_eo_event_reg'] ) ) {
 
-			// override the meta value with the checkbox state
+			// Override the meta value with the checkbox state.
 			$value = absint( $_POST['civi_eo_event_reg'] );
 
 		}
 
-		// go ahead and set the value
+		// Go ahead and set the value.
 		$this->set_event_registration( $event_id, $value );
 
 	}
@@ -1112,10 +1112,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function get_event_registration( $post_id ) {
 
-		// get the meta value
+		// Get the meta value.
 		$civi_reg = get_post_meta( $post_id, '_civi_reg', true );
 
-		// if it's not yet set it will be an empty string, so cast as boolean
+		// If it's not yet set it will be an empty string, so cast as boolean.
 		if ( $civi_reg === '' ) { $civi_reg = 0; }
 
 		// --<
@@ -1135,7 +1135,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function set_event_registration( $post_id, $value = 0 ) {
 
-		// update event meta
+		// Update event meta.
 		update_post_meta( $post_id,  '_civi_reg', $value );
 
 	}
@@ -1151,7 +1151,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function clear_event_registration( $post_id ) {
 
-		// delete the meta value
+		// Delete the meta value.
 		delete_post_meta( $post_id, '_civi_reg' );
 
 	}
@@ -1171,13 +1171,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_role( $event_id ) {
 
-		// kick out if not set
+		// Kick out if not set.
 		if ( ! isset( $_POST['civi_eo_event_role'] ) ) return;
 
-		// retrieve meta value
+		// Retrieve meta value.
 		$value = absint( $_POST['civi_eo_event_role'] );
 
-		// update event meta
+		// Update event meta.
 		update_post_meta( $event_id,  '_civi_role', $value );
 
 	}
@@ -1194,23 +1194,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function set_event_role( $event_id, $value = null ) {
 
-		// if not set
+		// If not set.
 		if ( is_null( $value ) ) {
 
-			// do we have a default set?
+			// Do we have a default set?
 			$default = $this->plugin->db->option_get( 'civi_eo_event_default_role' );
 
-			// did we get one?
+			// Did we get one?
 			if ( $default !== '' AND is_numeric( $default ) ) {
 
-				// override with default value
+				// Override with default value.
 				$value = absint( $default );
 
 			}
 
 		}
 
-		// update event meta
+		// Update event meta.
 		update_post_meta( $event_id,  '_civi_role', $value );
 
 	}
@@ -1227,10 +1227,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function get_event_role( $post_id ) {
 
-		// get the meta value
+		// Get the meta value.
 		$civi_role = get_post_meta( $post_id, '_civi_role', true );
 
-		// if it's not yet set it will be an empty string, so cast as number
+		// If it's not yet set it will be an empty string, so cast as number.
 		if ( $civi_role === '' ) { $civi_role = 0; }
 
 		// --<
@@ -1249,7 +1249,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function clear_event_role( $post_id ) {
 
-		// delete the meta value
+		// Delete the meta value.
 		delete_post_meta( $post_id, '_civi_role' );
 
 	}
@@ -1269,13 +1269,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration_profile( $event_id ) {
 
-		// kick out if not set
+		// Kick out if not set.
 		if ( ! isset( $_POST['civi_eo_event_profile'] ) ) return;
 
-		// retrieve meta value
+		// Retrieve meta value.
 		$profile_id = absint( $_POST['civi_eo_event_profile'] );
 
-		// update event meta
+		// Update event meta.
 		update_post_meta( $event_id,  '_civi_registration_profile', $profile_id );
 
 	}
@@ -1292,23 +1292,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function set_event_registration_profile( $event_id, $profile_id = null ) {
 
-		// if not set
+		// If not set.
 		if ( is_null( $profile_id ) ) {
 
-			// do we have a default set?
+			// Do we have a default set?
 			$default = $this->plugin->db->option_get( 'civi_eo_event_default_profile' );
 
-			// did we get one?
+			// Did we get one?
 			if ( $default !== '' AND is_numeric( $default ) ) {
 
-				// override with default value
+				// Override with default value.
 				$profile_id = absint( $default );
 
 			}
 
 		}
 
-		// update event meta
+		// Update event meta
 		update_post_meta( $event_id,  '_civi_registration_profile', $profile_id );
 
 	}
@@ -1325,10 +1325,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function get_event_registration_profile( $post_id ) {
 
-		// get the meta value
+		// Get the meta value.
 		$profile_id = get_post_meta( $post_id, '_civi_registration_profile', true );
 
-		// if it's not yet set it will be an empty string, so cast as number
+		// If it's not yet set it will be an empty string, so cast as number.
 		if ( $profile_id === '' ) { $profile_id = 0; }
 
 		// --<
@@ -1347,7 +1347,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function clear_event_registration_profile( $post_id ) {
 
-		// delete the meta value
+		// Delete the meta value.
 		delete_post_meta( $post_id, '_civi_registration_profile' );
 
 	}
@@ -1372,94 +1372,30 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function maybe_update_event_registration_profile( $formName, &$form ) {
 
-		// kick out if not a CiviEvent Online Registration form
+		// Kick out if not a CiviEvent Online Registration form.
 		if ( $formName != 'CRM_Event_Form_ManageEvent_Registration' ) return;
 
-		// bail if we don't have our sync data
+		// Bail if we don't have our sync data.
 		if ( ! isset( $this->sync_data ) ) return;
 
-		// get registration profile
+		// Get registration profile.
 		$existing_profile = $this->plugin->civi->has_registration_profile( $this->sync_data['civi_event'] );
 
-		// save event meta if this event have a registration profile specified
+		// Save event meta if this event have a registration profile specified.
 		if ( $existing_profile !== false ) {
 			$this->set_event_registration_profile( $this->sync_data['event_id'], $existing_profile['uf_group_id'] );
 		} else {
 			$this->set_event_registration_profile( $this->sync_data['event_id'] );
 		}
 
-		// clear saved data
+		// Clear saved data.
 		unset( $this->sync_data );
 
 	}
 
 
 
-} // class ends
-
-
-
-/*
-
-// useful theme snippets
-
-// for public display
-if ( eo_is_all_day( $post->ID ) ) {
-	$date_format = 'j F Y';
-} else {
-	$date_format = 'j F Y ' . get_option('time_format');
-}
-
-
-
-// the main Event Organiser filters
-
-apply_filters( 'eventorganiser_event_meta_list', $html, $post_id);
-apply_filters( 'eventorganiser_event_color',$color,$post_id);
-apply_filters( 'eventorganiser_event_classes', $event_classes, $post_id, $occurrence_id );
-
-apply_filters( 'eventorganiser_get_event_schedule', $event_details, $post_id );
-apply_filters( 'eventorganiser_generate_occurrences', $_event_data, $event_data );
-
-apply_filters( 'eventorganiser_is_event_query', $bool, $query, $exclusive );
-apply_filters( 'eventorganiser_events_expire_time', 24*60*60 );
-apply_filters( 'eventorganiser_menu_position', 5 );
-
-apply_filters( 'eventorganiser_event_properties', $args );
-
-apply_filters( 'eventorganiser_update_event_event_data', $event_data, $post_id, $post_data, $event_data );
-apply_filters( 'eventorganiser_update_event_post_data', $post_data, $post_id, $post_data, $event_data );
-apply_filters( 'eventorganiser_insert_event_event_data', $event_data, $post_data, $event_data );
-apply_filters( 'eventorganiser_insert_event_post_data', $post_data, $post_data, $event_data );
-
-apply_filters( 'eventorganiser_venue_tooltip', $tooltip_content, $venue_id, $args );
-apply_filters( 'eventorganiser_venue_marker', null, $venue_id, $args );
-apply_filters( 'eventorganiser_venue_address_fields', $address_fields);
-
-apply_filters( 'eventorganiser_format_datetime', $formatted_datetime , $format, $datetime);
-
-apply_filters( 'eventorganiser_pre_event_content', $event_content, $content);
-
-apply_filters( 'eventorganiser_get_the_start', eo_format_datetime( $start, $format ), $start, $format, $post_id, $occurrence_id );
-apply_filters( 'eventorganiser_get_the_end', eo_format_datetime( $end, $format ), $end, $format, $post_id, $occurrence_id );
-apply_filters( 'eventorganiser_get_next_occurrence', eo_format_datetime( $next, $format ), $next, $format, $post_id );
-apply_filters( 'eventorganiser_get_schedule_start', eo_format_datetime( $schedule_start, $format ), $schedule_start, $format, $post_id );
-apply_filters( 'eventorganiser_get_schedule_last', eo_format_datetime( $schedule_last, $format ), $schedule_last, $format, $post_id );
-apply_filters( 'eventorganiser_get_the_future_occurrences_of', $occurrences, $post_id );
-apply_filters( 'eventorganiser_get_the_occurrences_of', $occurrences, $post_id );
-
-apply_filters( 'eventorganiser_calendar_event_link',$link,$post->ID,$post->occurrence_id);
-apply_filters( 'eventorganiser_fullcalendar_event',$event, $post->ID,$post->occurrence_id);
-apply_filters( 'eventorganiser_admin_cal_summary',$summary,$post->ID,$post->occurrence_id,$post);
-apply_filters( 'eventorganiser_admin_calendar',$event, $post);
-apply_filters( 'eventorganiser_admin_fullcalendar_event', $event, $post->ID, $post->occurrence_id );
-
-apply_filters( 'eventorganiser_event_metabox_notice', $notices, $post )
-apply_filters( 'eventorganiser_calendar_dialog_tabs', array( 'summary' => __( 'Event Details', 'eventorganiser' ) ) )
-
-apply_filters( 'list_cats', $category->name, $category);
-
-*/
+} // Class ends.
 
 
 
