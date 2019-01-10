@@ -112,12 +112,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Do upgrade tasks.
 		$this->upgrade_tasks();
 
-		// Has there been a change of version?
+		// Store version if there has been a change.
 		if ( $this->plugin_version != CIVICRM_WP_EVENT_ORGANISER_VERSION ) {
-
-			// Store version for later reference.
 			$this->store_version();
-
 		}
 
 		// Register hooks.
@@ -134,17 +131,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function register_hooks() {
 
-		// Multisite?
+		// Add menu to Network submenu or Settings submenu.
 		if ( $this->is_network_activated() ) {
-
-			// Add menu to Network submenu.
 			add_action( 'network_admin_menu', array( $this, 'admin_menu' ), 30 );
-
 		} else {
-
-			// Add menu to Settings submenu.
 			add_action( 'admin_menu', array( $this, 'admin_menu' ), 30 );
-
 		}
 
 		// Override "no category" option.
@@ -172,12 +163,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Bail if this is a new install.
 		if ( $this->plugin_version === false ) return;
 
-		// Check for possibly missing default profile setting.
+		// Show an admin notice for possibly missing default profile setting.
 		if ( 'fgffgs' == $this->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
-
-			// Let's show an admin notice.
 			add_action( 'admin_notices', array( $this, 'upgrade_alert' ) );
-
 		}
 
 	}
@@ -1573,18 +1561,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get all event posts.
 		$all_events = get_posts( $args );
 
-		// Did we get any?
+		// Delete post meta for all events that we get.
 		if ( count( $all_events ) > 0 ) {
-
-			// Loop.
 			foreach( $all_events AS $event ) {
-
-				// Delete post meta.
 				delete_post_meta( $post_id, '_civi_eo_civicrm_events' );
 				delete_post_meta( $post_id, '_civi_eo_civicrm_events_disabled' );
-
 			}
-
 		}
 
 		// Overwrite event_disabled array.
@@ -1766,17 +1748,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get all event posts.
 		$all_events = get_posts( $args );
 
-		// Did we get any?
+		// Get post meta and add to return array if we get some.
 		if ( count( $all_events ) > 0 ) {
-
-			// Loop.
 			foreach( $all_events AS $event ) {
-
-				// Get post meta and add to return array.
 				$civi_event_data[$event->ID] = $this->get_civi_event_ids_by_eo_event_id( $event->ID );
-
 			}
-
 		}
 
 		// --<
@@ -1866,12 +1842,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// If we have some CiviEvent IDs for this EO event.
 		if ( count( $civi_event_ids ) > 0 ) {
 
-			// Loop.
+			// Unset items with the relevant key in the option array.
 			foreach( $civi_event_ids AS $civi_event_id ) {
-
-				// Unset the item with this key in the option array.
 				unset( $civi_event_data[$civi_event_id] );
-
 			}
 
 			// Store updated array.
@@ -1905,17 +1878,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get all correspondences.
 		$eo_event_data = $this->get_all_civi_to_eo_correspondences();
 
-		// If we get some.
+		// Get keyed value if we have one.
 		if ( count( $eo_event_data ) > 0 ) {
-
-			// Do we have the key?
 			if ( isset( $eo_event_data[$civi_event_id] ) ) {
-
-				// Get keyed value.
 				$eo_event_id = $eo_event_data[$civi_event_id]['post_id'];
-
 			}
-
 		}
 
 		// --<
@@ -1941,17 +1908,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get all correspondences.
 		$eo_event_data = $this->get_all_civi_to_eo_correspondences();
 
-		// If we get some.
+		// Get keyed value if we have one.
 		if ( count( $eo_event_data ) > 0 ) {
-
-			// Do we have the key?
 			if ( isset( $eo_event_data[$civi_event_id] ) ) {
-
-				// Get keyed value.
 				$eo_occurrence_id = $eo_event_data[$civi_event_id]['occurrence_id'];
-
 			}
-
 		}
 
 		// --<
@@ -2079,12 +2040,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Do we have any orphans to add?
 		if ( count( $to_add ) > 0 ) {
 
-			// Construct array.
+			// Add post IDs, keyed by CiviEvent ID.
 			foreach( $to_add AS $civi_event_id ) {
-
-				// Add post ID, keyed by CiviEvent ID.
 				$civi_event_disabled[$civi_event_id] = $post_id;
-
 			}
 
 		}
@@ -2092,12 +2050,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Do we have any orphans to remove?
 		if ( count( $to_remove ) > 0 ) {
 
-			// Construct array.
+			// Delete them from the data array.
 			foreach( $to_remove AS $civi_event_id ) {
-
-				// Delete it from the data array.
 				unset( $civi_event_disabled[$civi_event_id] );
-
 			}
 
 		}
@@ -2196,17 +2151,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get all orphan data.
 		$eo_event_data = $this->get_eo_event_ids_for_orphans();
 
-		// If we get some.
+		// Get keyed value if there is one.
 		if ( count( $eo_event_data ) > 0 ) {
-
-			// Do we have the key?
 			if ( isset( $eo_event_data[$civi_event_id] ) ) {
-
-				// Get keyed value.
 				$eo_event_id = $eo_event_data[$civi_event_id];
-
 			}
-
 		}
 
 		// --<

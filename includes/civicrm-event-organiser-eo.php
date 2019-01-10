@@ -482,15 +482,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// Does this type have an existing term?
 			$term_id = $this->plugin->taxonomy->get_term_id( $type );
 
-			// If not.
+			// If not ten create one and assign term ID.
 			if ( $term_id === false ) {
-
-				// Create one.
 				$term = $this->plugin->taxonomy->create_term( $type );
-
-				// Assign term ID.
 				$term_id = $term['term_id'];
-
 			}
 
 			// Define as array.
@@ -1008,12 +1003,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Get schedule.
 		$schedule = eo_get_event_schedule( $post_id );
 
-		// If we have some dates.
+		// If we have some dates, return them.
 		if( isset( $schedule['_occurrences'] ) AND count( $schedule['_occurrences'] ) > 0 ) {
-
-			// --<
 			return $schedule['_occurrences'];
-
 		}
 
 		// --<
@@ -1200,12 +1192,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// Do we have a default set?
 			$default = $this->plugin->db->option_get( 'civi_eo_event_default_role' );
 
-			// Did we get one?
+			// Override with default value if we get one.
 			if ( $default !== '' AND is_numeric( $default ) ) {
-
-				// Override with default value.
 				$value = absint( $default );
-
 			}
 
 		}
@@ -1298,12 +1287,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// Do we have a default set?
 			$default = $this->plugin->db->option_get( 'civi_eo_event_default_profile' );
 
-			// Did we get one?
+			// Override with default value if we get one.
 			if ( $default !== '' AND is_numeric( $default ) ) {
-
-				// Override with default value.
 				$profile_id = absint( $default );
-
 			}
 
 		}

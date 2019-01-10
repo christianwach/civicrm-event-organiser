@@ -230,12 +230,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Assume we have no edited term.
 		$old_term = null;
 
-		// Do we have the term stored?
+		// Use it if we have the term stored.
 		if ( isset( $this->term_edited ) ) {
-
-			// Use it.
 			$old_term = $this->term_edited;
-
 		}
 
 		// Get current term object.
@@ -1008,7 +1005,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Sanity check.
-		if ( isset( $type['value'] ) AND is_numeric( $type['value'] ) AND $type['value'] > 0 ) return $type['value'];
+		if ( isset( $type['value'] ) AND is_numeric( $type['value'] ) AND $type['value'] > 0 ) {
+			return $type['value'];
+		}
 
 		// If all the above fails.
 		return false;
@@ -1116,12 +1115,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 				// Init selected,
 				$selected = '';
 
-				// Is this value the same as in the post?
+				// Override selected if this value is the same as in the post.
 				if ( $existing_value === $type_value ) {
-
-					// Override selected,
 					$selected = ' selected="selected"';
-
 				}
 
 				// Construct option,
@@ -1158,12 +1154,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Do we have a default set?
 		$default = $this->plugin->db->option_get( 'civi_eo_event_default_type' );
 
-		// Did we get one?
+		// Override with default value if we get one.
 		if ( $default !== '' AND is_numeric( $default ) ) {
-
-			// Override with default value,
 			$existing_value = absint( $default );
-
 		}
 
 		// If we have a post,

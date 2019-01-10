@@ -323,7 +323,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Construct name.
 		$name = ! empty( $location['address']['street_address'] ) ?
 				$location['address']['street_address'] :
-				'Untitled venue';
+				__( 'Untitled venue', 'civicrm-event-organiser' );
 
 		// Construct args.
 		$args = array(
@@ -665,13 +665,10 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$email = '';
 		$phone = '';
 
-		// Is this an edit?
+		// Get meta box data if this is an edit.
 		if ( isset( $venue->term_id ) ) {
-
-			// Get meta box data.
 			$email = eo_get_venue_meta( $venue->term_id, '_civi_email', true );
 			$phone = eo_get_venue_meta( $venue->term_id, '_civi_phone', true );
-
 		}
 
 		// Add nonce.
