@@ -910,8 +910,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Show prettified list.
-		echo '<ul><li style="margin: 0.5em 0; padding: 0.5em 0 0.5em 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd;">' .
-				implode( '</li><li style="margin: 0.5em 0; padding: 0 0 0.5em 0; border-bottom: 1px solid #ddd;">', $links ) .
+		echo '<ul><li style="margin: 0.5em 0; padding: 0.5em 0 0.5em 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee;">' .
+				implode( '</li><li style="margin: 0.5em 0; padding: 0 0 0.5em 0; border-bottom: 1px solid #eee;">', $links ) .
 			 '</li></ul>';
 
 		/**
