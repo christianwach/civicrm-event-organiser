@@ -891,28 +891,28 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 			// Get DateTime object.
 			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
-			$timestamp = $start->getTimestamp();
 
-			// Construct date and time.
-			$date = date_i18n( get_option('date_format'), $timestamp );
-			$time = date_i18n( get_option('time_format'), $timestamp );
+			// Construct date and time format.
+			$format = get_option('date_format') . ' ' . get_option('time_format');
 
-			// Construct link content.
-			$content = $date . ' ' . $time;
+			// Get datetime string.
+			$datetime_string = eo_format_datetime( $start, $format );
 
-			// Wrap in anchor.
-			$content = '<a href="' . esc_url( $link ) . '">' . esc_html( $content ) . '</a>';
+			// Construct link.
+			$link = '<a href="' . esc_url( $link ) . '">' . esc_html( $datetime_string ) . '</a>';
 
-			// Prefix with helpful text.
-			$content = __( 'Info &amp; Settings for', 'civicrm-event-organiser' ) . ': ' . $content;
+			// Construct list item content.
+			$content = sprintf( __( 'Info and Settings for: %s', 'civicrm-event-organiser' ), $link );
 
 			// Add to array.
 			$links[] = $content;
 
 		}
 
-		// Show list.
-		echo '<ul><li>' . implode( '</li><li>', $links ) . '</li></p>';
+		// Show prettified list.
+		echo '<ul><li style="margin: 0.5em 0; padding: 0.5em 0 0.5em 0; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd;">' .
+				implode( '</li><li style="margin: 0.5em 0; padding: 0 0 0.5em 0; border-bottom: 1px solid #ddd;">', $links ) .
+			 '</li></ul>';
 
 		/**
 		 * Broadcast end of metabox.
