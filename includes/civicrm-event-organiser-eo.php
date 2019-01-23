@@ -893,7 +893,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
 
 			// Construct date and time format.
-			$format = get_option('date_format') . ' ' . get_option('time_format');
+			$format = get_option( 'date_format' );
+			if ( ! eo_is_all_day( $event->ID ) ) {
+				$format .= ' ' . get_option( 'time_format' );
+			}
 
 			// Get datetime string.
 			$datetime_string = eo_format_datetime( $start, $format );
