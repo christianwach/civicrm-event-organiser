@@ -2203,6 +2203,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * We are only dealing with the profile included at the top of the page, so
 	 * need to specify `weight = 1` to retrieve just that profile.
 	 *
+	 * We also need to specify the "module" - because CiviEvent can specify an
+	 * additional module called "CiviEvent_Additional" which refers to Profiles
+	 * used for (surprise, surprise) registrations for additional people. At the
+	 * moment, this plugin does not handle profiles used when "Register multiple
+	 * participants" is enabled.
+	 *
 	 * @since 0.2.4
 	 *
 	 * @param array $civi_event An array of data representing a CiviEvent.
@@ -2214,6 +2220,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$params = array(
 			'version' => 3,
 			'entity_table' => 'civicrm_event',
+			'module' => 'CiviEvent',
 			'entity_id' => $civi_event['id'],
 			'weight' => 1,
 			'sequential' => 1,
@@ -2222,12 +2229,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Query via API.
 		$result = civicrm_api( 'uf_join', 'getsingle', $params );
 
-		// Return false if we don't find one.
-		if (
-			isset( $result['is_error'] ) AND
-			$result['is_error'] == '1' AND
-			$result['count'] == '0'
-		) {
+		// Return false if we get an error.
+		if ( isset( $result['is_error'] ) AND $result['is_error'] == '1' ) {
+			return false;
+		}
+
+		// Return false if the event has no profile.
+		if ( isset( $result['count'] ) AND $result['count'] == '0' ) {
 			return false;
 		}
 
