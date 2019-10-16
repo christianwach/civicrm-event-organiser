@@ -1610,6 +1610,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'version' => 3,
 			'id' => $loc_id,
 			'return' => 'all',
+			// get country and state name
+			'api.Address.getsingle' => ['sequential' => 1, 'id' => "\$value.address_id", 'return' => ["country_id.name", "state_province_id.name"]],
 		);
 
 		// Call API ('get' returns an array keyed by the item).

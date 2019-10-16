@@ -332,6 +332,16 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			//'country' => $location['address']['country'], // CiviCRM country is an ID not a string
 		);
 
+		// Add country if present.
+		if (  ! isset($location['api.Address.getsingle']['is_error']) AND ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
+			$args['country'] = $location['api.Address.getsingle']['country_id.name'];
+		}
+
+		// Add state if present.
+		if (  ! isset($location['api.Address.getsingle']['is_error']) AND ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
+			$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
+		}
+
 		// Add street address if present.
 		if ( isset( $location['address']['street_address'] ) AND ! empty( $location['address']['street_address'] ) ) {
 			$args['address'] = $location['address']['street_address'];
@@ -481,6 +491,16 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 				//'state' => $location['address']['county'], // CiviCRM county is an ID not a string
 				//'country' => $location['address']['country'], // CiviCRM country is an ID not a string
 			);
+
+			// Add country if present.
+			if (  ! isset($location['api.Address.getsingle']['is_error']) AND ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
+				$args['country'] = $location['api.Address.getsingle']['country_id.name'];
+			}
+
+			// Add state if present.
+			if (  ! isset($location['api.Address.getsingle']['is_error']) AND ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
+				$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
+			}
 
 			// Add street address if present.
 			if ( isset( $location['address']['street_address'] ) AND ! empty( $location['address']['street_address'] ) ) {
