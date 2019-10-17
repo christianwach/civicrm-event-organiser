@@ -328,17 +328,15 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Construct args.
 		$args = array(
 			//'description' => $location['description'], // CiviCRM has no location description at present
-			//'state' => $location['address']['county'], // CiviCRM county is an ID not a string
-			//'country' => $location['address']['country'], // CiviCRM country is an ID not a string
 		);
 
 		// Add country if present.
-		if (  ! isset($location['api.Address.getsingle']['is_error']) AND ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
+		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) AND ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
 			$args['country'] = $location['api.Address.getsingle']['country_id.name'];
 		}
 
 		// Add state if present.
-		if (  ! isset($location['api.Address.getsingle']['is_error']) AND ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
+		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) AND ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
 			$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
 		}
 
