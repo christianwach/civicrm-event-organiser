@@ -958,10 +958,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$params = array(
 			'version' => 3,
 			'is_template' => 0,
-			// Define stupidly high limit, because API defaults to 25.
-			// TODO: we can set limit = 0.
 			'options' => array(
-				'limit' => '10000',
+				'limit' => 0, // Get all events.
 			),
 		);
 
@@ -1507,19 +1505,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// Construct locations array.
 		$params = array(
-
-			// API v3 please.
 			'version' => 3,
-
-			// Return all data.
-			'return' => 'all',
-
-			// Define stupidly high limit, because API defaults to 25
-			// TODO: use limit = 0.
+			'return' => 'all', // Return all data.
 			'options' => array(
-				'limit' => '10000',
+				'limit' => 0, // Get all locations.
 			),
-
 		);
 
 		// Call API.
