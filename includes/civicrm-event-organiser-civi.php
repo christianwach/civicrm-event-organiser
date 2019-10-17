@@ -374,12 +374,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Get CiviEvent online registration value.
 		$is_reg = $this->plugin->eo->get_event_registration( $post->ID );
 
-		// Did we get one?
+		// Add online registration value to our params if we get one.
 		if ( is_numeric( $is_reg ) AND $is_reg != 0 ) {
-
-			// Add to our params.
 			$civi_event['is_online_registration'] = 1;
-
 		}
 
 		// Participant_role default.
@@ -388,23 +385,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Get existing role ID.
 		$existing_id = $this->get_participant_role( $post );
 
-		// Did we get one?
+		// Add existing role ID to our params if we get one.
 		if ( $existing_id !== false AND is_numeric( $existing_id ) AND $existing_id != 0 ) {
-
-			// Add to our params.
 			$civi_event['default_role_id'] = $existing_id;
-
 		}
 
 		// Get event type pseudo-ID (or value), because it is required in CiviCRM.
 		$type_value = $this->plugin->taxonomy->get_default_event_type_value( $post );
 
-		// Well?
+		// Die if there are no event types defined in CiviCRM.
 		if ( $type_value === false ) {
-
-			// Error.
 			wp_die( __( 'You must have some CiviCRM event types defined', 'civicrm-event-organiser' ) );
-
 		}
 
 		// Assign event type value.
@@ -1298,12 +1289,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Get existing location.
 		$location = $this->get_location( $venue );
 
-		// Did we do okay?
+		// Delete location if we get one.
 		if ( $location !== false ) {
-
-			// Delete.
 			$result = $this->delete_location_by_id( $location['id'] );
-
 		}
 
 		// --<
@@ -1610,8 +1598,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			'version' => 3,
 			'id' => $loc_id,
 			'return' => 'all',
-			// get country and state name
-			'api.Address.getsingle' => ['sequential' => 1, 'id' => "\$value.address_id", 'return' => ["country_id.name", "state_province_id.name"]],
+			// Get country and state name.
+			'api.Address.getsingle' => array(
+				'sequential' => 1,
+				'id' => "\$value.address_id",
+				'return' => array(
+					"country_id.name",
+					"state_province_id.name"
+				),
+			),
 		);
 
 		// Call API ('get' returns an array keyed by the item).
@@ -1807,12 +1802,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Do we have a default set?
 		$default = $this->plugin->db->option_get( 'civi_eo_event_default_role' );
 
-		// Did we get one?
+		// Override with default value if we get one.
 		if ( $default !== '' AND is_numeric( $default ) ) {
-
-			// Override with default value.
 			$existing_id = absint( $default );
-
 		}
 
 		// If we have a post.
@@ -1821,12 +1813,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// Get stored value.
 			$stored_id = $this->plugin->eo->get_event_role( $post->ID );
 
-			// Did we get one?
+			// Override with stored value if we get one.
 			if ( $stored_id !== '' AND is_numeric( $stored_id ) AND $stored_id > 0 ) {
-
-				// Override with stored value.
 				$existing_id = absint( $stored_id );
-
 			}
 
 		}
@@ -1869,15 +1858,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		);
 		$participant_roles = civicrm_api( 'OptionValue', 'get', $opt_values );
 
-		// Did we get any?
+		// Return the participant roles array if we have one.
 		if ( $participant_roles['is_error'] == '0' AND count( $participant_roles['values'] ) > 0 ) {
-
-			// --<
 			return $participant_roles;
-
 		}
 
-		// --<
+		// Fallback.
 		return false;
 
 	}
@@ -1924,12 +1910,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				// Init selected.
 				$selected = '';
 
-				// Is this value the same as in the post?
+				// Override if the value is the same as in the post.
 				if ( $existing_id === $role_id ) {
-
-					// Override selected.
 					$selected = ' selected="selected"';
-
 				}
 
 				// Construct option.
@@ -1978,12 +1961,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// Get the first CiviEvent, though any would do as they all have the same value.
 			$civi_event = $this->get_event_by_id( array_shift( $civi_events ) );
 
-			// Did we do okay?
+			// Set checkbox to ticked if online registration is selected.
 			if ( $civi_event !== false AND $civi_event['is_error'] == '0' AND $civi_event['is_online_registration'] == '1' ) {
-
-				// Set checkbox to ticked.
 				$default = ' checked="checked"';
-
 			}
 
 		}
@@ -2278,12 +2258,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			// Get stored value.
 			$stored_id = $this->plugin->eo->get_event_registration_profile( $post->ID );
 
-			// Did we get one?
+			// Override with stored value if we get a value.
 			if ( $stored_id !== '' AND is_numeric( $stored_id ) AND $stored_id > 0 ) {
-
-				// Override with stored value.
 				$profile_id = absint( $stored_id );
-
 			}
 
 		}

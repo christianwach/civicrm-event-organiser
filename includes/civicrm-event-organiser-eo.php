@@ -1111,7 +1111,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$civi_reg = get_post_meta( $post_id, '_civi_reg', true );
 
 		// If it's not yet set it will be an empty string, so cast as boolean.
-		if ( $civi_reg === '' ) { $civi_reg = 0; }
+		if ( $civi_reg === '' ) {
+			$civi_reg = 0;
+		}
 
 		// --<
 		return absint( $civi_reg );
@@ -1223,7 +1225,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$civi_role = get_post_meta( $post_id, '_civi_role', true );
 
 		// If it's not yet set it will be an empty string, so cast as number.
-		if ( $civi_role === '' ) { $civi_role = 0; }
+		if ( $civi_role === '' ) {
+			$civi_role = 0;
+		}
 
 		// --<
 		return absint( $civi_role );
@@ -1318,7 +1322,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$profile_id = get_post_meta( $post_id, '_civi_registration_profile', true );
 
 		// If it's not yet set it will be an empty string, so cast as number.
-		if ( $profile_id === '' ) { $profile_id = 0; }
+		if ( $profile_id === '' ) {
+			$profile_id = 0;
+		}
 
 		// --<
 		return absint( $profile_id );
