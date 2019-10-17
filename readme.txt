@@ -18,7 +18,7 @@ A WordPress plugin for syncing Event Organiser Events, Venues and Event Categori
 
 ### Requirements
 
-This plugin requires at least WordPress 4.4 and CiviCRM 4.6 (CiviCRM 4.7 recommended).
+This plugin requires at least WordPress 4.4 and CiviCRM 4.7.
 
 It also requires:
 
