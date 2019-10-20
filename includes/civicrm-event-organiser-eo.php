@@ -503,8 +503,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$post_data['post_status'] = 'publish';
 
 		// Make the EO event a draft if the CiviEvent is not active.
+		// Not public event will be private post.
 		if ( $civi_event['is_active'] == 0 ) {
 			$post_data['post_status'] = 'draft';
+		} elseif ( $civi_event['is_public'] == 0 ) {
+			$post_data['post_status'] = 'private';
 		}
 
 		// Do we have a post ID for this event?
