@@ -96,6 +96,15 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public $term_html;
 
+	/**
+	 * CiviCRM ACF Integration compatibility object.
+	 *
+	 * @since 0.4.4
+	 * @access public
+	 * @var object $acf The CiviCRM ACF Integration compatibility object.
+	 */
+	public $acf;
+
 
 
 	/**
@@ -176,6 +185,9 @@ class CiviCRM_WP_Event_Organiser {
 		// Load our template functions.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-functions.php' );
 
+		// Load our CiviCRM ACF Integration class.
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-acf.php' );
+
 	}
 
 
@@ -198,6 +210,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo = new CiviCRM_WP_Event_Organiser_EO;
 		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue;
 		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy;
+		$this->acf = new CiviCRM_WP_Event_Organiser_ACF;
 
 		// Store references.
 		$this->term_html->set_references( $this );
@@ -206,6 +219,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo->set_references( $this );
 		$this->eo_venue->set_references( $this );
 		$this->taxonomy->set_references( $this );
+		$this->acf->set_references( $this );
 
 		// We're done.
 		$done = true;
