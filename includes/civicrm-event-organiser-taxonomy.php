@@ -157,7 +157,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function intercept_create_term( $term_id, $tt_id, $taxonomy ) {
 
 		// Only look for terms in the EO taxonomy.
-		if ( $taxonomy != 'event-category' ) return;
+		if ( $taxonomy != 'event-category' ) {
+			return;
+		}
 
 		// Get term object.
 		$term = get_term_by( 'id', $term_id, 'event-category' );
@@ -199,12 +201,20 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Error check.
-		if ( is_null( $term ) ) return;
-		if ( is_wp_error( $term ) ) return;
-		if ( ! is_object( $term ) ) return;
+		if ( is_null( $term ) ) {
+			return;
+		}
+		if ( is_wp_error( $term ) ) {
+			return;
+		}
+		if ( ! is_object( $term ) ) {
+			return;
+		}
 
 		// Check taxonomy.
-		if ( $term->taxonomy != 'event-category' ) return;
+		if ( $term->taxonomy != 'event-category' ) {
+			return;
+		}
 
 		// Store for reference in intercept_update_term().
 		$this->term_edited = clone $term;
@@ -225,7 +235,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function intercept_update_term( $term_id, $tt_id, $taxonomy ) {
 
 		// Only look for terms in the EO taxonomy.
-		if ( $taxonomy != 'event-category' ) return;
+		if ( $taxonomy != 'event-category' ) {
+			return;
+		}
 
 		// Assume we have no edited term.
 		$old_term = null;
@@ -263,7 +275,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function intercept_delete_term( $term, $tt_id, $taxonomy, $deleted_term ) {
 
 		// Only look for terms in the EO taxonomy.
-		if ( $taxonomy != 'event-category' ) return;
+		if ( $taxonomy != 'event-category' ) {
+			return;
+		}
 
 		// Unhook CiviCRM - no need because there is no hook to catch event type deletes.
 
@@ -287,7 +301,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function create_term( $type ) {
 
 		// Sanity check.
-		if ( ! is_array( $type ) ) return false;
+		if ( ! is_array( $type ) ) {
+			return false;
+		}
 
 		// Define description if present.
 		$description = isset( $type['description'] ) ? $type['description'] : '';
@@ -309,7 +325,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// If all goes well, we get: array( 'term_id' => 12, 'term_taxonomy_id' => 34 )
 		// If something goes wrong, we get a WP_Error object.
-		if ( is_wp_error( $result ) ) return false;
+		if ( is_wp_error( $result ) ) {
+			return false;
+		}
 
 		// --<
 		return $result;
@@ -330,7 +348,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function update_term( $new_type, $old_type = null ) {
 
 		// Sanity check.
-		if ( ! is_array( $new_type ) ) return false;
+		if ( ! is_array( $new_type ) ) {
+			return false;
+		}
 
 		// If we're updating a term.
 		if ( ! is_null( $old_type ) ) {
@@ -352,7 +372,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			$result = $this->create_term( $new_type );
 
 			// How did we do?
-			if ( $result === false ) return $result;
+			if ( $result === false ) {
+				return $result;
+			}
 
 			// --<
 			return $result['term_id'];
@@ -382,7 +404,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// If all goes well, we get: array( 'term_id' => 12, 'term_taxonomy_id' => 34 )
 		// If something goes wrong, we get a WP_Error object.
-		if ( is_wp_error( $result ) ) return false;
+		if ( is_wp_error( $result ) ) {
+			return false;
+		}
 
 		// --<
 		return $result['term_id'];
@@ -402,7 +426,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function get_term_id( $type ) {
 
 		// Sanity check.
-		if ( ! is_array( $type ) ) return false;
+		if ( ! is_array( $type ) ) {
+			return false;
+		}
 
 		// Init return.
 		$term_id = false;
@@ -411,19 +437,25 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$term = get_term_by( 'name', $type['label'], 'event-category' );
 
 		// How did we do?
-		if ( $term !== false ) return $term->term_id;
+		if ( $term !== false ) {
+			return $term->term_id;
+		}
 
 		// Try and match by term slug <-> type label.
 		$term = get_term_by( 'slug', sanitize_title( $type['label'] ), 'event-category' );
 
 		// How did we do?
-		if ( $term !== false ) return $term->term_id;
+		if ( $term !== false ) {
+			return $term->term_id;
+		}
 
 		// Try and match by term slug <-> type name.
 		$term = get_term_by( 'slug', sanitize_title( $type['name'] ), 'event-category' );
 
 		// How did we do?
-		if ( $term !== false ) return $term->term_id;
+		if ( $term !== false ) {
+			return $term->term_id;
+		}
 
 		// --<
 		return $term_id;
@@ -469,7 +501,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		);
 
 		// Error check.
-		if ( ! $tax ) return $null;
+		if ( ! $tax ) {
+			return $null;
+		}
 
 		// Get taxonomy name.
 		$taxonomy = $tax->taxonomy;
@@ -524,7 +558,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function terms_dropdown_clear( $output, $r ) {
 
 		// Only clear Event Organiser category.
-		if ( $r['taxonomy'] != 'event-category' ) return $output;
+		if ( $r['taxonomy'] != 'event-category' ) {
+			return $output;
+		}
 
 		// Only once please, in case further dropdowns are rendered.
 		remove_filter( 'wp_dropdown_cats', array( $this, 'terms_dropdown_clear' ), 20 );
@@ -548,7 +584,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function term_default_checked( $args, $post_id ) {
 
 		// Only modify Event Organiser category.
-		if ( $args['taxonomy'] != 'event-category' ) return $args;
+		if ( $args['taxonomy'] != 'event-category' ) {
+			return $args;
+		}
 
 		// If this is a post.
 		if ( $post_id ) {
@@ -561,7 +599,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			);
 
 			// Bail if a category is already set.
-			if ( ! empty( $args['selected_cats'] ) ) return $args;
+			if ( ! empty( $args['selected_cats'] ) ) {
+				return $args;
+			}
 
 		}
 
@@ -569,19 +609,25 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$type_value = $this->get_default_event_type_value();
 
 		// Bail if something went wrong.
-		if ( $type_value === false ) return $args;
+		if ( $type_value === false ) {
+			return $args;
+		}
 
 		// Get the event type data.
 		$type = $this->get_event_type_by_value( $type_value );
 
 		// Bail if something went wrong.
-		if ( $type === false ) return $args;
+		if ( $type === false ) {
+			return $args;
+		}
 
 		// Get corresponding term ID.
 		$term_id = $this->get_term_id( $type );
 
 		// Bail if something went wrong.
-		if ( $term_id === false ) return $args;
+		if ( $term_id === false ) {
+			return $args;
+		}
 
 		// Set argument.
 		$args['selected_cats'] = array( $term_id );
@@ -613,10 +659,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function event_type_pre( $op, $objectName, $objectId, $objectRef ) {
 
 		// Target our operation.
-		if ( $op != 'edit' ) return;
+		if ( $op != 'edit' ) {
+			return;
+		}
 
 		// Target our object type.
-		if ( $objectName != 'Email' ) return;
+		if ( $objectName != 'Email' ) {
+			return;
+		}
 
 	}
 
@@ -658,10 +708,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function event_type_process_form( $formName, &$form ) {
 
 		// Kick out if not options form.
-		if ( ! ( $form instanceof CRM_Admin_Form_Options ) ) return;
+		if ( ! ( $form instanceof CRM_Admin_Form_Options ) ) {
+			return;
+		}
 
 		// Kick out if not event type form.
-		if ( 'event_type' != $form->getVar( '_gName' ) ) return;
+		if ( 'event_type' != $form->getVar( '_gName' ) ) {
+			return;
+		}
 
 		// Inspect all values.
 		$type = $form->getVar( '_values' );
@@ -739,16 +793,22 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function update_event_type( $new_term, $old_term = null ) {
 
 		// Sanity check.
-		if ( ! is_object( $new_term ) ) return false;
+		if ( ! is_object( $new_term ) ) {
+			return false;
+		}
 
 		// Init CiviCRM or die.
-		if ( ! $this->plugin->civi->is_active() ) return false;
+		if ( ! $this->plugin->civi->is_active() ) {
+			return false;
+		}
 
 		// Get option group ID.
 		$opt_group_id = $this->get_event_types_optgroup_id();
 
 		// Error check.
-		if ( $opt_group_id === false ) return false;
+		if ( $opt_group_id === false ) {
+			return false;
+		}
 
 		// Define event type.
 		$params = array(
@@ -829,16 +889,22 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function delete_event_type( $term ) {
 
 		// Sanity check.
-		if ( ! is_object( $term ) ) return false;
+		if ( ! is_object( $term ) ) {
+			return false;
+		}
 
 		// Init CiviCRM or die.
-		if ( ! $this->plugin->civi->is_active() ) return false;
+		if ( ! $this->plugin->civi->is_active() ) {
+			return false;
+		}
 
 		// Get ID of event type to delete.
 		$type_id = $this->get_event_type_id( $term );
 
 		// Error check.
-		if ( $type_id === false ) return false;
+		if ( $type_id === false ) {
+			return false;
+		}
 
 		// Define event type.
 		$params = array(
@@ -884,13 +950,17 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function get_event_type_id( $term ) {
 
 		// Bail if we fail to init CiviCRM.
-		if ( ! $this->plugin->civi->is_active() ) return false;
+		if ( ! $this->plugin->civi->is_active() ) {
+			return false;
+		}
 
 		// Get option group ID.
 		$opt_group_id = $this->get_event_types_optgroup_id();
 
 		// Error check.
-		if ( $opt_group_id === false ) return false;
+		if ( $opt_group_id === false ) {
+			return false;
+		}
 
 		// Define params to get item.
 		$types_params = array(
@@ -932,7 +1002,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Sanity check ID and return if valid.
-		if ( isset( $type['id'] ) AND is_numeric( $type['id'] ) AND $type['id'] > 0 ) return $type['id'];
+		if ( isset( $type['id'] ) AND is_numeric( $type['id'] ) AND $type['id'] > 0 ) {
+			return $type['id'];
+		}
 
 		// If all the above fails.
 		return false;
@@ -952,13 +1024,17 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function get_event_type_value( $type_id ) {
 
 		// Bail if we fail to init CiviCRM.
-		if ( ! $this->plugin->civi->is_active() ) return false;
+		if ( ! $this->plugin->civi->is_active() ) {
+			return false;
+		}
 
 		// Get option group ID.
 		$opt_group_id = $this->get_event_types_optgroup_id();
 
 		// Error check.
-		if ( $opt_group_id === false ) return false;
+		if ( $opt_group_id === false ) {
+			return false;
+		}
 
 		// Define params to get item.
 		$types_params = array(
@@ -1026,13 +1102,17 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function get_event_types() {
 
 		// Bail if we fail to init CiviCRM.
-		if ( ! $this->plugin->civi->is_active() ) return false;
+		if ( ! $this->plugin->civi->is_active() ) {
+			return false;
+		}
 
 		// Get option group ID,
 		$opt_group_id = $this->get_event_types_optgroup_id();
 
 		// Error check,
-		if ( $opt_group_id === false ) return false;
+		if ( $opt_group_id === false ) {
+			return false;
+		}
 
 		// Define params to get items sorted by weight,
 		$types_params = array(
@@ -1085,7 +1165,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$html = '';
 
 		// Bail if we fail to init CiviCRM,
-		if ( ! $this->plugin->civi->is_active() ) return $html;
+		if ( ! $this->plugin->civi->is_active() ) {
+			return $html;
+		}
 
 		// Get all event types,
 		$result = $this->get_event_types();
@@ -1166,7 +1248,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			$cat = get_the_terms( $post->ID, 'event-category' );
 
 			// Error check,
-			if ( is_wp_error( $cat ) ) return false;
+			if ( is_wp_error( $cat ) ) {
+				return false;
+			}
 
 			// Did we get any?
 			if ( is_array( $cat ) AND count( $cat ) > 0 ) {
@@ -1202,13 +1286,17 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function get_event_type_by_id( $type_id ) {
 
 		// Bail if we fail to init CiviCRM.
-		if ( ! $this->plugin->civi->is_active() ) return false;
+		if ( ! $this->plugin->civi->is_active() ) {
+			return false;
+		}
 
 		// Get option group ID.
 		$opt_group_id = $this->get_event_types_optgroup_id();
 
 		// Error check.
-		if ( $opt_group_id === false ) return false;
+		if ( $opt_group_id === false ) {
+			return false;
+		}
 
 		// Define params to get item.
 		$type_params = array(
@@ -1238,13 +1326,17 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function get_event_type_by_value( $type_value ) {
 
 		// Bail if we fail to init CiviCRM.
-		if ( ! $this->plugin->civi->is_active() ) return false;
+		if ( ! $this->plugin->civi->is_active() ) {
+			return false;
+		}
 
 		// Get option group ID.
 		$opt_group_id = $this->get_event_types_optgroup_id();
 
 		// Error check.
-		if ( $opt_group_id === false ) return false;
+		if ( $opt_group_id === false ) {
+			return false;
+		}
 
 		// Define params to get item.
 		$type_params = array(

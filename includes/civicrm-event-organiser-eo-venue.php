@@ -58,7 +58,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function register_hooks() {
 
 		// Check for Event Organiser.
-		if ( ! $this->plugin->eo->is_active() ) return;
+		if ( ! $this->plugin->eo->is_active() ) {
+			return;
+		}
 
 		// Intercept create venue.
 		add_action( 'eventorganiser_insert_venue', array( $this, 'insert_venue' ), 10, 1 );
@@ -101,7 +103,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function insert_venue( $venue_id ) {
 
 		// Check permissions.
-		if ( ! $this->allow_venue_edit() ) return;
+		if ( ! $this->allow_venue_edit() ) {
+			return;
+		}
 
 		// Save custom EO components.
 		$this->_save_venue_components( $venue_id );
@@ -143,7 +147,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function save_venue( $venue_id ) {
 
 		// Check permissions.
-		if ( ! $this->allow_venue_edit() ) return;
+		if ( ! $this->allow_venue_edit() ) {
+			return;
+		}
 
 		// Save custom EO components.
 		$this->_save_venue_components( $venue_id );
@@ -188,9 +194,15 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function delete_venue_term( $term, $tt_id, $taxonomy, $deleted_term ) {
 
 		// Sanity checks.
-		if ( ! is_object( $deleted_term ) ) return;
-		if ( is_array( $taxonomy ) && ! in_array( 'event-venue', $taxonomy ) ) return;
-		if ( ! is_array( $taxonomy ) && $taxonomy != 'event-venue' ) return;
+		if ( ! is_object( $deleted_term ) ) {
+			return;
+		}
+		if ( is_array( $taxonomy ) && ! in_array( 'event-venue', $taxonomy ) ) {
+			return;
+		}
+		if ( ! is_array( $taxonomy ) && $taxonomy != 'event-venue' ) {
+			return;
+		}
 
 		// Delete anything associated with this venue.
 		$this->delete_venue_meta( $deleted_term );
@@ -211,7 +223,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function delete_venue( $term, $tt_id, $deleted_term ) {
 
 		// Sanity check.
-		if ( ! is_object( $deleted_term ) ) return;
+		if ( ! is_object( $deleted_term ) ) {
+			return;
+		}
 
 		// Delete anything associated with this venue.
 		$this->delete_venue_meta( $deleted_term );
@@ -231,10 +245,14 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// Only do this once.
 		static $term_deleted;
-		if ( isset( $term_deleted ) AND $term_deleted === $deleted_term->term_id ) return;
+		if ( isset( $term_deleted ) AND $term_deleted === $deleted_term->term_id ) {
+			return;
+		}
 
 		// Sanity check.
-		if ( ! is_object( $deleted_term ) ) return;
+		if ( ! is_object( $deleted_term ) ) {
+			return;
+		}
 
 		// Get venue ID.
 		$venue_id = $deleted_term->term_id;
@@ -276,7 +294,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function deleted_venue( $venue_id ) {
 
 		// Check permissions.
-		if ( ! $this->allow_venue_edit() ) return;
+		if ( ! $this->allow_venue_edit() ) {
+			return;
+		}
 
 		// Delete components.
 		$this->_delete_venue_components( $venue_id );
@@ -298,7 +318,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function create_venue( $location ) {
 
 		// Check permissions.
-		if ( ! $this->allow_venue_edit() ) return false;
+		if ( ! $this->allow_venue_edit() ) {
+			return false;
+		}
 
 		/*
 		 * Event Organiser will return a WP_Error object if there is already a
@@ -452,7 +474,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function update_venue( $location ) {
 
 		// Check permissions.
-		if ( ! $this->allow_venue_edit() ) return;
+		if ( ! $this->allow_venue_edit() ) {
+			return;
+		}
 
 		// Does this location have an existing venue?
 		$venue_id = $this->get_venue_id( $location );
@@ -533,7 +557,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			add_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10, 1 );
 
 			// Bail if we get an error.
-			if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) return false;
+			if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) {
+				return false;
+			}
 
 			// Create venue meta data, if present.
 			if ( isset( $location['email']['email'] ) ) {
@@ -584,7 +610,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$venue_id = $wpdb->get_var( $sql );
 
 		// If we get one, return it.
-		if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
+		if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) {
+			return $venue_id;
+		}
 
 		// ---------------------------------------------------------------------
 		// Next, see if we have an identical location
@@ -616,7 +644,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			$venue_id = $wpdb->get_var( $sql );
 
 			// If we get one, return it.
-			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
+			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) {
+				return $venue_id;
+			}
 
 		}
 
@@ -638,7 +668,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			$venue_id = $wpdb->get_var( $sql );
 
 			// If we get one, return it.
-			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) return $venue_id;
+			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) {
+				return $venue_id;
+			}
 
 		}
 
@@ -795,7 +827,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		}
 
-		if ( $single ) return $terms[0];
+		if ( $single ) {
+			return $terms[0];
+		}
 
 		// --<
 		return $terms;
@@ -894,7 +928,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	private function _save_venue_components( $venue_id ) {
 
 		// Skip if neither email nor phone is set.
-		if ( ! isset( $_POST['civi_eo_venue_email'] ) AND ! isset( $_POST['civi_eo_venue_phone'] ) ) return;
+		if ( ! isset( $_POST['civi_eo_venue_email'] ) AND ! isset( $_POST['civi_eo_venue_phone'] ) ) {
+			return;
+		}
 
 		// Check nonce.
 		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
@@ -959,7 +995,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$value = sanitize_email( $venue_email );
 
 		// Validate as email address.
-		if ( ! is_email( $value ) ) return;
+		if ( ! is_email( $value ) ) {
+			return;
+		}
 
 		// Update venue meta.
 		eo_update_venue_meta( $venue_id,  '_civi_email', esc_sql( $value ) );

@@ -132,10 +132,14 @@ class CiviCRM_WP_Event_Organiser {
 	public function initialise() {
 
 		// Bail if Event Organiser plugin is not present.
-		if ( ! defined( 'EVENT_ORGANISER_VER' ) ) return;
+		if ( ! defined( 'EVENT_ORGANISER_VER' ) ) {
+			return;
+		}
 
 		// Bail if CiviCRM plugin is not present.
-		if ( ! function_exists( 'civi_wp' ) ) return;
+		if ( ! function_exists( 'civi_wp' ) ) {
+			return;
+		}
 
 		// Include files.
 		$this->include_files();
@@ -201,16 +205,18 @@ class CiviCRM_WP_Event_Organiser {
 
 		// Only do this once.
 		static $done;
-		if ( isset( $done ) AND $done === true ) return;
+		if ( isset( $done ) AND $done === true ) {
+			return;
+		}
 
 		// Initialise objects.
-		$this->term_html = new CiviCRM_WP_Event_Organiser_Term_Description;
-		$this->db = new CiviCRM_WP_Event_Organiser_Admin;
-		$this->civi = new CiviCRM_WP_Event_Organiser_CiviCRM;
-		$this->eo = new CiviCRM_WP_Event_Organiser_EO;
-		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue;
-		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy;
-		$this->acf = new CiviCRM_WP_Event_Organiser_ACF;
+		$this->term_html = new CiviCRM_WP_Event_Organiser_Term_Description();
+		$this->db = new CiviCRM_WP_Event_Organiser_Admin();
+		$this->civi = new CiviCRM_WP_Event_Organiser_CiviCRM();
+		$this->eo = new CiviCRM_WP_Event_Organiser_EO();
+		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue();
+		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy();
+		$this->acf = new CiviCRM_WP_Event_Organiser_ACF();
 
 		// Store references.
 		$this->term_html->set_references( $this );
@@ -290,7 +296,7 @@ class CiviCRM_WP_Event_Organiser {
 global $civicrm_wp_event_organiser;
 
 // Init plugin.
-$civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser;
+$civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser();
 
 
 
@@ -323,10 +329,14 @@ function civicrm_eo() {
 function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 
 	// Bail if Event Organiser plugin is not present.
-	if ( ! defined( 'EVENT_ORGANISER_VER' ) ) return $links;
+	if ( ! defined( 'EVENT_ORGANISER_VER' ) ) {
+		return $links;
+	}
 
 	// Bail if CiviCRM plugin is not present.
-	if ( ! function_exists( 'civi_wp' ) ) return $links;
+	if ( ! function_exists( 'civi_wp' ) ) {
+		return $links;
+	}
 
 	// Add settings link.
 	if ( $file == plugin_basename( dirname( __FILE__ ) . '/civicrm-event-organiser.php' ) ) {

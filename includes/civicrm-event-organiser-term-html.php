@@ -65,10 +65,14 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	public function register_hooks() {
 
 		// Look for an existing WooDojo HTML Term Description install.
-		if ( class_exists( 'WooDojo_HTML_Term_Description' ) ) return;
+		if ( class_exists( 'WooDojo_HTML_Term_Description' ) ) {
+			return;
+		}
 
 		// Bail if user doesn't have the "unfiltered_html" capability.
-		if ( ! current_user_can( 'unfiltered_html' ) ) return;
+		if ( ! current_user_can( 'unfiltered_html' ) ) {
+			return;
+		}
 
 		// Allow HTML in term descriptions.
 		remove_filter( 'pre_term_description', 'wp_filter_kses' );

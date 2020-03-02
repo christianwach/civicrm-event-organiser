@@ -161,7 +161,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function upgrade_tasks() {
 
 		// Bail if this is a new install.
-		if ( $this->plugin_version === false ) return;
+		if ( $this->plugin_version === false ) {
+			return;
+		}
 
 		// Show an admin notice for possibly missing default profile setting.
 		if ( 'fgffgs' == $this->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
@@ -180,17 +182,25 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function upgrade_alert() {
 
 		// Check user permissions.
-		if ( ! current_user_can( 'manage_options' ) ) return;
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
 		// Get current screen.
 		$screen = get_current_screen();
 
 		// Prevent warning if screen not defined.
-		if ( empty( $screen ) ) return;
+		if ( empty( $screen ) ) {
+			return;
+		}
 
 		// Bail if on our settings page (or parent).
-		if ( false !== strpos( $screen->id, 'civi_eo_parent') ) return;
-		if ( false !== strpos( $screen->id, 'civi_eo_settings') ) return;
+		if ( false !== strpos( $screen->id, 'civi_eo_parent') ) {
+			return;
+		}
+		if ( false !== strpos( $screen->id, 'civi_eo_settings') ) {
+			return;
+		}
 
 		// Get URLs.
 		$urls = $this->page_get_urls();
@@ -216,7 +226,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function dependency_alert() {
 
 		// Check user permissions.
-		if ( ! current_user_can( 'manage_options' ) ) return;
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
 		// Construct message.
 		$message = __( 'CiviCRM Event Organiser requires Event Organiser version 3 or higher.', 'civicrm-event-organiser' );
@@ -254,10 +266,14 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function admin_menu() {
 
 		// We must be network admin in multisite.
-		if ( is_multisite() AND ! is_super_admin() ) return;
+		if ( is_multisite() AND ! is_super_admin() ) {
+			return;
+		}
 
 		// Check user permissions.
-		if ( ! current_user_can( 'manage_options' ) ) return;
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
 
 		// Try and update options.
 		$this->settings_update_router();
@@ -367,7 +383,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$screen = get_current_screen();
 
 		// Prevent warning if screen not defined.
-		if ( empty( $screen ) ) return;
+		if ( empty( $screen ) ) {
+			return;
+		}
 
 		// Use method in this class.
 		$this->admin_help( $screen );
@@ -401,7 +419,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		);
 
 		// Kick out if not our screen.
-		if ( ! in_array( $screen->id, $pages ) ) return $screen;
+		if ( ! in_array( $screen->id, $pages ) ) {
+			return $screen;
+		}
 
 		// Add a tab - we can add more later.
 		$screen->add_help_tab( array(
@@ -477,21 +497,27 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// Get all CiviEvent types and error check.
 		$all_types = $this->plugin->taxonomy->get_event_types();
-		if ( $all_types === false ) $all_types['values'] = array();
+		if ( $all_types === false ) {
+			$all_types['values'] = array();
+		}
 
 		// Get all EO event category terms.
 		$all_terms = $this->plugin->taxonomy->get_event_categories();
 
 		// Get all Civi Event locations and error check.
 		$all_locations = $this->plugin->civi->get_all_locations();
-		if ( $all_locations['is_error'] == '1' ) $all_locations['values'] = array();
+		if ( $all_locations['is_error'] == '1' ) {
+			$all_locations['values'] = array();
+		}
 
 		// Get all EO venues.
 		$all_venues = eo_get_venues();
 
 		// Get all Civi Events and error check.
 		$all_civi_events = $this->plugin->civi->get_all_civi_events();
-		if ( $all_civi_events['is_error'] == '1' ) $all_civi_events['values'] = array();
+		if ( $all_civi_events['is_error'] == '1' ) {
+			$all_civi_events['values'] = array();
+		}
 
 		// Get all EO Events.
 		$all_eo_events = get_posts( array( 'post_type' => 'event', 'numberposts' => -1 ) );
@@ -668,7 +694,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function page_get_urls() {
 
 		// Only calculate once.
-		if ( isset( $this->urls ) ) return $this->urls;
+		if ( isset( $this->urls ) ) {
+			return $this->urls;
+		}
 
 		// Init return.
 		$this->urls = array();
@@ -722,7 +750,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		$url = esc_url( $url );
 
-		if ( $echo ) echo $url;
+		if ( $echo ) {
+			echo $url;
+		}
 
 		// --<
 		return $url;
@@ -743,7 +773,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Sanitise admin page url.
 		$target_url = $_SERVER['REQUEST_URI'];
 		$url_array = explode( '&', $target_url );
-		if ( $url_array ) { $target_url = htmlentities( $url_array[0] . '&updated=true' ); }
+		if ( $url_array ) {
+			$target_url = htmlentities( $url_array[0] . '&updated=true' );
+		}
 
 		// --<
 		return $target_url;
@@ -1587,14 +1619,18 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function rebuild_event_correspondences() {
 
 		// Only applies to version 0.1.
-		if ( CIVICRM_WP_EVENT_ORGANISER_VERSION != '0.1' ) return;
+		if ( CIVICRM_WP_EVENT_ORGANISER_VERSION != '0.1' ) {
+			return;
+		}
 
 		// Only rely on the EO event correspondences, because of a bug in the
 		// 0.1 version of the plugin which overwrote the civi_to_eo array
 		$eo_to_civi = $this->get_all_eo_to_civi_correspondences();
 
 		// Kick out if we get none.
-		if ( count( $eo_to_civi ) === 0 ) return;
+		if ( count( $eo_to_civi ) === 0 ) {
+			return;
+		}
 
 		// Init CiviCRM correspondence array to be stored as option.
 		$civi_correspondences = array();
@@ -1936,7 +1972,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$civi_event_ids = get_post_meta( $post_id, '_civi_eo_civicrm_events', true );
 
 		// If it's not yet set it will be an empty string, so cast as array.
-		if ( $civi_event_ids === '' ) { $civi_event_ids = array(); }
+		if ( $civi_event_ids === '' ) {
+			$civi_event_ids = array();
+		}
 
 		// --<
 		return $civi_event_ids;
@@ -1960,7 +1998,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$civi_event_ids = $this->get_civi_event_ids_by_eo_event_id( $post_id );
 
 		// Return false if none present.
-		if ( count( $civi_event_ids ) === 0 ) return false;
+		if ( count( $civi_event_ids ) === 0 ) {
+			return false;
+		}
 
 		// Get value.
 		$civi_event_id = isset( $civi_event_ids[$occurrence_id] ) ? $civi_event_ids[$occurrence_id]: false;
@@ -2110,7 +2150,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$civi_event_ids = get_post_meta( $post_id, '_civi_eo_civicrm_events_disabled', true );
 
 		// If it's not yet set it will be an empty string, so cast as array.
-		if ( $civi_event_ids === '' ) { $civi_event_ids = array(); }
+		if ( $civi_event_ids === '' ) {
+			$civi_event_ids = array();
+		}
 
 		// --<
 		return $civi_event_ids;
@@ -2421,7 +2463,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		static $is_network_active;
 
 		// Have we done this already?
-		if ( isset( $is_network_active ) ) return $is_network_active;
+		if ( isset( $is_network_active ) ) {
+			return $is_network_active;
+		}
 
 		// If not multisite, it cannot be.
 		if ( ! is_multisite() ) {

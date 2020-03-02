@@ -67,7 +67,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function register_hooks() {
 
 		// Check for Event Organiser.
-		if ( ! $this->is_active() ) return;
+		if ( ! $this->is_active() ) {
+			return;
+		}
 
 		// Intercept insert post.
 		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
@@ -117,7 +119,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Only check once.
 		static $eo_active = false;
-		if ( $eo_active ) return true;
+		if ( $eo_active ) {
+			return true;
+		}
 
 		// Access Event Organiser option.
 		$installed_version = get_option( 'eventorganiser_version', 'etueue' );
@@ -160,7 +164,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function insert_post( $post_id, $post ) {
 
 		// Kick out if not event.
-		if ( $post->post_type != 'event' ) return;
+		if ( $post->post_type != 'event' ) {
+			return;
+		}
 
 		// Set flag.
 		$this->insert_event = true;
@@ -185,11 +191,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$this->_save_event_components( $post_id );
 
 		// Sync checkbox is only shown to people who can publish posts.
-		if ( ! current_user_can( 'publish_posts' ) ) return;
+		if ( ! current_user_can( 'publish_posts' ) ) {
+			return;
+		}
 
 		// Is our checkbox checked?
-		if ( ! isset( $_POST['civi_eo_event_sync'] ) ) return;
-		if ( $_POST['civi_eo_event_sync'] != 1 ) return;
+		if ( ! isset( $_POST['civi_eo_event_sync'] ) ) {
+			return;
+		}
+		if ( $_POST['civi_eo_event_sync'] != 1 ) {
+			return;
+		}
 
 		// Get post data.
 		$post = get_post( $post_id );
@@ -254,7 +266,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$post = get_post( $post_id );
 
 		// Bail if not an event.
-		if ( $post->post_type != 'event' ) return;
+		if ( $post->post_type != 'event' ) {
+			return;
+		}
 
 		// Get correspondences from post meta to use once the event has been deleted.
 		$this->saved_correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
@@ -289,8 +303,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( ! doing_action( 'delete_post' ) ) {
 
 			// Bail if our sync checkbox is not checked
-			if ( ! isset( $_POST['civi_eo_event_sync'] ) ) return;
-			if ( $_POST['civi_eo_event_sync'] != 1 ) return;
+			if ( ! isset( $_POST['civi_eo_event_sync'] ) ) {
+				return;
+			}
+			if ( $_POST['civi_eo_event_sync'] != 1 ) {
+				return;
+			}
 
 		}
 
@@ -343,7 +361,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		return;
 
 		// Bail if an event is not being deleted.
-		if ( ! doing_action( 'delete_post' ) ) return;
+		if ( ! doing_action( 'delete_post' ) ) {
+			return;
+		}
 
 		// Delete those CiviCRM events - not used at present.
 		//$this->plugin->civi->delete_civi_events( $correspondences );
@@ -366,7 +386,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function occurrence_deleted( $post_id, $occurrence_id ) {
 
 		// Init or die.
-		if ( ! $this->is_active() ) return;
+		if ( ! $this->is_active() ) {
+			return;
+		}
 
 		// Get CiviEvent ID from post meta.
 		$civi_event_id = $this->plugin->db->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
@@ -616,7 +638,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function pre_break_occurrence( $post_id, $occurrence_id ) {
 
 		// Init or die.
-		if ( ! $this->is_active() ) return;
+		if ( ! $this->is_active() ) {
+			return;
+		}
 
 		/*
 		 * At minimum, we need to prevent our '_civi_eo_civicrm_events' post meta
@@ -704,7 +728,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function pre_event_content( $event_content, $content ) {
 
 		// Init or die.
-		if ( ! $this->is_active() ) return $event_content;
+		if ( ! $this->is_active() ) {
+			return $event_content;
+		}
 
 		// Let's see.
 		//$this->get_participant_roles();
@@ -728,7 +754,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function event_meta_boxes() {
 
 		// Check permission.
-		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) return;
+		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) {
+			return;
+		}
 
 		// Create CiviCRM Settings and Sync metabox.
 		add_meta_box(
@@ -875,7 +903,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event->ID );
 
 		// Bail if we get none.
-		if ( empty( $civi_events ) ) return;
+		if ( empty( $civi_events ) ) {
+			return;
+		}
 
 		// Init links.
 		$links = array();
@@ -890,7 +920,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$civi_event = $this->plugin->civi->get_event_by_id( $civi_event_id );
 
 			// Continue if not found.
-			if ( $civi_event === false ) continue;
+			if ( $civi_event === false ) {
+				continue;
+			}
 
 			// Get DateTime object.
 			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
@@ -1172,7 +1204,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_event_role( $event_id ) {
 
 		// Kick out if not set.
-		if ( ! isset( $_POST['civi_eo_event_role'] ) ) return;
+		if ( ! isset( $_POST['civi_eo_event_role'] ) ) {
+			return;
+		}
 
 		// Retrieve meta value.
 		$value = absint( $_POST['civi_eo_event_role'] );
@@ -1269,7 +1303,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_event_registration_profile( $event_id ) {
 
 		// Kick out if not set.
-		if ( ! isset( $_POST['civi_eo_event_profile'] ) ) return;
+		if ( ! isset( $_POST['civi_eo_event_profile'] ) ) {
+			return;
+		}
 
 		// Retrieve meta value.
 		$profile_id = absint( $_POST['civi_eo_event_profile'] );
@@ -1371,10 +1407,14 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function maybe_update_event_registration_profile( $formName, &$form ) {
 
 		// Kick out if not a CiviEvent Online Registration form.
-		if ( $formName != 'CRM_Event_Form_ManageEvent_Registration' ) return;
+		if ( $formName != 'CRM_Event_Form_ManageEvent_Registration' ) {
+			return;
+		}
 
 		// Bail if we don't have our sync data.
-		if ( ! isset( $this->sync_data ) ) return;
+		if ( ! isset( $this->sync_data ) ) {
+			return;
+		}
 
 		// Get registration profile.
 		$existing_profile = $this->plugin->civi->has_registration_profile( $this->sync_data['civi_event'] );

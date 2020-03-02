@@ -85,10 +85,14 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	$links = array();
 
 	// Bail if no CiviCRM init function.
-	if ( ! function_exists( 'civi_wp' ) ) return $links;
+	if ( ! function_exists( 'civi_wp' ) ) {
+		return $links;
+	}
 
 	// Try and init CiviCRM.
-	if ( ! civi_wp()->initialize() ) return $links;
+	if ( ! civi_wp()->initialize() ) {
+		return $links;
+	}
 
 	// Need the post ID.
 	$post_id = absint( empty( $post_id ) ? get_the_ID() : $post_id );
@@ -103,7 +107,9 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	$civi_events = $plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
 
 	// Sanity check.
-	if ( empty( $civi_events ) ) return $links;
+	if ( empty( $civi_events ) ) {
+		return $links;
+	}
 
 	// Did we get more than one?
 	$multiple = ( count( $civi_events ) > 1 ) ? true : false;
@@ -115,16 +121,22 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		$civi_event = $plugin->civi->get_event_by_id( $civi_event_id );
 
 		// Continue if not found.
-		if ( $civi_event === false ) continue;
+		if ( $civi_event === false ) {
+			continue;
+		}
 
 		// Skip to next if registration is not open.
-		if ( $plugin->civi->is_registration_closed( $civi_event ) ) continue;
+		if ( $plugin->civi->is_registration_closed( $civi_event ) ) {
+			continue;
+		}
 
 		// Get link for the registration page.
 		$url = $plugin->civi->get_registration_link( $civi_event );
 
 		// Skip to next if empty.
-		if ( empty( $url ) ) continue;
+		if ( empty( $url ) ) {
+			continue;
+		}
 
 		/**
 		 * Filter registration URL.
