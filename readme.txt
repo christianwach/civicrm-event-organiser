@@ -27,6 +27,10 @@ It also requires:
 
 Be aware that this plugin is in active development. Test often, test thoroughly and open an issue if you find a problem.
 
+#### CiviCRM ACF Integration
+
+This plugin is compatible with [CiviCRM ACF Integration](https://github.com/christianwach/civicrm-acf-integration) and enables integration of Custom Fields on CiviCRM Events with ACF Fields attached to the Event Organiser "Event" Post Type.
+
 ### Known Issues
 
 There is currently no proper integration with CiviCRM's implementation of repeating events in version 4.7.n because, at present, CiviCRM does not save (or expose) the schedule that generates the sequence. To get around this limitation, this plugin prioritises a workflow based on creating events in Event Organiser and then (optionally, via the "CiviCRM Settings" metabox on the event's edit page) passing the data over to CiviCRM when requested.
