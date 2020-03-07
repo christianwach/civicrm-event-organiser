@@ -104,6 +104,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Add our event meta box.
 		add_action( 'add_meta_boxes_event', array( $this, 'event_meta_boxes' ), 11 );
 
+		// Maybe add a Menu Item to CiviCRM Admin Utilities menu.
+		add_action( 'civicrm_admin_utilities_menu_top', [ $this, 'menu_item_add_to_cau' ], 10, 2 );
+
+		// Maybe add a Menu Item to the CiviCRM Event's "Event Links" menu.
+		add_action( 'civicrm_alterContent', [ $this, 'menu_item_add_to_civi' ], 10, 4 );
+
 	}
 
 
@@ -538,7 +544,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Regardless of CiviEvent status: if the EO event is private, keep it that way.
 		if ( $eo_post_id !== false ) {
 			$eo_event = get_post( $eo_post_id );
-			if ( $eo_event->post_status == 'private' ) {
+			if ( ! empty( $eo_event->post_status ) AND $eo_event->post_status == 'private' ) {
 				$post_data['post_status'] = $eo_event->post_status;
 			}
 		}
@@ -960,6 +966,178 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * @param object $event The EO event object.
 		 */
 		do_action( 'civicrm_event_organiser_event_links_meta_box_after', $event );
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
+	 * Add a add a Menu Item to the CiviCRM Event's "Event Links" menu.
+	 *
+	 * @since 0.4.5
+	 *
+	 * @param str $content The previously generated content.
+	 * @param string $context The context of the content - 'page' or 'form'.
+	 * @param string $tplName The name of the ".tpl" template file.
+	 * @param object $object A reference to the page or form object.
+	 */
+	public function menu_item_add_to_civi( &$content, $context, $tplName, &$object ) {
+
+		// Bail if not a form.
+		if ( $context != 'form' ) {
+			return;
+		}
+
+		// Bail if not our target template.
+		if ( $tplName != 'CRM/Event/Form/ManageEvent/Tab.tpl' ) {
+			return;
+		}
+
+		/*
+		 * We do this to Contact View = "CRM/Contact/Page/View/Summary.tpl" as
+		 * well, though the actions hook may work.
+		 */
+
+		// Get the ID of the displayed Event.
+		if ( ! isset( $object->_defaultValues['id'] ) ) {
+			return;
+		}
+		if( ! is_numeric( $object->_defaultValues['id'] ) ) {
+			return;
+		}
+		$event_id = intval( $object->_defaultValues['id'] );
+
+		// Get the Post ID that this Event is mapped to.
+		$post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $event_id );
+		if ( $post_id === false ) {
+			return;
+		}
+
+		// Build view link.
+		$link_view = '<li><a class="crm-event-wordpress-view" href="' . get_permalink( $post_id ) . '">' .
+			__( 'View Event in WordPress', 'civicrm-event-organiser' ) .
+		'</a><li>' . "\n";
+
+		// Add edit link if permissions allow.
+		$link_edit = '';
+		if ( current_user_can( 'edit_post', $post_id ) ) {
+			$link_edit = '<li><a class="crm-event-wordpress-edit" href="' . get_edit_post_link( $post_id ) . '">' .
+				__( 'Edit Event in WordPress', 'civicrm-event-organiser' ) .
+			'</a><li>' . "\n";
+		}
+
+		// Build final link.
+		$link = $link_view . $link_edit . '<li><a class="crm-event-info"';
+
+		// Gulp, do the replace.
+		$content = str_replace( '<li><a class="crm-event-info"', $link, $content );
+
+	}
+
+
+
+	/**
+	 * Add a add a Menu Item to the CiviCRM Admin Utilities menu.
+	 *
+	 * Currently this only adds a link when there is a one-to-one mapping
+	 * between an EO Event and a CiviCRM Event.
+	 *
+	 * @since 0.4.5
+	 *
+	 * @param str $id The menu parent ID.
+	 * @param array $components The active CiviCRM Conponents.
+	 */
+	public function menu_item_add_to_cau( $id, $components ) {
+
+		// Access WordPress admin bar.
+		global $wp_admin_bar, $post;
+
+		// Bail if there's no Post.
+		if ( empty( $post ) ) {
+			return;
+		}
+
+		// Bail if there's no Post and it's WordPress admin.
+		if ( empty( $post ) AND is_admin() ) {
+			return;
+		}
+
+		// Kick out if not event.
+		if ( $post->post_type != 'event' ) {
+			return;
+		}
+
+		// Check permission.
+		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) {
+			return;
+		}
+
+		// Get linked CiviEvents.
+		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post->ID );
+
+		// TODO: Consider how to display Repeating Events in menu.
+
+		// Bail if we get more than one.
+		if ( empty( $civi_events ) OR count( $civi_events ) > 1 ) {
+			return;
+		}
+
+		// Init links.
+		$links = array();
+
+		// Show them.
+		foreach( $civi_events AS $civi_event_id ) {
+
+			// Get link.
+			$settings_link = $this->plugin->civi->get_settings_link( $civi_event_id );
+
+			/*
+			// Get CiviEvent.
+			$civi_event = $this->plugin->civi->get_event_by_id( $civi_event_id );
+
+			// Continue if not found.
+			if ( $civi_event === false ) {
+				continue;
+			}
+
+			// Get DateTime object.
+			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
+
+			// Construct date and time format.
+			$format = get_option( 'date_format' );
+			if ( ! eo_is_all_day( $event->ID ) ) {
+				$format .= ' ' . get_option( 'time_format' );
+			}
+
+			// Get datetime string.
+			$datetime_string = eo_format_datetime( $start, $format );
+
+			// Construct link.
+			$link = '<a href="' . esc_url( $settings_link ) . '">' . esc_html( $datetime_string ) . '</a>';
+
+			// Construct list item content.
+			$content = sprintf( __( 'Info and Settings for: %s', 'civicrm-event-organiser' ), $link );
+
+			// Add to array.
+			$links[] = $content;
+			*/
+
+			// Add item to menu.
+			$wp_admin_bar->add_node( array(
+				'id' => 'cau-0',
+				'parent' => $id,
+				//'parent' => 'edit',
+				'title' => __( 'Edit in CiviCRM', 'civicrm-acf-integration' ),
+				'href' => $settings_link,
+			) );
+
+		}
+
+
 
 	}
 
