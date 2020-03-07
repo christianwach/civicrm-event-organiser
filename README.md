@@ -20,7 +20,7 @@ Be aware that this plugin is in active development. Test often, test thoroughly 
 
 #### CiviCRM ACF Integration ####
 
-This plugin is compatible with [CiviCRM ACF Integration](https://github.com/christianwach/civicrm-acf-integration) and enables integration of Custom Fields on CiviCRM Events with ACF Fields attached to the Event Organiser "Event" Post Type.
+This plugin is compatible with [CiviCRM ACF Integration](https://github.com/christianwach/civicrm-acf-integration) which enables integration of Custom Fields on CiviCRM Events with ACF Fields attached to the Event Organiser "Event" Post Type.
 
 
 
