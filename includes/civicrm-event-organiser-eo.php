@@ -110,6 +110,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Maybe add a Menu Item to the CiviCRM Event's "Event Links" menu.
 		add_action( 'civicrm_alterContent', [ $this, 'menu_item_add_to_civi' ], 10, 4 );
 
+		// Maybe add a link to action links on the Events list table.
+		add_action( 'post_row_actions', [ $this, 'menu_item_add_to_row_actions' ], 10, 2 );
+
 	}
 
 
@@ -1137,7 +1140,63 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
+	}
 
+
+
+	/**
+	 * Add a link to action links on the Events list table.
+	 *
+	 * Currently this only adds a link when there is a one-to-one mapping
+	 * between an EO Event and a CiviCRM Event.
+	 *
+	 * @since 0.4.5
+	 *
+	 * @param array $actions The array of row action links.
+	 * @param WP_Post $post The WordPress Post object.
+	 */
+	public function menu_item_add_to_row_actions( $actions, $post ) {
+
+		// Bail if there's no Post object.
+		if ( empty( $post ) ) {
+			return $actions;
+		}
+
+		// Kick out if not event.
+		if ( $post->post_type != 'event' ) {
+			return $actions;
+		}
+
+		// Check permission.
+		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) {
+			return $actions;
+		}
+
+		// Get linked CiviEvents.
+		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $post->ID );
+
+		// Bail if we get more than one.
+		if ( empty( $civi_events ) OR count( $civi_events ) > 1 ) {
+			return $actions;
+		}
+
+		// Show them.
+		foreach( $civi_events AS $civi_event_id ) {
+
+			// Get link.
+			$settings_link = $this->plugin->civi->get_settings_link( $civi_event_id );
+
+			// Add link to actions.
+			$actions['civicrm'] = sprintf(
+				'<a href="%1$s">%2$s</a>',
+				esc_url( $settings_link ),
+				esc_html__( 'CiviCRM', 'civicrm-acf-integration' )
+			);
+
+		}
+
+		// --<
+		return $actions;
 
 	}
 
