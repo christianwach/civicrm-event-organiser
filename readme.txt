@@ -2,7 +2,7 @@
 Contributors: needle
 Donate link: https://www.paypal.me/interactivist
 Tags: civicrm, event organiser, events, sync
-Requires at least: 4.4
+Requires at least: 4.6
 Tested up to: 5.3
 Stable tag: 0.4.5
 License: GPLv2 or later
