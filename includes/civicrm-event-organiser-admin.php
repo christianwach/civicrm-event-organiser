@@ -2071,7 +2071,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post.
-	 * @param array $unlinked The CiviEvent IDs that have been orphaned from an EO event.
+	 * @param array $orphans The CiviEvent IDs that have been orphaned from an EO event.
 	 */
 	public function store_orphaned_events( $post_id, $orphans ) {
 

@@ -839,11 +839,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 
 	/**
-	 * Store a CiviEvent loc_block ID for a given EO venue ID.
+	 * Store a CiviCRM Location Block ID for a given EO venue ID.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $venue_id The numeric ID of the venue.
+	 * @param array $civi_loc_block The array of CiviCRM Location Block data.
 	 */
 	public function store_civi_location( $venue_id, $civi_loc_block ) {
 

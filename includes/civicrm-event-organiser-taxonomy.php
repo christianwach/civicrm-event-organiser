@@ -367,7 +367,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * @param string $taxonomy Name of the taxonomy.
 	 * @param object $deleted_term The deleted term object.
 	 */
-	public function intercept_delete_term( $term, $tt_id, $taxonomy, $deleted_term ) {
+	public function intercept_delete_term( $term_id, $tt_id, $taxonomy, $deleted_term ) {
 
 		// Only look for terms in the EO taxonomy.
 		if ( $taxonomy != 'event-category' ) {
@@ -660,11 +660,15 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * Always hide "Parent Category" dropdown in metaboxes.
 	 *
 	 * @since 0.3.5
+	 *
+	 * @param str $output The existing output.
+	 * @param array $parsed_args The arguments used to build the drop-down.
+	 * @return str $output The modified output.
 	 */
-	public function terms_dropdown_clear( $output, $r ) {
+	public function terms_dropdown_clear( $output, $parsed_args ) {
 
 		// Only clear Event Organiser category.
-		if ( $r['taxonomy'] != 'event-category' ) {
+		if ( $parsed_args['taxonomy'] != 'event-category' ) {
 			return $output;
 		}
 
