@@ -93,6 +93,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Intercept CiviCRM event type form edits.
 		add_action( 'civicrm_postProcess', array( $this, 'event_type_process_form' ), 10, 2 );
 
+		// Create custom filters that mirror 'the_content'.
+		add_filter( 'civicrm_eo_term_content', 'wptexturize' );
+		add_filter( 'civicrm_eo_term_content', 'convert_smilies' );
+		add_filter( 'civicrm_eo_term_content', 'convert_chars' );
+		add_filter( 'civicrm_eo_term_content', 'wpautop' );
+		add_filter( 'civicrm_eo_term_content', 'shortcode_unautop' );
+
 	}
 
 
@@ -1086,10 +1093,10 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		);
 
 		// Do we have a description?
-		if ( $new_term->description != '' ) {
+		if ( ! empty( $new_term->description ) ) {
 
-			// Add it.
-			$params['description'] = $new_term->description;
+			// Apply content filters and add to params.
+			$params['description'] = apply_filters( 'civicrm_eo_term_content', $new_term->description );
 
 		}
 
