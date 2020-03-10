@@ -19,6 +19,15 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 */
 	public $plugin;
 
+	/**
+	 * Term Meta key.
+	 *
+	 * @since 0.4.5
+	 * @access public
+	 * @var object $term_meta_key The Term Meta key.
+	 */
+	public $term_meta_key = '_ceo_civi_event_type_id';
+
 
 
 	/**
@@ -83,6 +92,85 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Intercept CiviCRM event type form edits.
 		add_action( 'civicrm_postProcess', array( $this, 'event_type_process_form' ), 10, 2 );
+
+	}
+
+
+
+	/**
+	 * Can this version of WordPress perform "term meta" queries?
+	 *
+	 * The `unregister_meta_key()` function was introduced in WordPress 4.6,
+	 * so we look for that rather than potentially triggering autoloaders by
+	 * using a `class_exists( 'WP_Term_Query' )` lookup.
+
+	 * @since 0.4.5
+	 *
+	 * @return bool True if terms can be queried by their "term meta", false otherwise.
+	 */
+	public function can_query_by_term_meta() {
+
+		// Bail if this version of WordPress doesn't support "term meta" queries.
+		if ( ! function_exists( 'unregister_meta_key' ) ) {
+			return false;
+		}
+
+		// --<
+		return true;
+
+	}
+
+
+
+	/**
+	 * Upgrade all synced terms to store linkage in "term_meta".
+	 *
+	 * @since 0.4.5
+	 */
+	public function upgrade() {
+
+		// Bail if term meta queries aren't available.
+		if ( ! $this->can_query_by_term_meta() ) {
+			return;
+		}
+
+		// Delay until "admin_init" hook.
+		add_action( 'admin_init', array( $this, 'upgrade_terms' ) );
+
+	}
+
+
+
+	/**
+	 * Upgrade all synced terms to store linkage in "term_meta".
+	 *
+	 * @since 0.4.5
+	 */
+	public function upgrade_terms() {
+
+		// Get all terms in the Event Category taxonomy.
+		$terms = $this->get_event_categories();
+
+		// Bail if we don't have any.
+		if ( empty( $terms ) ) {
+			return;
+		}
+
+		// Step through the terms.
+		foreach( $terms AS $term ) {
+
+			// Get the corresponding CiviCRM Event Type.
+			$event_type_id = $this->get_event_type_id( $term );
+
+			// Skip if something went wrong.
+			if ( $event_type_id === false ) {
+				continue;
+			}
+
+			// Add the Event Type ID to the term's meta.
+			$this->add_term_meta( $term->term_id, $event_type_id );
+
+		}
 
 	}
 
@@ -329,6 +417,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return false;
 		}
 
+		// Add the Event Type ID to the term's meta.
+		$this->add_term_meta( $result['term_id'], intval( $type['id'] ) );
+
 		// --<
 		return $result;
 
@@ -432,6 +523,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Init return.
 		$term_id = false;
+
+		// First, query "term meta".
+		$term = $this->get_term_by_meta( $type );
+
+		// How did we do?
+		if ( $term !== false ) {
+			return $term->term_id;
+		}
 
 		// Try and match by term name <-> type label.
 		$term = get_term_by( 'name', $type['label'], 'event-category' );
@@ -634,6 +733,174 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// --<
 		return $args;
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
+	 * Add meta data to an EO event category term.
+	 *
+	 * @since 0.4.5
+	 *
+	 * @param int $event_type The array of CiviEvent Event Type data.
+	 * @param int|bool $term_id The numeric ID of the term, or false on failure.
+	 */
+	public function get_term_by_meta( $event_type ) {
+
+		// Bail if this version of WordPress doesn't support "term meta" queries.
+		if ( ! $this->can_query_by_term_meta() ) {
+			return false;
+		}
+
+		// Query terms for the term with the ID of the Event Type in meta data.
+		$args = array(
+			'hide_empty' => false,
+			'meta_query' => array(
+				array(
+					'key' => $this->term_meta_key,
+					'value' => $event_type['id'],
+					'compare' => '='
+				),
+			),
+		);
+
+		// Get what should only be a single term.
+		$terms = get_terms( 'event-category', $args );
+
+		// Bail if there are no results.
+		if ( empty( $terms ) ) {
+			return false;
+		}
+
+		// Log a message and bail if there's an error.
+		if ( is_wp_error( $terms ) ) {
+
+			// Write error message.
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $terms->get_error_message(),
+				'term' => $term,
+				'event_type' => $event_type,
+				'backtrace' => $trace,
+			), true ) );
+			return false;
+
+		}
+
+		// If we get more than one, WTF?
+		if ( count( $terms ) > 1 ) {
+			return false;
+		}
+
+		// Init return.
+		$term = false;
+
+		// Grab term data.
+		if ( count( $terms ) === 1 ) {
+			$term = array_pop( $terms );
+		}
+
+		// --<
+		return $term;
+
+	}
+
+
+
+	/**
+	 * Get CiviCRM Event Type for an EO event category term.
+	 *
+	 * @since 0.4.5
+	 *
+	 * @param int $term_id The numeric ID of the term.
+	 * @return int|bool $event_type_id The ID of the CiviCRM Event Type, or false on failure.
+	 */
+	public function get_term_meta( $term_id ) {
+
+		// Bail if this version of WordPress doesn't support "term meta" queries.
+		if ( ! $this->can_query_by_term_meta() ) {
+			return false;
+		}
+
+		// Get the Event Type ID from the term's meta.
+		$event_type_id = get_term_meta( $term_id, $this->term_meta_key, true );
+
+		// Bail if there is no result.
+		if ( empty( $event_type_id ) ) {
+			return false;
+		}
+
+		// --<
+		return $event_type_id;
+
+	}
+
+
+
+	/**
+	 * Add meta data to an EO event category term.
+	 *
+	 * @since 0.4.5
+	 *
+	 * @param int $term_id The numeric ID of the term.
+	 * @param int $event_type_id The  numeric ID of the CiviEvent Event Type.
+	 * @return int|bool $meta_id The ID of the meta, or false on failure.
+	 */
+	public function add_term_meta( $term_id, $event_type_id ) {
+
+		// Add the Event Type ID to the term's meta.
+		$meta_id = add_term_meta( $term_id, $this->term_meta_key, intval( $event_type_id ), true );
+
+		// Log something if there's an error.
+		if ( $meta_id === false ) {
+
+			/*
+			 * This probably means that the term already has its term meta set.
+			 * Uncomment the following to debug if you need to.
+			 */
+
+			/*
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => __( 'Could not add term_meta', 'civicrm-event-organiser' ),
+				'term_id' => $term_id,
+				'event_type_id' => $event_type_id,
+				'backtrace' => $trace,
+			), true ) );
+			*/
+
+		}
+
+		// Log a message if the term_id is ambiguous between taxonomies.
+		if ( is_wp_error( $meta_id ) ) {
+
+			// Log error message.
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
+			error_log( print_r( array(
+				'method' => __METHOD__,
+				'message' => $meta_id->get_error_message(),
+				'term' => $term,
+				'event_type_id' => $event_type_id,
+				'backtrace' => $trace,
+			), true ) );
+
+			// Also overwrite return.
+			$meta_id = false;
+
+		}
+
+		// --<
+		return $meta_id;
 
 	}
 
@@ -948,6 +1215,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * @return int|bool $type_id The numeric ID of the CiviEvent event type, or false on failure.
 	 */
 	public function get_event_type_id( $term ) {
+
+		// First check if the term has the ID in its "term meta".
+		$type_id = $this->get_term_meta( $term->term_id );
+
+		// Short-circuit if we found it.
+		if ( $type_id !== false ) {
+			return $type_id;
+		}
 
 		// Bail if we fail to init CiviCRM.
 		if ( ! $this->plugin->civi->is_active() ) {

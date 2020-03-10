@@ -154,7 +154,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Utility to add a message to admin pages when an upgrade is required.
+	 * Utility to perform tasks when an upgrade is required.
 	 *
 	 * @since 0.2.4
 	 */
@@ -165,9 +165,22 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			return;
 		}
 
+		// Bail if this not WordPress admin.
+		if ( ! is_admin() ) {
+			return;
+		}
+
 		// Show an admin notice for possibly missing default profile setting.
 		if ( 'fgffgs' == $this->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
 			add_action( 'admin_notices', array( $this, 'upgrade_alert' ) );
+		}
+
+		// Maybe upgrade taxonomy to use "term meta".
+		if ( $this->plugin->taxonomy->can_query_by_term_meta() ) {
+			if ( 'fgffgs' == $this->option_get( 'civi_eo_term_meta_enabled', 'fgffgs' ) ) {
+				$this->plugin->taxonomy->upgrade();
+				$this->option_save( 'civi_eo_term_meta_enabled', 'yes' );
+			}
 		}
 
 	}
