@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the CiviCRM Event Organiser package.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.4.4\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.4.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
-"POT-Creation-Date: 2020-03-02 19:53:31+00:00\n"
+"POT-Creation-Date: 2020-03-10 16:49:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,13 +13,13 @@ msgstr ""
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
 #: assets/templates/manual-sync.php:5 assets/templates/settings.php:5
-#: civicrm-event-organiser.php:352
-#: includes/civicrm-event-organiser-admin.php:314
+#: civicrm-event-organiser.php:345
+#: includes/civicrm-event-organiser-admin.php:327
 msgid "Settings"
 msgstr ""
 
 #: assets/templates/manual-sync.php:6 assets/templates/settings.php:6
-#: includes/civicrm-event-organiser-admin.php:328
+#: includes/civicrm-event-organiser-admin.php:341
 msgid "Manual Sync"
 msgstr ""
 
@@ -145,116 +145,116 @@ msgstr ""
 msgid "A numerical ID must be present to update an Event."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:210
+#: includes/civicrm-event-organiser-admin.php:223
 msgid "CiviCRM Event Organiser needs your attention. Please visit the <a href=\"%s\">Settings Page</a>."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:234
+#: includes/civicrm-event-organiser-admin.php:247
 msgid "CiviCRM Event Organiser requires Event Organiser version 3 or higher."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:287
-#: includes/civicrm-event-organiser-admin.php:313
+#: includes/civicrm-event-organiser-admin.php:300
+#: includes/civicrm-event-organiser-admin.php:326
 msgid "CiviCRM Event Organiser: Settings"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:288
-#: includes/civicrm-event-organiser-admin.php:298
-#: includes/civicrm-event-organiser-admin.php:299
-#: includes/civicrm-event-organiser-admin.php:429
+#: includes/civicrm-event-organiser-admin.php:301
+#: includes/civicrm-event-organiser-admin.php:311
+#: includes/civicrm-event-organiser-admin.php:312
+#: includes/civicrm-event-organiser-admin.php:442
 msgid "CiviCRM Event Organiser"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:327
+#: includes/civicrm-event-organiser-admin.php:340
 msgid "CiviCRM Event Organiser: Manual Sync"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:450
+#: includes/civicrm-event-organiser-admin.php:463
 msgid "For further information about using CiviCRM Event Organiser, please refer to the README.md that comes with this plugin."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:530
+#: includes/civicrm-event-organiser-admin.php:543
 msgid "{{total}} event types to sync..."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:531
+#: includes/civicrm-event-organiser-admin.php:544
 msgid "Processing event types {{from}} to {{to}}"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:532
+#: includes/civicrm-event-organiser-admin.php:545
 msgid "Processing event types {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:538
+#: includes/civicrm-event-organiser-admin.php:551
 msgid "{{total}} categories to sync..."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:539
+#: includes/civicrm-event-organiser-admin.php:552
 msgid "Processing categories {{from}} to {{to}}"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:540
+#: includes/civicrm-event-organiser-admin.php:553
 msgid "Processing categories {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:546
+#: includes/civicrm-event-organiser-admin.php:559
 msgid "{{total}} locations to sync..."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:547
+#: includes/civicrm-event-organiser-admin.php:560
 msgid "Processing locations {{from}} to {{to}}"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:548
+#: includes/civicrm-event-organiser-admin.php:561
 msgid "Processing locations {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:554
+#: includes/civicrm-event-organiser-admin.php:567
 msgid "{{total}} venues to sync..."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:555
+#: includes/civicrm-event-organiser-admin.php:568
 msgid "Processing venues {{from}} to {{to}}"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:556
+#: includes/civicrm-event-organiser-admin.php:569
 msgid "Processing venues {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:562
-#: includes/civicrm-event-organiser-admin.php:570
+#: includes/civicrm-event-organiser-admin.php:575
+#: includes/civicrm-event-organiser-admin.php:583
 msgid "{{total}} events to sync..."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:563
-#: includes/civicrm-event-organiser-admin.php:571
+#: includes/civicrm-event-organiser-admin.php:576
+#: includes/civicrm-event-organiser-admin.php:584
 msgid "Processing events {{from}} to {{to}}"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:564
-#: includes/civicrm-event-organiser-admin.php:572
+#: includes/civicrm-event-organiser-admin.php:577
+#: includes/civicrm-event-organiser-admin.php:585
 msgid "Processing events {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:578
+#: includes/civicrm-event-organiser-admin.php:591
 msgid "All done!"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:624
-#: includes/civicrm-event-organiser-admin.php:666
+#: includes/civicrm-event-organiser-admin.php:637
+#: includes/civicrm-event-organiser-admin.php:679
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:1001
+#: includes/civicrm-event-organiser-admin.php:1014
 msgid "Could not sync Event Term"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:1113
+#: includes/civicrm-event-organiser-admin.php:1126
 msgid "Could not sync Event Type"
 msgstr ""
 
 #: includes/civicrm-event-organiser-civi.php:426
-msgid "You must have some CiviCRM event types defined"
+msgid "You must have some CiviCRM Event Types defined"
 msgstr ""
 
 #: includes/civicrm-event-organiser-civi.php:1474
@@ -274,7 +274,7 @@ msgid "Venue not created."
 msgstr ""
 
 #: includes/civicrm-event-organiser-eo-venue.php:694
-#: includes/civicrm-event-organiser-eo.php:764
+#: includes/civicrm-event-organiser-eo.php:773
 msgid "CiviCRM Settings"
 msgstr ""
 
@@ -286,52 +286,68 @@ msgstr ""
 msgid "Phone contact:"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:774
+#: includes/civicrm-event-organiser-eo.php:783
 msgid "Edit Events in CiviCRM"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:822
+#: includes/civicrm-event-organiser-eo.php:831
 msgid "Choose whether or not to sync this event and (if the sequence has changed) whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to \"disabled\"."
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:825
+#: includes/civicrm-event-organiser-eo.php:834
 msgid "Sync this event with CiviCRM:"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:830
+#: includes/civicrm-event-organiser-eo.php:839
 msgid "Delete unused CiviEvents:"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:845
+#: includes/civicrm-event-organiser-eo.php:854
 msgid "CiviEvent Options"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:847
+#: includes/civicrm-event-organiser-eo.php:856
 msgid "<strong>NOTE:</strong> these options will be set for <em>all corresponding CiviEvents</em> when you sync this event to CiviCRM. Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page."
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:852
+#: includes/civicrm-event-organiser-eo.php:861
 msgid "Enable Online Registration:"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:859
+#: includes/civicrm-event-organiser-eo.php:868
 msgid "Online Registration Profile:"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:865
+#: includes/civicrm-event-organiser-eo.php:874
 msgid "The profile assigned to the online registration form."
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:870
+#: includes/civicrm-event-organiser-eo.php:879
 msgid "Participant Role:"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:876
+#: includes/civicrm-event-organiser-eo.php:885
 msgid "This role is automatically assigned to people when they register online for this event and where the registration profile does not allow a role to be selected."
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:943
+#: includes/civicrm-event-organiser-eo.php:952
 msgid "Info and Settings for: %s"
+msgstr ""
+
+#: includes/civicrm-event-organiser-eo.php:1025
+msgid "View Event in WordPress"
+msgstr ""
+
+#: includes/civicrm-event-organiser-eo.php:1032
+msgid "Edit Event in WordPress"
+msgstr ""
+
+#: includes/civicrm-event-organiser-eo.php:1137
+msgid "Edit in CiviCRM"
+msgstr ""
+
+#: includes/civicrm-event-organiser-eo.php:1193
+msgid "CiviCRM"
 msgstr ""
 
 #: includes/civicrm-event-organiser-functions.php:50
@@ -346,7 +362,7 @@ msgstr ""
 msgid "Register"
 msgstr ""
 
-#: includes/civicrm-event-organiser-taxonomy.php:491
+#: includes/civicrm-event-organiser-taxonomy.php:597
 msgid "Empty Term"
 msgstr ""
 
