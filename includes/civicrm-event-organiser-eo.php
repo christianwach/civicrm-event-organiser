@@ -507,7 +507,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 			// We have a category...
 
-			// Get event type data for this pseudo-ID (actually "value").
+			// Get Event Type data for this pseudo-ID (actually "value").
 			$type = $this->plugin->taxonomy->get_event_type_by_value( $civi_event['event_type_id'] );
 
 			// Does this type have an existing term?

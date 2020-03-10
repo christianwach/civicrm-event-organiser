@@ -87,10 +87,10 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Ensure new events have the default term checked.
 		add_filter( 'wp_terms_checklist_args', array( $this, 'term_default_checked' ), 10, 2 );
 
-		// Intercept CiviCRM event type enable/disable.
+		// Intercept CiviCRM Event Type enable/disable.
 		//add_action( 'civicrm_enableDisable', array( $this, 'event_type_toggle' ), 10, 3 );
 
-		// Intercept CiviCRM event type form edits.
+		// Intercept CiviCRM Event Type form edits.
 		add_action( 'civicrm_postProcess', array( $this, 'event_type_process_form' ), 10, 2 );
 
 		// Create custom filters that mirror 'the_content'.
@@ -374,7 +374,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return;
 		}
 
-		// Unhook CiviCRM - no need because there is no hook to catch event type deletes.
+		// Unhook CiviCRM - no need because there is no hook to catch Event Type deletes.
 
 		// Delete CiviEvent term if it exists.
 		$civi_event_type_id = $this->delete_event_type( $deleted_term );
@@ -390,7 +390,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $type A CiviEvent event type.
+	 * @param int $type The CiviCRM Event Type.
 	 * @return array $result Array containing EO event category term data.
 	 */
 	public function create_term( $type ) {
@@ -439,8 +439,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $new_type A CiviEvent event type.
-	 * @param array $old_type A CiviEvent event type prior to the update.
+	 * @param array $new_type The CiviCRM Event Type.
+	 * @param array $old_type The CiviCRM Event Type prior to the update.
 	 * @return int|bool $term_id The ID of the updated EO event category term.
 	 */
 	public function update_term( $new_type, $old_type = null ) {
@@ -514,11 +514,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get an EO event category term by CiviEvent event type.
+	 * Get an EO event category term by CiviCRM Event Type.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $type A CiviEvent event type.
+	 * @param int $type The CiviCRM Event Type.
 	 * @return int|bool $term_id The ID of the updated EO event category term.
 	 */
 	public function get_term_id( $type ) {
@@ -711,7 +711,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		}
 
-		// Get the default event type value.
+		// Get the default Event Type value.
 		$type_value = $this->get_default_event_type_value();
 
 		// Bail if something went wrong.
@@ -719,7 +719,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return $args;
 		}
 
-		// Get the event type data.
+		// Get the Event Type data.
 		$type = $this->get_event_type_by_value( $type_value );
 
 		// Bail if something went wrong.
@@ -754,7 +754,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.5
 	 *
-	 * @param int $event_type The array of CiviEvent Event Type data.
+	 * @param int $event_type The array of CiviCRM Event Type data.
 	 * @param int|bool $term_id The numeric ID of the term, or false on failure.
 	 */
 	public function get_term_by_meta( $event_type ) {
@@ -857,7 +857,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * @since 0.4.5
 	 *
 	 * @param int $term_id The numeric ID of the term.
-	 * @param int $event_type_id The  numeric ID of the CiviEvent Event Type.
+	 * @param int $event_type_id The  numeric ID of the CiviCRM Event Type.
 	 * @return int|bool $meta_id The ID of the meta, or false on failure.
 	 */
 	public function add_term_meta( $term_id, $event_type_id ) {
@@ -918,7 +918,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Intercept when a CiviCRM event type is updated.
+	 * Intercept when a CiviCRM Event Type is updated.
 	 *
 	 * Unfortunately, this doesn't work because Civi does not fire hook_civicrm_pre
 	 * for this entity type. Sad face.
@@ -947,7 +947,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Intercept when a CiviCRM event type is toggled.
+	 * Intercept when a CiviCRM Event Type is toggled.
 	 *
 	 * @since 0.4.2
 	 *
@@ -972,7 +972,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Update an EO 'event-category' term when a CiviCRM event type is updated.
+	 * Update an EO 'event-category' term when a CiviCRM Event Type is updated.
 	 *
 	 * @since 0.4.2
 	 *
@@ -986,7 +986,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return;
 		}
 
-		// Kick out if not event type form.
+		// Kick out if not Event Type form.
 		if ( 'event_type' != $form->getVar( '_gName' ) ) {
 			return;
 		}
@@ -1007,10 +1007,10 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			// Define description if present.
 			$description = isset( $submitted_values['description'] ) ? $submitted_values['description'] : '';
 
-			// Copy existing event type.
+			// Copy existing Event Type.
 			$new_type = $type;
 
-			// Assemble new event type.
+			// Assemble new Event Type.
 			$new_type['label'] = $submitted_values['label'];
 			$new_type['name'] = $submitted_values['label'];
 			$new_type['description'] = $submitted_values['description'];
@@ -1033,7 +1033,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			// Define description if present.
 			$description = isset( $submitted_values['description'] ) ? $submitted_values['description'] : '';
 
-			// Construct event type.
+			// Construct Event Type.
 			$new_type = array(
 				'label' => $submitted_values['label'],
 				'name' => $submitted_values['label'],
@@ -1056,7 +1056,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Update a CiviEvent event type.
+	 * Update a CiviCRM Event Type.
 	 *
 	 * @since 0.4.2
 	 *
@@ -1084,7 +1084,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return false;
 		}
 
-		// Define event type.
+		// Define Event Type.
 		$params = array(
 			'version' => 3,
 			'option_group_id' => $opt_group_id,
@@ -1092,23 +1092,20 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			'name' => $new_term->name,
 		);
 
-		// Do we have a description?
+		// If there is a description, apply content filters and add to params.
 		if ( ! empty( $new_term->description ) ) {
-
-			// Apply content filters and add to params.
 			$params['description'] = apply_filters( 'civicrm_eo_term_content', $new_term->description );
-
 		}
 
 		// If we're updating a term.
 		if ( ! is_null( $old_term ) ) {
 
-			// Get existing event type ID.
+			// Get existing Event Type ID.
 			$type_id = $this->get_event_type_id( $old_term );
 
 		} else {
 
-			// Get matching event type ID.
+			// Get matching Event Type ID.
 			$type_id = $this->get_event_type_id( $new_term );
 
 		}
@@ -1118,7 +1115,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			$params['id'] = $type_id;
 		}
 
-		// Create (or update) the event type.
+		// Create (or update) the Event Type.
 		$type = civicrm_api( 'option_value', 'create', $params );
 
 		// Error check.
@@ -1153,7 +1150,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Delete a CiviEvent event type.
+	 * Delete a CiviCRM Event Type.
 	 *
 	 * @since 0.4.2
 	 *
@@ -1172,7 +1169,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return false;
 		}
 
-		// Get ID of event type to delete.
+		// Get ID of Event Type to delete.
 		$type_id = $this->get_event_type_id( $term );
 
 		// Error check.
@@ -1180,13 +1177,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return false;
 		}
 
-		// Define event type.
+		// Define Event Type.
 		$params = array(
 			'version' => 3,
 			'id' => $type_id,
 		);
 
-		// Delete the event type.
+		// Delete the Event Type.
 		$result = civicrm_api( 'option_value', 'delete', $params );
 
 		// Error check.
@@ -1214,12 +1211,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get a CiviEvent event type by term.
+	 * Get a CiviCRM Event Type by term.
 	 *
 	 * @since 0.4.2
 	 *
 	 * @param object $term The EO event category term.
-	 * @return int|bool $type_id The numeric ID of the CiviEvent event type, or false on failure.
+	 * @return int|bool $type_id The numeric ID of the CiviCRM Event Type, or false on failure.
 	 */
 	public function get_event_type_id( $term ) {
 
@@ -1263,7 +1260,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			/*
 			 * Sometimes we want to log failures, but not usually. When no type
 			 * is found, it's not an error as such; it can just mean there's no
-			 * existing event type. Uncomment the error logging code to see
+			 * existing Event Type. Uncomment the error logging code to see
 			 * what's going on.
 			 */
 
@@ -1296,12 +1293,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get a CiviEvent event type value by type ID.
+	 * Get a CiviCRM Event Type value by type ID.
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param int $type_id The numeric ID of the CiviEvent event type.
-	 * @return int|bool $value The value of the CiviEvent event type (or false on failure)
+	 * @param int $type_id The numeric ID of the CiviCRM Event Type.
+	 * @return int|bool $value The value of the CiviCRM Event Type (or false on failure)
 	 */
 	public function get_event_type_value( $type_id ) {
 
@@ -1375,7 +1372,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get all CiviEvent event types.
+	 * Get all CiviCRM Event Types.
 	 *
 	 * @since 0.4.2
 	 *
@@ -1434,8 +1431,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get all CiviEvent event types formatted as a dropdown list. The pseudo-ID
-	 * is actually the event type "value" rather than the event type ID.
+	 * Get all CiviCRM Event Types formatted as a dropdown list. The pseudo-ID
+	 * is actually the Event Type "value" rather than the Event Type ID.
 	 *
 	 * @since 0.4.2
 	 *
@@ -1451,7 +1448,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return $html;
 		}
 
-		// Get all event types,
+		// Get all Event Types,
 		$result = $this->get_event_types();
 
 		// Did we get any?
@@ -1502,13 +1499,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get the default event type value for a post, but fall back to the default as set
+	 * Get the default Event Type value for a post, but fall back to the default as set
 	 * on the admin screen, Fall back to false otherwise.
 	 *
 	 * @since 0.4.2
 	 *
 	 * @param object $post The WP event object.
-	 * @return int|bool $existing_id The numeric ID of the CiviEvent event type, or false if none exists.
+	 * @return int|bool $existing_id The numeric ID of the CiviCRM Event Type, or false if none exists.
 	 */
 	public function get_default_event_type_value( $post = null ) {
 
@@ -1558,12 +1555,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get a CiviEvent event type by ID.
+	 * Get a CiviCRM Event Type by ID.
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param int $type_id The numeric ID of a CiviEvent event type.
-	 * @return array $type CiviEvent event type data.
+	 * @param int $type_id The numeric ID of a CiviCRM Event Type.
+	 * @return array $type CiviCRM Event Type data.
 	 */
 	public function get_event_type_by_id( $type_id ) {
 
@@ -1598,12 +1595,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get a CiviEvent event type by "value" pseudo-ID.
+	 * Get a CiviCRM Event Type by "value" pseudo-ID.
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param int $type_value The numeric value of a CiviEvent event type.
-	 * @return array $type CiviEvent event type data.
+	 * @param int $type_value The numeric value of a CiviCRM Event Type.
+	 * @return array $type CiviCRM Event Type data.
 	 */
 	public function get_event_type_by_value( $type_value ) {
 
@@ -1665,7 +1662,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 			}
 
-			// Define params to get event type option group.
+			// Define params to get Event Type option group.
 			$opt_group_params = array(
 				'name' => 'event_type',
 				'version' => 3,

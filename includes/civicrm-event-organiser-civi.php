@@ -418,15 +418,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$civi_event['default_role_id'] = $existing_id;
 		}
 
-		// Get event type pseudo-ID (or value), because it is required in CiviCRM.
+		// Get Event Type pseudo-ID (or value), because it is required in CiviCRM.
 		$type_value = $this->plugin->taxonomy->get_default_event_type_value( $post );
 
-		// Die if there are no event types defined in CiviCRM.
+		// Die if there are no Event Types defined in CiviCRM.
 		if ( $type_value === false ) {
-			wp_die( __( 'You must have some CiviCRM event types defined', 'civicrm-event-organiser' ) );
+			wp_die( __( 'You must have some CiviCRM Event Types defined', 'civicrm-event-organiser' ) );
 		}
 
-		// Assign event type value.
+		// Assign Event Type value.
 		$civi_event['event_type_id'] = $type_value;
 
 		/**
@@ -1256,7 +1256,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Disabled.
 		return true;
 
-		// Check default event type.
+		// Check default Event Type.
 		$result = $this->_validate_event_type();
 		if ( is_wp_error( $result ) ) {
 			return $result;

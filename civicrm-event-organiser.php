@@ -270,18 +270,11 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public function enable_translation() {
 
-		// Not used, as there are no translations as yet.
+		// Load plugin translations.
 		load_plugin_textdomain(
-
-			// Unique name.
-			'civicrm-event-organiser',
-
-			// Deprecated argument.
-			false,
-
-			// Relative path to directory containing translation files.
-			dirname( plugin_basename( __FILE__ ) ) . '/languages/'
-
+			'civicrm-event-organiser', // Unique name.
+			false, // Deprecated argument.
+			dirname( plugin_basename( __FILE__ ) ) . '/languages/' // Relative path to translation files.
 		);
 
 	}

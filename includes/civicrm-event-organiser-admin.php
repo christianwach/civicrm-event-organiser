@@ -62,7 +62,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @var object $step_counts The array of item counts to process per AJAX request.
 	 */
 	public $step_counts = array(
-		'tax' => 5, // EO category terms & CiviCRM event types.
+		'tax' => 5, // EO category terms & CiviCRM Event Types.
 		'venue' => 5, // EO venues & CiviCRM locations.
 		'event' => 1, // EO events & CiviCRM events.
 	);
@@ -538,7 +538,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Init localisation.
 		$localisation = array(
 
-			// CiviCRM event types.
+			// CiviCRM Event Types.
 			'event_types' => array(
 				'total' => __( '{{total}} event types to sync...', 'civicrm-event-organiser' ),
 				'current' => __( 'Processing event types {{from}} to {{to}}', 'civicrm-event-organiser' ),
@@ -651,7 +651,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get all participant roles.
 		$roles = $this->plugin->civi->get_participant_roles_select( $event = null );
 
-		// Get all event types.
+		// Get all Event Types.
 		$types = $this->plugin->taxonomy->get_event_types_select();
 
 		// Get all event registration profiles.
@@ -687,7 +687,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get all participant roles.
 		$roles = $this->plugin->civi->get_participant_roles_select( $event = null );
 
-		// Get all event types.
+		// Get all Event Types.
 		$types = $this->plugin->taxonomy->get_event_types_select();
 
 		// Include template file.
@@ -927,7 +927,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Stepped synchronisation of EO category terms to CiviCRM event types.
+	 * Stepped synchronisation of EO category terms to CiviCRM Event Types.
 	 *
 	 * @since 0.2.4
 	 */
@@ -1043,7 +1043,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Stepped synchronisation of CiviCRM event types to EO category terms.
+	 * Stepped synchronisation of CiviCRM Event Types to EO category terms.
 	 *
 	 * @since 0.2.4
 	 */
@@ -1070,7 +1070,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$opt_group_id = $this->plugin->taxonomy->get_event_types_optgroup_id();
 		if ( $opt_group_id !== false ) {
 
-			// Get event types (descriptions will be present if not null).
+			// Get Event Types (descriptions will be present if not null).
 			$types = civicrm_api( 'option_value', 'get', array(
 				'option_group_id' => $opt_group_id,
 				'version' => 3,
@@ -1109,7 +1109,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$data['from'] = intval( $offset );
 			$data['to'] = $data['from'] + $diff;
 
-			// Sync each event type in turn.
+			// Sync each Event Type in turn.
 			foreach( $types['values'] AS $type ) {
 
 				// Update CiviEvent term - or create if it doesn't exist.
@@ -1118,7 +1118,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				// Next on failure.
 				if ( $eo_term_id === false ) {
 
-					// Log failed event type first.
+					// Log failed Event Type first.
 					$e = new Exception;
 					$trace = $e->getTraceAsString();
 					error_log( print_r( array(
