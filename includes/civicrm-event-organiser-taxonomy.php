@@ -67,15 +67,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 */
 	public function register_hooks() {
 
-		// Intercept new term creation.
-		add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
+		// Intercept WordPress term operations.
+		$this->hooks_wordpress_add();
 
-		// Intercept term updates.
-		add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 2 );
-		add_action( 'edited_term', array( $this, 'intercept_update_term' ), 20, 3 );
-
-		// Intercept term deletion.
-		add_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20, 4 );
+		// Add CiviCRM listeners once CiviCRM is available.
+		add_action( 'civicrm_config', array( $this, 'civicrm_config' ), 10, 1 );
 
 		// Filter Radio Buttons for Taxonomies null term insertion.
 		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'skip_null_term' ), 20, 1 );
@@ -87,21 +83,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Ensure new events have the default term checked.
 		add_filter( 'wp_terms_checklist_args', array( $this, 'term_default_checked' ), 10, 2 );
 
-		// Intercept CiviCRM Event Type enable/disable.
-		//add_action( 'civicrm_enableDisable', array( $this, 'event_type_toggle' ), 10, 3 );
-
-		// Intercept CiviCRM Event Type form edits.
-		//add_action( 'civicrm_postProcess', array( $this, 'event_type_process_form' ), 10, 2 );
-
 		// Create custom filters that mirror 'the_content'.
 		add_filter( 'civicrm_eo_term_content', 'wptexturize' );
 		add_filter( 'civicrm_eo_term_content', 'convert_smilies' );
 		add_filter( 'civicrm_eo_term_content', 'convert_chars' );
 		add_filter( 'civicrm_eo_term_content', 'wpautop' );
 		add_filter( 'civicrm_eo_term_content', 'shortcode_unautop' );
-
-		// Intercept CiviCRM Event Type operations.
-		add_action( 'civicrm_config', array( $this, 'event_type_listeners_add' ), 10, 1 );
 
 	}
 
@@ -117,7 +104,46 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function civicrm_config( &$config ) {
 
 		// Add CiviCRM listeners once CiviCRM is available.
-		$this->event_type_listeners_add();
+		$this->hooks_civicrm_add();
+
+	}
+
+
+
+	/**
+	 * Register WordPress hooks.
+	 *
+	 * @since 0.4.6
+	 */
+	public function hooks_wordpress_add() {
+
+		// Intercept new term creation.
+		add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
+
+		// Intercept term updates.
+		add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 2 );
+		add_action( 'edited_term', array( $this, 'intercept_update_term' ), 20, 3 );
+
+		// Intercept term deletion.
+		add_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20, 4 );
+
+	}
+
+
+
+
+	/**
+	 * Remove WordPress hooks.
+	 *
+	 * @since 0.4.6
+	 */
+	public function hooks_wordpress_remove() {
+
+		// Remove all previously added callbacks.
+		remove_action( 'created_term', array( $this, 'intercept_create_term' ), 20 );
+		remove_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20 );
+		remove_action( 'edited_term', array( $this, 'intercept_update_term' ), 20 );
+		remove_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20 );
 
 	}
 
@@ -128,7 +154,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.6
 	 */
-	public function event_type_listeners_add() {
+	public function hooks_civicrm_add() {
 
 		// Add callback for CiviCRM "postInsert" hook.
 		Civi::service('dispatcher')->addListener(
@@ -170,7 +196,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.6
 	 */
-	public function event_type_listeners_remove() {
+	public function hooks_civicrm_remove() {
 
 		// Remove callback for CiviCRM "postInsert" hook.
 		Civi::service('dispatcher')->removeListener(
@@ -358,13 +384,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$term = get_term_by( 'id', $term_id, 'event-category' );
 
 		// Unhook CiviCRM.
-		$this->event_type_listeners_remove();
+		$this->hooks_civicrm_remove();
 
 		// Update CiviCRM Event Type - or create if it doesn't exist.
 		$event_type_id = $this->update_event_type( $term );
 
 		// Rehook CiviCRM.
-		$this->event_type_listeners_add();
+		$this->hooks_civicrm_add();
 
 	}
 
@@ -446,13 +472,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$new_term = get_term_by( 'id', $term_id, 'event-category' );
 
 		// Unhook CiviCRM.
-		$this->event_type_listeners_remove();
+		$this->hooks_civicrm_remove();
 
 		// Update CiviCRM Event Type - or create if it doesn't exist.
 		$event_type_id = $this->update_event_type( $new_term, $old_term );
 
 		// Rehook CiviCRM.
-		$this->event_type_listeners_add();
+		$this->hooks_civicrm_add();
 
 	}
 
@@ -477,13 +503,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Unhook CiviCRM.
-		$this->event_type_listeners_remove();
+		$this->hooks_civicrm_remove();
 
 		// Delete the CiviCRM Event Type if it exists.
 		$event_type_id = $this->delete_event_type( $deleted_term );
 
 		// Rehook CiviCRM.
-		$this->event_type_listeners_add();
+		$this->hooks_civicrm_add();
 
 	}
 
@@ -513,14 +539,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			'description'=> $description,
 		);
 
-		// Unhook listener.
-		remove_action( 'created_term', array( $this, 'intercept_create_term' ), 20 );
+		// Unhook listeners.
+		$this->hooks_wordpress_remove();
 
 		// Insert it.
 		$result = wp_insert_term( $event_type['label'], 'event-category', $args );
 
-		// Rehook listener.
-		add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
+		// Rehook listeners.
+		$this->hooks_wordpress_add();
 
 		// If all goes well, we get: array( 'term_id' => 12, 'term_taxonomy_id' => 34 )
 		// If something goes wrong, we get a WP_Error object.
@@ -530,6 +556,16 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Add the Event Type ID to the term's meta.
 		$this->add_term_meta( $result['term_id'], intval( $event_type['id'] ) );
+
+		/*
+		 * WordPress does not have an "Active/Inactive" term state by default,
+		 * but we can add a "term meta" value to hold this.
+		 *
+		 * @see eventorganiser_add_tax_meta()
+		 * @see eventorganiser_edit_tax_meta()
+		 */
+
+		 // TODO: Use "term meta" to save "Active/Inactive" state.
 
 		// --<
 		return $result;
@@ -608,21 +644,29 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		);
 
 		// Unhook listeners.
-		remove_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20 );
-		remove_action( 'edited_term', array( $this, 'intercept_update_term' ), 20 );
+		$this->hooks_wordpress_remove();
 
 		// Update term.
 		$result = wp_update_term( $term_id, 'event-category', $args );
 
 		// Rehook listeners.
-		add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 2 );
-		add_action( 'edited_term', array( $this, 'intercept_update_term' ), 20, 3 );
+		$this->hooks_wordpress_add();
 
 		// If all goes well, we get: array( 'term_id' => 12, 'term_taxonomy_id' => 34 )
 		// If something goes wrong, we get a WP_Error object.
 		if ( is_wp_error( $result ) ) {
 			return false;
 		}
+
+		/*
+		 * WordPress does not have an "Active/Inactive" term state by default,
+		 * but we can add a "term meta" value to hold this.
+		 *
+		 * @see eventorganiser_add_tax_meta()
+		 * @see eventorganiser_edit_tax_meta()
+		 */
+
+		 // TODO: Use "term meta" to save "Active/Inactive" state.
 
 		// --<
 		return $result['term_id'];
@@ -642,13 +686,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function delete_term( $term_id ) {
 
 		// Unhook listeners.
-		remove_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20 );
+		$this->hooks_wordpress_remove();
 
 		// Delete the term.
 		$result = wp_delete_term( $term_id, 'event-category' );
 
 		// Rehook listeners.
-		add_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20, 4 );
+		$this->hooks_wordpress_add();
 
 		// True on success, false if term does not exist. Zero on attempted
 		// deletion of default Category. WP_Error if the taxonomy does not exist.
@@ -1067,133 +1111,6 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Intercept when a CiviCRM Event Type is toggled.
-	 *
-	 * @since 0.4.2
-	 *
-	 * @param object $recordBAO The CiviCRM option object.
-	 * @param integer $recordID The ID of the object.
-	 * @param bool $isActive Whether the item is active or not.
-	 */
-	public function event_type_toggle( $recordBAO, $recordID, $isActive ) {
-
-		/**
-		 * Example data:
-		 *
-		 * [recordBAO] => CRM_Core_BAO_OptionValue
-		 * [recordID] => 734
-		 * [isActive] => 1
-		 *
-		 * WordPress does not have an "Inactive" term state by default, but we
-		 * could add a "term meta" value to hold this.
-		 *
-		 * @see eventorganiser_add_tax_meta()
-		 * @see eventorganiser_edit_tax_meta()
-		 */
-
-		 // TODO: Use "term meta" to save Active/Inactive state.
-
-	}
-
-
-
-	/**
-	 * Update an EO 'event-category' term when a CiviCRM Event Type is updated.
-	 *
-	 * @since 0.4.2
-	 *
-	 * @param string $formName The CiviCRM form name.
-	 * @param object $form The CiviCRM form object.
-	 */
-	public function event_type_process_form( $formName, &$form ) {
-
-		// Kick out if not options form.
-		if ( ! ( $form instanceof CRM_Admin_Form_Options ) ) {
-			return;
-		}
-
-		// Kick out if not Event Type form.
-		if ( 'event_type' != $form->getVar( '_gName' ) ) {
-			return;
-		}
-
-		// Inspect all values.
-		$event_type = $form->getVar( '_values' );
-
-		// Inspect submitted values.
-		$submitted_values = $form->getVar( '_submitValues' );
-
-		// TODO: we still need to address the 'is_active' option.
-
-		// If our type is populated.
-		if ( ! empty( $event_type['id'] ) ) {
-
-			// If it's a delete operation.
-			if ( ! empty( $submitted_values['_qf_Options_next'] ) ) {
-				if ( $submitted_values['_qf_Options_next'] == 'Delete' ) {
-
-					// Delete term and bail.
-					$term_id = $this->get_term_id( $event_type );
-					if ( $term_id !== false ) {
-						$success = $this->delete_term( $term_id );
-						return;
-					}
-
-				}
-			}
-
-			// Define description if present.
-			$description = isset( $submitted_values['description'] ) ? $submitted_values['description'] : '';
-
-			// Copy existing Event Type.
-			$new_type = $event_type;
-
-			// Assemble new Event Type.
-			$new_type['label'] = $submitted_values['label'];
-			$new_type['name'] = $submitted_values['label'];
-			$new_type['description'] = $submitted_values['description'];
-
-			// Unhook listeners.
-			remove_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20 );
-			remove_action( 'edited_term', array( $this, 'intercept_update_term' ), 20 );
-
-			// Update EO term - or create if it doesn't exist.
-			$result = $this->update_term( $new_type, $event_type );
-
-			// Rehook listeners.
-			add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 2 );
-			add_action( 'edited_term', array( $this, 'intercept_update_term' ), 20, 3 );
-
-		} else {
-
-			// It's an insert operation.
-
-			// Define description if present.
-			$description = isset( $submitted_values['description'] ) ? $submitted_values['description'] : '';
-
-			// Construct Event Type.
-			$new_type = array(
-				'label' => $submitted_values['label'],
-				'name' => $submitted_values['label'],
-				'description' => $description,
-			);
-
-			// Unhook listener.
-			remove_action( 'created_term', array( $this, 'intercept_create_term' ), 20 );
-
-			// Create EO term.
-			$result = $this->create_term( $new_type );
-
-			// Rehook listener.
-			add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
-
-		}
-
-	}
-
-
-
-	/**
 	 * Callback for the CiviCRM 'civi.dao.postInsert' hook.
 	 *
 	 * @since 0.4.6
@@ -1213,7 +1130,6 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Bail if it's not an Event Type.
 		$opt_group_id = $this->get_event_types_optgroup_id();
-
 		if ( $opt_group_id === false OR $opt_group_id != $event_type->option_group_id ) {
 			return;
 		}
@@ -1232,14 +1148,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			'description' => $description,
 		);
 
-		// Unhook listener.
-		remove_action( 'created_term', array( $this, 'intercept_create_term' ), 20 );
+		// Unhook listeners.
+		$this->hooks_wordpress_remove();
 
 		// Create EO term.
 		$result = $this->create_term( $term_data );
 
-		// Rehook listener.
-		add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
+		// Rehook listeners.
+		$this->hooks_wordpress_add();
 
 	}
 
@@ -1313,6 +1229,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Get the full data for the updated Event Type.
 		$event_type_full = $this->get_event_type_by_id( $event_type->id );
+		if ( $event_type_full === false ) {
+			return;
+		}
 
 		// Update description if present.
 		$description = '';
@@ -1329,15 +1248,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		);
 
 		// Unhook listeners.
-		remove_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20 );
-		remove_action( 'edited_term', array( $this, 'intercept_update_term' ), 20 );
+		$this->hooks_wordpress_remove();
 
 		// Update EO term - or create if it doesn't exist.
 		$result = $this->update_term( $event_type );
 
 		// Rehook listeners.
-		add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 2 );
-		add_action( 'edited_term', array( $this, 'intercept_update_term' ), 20, 3 );
+		$this->hooks_wordpress_add();
 
 	}
 
@@ -1374,13 +1291,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Unhook listeners.
-		remove_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20 );
+		$this->hooks_wordpress_remove();
 
 		// Delete term.
 		$success = $this->delete_term( $term_id );
 
 		// Rehook listeners.
-		add_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20, 4 );
+		$this->hooks_wordpress_add();
 
 	}
 
