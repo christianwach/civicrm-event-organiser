@@ -31,9 +31,6 @@
 
 		<h3><?php _e( 'Event Type Synchronisation', 'civicrm-event-organiser' ); ?></h3>
 
-		<p><?php _e( 'At present, there is no CiviCRM hook that fires when a CiviEvent event type is deleted.', 'civicrm-event-organiser' ); ?><br />
-		<strong><?php _e( 'Event types should always be deleted from the Event Category screen.', 'civicrm-event-organiser' ); ?></strong></p>
-
 		<table class="form-table">
 
 			<tr valign="top">
