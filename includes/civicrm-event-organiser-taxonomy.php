@@ -201,27 +201,27 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Remove callback for CiviCRM "postInsert" hook.
 		Civi::service('dispatcher')->removeListener(
 			'civi.dao.postInsert',
-			[ $this, 'event_type_created' ],
+			[ $this, 'event_type_created' ]
 		);
 
 		/*
 		// Remove callback for CiviCRM "preUpdate" hook.
 		Civi::service('dispatcher')->removeListener(
 			'civi.dao.preUpdate',
-			[ $this, 'event_type_pre_update' ],
+			[ $this, 'event_type_pre_update' ]
 		);
 		*/
 
 		// Remove callback for CiviCRM "postUpdate" hook.
 		Civi::service('dispatcher')->removeListener(
 			'civi.dao.postUpdate',
-			[ $this, 'event_type_updated' ],
+			[ $this, 'event_type_updated' ]
 		);
 
 		// Remove callback for CiviCRM "preDelete" hook.
 		Civi::service('dispatcher')->removeListener(
 			'civi.dao.preDelete',
-			[ $this, 'event_type_pre_delete' ],
+			[ $this, 'event_type_pre_delete' ]
 		);
 
 	}
