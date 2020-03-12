@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the CiviCRM Event Organiser package.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.4.6\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
-"POT-Creation-Date: 2020-03-11 13:08:19+00:00\n"
+"POT-Creation-Date: 2020-03-12 08:18:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -47,61 +47,53 @@ msgstr ""
 msgid "Event Type Synchronisation"
 msgstr ""
 
-#: assets/templates/manual-sync.php:34
-msgid "At present, there is no CiviCRM hook that fires when a CiviEvent event type is deleted."
-msgstr ""
-
-#: assets/templates/manual-sync.php:35
-msgid "Event types should always be deleted from the Event Category screen."
-msgstr ""
-
-#: assets/templates/manual-sync.php:40
+#: assets/templates/manual-sync.php:37
 msgid "Event Organiser Categories to CiviCRM Event Types"
 msgstr ""
 
-#: assets/templates/manual-sync.php:41 assets/templates/manual-sync.php:50
-#: assets/templates/manual-sync.php:67 assets/templates/manual-sync.php:76
-#: assets/templates/manual-sync.php:93 assets/templates/manual-sync.php:102
+#: assets/templates/manual-sync.php:38 assets/templates/manual-sync.php:47
+#: assets/templates/manual-sync.php:64 assets/templates/manual-sync.php:73
+#: assets/templates/manual-sync.php:90 assets/templates/manual-sync.php:99
 msgid "Sync Now"
 msgstr ""
 
-#: assets/templates/manual-sync.php:41 assets/templates/manual-sync.php:50
-#: assets/templates/manual-sync.php:67 assets/templates/manual-sync.php:76
-#: assets/templates/manual-sync.php:93 assets/templates/manual-sync.php:102
+#: assets/templates/manual-sync.php:38 assets/templates/manual-sync.php:47
+#: assets/templates/manual-sync.php:64 assets/templates/manual-sync.php:73
+#: assets/templates/manual-sync.php:90 assets/templates/manual-sync.php:99
 msgid "Continue Sync"
 msgstr ""
 
-#: assets/templates/manual-sync.php:41 assets/templates/manual-sync.php:50
-#: assets/templates/manual-sync.php:67 assets/templates/manual-sync.php:76
-#: assets/templates/manual-sync.php:93 assets/templates/manual-sync.php:102
+#: assets/templates/manual-sync.php:38 assets/templates/manual-sync.php:47
+#: assets/templates/manual-sync.php:64 assets/templates/manual-sync.php:73
+#: assets/templates/manual-sync.php:90 assets/templates/manual-sync.php:99
 msgid "Stop Sync"
 msgstr ""
 
-#: assets/templates/manual-sync.php:49
+#: assets/templates/manual-sync.php:46
 msgid "CiviCRM Event Types to Event Organiser Categories"
 msgstr ""
 
-#: assets/templates/manual-sync.php:61
+#: assets/templates/manual-sync.php:58
 msgid "Venue Synchronisation"
 msgstr ""
 
-#: assets/templates/manual-sync.php:66
+#: assets/templates/manual-sync.php:63
 msgid "Event Organiser Venues to CiviEvent Locations"
 msgstr ""
 
-#: assets/templates/manual-sync.php:75
+#: assets/templates/manual-sync.php:72
 msgid "CiviEvent Locations to Event Organiser Venues"
 msgstr ""
 
-#: assets/templates/manual-sync.php:87
+#: assets/templates/manual-sync.php:84
 msgid "Event Synchronisation"
 msgstr ""
 
-#: assets/templates/manual-sync.php:92
+#: assets/templates/manual-sync.php:89
 msgid "Event Organiser Events to CiviEvents"
 msgstr ""
 
-#: assets/templates/manual-sync.php:101
+#: assets/templates/manual-sync.php:98
 msgid "CiviEvents to Event Organiser Events"
 msgstr ""
 
