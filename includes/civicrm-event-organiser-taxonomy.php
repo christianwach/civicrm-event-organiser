@@ -948,7 +948,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * @since 0.4.5
 	 *
 	 * @param array $event_type The array of CiviCRM Event Type data.
-	 * @param WP_Term|bool $term The term object, or false on failure.
+	 * @return WP_Term|bool $term The term object, or false on failure.
 	 */
 	public function get_term_by_meta( $event_type ) {
 
