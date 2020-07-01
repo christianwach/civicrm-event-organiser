@@ -234,7 +234,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * The `unregister_meta_key()` function was introduced in WordPress 4.6,
 	 * so we look for that rather than potentially triggering autoloaders by
 	 * using a `class_exists( 'WP_Term_Query' )` lookup.
-
+	 *
 	 * @since 0.4.5
 	 *
 	 * @return bool True if terms can be queried by their "term meta", false otherwise.
@@ -1089,7 +1089,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			error_log( print_r( array(
 				'method' => __METHOD__,
 				'message' => $meta_id->get_error_message(),
-				'term' => $term,
+				'term_id' => $term_id,
 				'event_type_id' => $event_type_id,
 				'backtrace' => $trace,
 			), true ) );
