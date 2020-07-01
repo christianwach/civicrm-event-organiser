@@ -153,6 +153,9 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		// The WordPress AJAX mthod token.
 		me.action = options.action;
 
+		// The AJAX nonce.
+		me.ajax_nonce = me.button.data( 'security' );
+
 		/**
 		 * Add a click event listener to start sync.
 		 *
@@ -232,18 +235,20 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		 */
 		this.send = function() {
 
+			// Define vars.
+			var url, data;
+
+			// URL to post to.
+			url = CiviCRM_Event_Organiser_Manual_Sync.settings.get_setting( 'ajax_url' );
+
+			// Data received by WordPress.
+			data = {
+				action: me.action,
+				_ajax_nonce: me.ajax_nonce
+			};
+
 			// Use jQuery post.
-			$.post(
-
-				// URL to post to.
-				CiviCRM_Event_Organiser_Manual_Sync.settings.get_setting( 'ajax_url' ),
-
-				{
-
-					// Token received by WordPress.
-					action: me.action
-
-				},
+			$.post( url, data,
 
 				// Callback.
 				function( data, textStatus ) {

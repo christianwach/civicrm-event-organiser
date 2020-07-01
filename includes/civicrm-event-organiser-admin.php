@@ -936,6 +936,29 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Init AJAX return.
 		$data = array();
 
+		// If this is an AJAX request, check security.
+		if ( wp_doing_ajax() ) {
+
+			// Check security.
+			$result = check_ajax_referer( 'civi_eo_tax_eo_to_civi', false, false );
+
+			// Bail if check fails.
+			if ( $result === false ) {
+
+				// Set finished flag.
+				$data['finished'] = 'true';
+
+				// Delete the option to start from the beginning.
+				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
+
+				// Send data to browser.
+				$this->send_data( $data );
+				return;
+
+			}
+
+		}
+
 		// If the offset value doesn't exist.
 		if ( 'fgffgs' == get_option( '_civi_eo_tax_eo_to_civi_offset', 'fgffgs' ) ) {
 
@@ -1052,6 +1075,29 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Init AJAX return.
 		$data = array();
 
+		// If this is an AJAX request, check security.
+		if ( wp_doing_ajax() ) {
+
+			// Check security.
+			$result = check_ajax_referer( 'civi_eo_tax_civi_to_eo', false, false );
+
+			// Bail if check fails.
+			if ( $result === false ) {
+
+				// Set finished flag.
+				$data['finished'] = 'true';
+
+				// Delete the option to start from the beginning.
+				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
+
+				// Send data to browser.
+				$this->send_data( $data );
+				return;
+
+			}
+
+		}
+
 		// If the offset value doesn't exist.
 		if ( 'fgffgs' == get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) {
 
@@ -1164,6 +1210,29 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Init AJAX return.
 		$data = array();
 
+		// If this is an AJAX request, check security.
+		if ( wp_doing_ajax() ) {
+
+			// Check security.
+			$result = check_ajax_referer( 'civi_eo_venue_eo_to_civi', false, false );
+
+			// Bail if check fails.
+			if ( $result === false ) {
+
+				// Set finished flag.
+				$data['finished'] = 'true';
+
+				// Delete the option to start from the beginning.
+				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
+
+				// Send data to browser.
+				$this->send_data( $data );
+				return;
+
+			}
+
+		}
+
 		// If the offset value doesn't exist.
 		if ( 'fgffgs' == get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) {
 
@@ -1261,6 +1330,29 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Init AJAX return.
 		$data = array();
 
+		// If this is an AJAX request, check security.
+		if ( wp_doing_ajax() ) {
+
+			// Check security.
+			$result = check_ajax_referer( 'civi_eo_venue_civi_to_eo', false, false );
+
+			// Bail if check fails.
+			if ( $result === false ) {
+
+				// Set finished flag.
+				$data['finished'] = 'true';
+
+				// Delete the option to start from the beginning.
+				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
+
+				// Send data to browser.
+				$this->send_data( $data );
+				return;
+
+			}
+
+		}
+
 		// If the offset value doesn't exist.
 		if ( 'fgffgs' == get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) {
 
@@ -1354,6 +1446,29 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Init AJAX return.
 		$data = array();
 
+		// If this is an AJAX request, check security.
+		if ( wp_doing_ajax() ) {
+
+			// Check security.
+			$result = check_ajax_referer( 'civi_eo_event_eo_to_civi', false, false );
+
+			// Bail if check fails.
+			if ( $result === false ) {
+
+				// Set finished flag.
+				$data['finished'] = 'true';
+
+				// Delete the option to start from the beginning.
+				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
+
+				// Send data to browser.
+				$this->send_data( $data );
+				return;
+
+			}
+
+		}
+
 		// If the offset value doesn't exist.
 		if ( 'fgffgs' == get_option( '_civi_eo_event_eo_to_civi_offset', 'fgffgs' ) ) {
 
@@ -1442,6 +1557,29 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// Init AJAX return.
 		$data = array();
+
+		// If this is an AJAX request, check security.
+		if ( wp_doing_ajax() ) {
+
+			// Check security.
+			$result = check_ajax_referer( 'civi_eo_event_civi_to_eo', false, false );
+
+			// Bail if check fails.
+			if ( $result === false ) {
+
+				// Set finished flag.
+				$data['finished'] = 'true';
+
+				// Delete the option to start from the beginning.
+				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
+
+				// Send data to browser.
+				$this->send_data( $data );
+				return;
+
+			}
+
+		}
 
 		// If the offset value doesn't exist.
 		if ( 'fgffgs' == get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) {

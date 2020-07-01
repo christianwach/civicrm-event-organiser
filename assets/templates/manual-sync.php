@@ -34,8 +34,9 @@
 		<table class="form-table">
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_tax_eo_to_civi"><?php _e( 'Event Organiser Categories to CiviCRM Event Types', 'civicrm-event-organiser' ); ?></label></th>
-				<td><input type="submit" id="civi_eo_tax_eo_to_civi" name="civi_eo_tax_eo_to_civi" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_tax_eo_to_civi_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_tax_eo_to_civi_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_tax_eo_to_civi_stop" name="civi_eo_tax_eo_to_civi_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+				<?php $identifier = 'civi_eo_tax_eo_to_civi'; ?>
+				<th scope="row"><label for="<?php echo $identifier; ?>"><?php _e( 'Event Organiser Categories to CiviCRM Event Types', 'civicrm-event-organiser' ); ?></label></th>
+				<td><input type="submit" id="<?php echo $identifier; ?>" name="<?php echo $identifier; ?>" data-security="<?php echo esc_attr( wp_create_nonce( $identifier ) ); ?>" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_tax_eo_to_civi_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_tax_eo_to_civi_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="<?php echo $identifier; ?>_stop" name="<?php echo $identifier; ?>_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
 			</tr>
 
 			<tr valign="top">
@@ -43,8 +44,9 @@
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_tax_civi_to_eo"><?php _e( 'CiviCRM Event Types to Event Organiser Categories', 'civicrm-event-organiser' ); ?></label></th>
-				<td><input type="submit" id="civi_eo_tax_civi_to_eo" name="civi_eo_tax_civi_to_eo" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_tax_civi_to_eo_stop" name="civi_eo_tax_civi_to_eo_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+				<?php $identifier = 'civi_eo_tax_civi_to_eo'; ?>
+				<th scope="row"><label for="<?php echo $identifier; ?>"><?php _e( 'CiviCRM Event Types to Event Organiser Categories', 'civicrm-event-organiser' ); ?></label></th>
+				<td><input type="submit" id="<?php echo $identifier; ?>" name="<?php echo $identifier; ?>" data-security="<?php echo esc_attr( wp_create_nonce( $identifier ) ); ?>" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="<?php echo $identifier; ?>_stop" name="<?php echo $identifier; ?>_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
 			</tr>
 
 			<tr valign="top">
@@ -60,8 +62,9 @@
 		<table class="form-table">
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_venue_eo_to_civi"><?php _e( 'Event Organiser Venues to CiviEvent Locations', 'civicrm-event-organiser' ); ?></label></th>
-				<td><input type="submit" id="civi_eo_venue_eo_to_civi" name="civi_eo_venue_eo_to_civi" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_venue_eo_to_civi_stop" name="civi_eo_venue_eo_to_civi_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+				<?php $identifier = 'civi_eo_venue_eo_to_civi'; ?>
+				<th scope="row"><label for="<?php echo $identifier; ?>"><?php _e( 'Event Organiser Venues to CiviEvent Locations', 'civicrm-event-organiser' ); ?></label></th>
+				<td><input type="submit" id="<?php echo $identifier; ?>" name="<?php echo $identifier; ?>" data-security="<?php echo esc_attr( wp_create_nonce( $identifier ) ); ?>" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="<?php echo $identifier; ?>_stop" name="<?php echo $identifier; ?>_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
 			</tr>
 
 			<tr valign="top">
@@ -69,8 +72,9 @@
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_venue_civi_to_eo"><?php _e( 'CiviEvent Locations to Event Organiser Venues', 'civicrm-event-organiser' ); ?></label></th>
-				<td><input type="submit" id="civi_eo_venue_civi_to_eo" name="civi_eo_venue_civi_to_eo" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_venue_civi_to_eo_stop" name="civi_eo_venue_civi_to_eo_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+				<?php $identifier = 'civi_eo_venue_civi_to_eo'; ?>
+				<th scope="row"><label for="<?php echo $identifier; ?>"><?php _e( 'CiviEvent Locations to Event Organiser Venues', 'civicrm-event-organiser' ); ?></label></th>
+				<td><input type="submit" id="<?php echo $identifier; ?>" name="<?php echo $identifier; ?>" data-security="<?php echo esc_attr( wp_create_nonce( $identifier ) ); ?>" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="<?php echo $identifier; ?>_stop" name="<?php echo $identifier; ?>_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
 			</tr>
 
 			<tr valign="top">
@@ -86,8 +90,9 @@
 		<table class="form-table">
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_eo_to_civi"><?php _e( 'Event Organiser Events to CiviEvents', 'civicrm-event-organiser' ); ?></label></th>
-				<td><input type="submit" id="civi_eo_event_eo_to_civi" name="civi_eo_event_eo_to_civi" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_event_eo_to_civi_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_event_eo_to_civi_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_event_eo_to_civi_stop" name="civi_eo_event_eo_to_civi_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+				<?php $identifier = 'civi_eo_event_eo_to_civi'; ?>
+				<th scope="row"><label for="<?php echo $identifier; ?>"><?php _e( 'Event Organiser Events to CiviEvents', 'civicrm-event-organiser' ); ?></label></th>
+				<td><input type="submit" id="<?php echo $identifier; ?>" name="<?php echo $identifier; ?>" data-security="<?php echo esc_attr( wp_create_nonce( $identifier ) ); ?>" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_event_eo_to_civi_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_event_eo_to_civi_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="<?php echo $identifier; ?>_stop" name="<?php echo $identifier; ?>_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
 			</tr>
 
 			<tr valign="top">
@@ -95,8 +100,9 @@
 			</tr>
 
 			<tr valign="top">
-				<th scope="row"><label for="civi_eo_event_civi_to_eo"><?php _e( 'CiviEvents to Event Organiser Events', 'civicrm-event-organiser' ); ?></label></th>
-				<td><input type="submit" id="civi_eo_event_civi_to_eo" name="civi_eo_event_civi_to_eo" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="civi_eo_event_civi_to_eo_stop" name="civi_eo_event_civi_to_eo_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
+				<?php $identifier = 'civi_eo_event_civi_to_eo'; ?>
+				<th scope="row"><label for="<?php echo $identifier; ?>"><?php _e( 'CiviEvents to Event Organiser Events', 'civicrm-event-organiser' ); ?></label></th>
+				<td><input type="submit" id="<?php echo $identifier; ?>" name="<?php echo $identifier; ?>" data-security="<?php echo esc_attr( wp_create_nonce( $identifier ) ); ?>" value="<?php if ( 'fgffgs' == get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) { _e( 'Sync Now', 'civicrm-event-organiser' ); } else { _e( 'Continue Sync', 'civicrm-event-organiser' ); } ?>" class="button-primary" /><?php if ( 'fgffgs' == get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) {} else { ?> <input type="submit" id="<?php echo $identifier; ?>_stop" name="<?php echo $identifier; ?>_stop" value="<?php _e( 'Stop Sync', 'civicrm-event-organiser' ); ?>" class="button-secondary" /><?php } ?></td>
 			</tr>
 
 			<tr valign="top">
