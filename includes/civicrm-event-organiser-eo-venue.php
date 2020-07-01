@@ -28,7 +28,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function __construct() {
 
 		// Add hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', array( $this, 'register_hooks' ) );
+		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'register_hooks' ] );
 
 	}
 
@@ -63,27 +63,27 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		// Intercept create venue.
-		add_action( 'eventorganiser_insert_venue', array( $this, 'insert_venue' ), 10, 1 );
+		add_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ], 10, 1 );
 
 		// Intercept save venue.
-		add_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10, 1 );
+		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
 
 		// Intercept term deletion (before delete venue).
-		add_action( 'delete_term', array( $this, 'delete_venue_term' ), 20, 4 );
-		add_action( 'delete_event-venue', array( $this, 'delete_venue' ), 20, 3 );
+		add_action( 'delete_term', [ $this, 'delete_venue_term' ], 20, 4 );
+		add_action( 'delete_event-venue', [ $this, 'delete_venue' ], 20, 3 );
 
 		// Intercept after delete venue.
-		add_action( 'eventorganiser_delete_venue', array( $this, 'deleted_venue' ), 10, 1 );
+		add_action( 'eventorganiser_delete_venue', [ $this, 'deleted_venue' ], 10, 1 );
 
 		// Add our venue meta box.
-		add_action( 'add_meta_boxes', array( $this, 'venue_meta_box' ) );
+		add_action( 'add_meta_boxes', [ $this, 'venue_meta_box' ] );
 
 		// Filter terms after EO does.
-		add_filter( 'wp_get_object_terms', array( $this, 'update_venue_meta' ), 20, 4 );
+		add_filter( 'wp_get_object_terms', [ $this, 'update_venue_meta' ], 20, 4 );
 
 		// Intercept terms after EO does.
-		add_filter( 'get_terms', array( $this, 'update_venue_meta_cache' ), 20, 2 );
-		add_filter( 'get_event-venue', array( $this, 'update_venue_meta_cache' ), 20, 2 );
+		add_filter( 'get_terms', [ $this, 'update_venue_meta_cache' ], 20, 2 );
+		add_filter( 'get_event-venue', [ $this, 'update_venue_meta_cache' ], 20, 2 );
 
 	}
 
@@ -333,12 +333,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			// Log and move on.
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => __( 'Street Address is empty.', 'civicrm-event-organiser' ),
 				'location' => $location,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 
 		}
 
@@ -348,9 +348,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 				__( 'Untitled venue', 'civicrm-event-organiser' );
 
 		// Construct args.
-		$args = array(
+		$args = [
 			//'description' => $location['description'], // CiviCRM has no location description at present
-		);
+		];
 
 		// Add country if present.
 		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) AND ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
@@ -386,8 +386,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		// Remove actions to prevent recursion.
-		remove_action( 'eventorganiser_insert_venue', array( $this, 'insert_venue' ), 10 );
-		remove_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10 );
+		remove_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ], 10 );
+		remove_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10 );
 
 		// Retrieve venue with slug-to-be-used.
 		$existing_venue = eo_get_venue_by( 'slug', sanitize_title( $name ) );
@@ -412,8 +412,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$result = eo_insert_venue( $name, $args );
 
 		// Add actions again.
-		add_action( 'eventorganiser_insert_venue', array( $this, 'insert_venue' ), 10, 1 );
-		add_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10, 1 );
+		add_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ], 10, 1 );
+		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
 
 		// If we get an error.
 		if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) {
@@ -421,13 +421,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			// Log and bail.
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => __( 'Venue not created.', 'civicrm-event-organiser' ),
 				'result' => $result,
 				'location' => $location,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 			return;
 
 		}
@@ -507,12 +507,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			}
 
 			// Construct args.
-			$args = array(
+			$args = [
 				'name' => $venue->name, // Can't update name yet (locations don't have one)
 				//'description' => $location['description'], // CiviCRM has no location description at present
 				//'state' => $location['address']['county'], // CiviCRM county is an ID not a string
 				//'country' => $location['address']['country'], // CiviCRM country is an ID not a string
-			);
+			];
 
 			// Add country if present.
 			if (  ! isset($location['api.Address.getsingle']['is_error']) AND ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
@@ -548,13 +548,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			}
 
 			// Remove actions to prevent recursion.
-			remove_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10 );
+			remove_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10 );
 
 			// Insert venue.
 			$result = eo_update_venue( $venue_id, $args );
 
 			// Add actions again.
-			add_action( 'eventorganiser_save_venue', array( $this, 'save_venue' ), 10, 1 );
+			add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
 
 			// Bail if we get an error.
 			if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) {
@@ -692,7 +692,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		add_meta_box(
 			'civi_eo_venue_metabox',
 			__( 'CiviCRM Settings', 'civicrm-event-organiser' ),
-			array( $this, 'venue_meta_box_render' ),
+			[ $this, 'venue_meta_box_render' ],
 			'event_page_venues',
 			'side',
 			'high'
@@ -789,7 +789,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$single = false;
 		if ( ! is_array($terms) ) {
 			$single = true;
-			$terms = array( $terms );
+			$terms = [ $terms ];
 		}
 
 		if( empty( $terms ) ) return $terms;

@@ -37,7 +37,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	public function __construct() {
 
 		// Add CiviCRM hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', array( $this, 'initialise' ) );
+		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'initialise' ] );
 
 	}
 
@@ -148,7 +148,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		$fields = get_fields( $args['post_id'] );
 
 		// We only ever update a CiviCRM Event via ACF.
-		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10 );
 
 		// Loop through the CiviCRM Events and update.
 		foreach( $correspondences AS $event_id ) {
@@ -156,7 +156,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		}
 
 		// Restore hook.
-		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
+		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10, 4 );
 
 	}
 
@@ -262,12 +262,12 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		if ( empty( $event['id'] ) ) {
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => __( 'A numerical ID must be present to update an Event.', 'civicrm-event_organiser' ),
 				'event' => $event,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 			return $event_data;
 		}
 

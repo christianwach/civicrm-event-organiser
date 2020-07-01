@@ -37,7 +37,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function __construct() {
 
 		// Add Event Organiser hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', array( $this, 'register_hooks' ) );
+		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'register_hooks' ] );
 
 	}
 
@@ -72,37 +72,37 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Intercept insert post.
-		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
+		add_action( 'wp_insert_post', [ $this, 'insert_post' ], 10, 2 );
 
 		// Intercept save event.
-		add_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10, 1 );
+		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10, 1 );
 
 		// Intercept update event - though by misuse of a filter.
-		//add_filter( 'eventorganiser_update_event_event_data', array( $this, 'intercept_update_event' ), 10, 3 );
+		//add_filter( 'eventorganiser_update_event_event_data', [ $this, 'intercept_update_event' ], 10, 3 );
 
 		// Intercept before delete post.
-		add_action( 'before_delete_post', array( $this, 'intercept_before_delete_post' ), 10, 1 );
+		add_action( 'before_delete_post', [ $this, 'intercept_before_delete_post' ], 10, 1 );
 
 		// Intercept delete event occurrences - which is the preferred way to hook into event deletion.
-		add_action( 'eventorganiser_delete_event_occurrences', array( $this, 'delete_event_occurrences' ), 10, 2 );
+		add_action( 'eventorganiser_delete_event_occurrences', [ $this, 'delete_event_occurrences' ], 10, 2 );
 
 		// Intercept before break occurrence
-		add_action( 'eventorganiser_pre_break_occurrence', array( $this, 'pre_break_occurrence' ), 10, 2 );
+		add_action( 'eventorganiser_pre_break_occurrence', [ $this, 'pre_break_occurrence' ], 10, 2 );
 
 		// There's no hook for 'eventorganiser_delete_event_occurrence', which moves the occurrence.
 		// To the 'exclude' array of the date sequence
 
 		// Intercept after break occurrence.
-		add_action( 'eventorganiser_occurrence_broken', array( $this, 'occurrence_broken' ), 10, 3 );
+		add_action( 'eventorganiser_occurrence_broken', [ $this, 'occurrence_broken' ], 10, 3 );
 
 		// Intercept "Delete Occurrence" in admin calendar.
-		add_action( 'eventorganiser_admin_calendar_occurrence_deleted', array( $this, 'occurrence_deleted' ), 10, 2 );
+		add_action( 'eventorganiser_admin_calendar_occurrence_deleted', [ $this, 'occurrence_deleted' ], 10, 2 );
 
 		// Debug.
-		//add_filter( 'eventorganiser_pre_event_content', array( $this, 'pre_event_content' ), 10, 2 );
+		//add_filter( 'eventorganiser_pre_event_content', [ $this, 'pre_event_content' ], 10, 2 );
 
 		// Add our event meta box.
-		add_action( 'add_meta_boxes_event', array( $this, 'event_meta_boxes' ), 11 );
+		add_action( 'add_meta_boxes_event', [ $this, 'event_meta_boxes' ], 11 );
 
 		// Maybe add a Menu Item to CiviCRM Admin Utilities menu.
 		add_action( 'civicrm_admin_utilities_menu_top', [ $this, 'menu_item_add_to_cau' ], 10, 2 );
@@ -139,7 +139,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( $installed_version === 'etueue' OR version_compare( $installed_version, '3', '<' ) ) {
 
 			// Let's show an admin notice.
-			add_action( 'admin_notices', array( $this->plugin->db, 'dependency_alert' ) );
+			add_action( 'admin_notices', [ $this->plugin->db, 'dependency_alert' ] );
 
 			// Set flag.
 			$eo_active = false;
@@ -222,17 +222,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 		//$schedule = eo_get_event_schedule( $post_id );
 
 		// Prevent recursion.
-		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
-		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
-		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi, 'event_created' ], 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi, 'event_deleted' ], 10 );
 
 		// Update our CiviCRM events - or create new if none exist.
 		$this->plugin->civi->update_civi_events( $post, $dates );
 
 		// Restore hooks.
-		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10, 4 );
-		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
-		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10, 4 );
+		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_created' ], 10, 4 );
+		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10, 4 );
+		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_deleted' ], 10, 4 );
 
 	}
 
@@ -331,9 +331,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 */
 
 		// Prevent recursion.
-		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10 );
-		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10 );
-		remove_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi, 'event_created' ], 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi, 'event_deleted' ], 10 );
 
 		// Are we deleting an event?
 		if ( doing_action( 'delete_post' ) AND isset( $this->saved_correspondences ) ) {
@@ -362,9 +362,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Restore hooks.
-		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_created' ), 10, 4 );
-		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_updated' ), 10, 4 );
-		add_action( 'civicrm_post', array( $this->plugin->civi, 'event_deleted' ), 10, 4 );
+		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_created' ], 10, 4 );
+		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10, 4 );
+		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_deleted' ], 10, 4 );
 
 		// TODO: Decide if we delete CiviEvents.
 		return;
@@ -430,7 +430,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_event( $civi_event ) {
 
 		// Define schedule.
-		$event_data = array(
+		$event_data = [
 
 			// Start date.
 			'start' => new DateTime( $civi_event['start_date'], eo_get_blog_timezone() ),
@@ -448,10 +448,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// We can't tell if a CiviEvent is repeating.
 			'schedule' => 'once',
 
-		);
+		];
 
 		// Define post.
-		$post_data = array(
+		$post_data = [
 
 			// Standard post data.
 			'post_title' => $civi_event['title'],
@@ -463,7 +463,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'pinged' => '',
 			'post_content_filtered' => '',
 
-		);
+		];
 
 		// Test for created date, which may be absent.
 		if ( isset( $civi_event['created_date'] ) AND ! empty( $civi_event['created_date'] ) ) {
@@ -500,7 +500,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Init category as undefined.
-		$terms = array();
+		$terms = [];
 
 		// Get location ID.
 		if ( isset( $civi_event['event_type_id'] ) ) {
@@ -520,15 +520,15 @@ class CiviCRM_WP_Event_Organiser_EO {
 			}
 
 			// Define as array.
-			$terms = array( absint( $term_id ) );
+			$terms = [ absint( $term_id ) ];
 
 		}
 
 		// Add to post data.
-		$post_data['tax_input'] = array(
-			'event-venue' => array( absint( $venue_id ) ),
+		$post_data['tax_input'] = [
+			'event-venue' => [ absint( $venue_id ) ],
 			'event-category' => $terms,
-		);
+		];
 
 		// Default to published.
 		$post_data['post_status'] = 'publish';
@@ -553,8 +553,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Remove hooks.
-		remove_action( 'wp_insert_post', array( $this, 'insert_post' ), 10 );
-		remove_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10 );
+		remove_action( 'wp_insert_post', [ $this, 'insert_post' ], 10 );
+		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10 );
 
 		// Use EO's API to create/update an event.
 		if ( $eo_post_id === false ) {
@@ -564,8 +564,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Re-add hooks.
-		add_action( 'wp_insert_post', array( $this, 'insert_post' ), 10, 2 );
-		add_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10, 1 );
+		add_action( 'wp_insert_post', [ $this, 'insert_post' ], 10, 2 );
+		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10, 1 );
 
 		// Save event meta if the event has online registration enabled.
 		if (
@@ -607,13 +607,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 */
 
 		// Save some data.
-		$this->sync_data = array(
+		$this->sync_data = [
 			'event_id' => $event_id,
 			'civi_event' => $civi_event,
-		);
+		];
 
 		// Let's hook into postProcess for now.
-		add_action( 'civicrm_postProcess', array( $this, 'maybe_update_event_registration_profile' ), 10, 2 );
+		add_action( 'civicrm_postProcess', [ $this, 'maybe_update_event_registration_profile' ], 10, 2 );
 
 		/**
 		 * Broadcast end of EO event update.
@@ -660,7 +660,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 */
 
 		// Unhook eventorganiser_save_event, because that relies on $_POST.
-		remove_action( 'eventorganiser_save_event', array( $this, 'intercept_save_event' ), 10 );
+		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10 );
 
 		// Get the CiviEvent that this occurrence is synced with.
 		$this->temp_civi_event_id = $this->plugin->db->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
@@ -669,7 +669,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$this->plugin->db->clear_event_correspondence( $post_id, $occurrence_id );
 
 		// Do not copy across the '_civi_eo_civicrm_events' meta.
-		add_filter( 'eventorganiser_breaking_occurrence_exclude_meta', array( $this, 'occurrence_exclude_meta' ), 10, 1 );
+		add_filter( 'eventorganiser_breaking_occurrence_exclude_meta', [ $this, 'occurrence_exclude_meta' ], 10, 1 );
 
 	}
 
@@ -716,7 +716,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 */
 
 		// Build new correspondences array.
-		$correspondences = array( $occurrence_id => $this->temp_civi_event_id );
+		$correspondences = [ $occurrence_id => $this->temp_civi_event_id ];
 
 		// Store new correspondences.
 		$this->plugin->db->store_event_correspondences( $new_event_id, $correspondences );
@@ -771,7 +771,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_meta_box(
 			'civi_eo_event_metabox',
 			__( 'CiviCRM Settings', 'civicrm-event-organiser' ),
-			array( $this, 'event_meta_box_render' ),
+			[ $this, 'event_meta_box_render' ],
 			'event',
 			'side', // Column: options are 'normal' and 'side'.
 			'core' // Vertical placement: options are 'core', 'high', 'low'.
@@ -781,7 +781,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_meta_box(
 			'civi_eo_event_links_metabox',
 			__( 'Edit Events in CiviCRM', 'civicrm-event-organiser' ),
-			array( $this, 'event_links_meta_box_render' ),
+			[ $this, 'event_links_meta_box_render' ],
 			'event',
 			'normal', // Column: options are 'normal' and 'side'.
 			'high' // Vertical placement: options are 'core', 'high', 'low'.
@@ -917,7 +917,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Init links.
-		$links = array();
+		$links = [];
 
 		// Show them.
 		foreach( $civi_events AS $civi_event_id ) {
@@ -1090,7 +1090,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Init links.
-		$links = array();
+		$links = [];
 
 		// Show them.
 		foreach( $civi_events AS $civi_event_id ) {
@@ -1130,13 +1130,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 			*/
 
 			// Add item to menu.
-			$wp_admin_bar->add_node( array(
+			$wp_admin_bar->add_node( [
 				'id' => 'cau-0',
 				'parent' => $id,
 				//'parent' => 'edit',
 				'title' => __( 'Edit in CiviCRM', 'civicrm-acf-integration' ),
 				'href' => $settings_link,
-			) );
+			] );
 
 		}
 
@@ -1217,15 +1217,15 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function get_all_dates( $post_id ) {
 
 		// Init dates.
-		$all_dates = array();
+		$all_dates = [];
 
 		// Get all dates.
-		$all_event_dates = new WP_Query( array(
+		$all_event_dates = new WP_Query( [
 			'post_type' => 'event',
 			'posts_per_page' => -1,
 			'event_series' => $post_id,
 			'group_events_by' => 'occurrence'
-		));
+		] );
 
 		// If we have some.
 		if( $all_event_dates->have_posts() ) {
@@ -1240,7 +1240,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 				global $post;
 
 				// Init.
-				$date = array();
+				$date = [];
 
 				// Add to our array, formatted for CiviCRM.
 				$date['occurrence_id'] = $post->occurrence_id;
@@ -1284,7 +1284,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// --<
-		return array();
+		return [];
 
 	}
 

@@ -26,6 +26,7 @@ if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_FILE' ) ) {
 if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_URL' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_URL', plugin_dir_url( CIVICRM_WP_EVENT_ORGANISER_FILE ) );
 }
+
 // Store PATH to this plugin's directory.
 if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_PATH', plugin_dir_path( CIVICRM_WP_EVENT_ORGANISER_FILE ) );
@@ -43,16 +44,16 @@ if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 class CiviCRM_WP_Event_Organiser {
 
 	/**
-	 * Admin/DB object.
+	 * Admin object.
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $db The admin/db object.
+	 * @var object $db The Admin object.
 	 */
 	public $db;
 
 	/**
-	 * CiviCRM utilities object.
+	 * CiviCRM object.
 	 *
 	 * @since 0.1
 	 * @access public
@@ -61,7 +62,7 @@ class CiviCRM_WP_Event_Organiser {
 	public $civi;
 
 	/**
-	 * Event Organiser utilities object.
+	 * Event Organiser object.
 	 *
 	 * @since 0.1
 	 * @access public
@@ -70,7 +71,7 @@ class CiviCRM_WP_Event_Organiser {
 	public $eo;
 
 	/**
-	 * Event Organiser venue utilities object.
+	 * Event Organiser Venue object.
 	 *
 	 * @since 0.1
 	 * @access public
@@ -115,10 +116,10 @@ class CiviCRM_WP_Event_Organiser {
 	public function __construct() {
 
 		// Use translation files.
-		add_action( 'plugins_loaded', array( $this, 'enable_translation' ) );
+		add_action( 'plugins_loaded', [ $this, 'enable_translation' ] );
 
 		// Initialise.
-		add_action( 'plugins_loaded', array( $this, 'initialise' ) );
+		add_action( 'plugins_loaded', [ $this, 'initialise' ] );
 
 	}
 
@@ -336,9 +337,9 @@ function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 
 		// Is this Network Admin?
 		if ( is_network_admin() ) {
-			$link = add_query_arg( array( 'page' => 'civi_eo_parent' ), network_admin_url( 'settings.php' ) );
+			$link = add_query_arg( [ 'page' => 'civi_eo_parent' ], network_admin_url( 'settings.php' ) );
 		} else {
-			$link = add_query_arg( array( 'page' => 'civi_eo_parent' ), admin_url( 'options-general.php' ) );
+			$link = add_query_arg( [ 'page' => 'civi_eo_parent' ], admin_url( 'options-general.php' ) );
 		}
 
 		// Add settings link.

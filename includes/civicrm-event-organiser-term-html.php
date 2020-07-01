@@ -35,7 +35,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	public function __construct() {
 
 		// Register hooks on admin init.
-		add_action( 'admin_init', array( $this, 'register_hooks' ) );
+		add_action( 'admin_init', [ $this, 'register_hooks' ] );
 
 	}
 
@@ -79,8 +79,8 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 		remove_filter( 'term_description', 'wp_kses_data' );
 
 		// Add TinyMCE to the Event Organiser taxonomy.
-		add_action( 'event-category_edit_form_fields', array( $this, 'render_field_edit' ), 1, 2 );
-		add_action( 'event-category_add_form_fields', array( $this, 'render_field_add' ), 1, 1 );
+		add_action( 'event-category_edit_form_fields', [ $this, 'render_field_edit' ], 1, 2 );
+		add_action( 'event-category_add_form_fields', [ $this, 'render_field_add' ], 1, 1 );
 
 	}
 
@@ -100,13 +100,13 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 */
 	public function render_field_edit( $tag, $taxonomy ) {
 
-		$settings = array(
-			'quicktags' 	=> array( 'buttons' => 'em,strong,link' ),
+		$settings = [
+			'quicktags' 	=> [ 'buttons' => 'em,strong,link' ],
 			'textarea_name'	=> 'description',
 			'quicktags' 	=> true,
 			'tinymce' 		=> true,
 			'editor_css'	=> '<style>#wp-html-description-editor-container .wp-editor-area { height: 250px; }</style>'
-		);
+		];
 
 		?>
 		<tr>
@@ -133,13 +133,13 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 */
 	public function render_field_add( $taxonomy ) {
 
-		$settings = array(
-			'quicktags' 	=> array( 'buttons' => 'em,strong,link' ),
+		$settings = [
+			'quicktags' 	=> [ 'buttons' => 'em,strong,link' ],
 			'textarea_name'	=> 'description',
 			'quicktags' 	=> true,
 			'tinymce' 		=> true,
 			'editor_css'	=> '<style>#wp-html-tag-description-editor-container .wp-editor-area { height: 150px; }</style>'
-		);
+		];
 
 		?>
 		<div>

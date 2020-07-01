@@ -38,7 +38,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function __construct() {
 
 		// Add CiviCRM hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', array( $this, 'register_hooks' ) );
+		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'register_hooks' ] );
 
 	}
 
@@ -71,17 +71,17 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$this->hooks_wordpress_add();
 
 		// Add CiviCRM listeners once CiviCRM is available.
-		add_action( 'civicrm_config', array( $this, 'civicrm_config' ), 10, 1 );
+		add_action( 'civicrm_config', [ $this, 'civicrm_config' ], 10, 1 );
 
 		// Filter Radio Buttons for Taxonomies null term insertion.
-		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', array( $this, 'skip_null_term' ), 20, 1 );
-		add_filter( 'radio_buttons_for_taxonomies_no_term_event-category', array( $this, 'skip_null_term' ), 20, 1 );
+		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', [ $this, 'skip_null_term' ], 20, 1 );
+		add_filter( 'radio_buttons_for_taxonomies_no_term_event-category', [ $this, 'skip_null_term' ], 20, 1 );
 
 		// Hide "Parent Category" dropdown in event category metaboxes.
-		add_action( 'add_meta_boxes_event', array( $this, 'terms_dropdown_intercept' ), 3 );
+		add_action( 'add_meta_boxes_event', [ $this, 'terms_dropdown_intercept' ], 3 );
 
 		// Ensure new events have the default term checked.
-		add_filter( 'wp_terms_checklist_args', array( $this, 'term_default_checked' ), 10, 2 );
+		add_filter( 'wp_terms_checklist_args', [ $this, 'term_default_checked' ], 10, 2 );
 
 		// Create custom filters that mirror 'the_content'.
 		add_filter( 'civicrm_eo_term_content', 'wptexturize' );
@@ -118,14 +118,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function hooks_wordpress_add() {
 
 		// Intercept new term creation.
-		add_action( 'created_term', array( $this, 'intercept_create_term' ), 20, 3 );
+		add_action( 'created_term', [ $this, 'intercept_create_term' ], 20, 3 );
 
 		// Intercept term updates.
-		add_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20, 2 );
-		add_action( 'edited_term', array( $this, 'intercept_update_term' ), 20, 3 );
+		add_action( 'edit_terms', [ $this, 'intercept_pre_update_term' ], 20, 2 );
+		add_action( 'edited_term', [ $this, 'intercept_update_term' ], 20, 3 );
 
 		// Intercept term deletion.
-		add_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20, 4 );
+		add_action( 'delete_term', [ $this, 'intercept_delete_term' ], 20, 4 );
 
 	}
 
@@ -140,10 +140,10 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function hooks_wordpress_remove() {
 
 		// Remove all previously added callbacks.
-		remove_action( 'created_term', array( $this, 'intercept_create_term' ), 20 );
-		remove_action( 'edit_terms', array( $this, 'intercept_pre_update_term' ), 20 );
-		remove_action( 'edited_term', array( $this, 'intercept_update_term' ), 20 );
-		remove_action( 'delete_term', array( $this, 'intercept_delete_term' ), 20 );
+		remove_action( 'created_term', [ $this, 'intercept_create_term' ], 20 );
+		remove_action( 'edit_terms', [ $this, 'intercept_pre_update_term' ], 20 );
+		remove_action( 'edited_term', [ $this, 'intercept_update_term' ], 20 );
+		remove_action( 'delete_term', [ $this, 'intercept_delete_term' ], 20 );
 
 	}
 
@@ -266,7 +266,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Delay until "admin_init" hook.
-		add_action( 'admin_init', array( $this, 'upgrade_terms' ) );
+		add_action( 'admin_init', [ $this, 'upgrade_terms' ] );
 
 	}
 
@@ -328,11 +328,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			if ( function_exists( 'unregister_taxonomy' ) ) {
 
 				// Construct args.
-				$args = array(
+				$args = [
 					'taxonomy' => 'event-category',
 					'orderby' => 'count',
 					'hide_empty' => 0
-				);
+				];
 
 				// Get all terms.
 				$terms = get_terms( $args );
@@ -340,10 +340,10 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			} else {
 
 				// Construct args.
-				$args = array(
+				$args = [
 					'orderby' => 'count',
 					'hide_empty' => 0
-				);
+				];
 
 				// Get all terms.
 				$terms = get_terms( 'event-category', $args );
@@ -534,10 +534,10 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$description = isset( $event_type['description'] ) ? $event_type['description'] : '';
 
 		// Construct args.
-		$args = array(
+		$args = [
 			'slug' => sanitize_title( $event_type['name'] ),
 			'description'=> $description,
-		);
+		];
 
 		// Unhook listeners.
 		$this->hooks_wordpress_remove();
@@ -637,11 +637,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$description = isset( $new_type['description'] ) ? $new_type['description'] : '';
 
 		// Construct term.
-		$args = array(
+		$args = [
 			'name' => $new_type['label'],
 			'slug' => sanitize_title( $new_type['name'] ),
 			'description'=> $description,
-		);
+		];
 
 		// Unhook listeners.
 		$this->hooks_wordpress_remove();
@@ -839,7 +839,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	public function terms_dropdown_intercept() {
 
 		// Trigger emptying of dropdown.
-		add_filter( 'wp_dropdown_cats', array( $this, 'terms_dropdown_clear' ), 20, 2 );
+		add_filter( 'wp_dropdown_cats', [ $this, 'terms_dropdown_clear' ], 20, 2 );
 
 	}
 
@@ -862,7 +862,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Only once please, in case further dropdowns are rendered.
-		remove_filter( 'wp_dropdown_cats', array( $this, 'terms_dropdown_clear' ), 20 );
+		remove_filter( 'wp_dropdown_cats', [ $this, 'terms_dropdown_clear' ], 20 );
 
 		// Clear.
 		return '';
@@ -894,7 +894,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			$args['selected_cats'] = wp_get_object_terms(
 				$post_id,
 				$args['taxonomy'],
-				array_merge( $args, array( 'fields' => 'ids' ) )
+				array_merge( $args, [ 'fields' => 'ids' ] )
 			);
 
 			// Bail if a category is already set.
@@ -929,7 +929,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Set argument.
-		$args['selected_cats'] = array( $term_id );
+		$args['selected_cats'] = [ $term_id ];
 
 		// --<
 		return $args;
@@ -958,16 +958,16 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Query terms for the term with the ID of the Event Type in meta data.
-		$args = array(
+		$args = [
 			'hide_empty' => false,
-			'meta_query' => array(
-				array(
+			'meta_query' => [
+				[
 					'key' => $this->term_meta_key,
 					'value' => $event_type['id'],
 					'compare' => '='
-				),
-			),
-		);
+				],
+			],
+		];
 
 		// Get what should only be a single term.
 		$terms = get_terms( 'event-category', $args );
@@ -983,13 +983,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			// Write error message.
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => $terms->get_error_message(),
 				'term' => $term,
 				'event_type' => $event_type,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 			return false;
 
 		}
@@ -1069,13 +1069,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			/*
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => __( 'Could not add term_meta', 'civicrm-event-organiser' ),
 				'term_id' => $term_id,
 				'event_type_id' => $event_type_id,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 			*/
 
 		}
@@ -1086,13 +1086,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			// Log error message.
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => $meta_id->get_error_message(),
 				'term_id' => $term_id,
 				'event_type_id' => $event_type_id,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 
 			// Also overwrite return.
 			$meta_id = false;
@@ -1141,12 +1141,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Construct term data.
-		$term_data = array(
+		$term_data = [
 			'id' => $event_type->id,
 			'label' => $event_type->label,
 			'name' => $event_type->label,
 			'description' => $description,
-		);
+		];
 
 		// Unhook listeners.
 		$this->hooks_wordpress_remove();
@@ -1189,14 +1189,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		/*
 		$e = new Exception;
 		$trace = $e->getTraceAsString();
-		error_log( print_r( array(
+		error_log( print_r( [
 			'method' => __METHOD__,
 			'hook' => $hook,
 			//'event' => $event,
 			'event_type' => $event_type,
 			'event_type_pre' => $this->event_type_pre,
 			//'backtrace' => $trace,
-		), true ) );
+		], true ) );
 		*/
 
 	}
@@ -1240,12 +1240,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Construct Event Type data.
-		$event_type = array(
+		$event_type = [
 			'id' => $event_type_full['id'],
 			'label' => $event_type_full['label'],
 			'name' => $event_type_full['name'],
 			'description' => $description,
-		);
+		];
 
 		// Unhook listeners.
 		$this->hooks_wordpress_remove();
@@ -1337,12 +1337,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Define Event Type.
-		$params = array(
+		$params = [
 			'version' => 3,
 			'option_group_id' => $opt_group_id,
 			'label' => $new_term->name,
 			//'name' => $new_term->name,
-		);
+		];
 
 		// If there is a description, apply content filters and add to params.
 		if ( ! empty( $new_term->description ) ) {
@@ -1383,12 +1383,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'params' => $params,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 
 			// --<
 			return false;
@@ -1436,10 +1436,10 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Define Event Type.
-		$params = array(
+		$params = [
 			'version' => 3,
 			'id' => $event_type_id,
-		);
+		];
 
 		// Delete the Event Type.
 		$result = civicrm_api( 'option_value', 'delete', $params );
@@ -1449,12 +1449,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'params' => $params,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 
 			// --<
 			return false;
@@ -1500,14 +1500,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Define params to get item.
-		$params = array(
+		$params = [
 			'version' => 3,
 			'option_group_id' => $opt_group_id,
 			'label' => $term->name,
-			'options' => array(
+			'options' => [
 				'sort' => 'weight ASC',
-			),
-		);
+			],
+		];
 
 		// Get the item.
 		$result = civicrm_api( 'option_value', 'getsingle', $params );
@@ -1525,12 +1525,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			/*
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'params' => $params,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 			*/
 
 			// --<
@@ -1574,11 +1574,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Define params to get item.
-		$params = array(
+		$params = [
 			'version' => 3,
 			'option_group_id' => $opt_group_id,
 			'id' => $event_type_id,
-		);
+		];
 
 		// Get the item.
 		$result = civicrm_api( 'option_value', 'getsingle', $params );
@@ -1604,13 +1604,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'result' => $result,
 				'params' => $params,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 
 			// --<
 			return false;
@@ -1652,13 +1652,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Define params to get items sorted by weight,
-		$params = array(
+		$params = [
 			'option_group_id' => $opt_group_id,
 			'version' => 3,
-			'options' => array(
+			'options' => [
 				'sort' => 'weight ASC',
-			),
-		);
+			],
+		];
 
 		// Get them (descriptions will be present if not null),
 		$result = civicrm_api( 'option_value', 'get', $params );
@@ -1668,13 +1668,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( array(
+			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
 				'result' => $result,
 				'params' => $params,
 				'backtrace' => $trace,
-			), true ) );
+			], true ) );
 
 			// --<
 			return false;
@@ -1720,7 +1720,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			$event_types = $result['values'];
 
 			// Init options,
-			$options = array();
+			$options = [];
 
 			// Get existing type value,
 			$existing_value = $this->get_default_event_type_value();
@@ -1836,11 +1836,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Define params to get item.
-		$params = array(
+		$params = [
 			'option_group_id' => $opt_group_id,
 			'version' => 3,
 			'id' => $event_type_id,
-		);
+		];
 
 		// Get them (descriptions will be present if not null).
 		$event_type = civicrm_api( 'option_value', 'getsingle', $params );
@@ -1876,11 +1876,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Define params to get item.
-		$params = array(
+		$params = [
 			'option_group_id' => $opt_group_id,
 			'version' => 3,
 			'value' => $event_type_value,
-		);
+		];
 
 		// Get them (descriptions will be present if not null).
 		$event_type = civicrm_api( 'option_value', 'getsingle', $params );
@@ -1921,10 +1921,10 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			}
 
 			// Define params to get Event Type option group.
-			$params = array(
+			$params = [
 				'name' => 'event_type',
 				'version' => 3,
-			);
+			];
 
 			// Get it.
 			$result = civicrm_api( 'option_group', 'getsingle', $params );

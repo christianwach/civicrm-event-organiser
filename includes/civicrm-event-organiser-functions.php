@@ -82,7 +82,7 @@ add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_reg
 function civicrm_event_organiser_get_register_links( $post_id = null ) {
 
 	// Init return.
-	$links = array();
+	$links = [];
 
 	// Bail if no CiviCRM init function.
 	if ( ! function_exists( 'civi_wp' ) ) {
