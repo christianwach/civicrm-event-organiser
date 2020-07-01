@@ -105,8 +105,13 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		// Exclude "Event" from being mapped to a Contact Type.
 		add_filter( 'civicrm_acf_integration_post_types_get_all', [ $this, 'post_types_filter' ], 10, 1 );
 
-	}
+		// Listen for a CiviEvent being synced to an EO Event.
+		add_action( 'civicrm_event_organiser_admin_civi_to_eo_sync', [ $this, 'sync_to_eo' ], 10, 1 );
 
+		// Listen for an EO Event being synced to a CiviEvent.
+		add_action( 'civicrm_event_organiser_admin_eo_to_civi_sync', [ $this, 'sync_to_civi' ], 10, 1 );
+
+	}
 
 
 
@@ -469,6 +474,114 @@ class CiviCRM_WP_Event_Organiser_ACF {
 
 		// --<
 		return $post_types;
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
+	 * Intercept when an EO Event is been synced from a CiviEvent.
+	 *
+	 * Sync any associated ACF Fields mapped to Custom Fields.
+	 *
+	 * @since 0.5.2
+	 *
+	 * @param array $args The array of CiviCRM Event and EO Event params.
+	 */
+	public function sync_to_eo( $args ) {
+
+		// Get all ACF Fields for the Event.
+		$acf_fields = $this->cacf->acf->field->fields_get_for_post( $args['event_id'] );
+
+		// Bail if we don't have any Custom Fields in ACF.
+		if ( empty( $acf_fields['custom'] ) ) {
+			return;
+		}
+
+		// Get all the Custom Fields for CiviCRM Events.
+		$civicrm_custom_fields = $this->cacf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+
+		// Bail if there are none.
+		if ( empty( $civicrm_custom_fields ) ) {
+			return;
+		}
+
+		// Flatten the array since we don't need labels.
+		$custom_fields = [];
+		foreach( $civicrm_custom_fields AS $key => $field_group ) {
+			foreach( $field_group AS $custom_field ) {
+				$custom_fields[] = $custom_field;
+			}
+		}
+
+		// CiviEvent data contains the associated Custom Field data! *smile*
+		$custom_field_data = [];
+		foreach( $args['civi_event'] AS $key => $value ) {
+			if ( substr( $key, 0, 7 ) == 'custom_' ) {
+				$index = str_replace( 'custom_', '', $key );
+				$custom_field_data[$index] = $value;
+			}
+		}
+
+		// CiviCRM only appends populated Custom Fields.
+
+		// Get the current ACF Fields.
+		$current_acf_fields = get_fields( $args['event_id'] );
+
+		// Let's run through each Custom Field in turn.
+		foreach( $acf_fields['custom'] AS $selector => $custom_field_ref ) {
+
+			// If the field is missing from the current fields.
+			if ( empty( $current_acf_fields[$selector] ) ) {
+
+				// Prime with an empty string.
+				$this->cacf->acf->field->value_update( $selector, '', $args['event_id'] );
+
+			} else {
+
+				// Safely get the value from the Custom Field values.
+				$value = '';
+				if ( ! empty( $custom_field_data[$custom_field_ref] ) ) {
+					$value = $custom_field_data[$custom_field_ref];
+				}
+
+				// Grab the CiviCRM field definition.
+				$field = wp_list_filter( $custom_fields, [ 'id' => $custom_field_ref ] );
+
+				// Parse the value for ACF.
+				$value = $this->cacf->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $post_id );
+
+				// Update the value of the ACF Field.
+				$this->cacf->acf->field->value_update( $selector, $value, $args['event_id'] );
+
+			}
+
+		}
+
+	}
+
+
+
+	/**
+	 * Intercept when a CiviEvent is been synced from an EO Event.
+	 *
+	 * Sync any associated Custom Fields mapped to ACF Fields.
+	 *
+	 * @since 0.5.2
+	 *
+	 * @param array $args The array of CiviCRM Event and EO Event params.
+	 */
+	public function sync_to_civi( $args ) {
+
+		// Set Post ID to be compatible with CAI.
+		$args['post_id'] = $args['event_id'];
+
+		// Pass on.
+		$this->acf_fields_saved( $args );
 
 	}
 

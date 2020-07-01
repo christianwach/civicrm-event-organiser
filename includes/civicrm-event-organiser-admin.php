@@ -1521,6 +1521,26 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				// Update CiviEvent - or create if it doesn't exist.
 				$this->plugin->civi->update_civi_events( $event, $dates );
 
+				// Make an array of params.
+				$args = [
+					'event_id' => $event->ID,
+					'event' => $event,
+					'dates' => $dates,
+				];
+
+				/**
+				 * Broadcast that the EO Event has been synced.
+				 *
+				 * Used internally to:
+				 *
+				 * - Update the Custom Fields synced via CiviCRM ACF Integration
+				 *
+				 * @since 0.5.2
+				 *
+				 * @param array $args The array of params.
+				 */
+				do_action( 'civicrm_event_organiser_admin_eo_to_civi_sync', $args );
+
 			}
 
 			// Restore hooks.
@@ -1652,6 +1672,27 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 				// Store correspondences.
 				$this->store_event_correspondences( $event_id, [ $occurrence_id => $civi_event['id'] ] );
+
+				// Make an array of params.
+				$args = [
+					'event_id' => $event_id,
+					'occurrence_id' => $occurrence_id,
+					'civi_event_id' => $civi_event['id'],
+					'civi_event' => $civi_event,
+				];
+
+				/**
+				 * Broadcast that the CiviEvent has been synced.
+				 *
+				 * Used internally to:
+				 *
+				 * - Update the ACF Fields synced via CiviCRM ACF Integration
+				 *
+				 * @since 0.5.2
+				 *
+				 * @param array $args The array of params.
+				 */
+				do_action( 'civicrm_event_organiser_admin_civi_to_eo_sync', $args );
 
 			}
 
