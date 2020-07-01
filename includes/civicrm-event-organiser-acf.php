@@ -494,8 +494,11 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	 */
 	public function sync_to_eo( $args ) {
 
+		// Grab Event ID.
+		$event_id = $args['event_id'];
+
 		// Get all ACF Fields for the Event.
-		$acf_fields = $this->cacf->acf->field->fields_get_for_post( $args['event_id'] );
+		$acf_fields = $this->cacf->acf->field->fields_get_for_post( $event_id );
 
 		// Bail if we don't have any Custom Fields in ACF.
 		if ( empty( $acf_fields['custom'] ) ) {
@@ -514,6 +517,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		$custom_fields = [];
 		foreach( $civicrm_custom_fields AS $key => $field_group ) {
 			foreach( $field_group AS $custom_field ) {
+				$custom_field['type'] = $custom_field['data_type'];
 				$custom_fields[] = $custom_field;
 			}
 		}
@@ -530,7 +534,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		// CiviCRM only appends populated Custom Fields.
 
 		// Get the current ACF Fields.
-		$current_acf_fields = get_fields( $args['event_id'] );
+		$current_acf_fields = get_fields( $event_id );
 
 		// Let's run through each Custom Field in turn.
 		foreach( $acf_fields['custom'] AS $selector => $custom_field_ref ) {
@@ -539,7 +543,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 			if ( empty( $current_acf_fields[$selector] ) ) {
 
 				// Prime with an empty string.
-				$this->cacf->acf->field->value_update( $selector, '', $args['event_id'] );
+				$this->cacf->acf->field->value_update( $selector, '', $event_id );
 
 			} else {
 
@@ -550,13 +554,14 @@ class CiviCRM_WP_Event_Organiser_ACF {
 				}
 
 				// Grab the CiviCRM field definition.
-				$field = wp_list_filter( $custom_fields, [ 'id' => $custom_field_ref ] );
+				$filtered = wp_list_filter( $custom_fields, [ 'id' => $custom_field_ref ] );
+				$field = array_pop( $filtered );
 
 				// Parse the value for ACF.
-				$value = $this->cacf->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $post_id );
+				$value = $this->cacf->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $event_id );
 
 				// Update the value of the ACF Field.
-				$this->cacf->acf->field->value_update( $selector, $value, $args['event_id'] );
+				$this->cacf->acf->field->value_update( $selector, $value, $event_id );
 
 			}
 
