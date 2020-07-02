@@ -539,31 +539,23 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		// Let's run through each Custom Field in turn.
 		foreach( $acf_fields['custom'] AS $selector => $custom_field_ref ) {
 
-			// If the field is missing from the current fields.
-			if ( ! isset( $current_acf_fields[$selector] ) ) {
+			// Prime with an empty string.
+			$value = '';
 
-				// Prime with an empty string.
-				$this->cacf->acf->field->value_update( $selector, '', $event_id );
-
-			} else {
-
-				// Safely get the value from the Custom Field values.
-				$value = '';
-				if ( isset( $custom_field_data[$custom_field_ref] ) ) {
-					$value = $custom_field_data[$custom_field_ref];
-				}
-
-				// Grab the CiviCRM field definition.
-				$filtered = wp_list_filter( $custom_fields, [ 'id' => $custom_field_ref ] );
-				$field = array_pop( $filtered );
-
-				// Parse the value for ACF.
-				$value = $this->cacf->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $event_id );
-
-				// Update the value of the ACF Field.
-				$this->cacf->acf->field->value_update( $selector, $value, $event_id );
-
+			// Safely get the value from the Custom Field values.
+			if ( isset( $custom_field_data[$custom_field_ref] ) ) {
+				$value = $custom_field_data[$custom_field_ref];
 			}
+
+			// Grab the CiviCRM field definition.
+			$filtered = wp_list_filter( $custom_fields, [ 'id' => $custom_field_ref ] );
+			$field = array_pop( $filtered );
+
+			// Parse the value for ACF.
+			$value = $this->cacf->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $event_id );
+
+			// Update the value of the ACF Field.
+			$this->cacf->acf->field->value_update( $selector, $value, $event_id );
 
 		}
 
