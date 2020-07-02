@@ -525,16 +525,12 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		// CiviEvent data contains the associated Custom Field data! *smile*
 		$custom_field_data = [];
 		foreach( $args['civi_event'] AS $key => $value ) {
+			// CiviCRM only appends populated Custom Fields.
 			if ( substr( $key, 0, 7 ) == 'custom_' ) {
 				$index = str_replace( 'custom_', '', $key );
 				$custom_field_data[$index] = $value;
 			}
 		}
-
-		// CiviCRM only appends populated Custom Fields.
-
-		// Get the current ACF Fields.
-		$current_acf_fields = get_fields( $event_id );
 
 		// Let's run through each Custom Field in turn.
 		foreach( $acf_fields['custom'] AS $selector => $custom_field_ref ) {
