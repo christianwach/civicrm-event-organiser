@@ -540,7 +540,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		foreach( $acf_fields['custom'] AS $selector => $custom_field_ref ) {
 
 			// If the field is missing from the current fields.
-			if ( empty( $current_acf_fields[$selector] ) ) {
+			if ( ! isset( $current_acf_fields[$selector] ) ) {
 
 				// Prime with an empty string.
 				$this->cacf->acf->field->value_update( $selector, '', $event_id );
@@ -549,7 +549,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 
 				// Safely get the value from the Custom Field values.
 				$value = '';
-				if ( ! empty( $custom_field_data[$custom_field_ref] ) ) {
+				if ( isset( $custom_field_data[$custom_field_ref] ) ) {
 					$value = $custom_field_data[$custom_field_ref];
 				}
 
