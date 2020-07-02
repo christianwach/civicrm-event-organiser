@@ -484,9 +484,9 @@ class CiviCRM_WP_Event_Organiser_ACF {
 
 
 	/**
-	 * Intercept when an EO Event is been synced from a CiviEvent.
+	 * Intercept when a CiviEvent has been synced to an EO Event.
 	 *
-	 * Sync any associated ACF Fields mapped to Custom Fields.
+	 * Update any associated ACF Fields with their Custom Field values.
 	 *
 	 * @since 0.5.2
 	 *
@@ -560,9 +560,9 @@ class CiviCRM_WP_Event_Organiser_ACF {
 
 
 	/**
-	 * Intercept when a CiviEvent is been synced from an EO Event.
+	 * Intercept when an EO Event has been synced to a CiviEvent.
 	 *
-	 * Sync any associated Custom Fields mapped to ACF Fields.
+	 * Update any associated Custom Fields with their ACF Field values.
 	 *
 	 * @since 0.5.2
 	 *
