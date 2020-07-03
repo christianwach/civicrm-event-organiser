@@ -547,6 +547,17 @@ class CiviCRM_WP_Event_Organiser_ACF {
 			$filtered = wp_list_filter( $custom_fields, [ 'id' => $custom_field_ref ] );
 			$field = array_pop( $filtered );
 
+			// Contact Reference fields return the Contact's "sort_name".
+			if ( $field['type'] == 'ContactReference' ) {
+
+				// Overwrite value if the raw value exists.
+				$key = $field['id'] . '_id';
+				if ( isset( $custom_field_data[$key] ) ) {
+					$value = $custom_field_data[$key];
+				}
+
+			}
+
 			// Parse the value for ACF.
 			$value = $this->cacf->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $event_id );
 
