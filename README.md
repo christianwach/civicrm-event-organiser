@@ -7,7 +7,7 @@ A *WordPress* plugin for syncing *Event Organiser* plugin Events with *CiviCRM* 
 
 #### Notes ####
 
-This plugin requires at least *WordPress 4.6* and *CiviCRM 4.7*.
+This plugin requires at least *WordPress 4.9* and *CiviCRM 4.7*.
 
 It also requires:
 

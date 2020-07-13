@@ -2,8 +2,8 @@
 Contributors: needle
 Donate link: https://www.paypal.me/interactivist
 Tags: civicrm, event organiser, events, sync
-Requires at least: 4.6
-Tested up to: 5.4
+Requires at least: 4.9
+Tested up to: 5.5
 Stable tag: 0.5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -18,7 +18,7 @@ A WordPress plugin for syncing Event Organiser Events, Venues and Event Categori
 
 ### Requirements
 
-This plugin requires at least WordPress 4.6 and CiviCRM 4.7.
+This plugin requires at least WordPress 4.9 and CiviCRM 4.7.
 
 It also requires:
 
