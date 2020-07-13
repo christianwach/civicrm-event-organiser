@@ -375,15 +375,15 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	 *
 	 * @since 0.4.4
 	 *
-	 * @param bool $post_id False, since we're asking for a Post ID.
+	 * @param bool $post_ids False, since we're asking for the Post IDs.
 	 * @param array $args The array of CiviCRM Custom Fields params.
-	 * @param bool|int $post_id The mapped Post ID, or false if not mapped.
+	 * @return array|bool $post_ids The mapped Post IDs, or false if not mapped.
 	 */
-	public function query_post_id( $post_id, $args ) {
+	public function query_post_id( $post_ids, $args ) {
 
 		// Bail early if a Post ID has been found.
-		if ( $post_id !== false ) {
-			return $post_id;
+		if ( $post_ids !== false ) {
+			return $post_ids;
 		}
 
 		// Let's tease out the context from the Custom Field data.
@@ -397,13 +397,21 @@ class CiviCRM_WP_Event_Organiser_ACF {
 			// Get the Post ID that this Event is mapped to.
 			$post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $field['entity_id'] );
 
+			// Skip to next if not found.
+			if ( $post_id === false ) {
+				continue;
+			}
+
+			// Cast as an array.
+			$post_ids = [ $post_id ];
+
 			// We can bail now that we know.
 			break;
 
 		}
 
 		// --<
-		return $post_id;
+		return $post_ids;
 
 	}
 
