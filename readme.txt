@@ -6,7 +6,7 @@ Requires at least: 4.9
 Tested up to: 5.5
 Stable tag: 0.5.3
 License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 Keep Event Organiser plugin Events in sync with CiviCRM Events.
 
@@ -22,8 +22,8 @@ This plugin requires at least WordPress 4.9 and CiviCRM 4.7.
 
 It also requires:
 
-* [Event Organiser](http://wordpress.org/plugins/event-organiser/) version 3.0 or greater
-* [Radio Buttons for Taxonomies](http://wordpress.org/plugins/radio-buttons-for-taxonomies/) to ensure only one event type is selected
+* [Event Organiser](https://wordpress.org/plugins/event-organiser/) version 3.0 or greater
+* [Radio Buttons for Taxonomies](https://wordpress.org/plugins/radio-buttons-for-taxonomies/) to ensure only one event type is selected
 
 Be aware that this plugin is in active development. Test often, test thoroughly and open an issue if you find a problem.
 
