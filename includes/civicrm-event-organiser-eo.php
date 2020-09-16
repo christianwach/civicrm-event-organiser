@@ -821,71 +821,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Get registration profiles.
 		$profiles = $this->plugin->civi->get_registration_profiles_select( $event );
 
-		// Init sync options.
-		$sync_options = '';
-
-		// Show checkbox to people who can publish posts.
-		if ( current_user_can( 'publish_posts' ) ) {
-
-			// Define sync options.
-			$sync_options = '
-			<p class="civi_eo_event_desc">' . __( 'Choose whether or not to sync this event and (if the sequence has changed) whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ) . '</p>
-
-			<p>
-			<label for="civi_eo_event_sync">' . __( 'Sync this event with CiviCRM:', 'civicrm-event-organiser' ) . '</label>
-			<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
-			</p>
-
-			<p>
-			<label for="civi_eo_event_delete_unused">' . __( 'Delete unused CiviEvents:', 'civicrm-event-organiser' ) . '</label>
-			<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
-			</p>
-
-			<hr />
-
-			';
-
-		}
-
-		// Show sync options, if allowed.
-		echo $sync_options;
-
-		// Show meta box.
-		echo '
-		<h4>' . __( 'CiviEvent Options', 'civicrm-event-organiser' ) . '</h4>
-
-		<p class="civi_eo_event_desc">' . __( '<strong>NOTE:</strong> these options will be set for <em>all corresponding CiviEvents</em> when you sync this event to CiviCRM. Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ) . '</p>
-
-		<hr />
-
-		<p>
-		<label for="civi_eo_event_reg">' . __( 'Enable Online Registration:', 'civicrm-event-organiser' ) . '</label>
-		<input type="checkbox" id="civi_eo_event_reg" name="civi_eo_event_reg" value="1"' . $reg_checked . ' />
-		</p>
-
-		<hr />
-
-		<p>
-		<label for="civi_eo_event_profile">' . __( 'Online Registration Profile:', 'civicrm-event-organiser' ) . '</label>
-		<select id="civi_eo_event_profile" name="civi_eo_event_profile">
-			' . $profiles . '
-		</select>
-		</p>
-
-		<p class="description">' . __( 'The profile assigned to the online registration form.', 'civicrm-event-organiser' ) . '</p>
-
-		<hr />
-
-		<p>
-		<label for="civi_eo_event_role">' . __( 'Participant Role:', 'civicrm-event-organiser' ) . '</label>
-		<select id="civi_eo_event_role" name="civi_eo_event_role">
-			' . $roles . '
-		</select>
-		</p>
-
-		<p class="description">' . __( 'This role is automatically assigned to people when they register online for this event and where the registration profile does not allow a role to be selected.', 'civicrm-event-organiser' ) . '</p>
-
-		';
+		// Show Event Sync Metabox.
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/event-sync-metabox.php';
 
 		/**
 		 * Broadcast end of metabox.
@@ -957,10 +894,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
-		// Show prettified list.
-		echo '<ul><li style="margin: 0.5em 0; padding: 0.5em 0 0.5em 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee;">' .
-				implode( '</li><li style="margin: 0.5em 0; padding: 0 0 0.5em 0; border-bottom: 1px solid #eee;">', $links ) .
-			 '</li></ul>';
+		// Show Event Links Metabox.
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/event-links-metabox.php';
 
 		/**
 		 * Broadcast end of metabox.
