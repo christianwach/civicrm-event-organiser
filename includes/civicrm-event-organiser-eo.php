@@ -801,16 +801,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function event_meta_box_render( $event ) {
 
+		// Get linked CiviEvents.
+		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event->ID );
+
+		// Set multiple status.
+		$multiple = false;
+		if ( count( $civi_events ) > 1 ) {
+			$multiple = true;
+		}
+
 		// Add nonce.
 		wp_nonce_field( 'civi_eo_event_meta_save', 'civi_eo_event_nonce_field' );
 
 		// Get online registration.
 		$is_reg_checked = $this->get_event_registration( $event->ID );
 
-		// Init checkbox status.
+		// Set checkbox status.
 		$reg_checked = '';
-
-		// Override if registration is allowed.
 		if ( $is_reg_checked == 1 ) {
 			$reg_checked = ' checked="checked"';
 		}
@@ -824,14 +831,33 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Show Event Sync Metabox.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/event-sync-metabox.php';
 
-		/**
-		 * Broadcast end of metabox.
-		 *
-		 * @since 0.3
-		 *
-		 * @param object $event The EO event object.
-		 */
-		do_action( 'civicrm_event_organiser_event_meta_box_after', $event );
+		// Add our metabox JavaScript in the footer.
+		wp_enqueue_script(
+			'civi_eo_event_metabox_js',
+			CIVICRM_WP_EVENT_ORGANISER_URL . '/assets/js/civi-eo-event-metabox.js',
+			[ 'jquery' ],
+			CIVICRM_WP_EVENT_ORGANISER_VERSION,
+			true
+		);
+
+		// Init localisation.
+		$localisation = [];
+
+		// Init settings.
+		$settings = [];
+
+		// Localisation array.
+		$vars = [
+			'localisation' => $localisation,
+			'settings' => $settings,
+		];
+
+		// Localise.
+		wp_localize_script(
+			'civi_eo_event_metabox_js',
+			'CiviCRM_Event_Organiser_Metabox_Settings',
+			$vars
+		);
 
 	}
 
@@ -896,15 +922,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Show Event Links Metabox.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/event-links-metabox.php';
-
-		/**
-		 * Broadcast end of metabox.
-		 *
-		 * @since 0.3.6
-		 *
-		 * @param object $event The EO event object.
-		 */
-		do_action( 'civicrm_event_organiser_event_links_meta_box_after', $event );
 
 	}
 

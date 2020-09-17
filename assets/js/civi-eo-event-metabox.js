@@ -1,0 +1,197 @@
+/**
+ * CiviCRM Event Organiser "Event Metabox" Javascript.
+ *
+ * Implements sync functionality on the plugin's "Manual Sync" admin pages.
+ *
+ * @package CiviCRM_Event_Organiser
+ */
+
+/**
+ * Create CiviCRM Event Organiser "Manual Sync" object.
+ *
+ * This works as a "namespace" of sorts, allowing us to hang properties, methods
+ * and "sub-namespaces" from it.
+ *
+ * @since 0.5.3
+ */
+var CiviCRM_Event_Organiser_Event_Metabox = CiviCRM_Event_Organiser_Event_Metabox || {};
+
+
+
+/**
+ * Pass the jQuery shortcut in.
+ *
+ * @since 0.5.3
+ *
+ * @param {Object} $ The jQuery object.
+ */
+( function( $ ) {
+
+	/**
+	 * Create Settings Singleton.
+	 *
+	 * @since 0.5.3
+	 */
+	CiviCRM_Event_Organiser_Event_Metabox.settings = new function() {
+
+		// Prevent reference collisions.
+		var me = this;
+
+		/**
+		 * Initialise Settings.
+		 *
+		 * This method should only be called once.
+		 *
+		 * @since 0.5.3
+		 */
+		this.init = function() {
+
+			// Init localisation.
+			me.init_localisation();
+
+			// Init settings.
+			me.init_settings();
+
+		};
+
+		/**
+		 * Do setup when jQuery reports that the DOM is ready.
+		 *
+		 * This method should only be called once.
+		 *
+		 * @since 0.5.3
+		 */
+		this.dom_ready = function() {
+
+		};
+
+		// Init localisation array.
+		me.localisation = [];
+
+		/**
+		 * Init localisation from settings object.
+		 *
+		 * @since 0.5.3
+		 */
+		this.init_localisation = function() {
+			if ( 'undefined' !== typeof CiviCRM_Event_Organiser_Metabox_Settings ) {
+				me.localisation = CiviCRM_Event_Organiser_Metabox_Settings.localisation;
+			}
+		};
+
+		/**
+		 * Getter for localisation.
+		 *
+		 * @since 0.5.3
+		 *
+		 * @param {String} The identifier for the desired localisation string.
+		 * @return {String} The localised string.
+		 */
+		this.get_localisation = function( key, identifier ) {
+			return me.localisation[key][identifier];
+		};
+
+		// Init settings array.
+		me.settings = [];
+
+		/**
+		 * Init settings from settings object.
+		 *
+		 * @since 0.5.3
+		 */
+		this.init_settings = function() {
+			if ( 'undefined' !== typeof CiviCRM_Event_Organiser_Metabox_Settings ) {
+				me.settings = CiviCRM_Event_Organiser_Metabox_Settings.settings;
+			}
+		};
+
+		/**
+		 * Getter for retrieving a setting.
+		 *
+		 * @since 0.5.3
+		 *
+		 * @param {String} The identifier for the desired setting.
+		 * @return The value of the setting.
+		 */
+		this.get_setting = function( identifier ) {
+			return me.settings[identifier];
+		};
+
+	};
+
+	/**
+	 * Create Accordion Singleton.
+	 *
+	 * @since 0.5.3
+	 */
+	CiviCRM_Event_Organiser_Event_Metabox.accordion = new function() {
+
+		// Prevent reference collisions.
+		var me = this;
+
+		/**
+		 * Initialise Settings.
+		 *
+		 * This method should only be called once.
+		 *
+		 * @since 0.5.3
+		 */
+		this.init = function() {
+		};
+
+		/**
+		 * Do setup when jQuery reports that the DOM is ready.
+		 *
+		 * This method should only be called once.
+		 *
+		 * @since 0.5.3
+		 */
+		this.dom_ready = function() {
+
+			/**
+			 * Toggle accordion depending on state of "Enable Online Registration" checkbox.
+			 *
+			 * @since 0.5.3
+			 *
+			 * @param {Object} e The click event object.
+			 */
+			$('#civi_eo_event_reg').click( function(e) {
+
+				var current_on;
+
+				// Get checked state.
+				current_on = $(this).prop( 'checked' );
+
+				// Toggle visibility of registration section.
+				if ( current_on ) {
+					$('.civi_eo_event_reg_toggle').slideDown( 'slow' );
+				} else {
+					$('.civi_eo_event_reg_toggle').slideUp( 'slow' );
+				}
+
+			});
+
+		};
+
+	};
+
+	// Call init methods.
+	CiviCRM_Event_Organiser_Event_Metabox.settings.init();
+	CiviCRM_Event_Organiser_Event_Metabox.accordion.init();
+
+} )( jQuery );
+
+
+
+/**
+ * Trigger dom_ready methods where necessary.
+ *
+ * @since 0.5.3
+ */
+jQuery(document).ready(function($) {
+
+	// The DOM is loaded now.
+	CiviCRM_Event_Organiser_Event_Metabox.settings.dom_ready();
+	CiviCRM_Event_Organiser_Event_Metabox.accordion.dom_ready();
+
+}); // End document.ready()
