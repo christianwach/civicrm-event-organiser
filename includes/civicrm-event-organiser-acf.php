@@ -203,10 +203,13 @@ class CiviCRM_WP_Event_Organiser_ACF {
 			// Get the CiviCRM Custom Field.
 			$custom_field_id = $this->cacf->civicrm->custom_field->custom_field_id_get( $settings );
 
-			// Build Custom Field code.
-			if ( ! empty( $custom_field_id ) ) {
-				$code = 'custom_' . $custom_field_id;
+			// Skip if there's no corresponding CiviCRM Custom Field.
+			if ( empty( $custom_field_id ) ) {
+				continue;
 			}
+
+			// Build Custom Field code.
+			$code = 'custom_' . $custom_field_id;
 
 			// Parse value by field type.
 			$value = $this->cacf->acf->field->value_get_for_civicrm( $settings['type'], $value );
