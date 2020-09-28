@@ -96,19 +96,32 @@ body.js .civi_eo_event_reg_toggle {
 			<?php
 
 			/**
-			 * Broadcast end of metabox.
+			 * Broadcast end of the Online Registration options.
 			 *
 			 * @since 0.5.3
 			 *
 			 * @param object $event The EO event object.
 			 */
-			do_action( 'civicrm_event_organiser_event_meta_box_options_after', $event );
+			do_action( 'civicrm_event_organiser_event_meta_box_online_reg_after', $event );
 
 			?>
 
 		</div>
 
 	</div>
+
+	<?php
+
+	/**
+	 * Broadcast end of Event Options.
+	 *
+	 * @since 0.5.3
+	 *
+	 * @param object $event The EO event object.
+	 */
+	do_action( 'civicrm_event_organiser_event_meta_box_options_after', $event );
+
+	?>
 
 </div>
 

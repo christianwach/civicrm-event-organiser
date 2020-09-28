@@ -106,6 +106,15 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public $acf;
 
+	/**
+	 * Caldera Forms CiviCRM Redirect compatibility object.
+	 *
+	 * @since 0.5.3
+	 * @access public
+	 * @var object $cfcr The Caldera Forms CiviCRM Redirect compatibility object.
+	 */
+	public $cfcr;
+
 
 
 	/**
@@ -193,6 +202,9 @@ class CiviCRM_WP_Event_Organiser {
 		// Load our CiviCRM ACF Integration class.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-acf.php' );
 
+		// Load our Caldera Forms CiviCRM Redirect class.
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cfcr.php' );
+
 	}
 
 
@@ -218,6 +230,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue();
 		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy();
 		$this->acf = new CiviCRM_WP_Event_Organiser_ACF();
+		$this->cfcr = new CiviCRM_WP_Event_Organiser_CFCR();
 
 		// Store references.
 		$this->term_html->set_references( $this );
@@ -227,6 +240,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo_venue->set_references( $this );
 		$this->taxonomy->set_references( $this );
 		$this->acf->set_references( $this );
+		$this->cfcr->set_references( $this );
 
 		// We're done.
 		$done = true;
