@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the CiviCRM Event Organiser package.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.5.2\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
-"POT-Creation-Date: 2020-07-13 15:10:54+00:00\n"
+"POT-Creation-Date: 2020-09-29 16:14:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,8 +12,76 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
+#: assets/templates/event-cfcr-metabox.php:16
+msgid "Registration Page Redirect"
+msgstr ""
+
+#: assets/templates/event-cfcr-metabox.php:26
+msgid "Choose New"
+msgstr ""
+
+#: assets/templates/event-cfcr-metabox.php:26
+msgid "Delete"
+msgstr ""
+
+#: assets/templates/event-cfcr-metabox.php:30
+msgid "Is active?"
+msgstr ""
+
+#: assets/templates/event-cfcr-metabox.php:38
+msgid "Redirect from an Event Registration Form to a Post or Page containing a Caldera Form."
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:28
+msgid "Sync this event with CiviCRM:"
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:33
+msgid "Choose whether or not to sync this event to CiviCRM. It is recommended that you finish configuring your event before you sync it to CiviCRM."
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:38
+msgid "Delete unused CiviEvents:"
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:43
+msgid "If the sequence has changed, choose whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to \"disabled\"."
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:53
+msgid "CiviEvent Options"
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:56
+msgid "<strong>NOTE:</strong> Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page."
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:56
+msgid "These options will be set for <em>all corresponding CiviEvents</em> when you sync this event to CiviCRM."
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:63
+msgid "Enable Online Registration:"
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:72
+msgid "Online Registration Profile:"
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:79
+msgid "The profile assigned to the online registration form."
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:85
+msgid "Participant Role:"
+msgstr ""
+
+#: assets/templates/event-sync-metabox.php:92
+msgid "This role is automatically assigned to people when they register online for this event and where the registration profile does not allow a role to be selected."
+msgstr ""
+
 #: assets/templates/manual-sync.php:5 assets/templates/settings.php:5
-#: civicrm-event-organiser.php:346
+#: civicrm-event-organiser.php:360
 #: includes/civicrm-event-organiser-admin.php:327
 msgid "Settings"
 msgstr ""
@@ -133,7 +201,7 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: includes/civicrm-event-organiser-acf.php:272
+#: includes/civicrm-event-organiser-acf.php:275
 msgid "A numerical ID must be present to update an Event."
 msgstr ""
 
@@ -245,6 +313,19 @@ msgstr ""
 msgid "Could not sync Event Type"
 msgstr ""
 
+#: includes/civicrm-event-organiser-cfcr.php:152
+#: includes/civicrm-event-organiser-cfcr.php:178
+msgid "None selected"
+msgstr ""
+
+#: includes/civicrm-event-organiser-cfcr.php:176
+msgid "Choose Redirect Location"
+msgstr ""
+
+#: includes/civicrm-event-organiser-cfcr.php:177
+msgid "Set Redirect Location"
+msgstr ""
+
 #: includes/civicrm-event-organiser-civi.php:426
 msgid "You must have some CiviCRM Event Types defined"
 msgstr ""
@@ -282,63 +363,23 @@ msgstr ""
 msgid "Edit Events in CiviCRM"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:832
-msgid "Choose whether or not to sync this event and (if the sequence has changed) whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to \"disabled\"."
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:835
-msgid "Sync this event with CiviCRM:"
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:840
-msgid "Delete unused CiviEvents:"
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:855
-msgid "CiviEvent Options"
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:857
-msgid "<strong>NOTE:</strong> these options will be set for <em>all corresponding CiviEvents</em> when you sync this event to CiviCRM. Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page."
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:862
-msgid "Enable Online Registration:"
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:869
-msgid "Online Registration Profile:"
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:875
-msgid "The profile assigned to the online registration form."
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:880
-msgid "Participant Role:"
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:886
-msgid "This role is automatically assigned to people when they register online for this event and where the registration profile does not allow a role to be selected."
-msgstr ""
-
-#: includes/civicrm-event-organiser-eo.php:953
+#: includes/civicrm-event-organiser-eo.php:916
 msgid "Info and Settings for: %s"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1026
+#: includes/civicrm-event-organiser-eo.php:978
 msgid "View Event in WordPress"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1033
+#: includes/civicrm-event-organiser-eo.php:985
 msgid "Edit Event in WordPress"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1138
+#: includes/civicrm-event-organiser-eo.php:1090
 msgid "Edit in CiviCRM"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1194
+#: includes/civicrm-event-organiser-eo.php:1146
 msgid "CiviCRM"
 msgstr ""
 
@@ -385,5 +426,5 @@ msgid "Christian Wach"
 msgstr ""
 
 #. Author URI of the plugin/theme
-msgid "http://haystack.co.uk"
+msgid "https://haystack.co.uk"
 msgstr ""
