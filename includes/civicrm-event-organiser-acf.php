@@ -128,6 +128,11 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	 */
 	public function acf_fields_saved( $args ) {
 
+		// Bail early if this Field Group is not attached to a Post Type.
+		if ( ! is_numeric( $args['post_id'] ) ) {
+			return;
+		}
+
 		// We need the Post itself.
 		$post = get_post( $args['post_id'] );
 
