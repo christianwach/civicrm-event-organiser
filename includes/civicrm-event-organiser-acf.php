@@ -366,7 +366,12 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		}
 
 		// Get the Custom Fields for CiviCRM Events.
-		$custom_fields = $this->cacf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		$event_custom_fields = $this->cacf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+
+		// Maybe merge with passed in array.
+		if ( ! empty( $event_custom_fields ) ) {
+			$custom_fields = array_merge( $custom_fields, $event_custom_fields );
+		}
 
 		// --<
 		return $custom_fields;
@@ -460,6 +465,17 @@ class CiviCRM_WP_Event_Organiser_ACF {
 			$is_visible = $this->cacf->acf->field_group->is_visible( $field_group, $params );
 
 		}
+
+		///*
+		$e = new \Exception;
+		$trace = $e->getTraceAsString();
+		error_log( print_r( [
+			'method' => __METHOD__,
+			//'field_group' => $field_group,
+			'is_visible' => $is_visible ? 'y' : 'n',
+			//'backtrace' => $trace,
+		], true ) );
+		//*/
 
 		// Maybe add to pseudo-cache.
 		if ( ! isset( $pseudocache[$field_group['ID']] ) ) {
