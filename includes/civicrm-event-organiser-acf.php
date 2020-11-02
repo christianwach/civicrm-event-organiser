@@ -97,7 +97,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		add_filter( 'civicrm_acf_integration_query_field_group_mapped', [ $this, 'query_field_group_mapped' ], 10, 2 );
 
 		// Listen for queries from our Custom Field class.
-		add_filter( 'civicrm_acf_integration_query_custom_fields', [ $this, 'query_custom_fields' ], 10, 3 );
+		add_filter( 'civicrm_acf_integration_query_custom_fields', [ $this, 'query_custom_fields' ], 10, 2 );
 
 		// Listen for queries from the Custom Field class.
 		add_filter( 'civicrm_acf_integration_query_post_id', [ $this, 'query_post_id' ], 10, 2 );
