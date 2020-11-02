@@ -94,13 +94,13 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		add_action( 'civicrm_acf_integration_mapper_acf_fields_saved', [ $this, 'acf_fields_saved' ], 10, 1 );
 
 		// Listen for queries from our Field Group class.
-		add_action( 'civicrm_acf_integration_query_field_group_mapped', [ $this, 'query_field_group_mapped' ], 10, 2 );
+		add_filter( 'civicrm_acf_integration_query_field_group_mapped', [ $this, 'query_field_group_mapped' ], 10, 2 );
 
 		// Listen for queries from our Custom Field class.
-		add_action( 'civicrm_acf_integration_query_custom_fields', [ $this, 'query_custom_fields' ], 10, 2 );
+		add_filter( 'civicrm_acf_integration_query_custom_fields', [ $this, 'query_custom_fields' ], 10, 3 );
 
 		// Listen for queries from the Custom Field class.
-		add_action( 'civicrm_acf_integration_query_post_id', [ $this, 'query_post_id' ], 10, 2 );
+		add_filter( 'civicrm_acf_integration_query_post_id', [ $this, 'query_post_id' ], 10, 2 );
 
 		// Exclude "Event" from being mapped to a Contact Type.
 		add_filter( 'civicrm_acf_integration_post_types_get_all', [ $this, 'post_types_filter' ], 10, 1 );
