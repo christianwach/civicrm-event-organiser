@@ -466,17 +466,6 @@ class CiviCRM_WP_Event_Organiser_ACF {
 
 		}
 
-		///*
-		$e = new \Exception;
-		$trace = $e->getTraceAsString();
-		error_log( print_r( [
-			'method' => __METHOD__,
-			//'field_group' => $field_group,
-			'is_visible' => $is_visible ? 'y' : 'n',
-			//'backtrace' => $trace,
-		], true ) );
-		//*/
-
 		// Maybe add to pseudo-cache.
 		if ( ! isset( $pseudocache[$field_group['ID']] ) ) {
 			$pseudocache[$field_group['ID']] = $is_visible;
