@@ -187,9 +187,10 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	 * @since 0.2
 	 *
 	 * @param array $fields The ACF Field data.
+	 * @param int $event_id The numeric ID of the Event.
 	 * @return array|bool $event_data The CiviCRM Event data.
 	 */
-	public function prepare_from_fields( $fields ) {
+	public function prepare_from_fields( $fields, $event_id = null ) {
 
 		// Init data for fields.
 		$event_data = [];
@@ -203,7 +204,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		foreach( $fields AS $field => $value ) {
 
 			// Get the Field settings.
-			$settings = get_field_object( $field );
+			$settings = get_field_object( $field, $event_id );
 
 			// Get the CiviCRM Custom Field.
 			$custom_field_id = $this->cacf->civicrm->custom_field->custom_field_id_get( $settings );
@@ -243,7 +244,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	public function update_from_fields( $event_id, $fields ) {
 
 		// Build required data.
-		$event_data = $this->prepare_from_fields( $fields );
+		$event_data = $this->prepare_from_fields( $fields, $event_id );
 
 		// Add the Event ID.
 		$event_data['id'] = $event_id;
@@ -383,21 +384,19 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	/**
 	 * Listen for queries from the Custom Field class.
 	 *
-	 * This method responds with a Post ID if it detects that the set of Custom
+	 * This method responds with a "Post ID" if it detects that the set of Custom
 	 * Fields maps to an Event.
 	 *
 	 * @since 0.4.4
 	 *
-	 * @param bool $post_ids False, since we're asking for the Post IDs.
+	 * @param array|bool $post_ids The existing "Post IDs".
 	 * @param array $args The array of CiviCRM Custom Fields params.
-	 * @return array|bool $post_ids The mapped Post IDs, or false if not mapped.
+	 * @return array|bool $post_ids The mapped "Post IDs", or false if not mapped.
 	 */
 	public function query_post_id( $post_ids, $args ) {
 
-		// Bail early if a Post ID has been found.
-		if ( $post_ids !== false ) {
-			return $post_ids;
-		}
+		// Init Event Post IDs.
+		$event_post_ids = [];
 
 		// Let's tease out the context from the Custom Field data.
 		foreach( $args['custom_fields'] AS $field ) {
@@ -407,7 +406,7 @@ class CiviCRM_WP_Event_Organiser_ACF {
 				continue;
 			}
 
-			// Get the Post ID that this Event is mapped to.
+			// Get the "Post ID" that this Event is mapped to.
 			$post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $field['entity_id'] );
 
 			// Skip to next if not found.
@@ -416,11 +415,23 @@ class CiviCRM_WP_Event_Organiser_ACF {
 			}
 
 			// Cast as an array.
-			$post_ids = [ $post_id ];
+			$event_post_ids = [ $post_id ];
 
 			// We can bail now that we know.
 			break;
 
+		}
+
+		// Bail if we didn't find any Event "Post IDs".
+		if ( empty( $event_post_ids ) ) {
+			return $post_ids;
+		}
+
+		// Add found "Post IDs" to return array.
+		if ( is_array( $post_ids ) ) {
+			$post_ids = array_merge( $post_ids, $event_post_ids );
+		} else {
+			$post_ids = $event_post_ids;
 		}
 
 		// --<
