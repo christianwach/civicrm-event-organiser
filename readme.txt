@@ -4,7 +4,7 @@ Donate link: https://www.paypal.me/interactivist
 Tags: civicrm, event organiser, events, sync
 Requires at least: 4.9
 Tested up to: 5.6
-Stable tag: 0.6
+Stable tag: 0.6.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
