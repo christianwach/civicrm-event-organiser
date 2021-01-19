@@ -199,6 +199,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			return;
 		}
 
+		// Kick out if the event is a template.
+		if ( ! empty( $objectRef->is_template ) ) {
+			return;
+		}
+
 		// Update a single EO event - or create if it doesn't exist.
 		$event_id = $this->plugin->eo->update_event( (array) $objectRef );
 
@@ -263,6 +268,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// Kick out if not event object.
 		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) {
+			return;
+		}
+
+		// Kick out if the event is a template.
+		if ( ! empty( $objectRef->is_template ) ) {
 			return;
 		}
 
