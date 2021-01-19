@@ -199,6 +199,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			return;
 		}
 
+		// skip event creation incase of event template
+		if (!empty($objectRef->is_template)) {
+			return;
+		}
+
 		// Update a single EO event - or create if it doesn't exist.
 		$event_id = $this->plugin->eo->update_event( (array) $objectRef );
 
