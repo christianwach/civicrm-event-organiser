@@ -436,8 +436,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 			'start' => new DateTime( $civi_event['start_date'], eo_get_blog_timezone() ),
 
 			// End date and end of schedule are the same.
-			'end' => ($civi_event['end_date'] != 'null') ? new DateTime( $civi_event['end_date'], eo_get_blog_timezone() ) : '',
-			'schedule_last' => ($civi_event['end_date'] != 'null') ? new DateTime( $civi_event['end_date'], eo_get_blog_timezone() ) : '',
+			'end' => ( $civi_event['end_date'] != 'null' ) ? new DateTime( $civi_event['end_date'], eo_get_blog_timezone() ) : '',
+			'schedule_last' => ( $civi_event['end_date'] != 'null' ) ? new DateTime( $civi_event['end_date'], eo_get_blog_timezone() ) : '',
 
 			// We can't tell if a CiviEvent is repeating, so only once.
 			'frequency' => 1,
