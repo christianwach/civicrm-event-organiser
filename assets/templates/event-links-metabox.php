@@ -1,4 +1,17 @@
-<!-- assets/templates/event-links-metabox.php -->
+<?php
+/**
+ * Event Links template.
+ *
+ * Handles markup for the Event Links metabox.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.3.6
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?><!-- assets/templates/event-links-metabox.php -->
 <style>
 .civi_eo_event_list li {
 	margin: 0.5em 0;

@@ -1,4 +1,17 @@
 <?php
+/**
+ * Event Organiser Class.
+ *
+ * Handles functionality generally related to Event Organiser.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.1
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 
 /**
  * CiviCRM Event Organiser EO General Class.
@@ -1651,6 +1664,3 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 
 } // Class ends.
-
-
-

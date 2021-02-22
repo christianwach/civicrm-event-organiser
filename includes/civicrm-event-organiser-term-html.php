@@ -1,7 +1,20 @@
 <?php
+/**
+ * Term Description Class.
+ *
+ * Replicates the functionality of WooDojo HTML Term Description plugin.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.2.1
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 
 /**
- * CiviCRM Event Organiser Term_Description Class.
+ * CiviCRM Event Organiser Term Description Class.
  *
  * This class replicates the functionality of WooDojo HTML Term Description
  * plugin since that plugin has now been withdrawn. It was described thus:
@@ -166,6 +179,3 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 
 
 } // Class ends.
-
-
-

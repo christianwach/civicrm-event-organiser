@@ -1,4 +1,17 @@
 <?php
+/**
+ * Caldera Forms CiviCRM Redirect Class.
+ *
+ * Handles compatibility with the "Caldera Forms CiviCRM Redirect" plugin.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.5.3
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 
 /**
  * CiviCRM Event Organiser "Caldera Forms CiviCRM Redirect" Compatibility Class.
@@ -438,6 +451,3 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 
 } // Class ends.
-
-
-

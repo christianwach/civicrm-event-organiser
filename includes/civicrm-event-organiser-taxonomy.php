@@ -1,4 +1,17 @@
 <?php
+/**
+ * Taxonomy Class.
+ *
+ * Handles sync between the Event Organiser custom taxonomy and CiviCRM Event types.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.4.2
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 
 /**
  * CiviCRM Event Organiser Taxonomy Class.
@@ -1950,6 +1963,3 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 } // Class ends.
-
-
-

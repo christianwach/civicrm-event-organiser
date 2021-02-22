@@ -1,4 +1,17 @@
-<!-- assets/templates/manual-sync.php -->
+<?php
+/**
+ * Manual Sync template.
+ *
+ * Handles markup for the Manual Sync admin page.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.2.4
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?><!-- assets/templates/manual-sync.php -->
 <div class="wrap">
 
 	<h1 class="nav-tab-wrapper">
@@ -114,6 +127,3 @@
 	</form>
 
 </div><!-- /.wrap -->
-
-
-

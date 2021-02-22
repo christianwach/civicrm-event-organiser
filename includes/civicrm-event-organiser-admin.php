@@ -1,4 +1,17 @@
 <?php
+/**
+ * Admin Class.
+ *
+ * Handles plugin admin functionality.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.1
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 
 /**
  * CiviCRM Event Organiser Admin Class.
@@ -2716,6 +2729,3 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	}
 
 } // Class ends.
-
-
-

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * CiviCRM Event Organiser Template functions.
  *
@@ -7,8 +6,12 @@
  * during The Loop. Please refer to the docblocks of each function to see usage
  * instructions.
  *
+ * @package CiviCRM_WP_Event_Organiser
  * @since 0.2.2
  */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 
 
@@ -186,6 +189,3 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	return $links;
 
 }
-
-
-

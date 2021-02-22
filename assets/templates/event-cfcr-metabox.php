@@ -1,4 +1,17 @@
-<!-- assets/templates/event-cfcr-metabox.php -->
+<?php
+/**
+ * CFCR Registration Page Redirect template.
+ *
+ * Handles markup for the CFCR Registration Page Redirect metabox.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.5.3
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?><!-- assets/templates/event-cfcr-metabox.php -->
 <style>
 .civi_eo_event_cfcr_post_link p {
 	font-size: 120%;

@@ -1,4 +1,17 @@
 <?php
+/**
+ * Event Organiser Venue Class.
+ *
+ * Handles functionality related to EO venues.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.1
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 
 /**
  * CiviCRM Event Organiser Venues Class.
@@ -1027,6 +1040,3 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 
 } // Class ends.
-
-
-

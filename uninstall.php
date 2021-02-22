@@ -1,20 +1,18 @@
-<?php /*
-================================================================================
-CiviCRM Event Organiser Uninstaller
-================================================================================
-AUTHOR: Christian Wach <needle@haystack.co.uk>
---------------------------------------------------------------------------------
-NOTES
-=====
+<?php
+/**
+ * Uninstaller.
+ *
+ * Handles uninstallation of the CiviCRM Event Organiser plugin.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.1
+ */
 
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
---------------------------------------------------------------------------------
-*/
-
-
-
-// Kick out if uninstall not called from WordPress.
-if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) exit();
+// Exit if uninstall not called from WordPress.
+defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 
 
@@ -32,6 +30,3 @@ $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_type' );
 // Delete data arrays.
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_civi_event_disabled' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_civi_event_data' );
-
-
-

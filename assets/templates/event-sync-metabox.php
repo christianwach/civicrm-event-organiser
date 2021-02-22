@@ -1,4 +1,17 @@
-<!-- assets/templates/event-sync-metabox.php -->
+<?php
+/**
+ * Event Sync template.
+ *
+ * Handles markup for the Event Sync metabox.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.3
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+?><!-- assets/templates/event-sync-metabox.php -->
 <style>
 .civi_eo_event_sync_wrapper {
 	border-bottom: 2px solid #ddd;

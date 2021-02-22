@@ -1,4 +1,17 @@
 <?php
+/**
+ * CiviCRM Class.
+ *
+ * Handles interactions with CiviCRM.
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ * @since 0.1
+ */
+
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
+
+
 
 /**
  * CiviCRM Event Organiser CiviCRM Class.
@@ -2849,6 +2862,3 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 } // Class ends.
-
-
-
