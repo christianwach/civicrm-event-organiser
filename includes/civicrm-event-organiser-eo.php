@@ -442,16 +442,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event( $civi_event ) {
 
-		///*
-		$e = new \Exception;
-		$trace = $e->getTraceAsString();
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'civi_event' => $civi_event,
-			//'backtrace' => $trace,
-		), true ) );
-		//*/
-
 		// Make sure we have a valid end date.
 		if ( empty( $civi_event['end_date'] ) OR $civi_event['end_date'] == 'null' ) {
 			$end_date = '';
