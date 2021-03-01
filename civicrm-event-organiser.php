@@ -98,13 +98,22 @@ class CiviCRM_WP_Event_Organiser {
 	public $term_html;
 
 	/**
+	 * CiviCRM Profile Sync compatibility object.
+	 *
+	 * @since 0.4.4
+	 * @access public
+	 * @var object $cwps The CiviCRM Profile Sync compatibility object.
+	 */
+	public $cwps;
+
+	/**
 	 * CiviCRM ACF Integration compatibility object.
 	 *
 	 * @since 0.4.4
 	 * @access public
-	 * @var object $acf The CiviCRM ACF Integration compatibility object.
+	 * @var object $cai The CiviCRM ACF Integration compatibility object.
 	 */
-	public $acf;
+	public $cai;
 
 	/**
 	 * Caldera Forms CiviCRM Redirect compatibility object.
@@ -199,8 +208,11 @@ class CiviCRM_WP_Event_Organiser {
 		// Load our template functions.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-functions.php' );
 
+		// Load our CiviCRM Profile Sync class.
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cwps.php' );
+
 		// Load our CiviCRM ACF Integration class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-acf.php' );
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cai.php' );
 
 		// Load our Caldera Forms CiviCRM Redirect class.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cfcr.php' );
@@ -229,7 +241,8 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo = new CiviCRM_WP_Event_Organiser_EO();
 		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue();
 		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy();
-		$this->acf = new CiviCRM_WP_Event_Organiser_ACF();
+		$this->cwps = new CiviCRM_WP_Event_Organiser_CWPS();
+		$this->cai = new CiviCRM_WP_Event_Organiser_CAI();
 		$this->cfcr = new CiviCRM_WP_Event_Organiser_CFCR();
 
 		// Store references.
@@ -239,7 +252,8 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo->set_references( $this );
 		$this->eo_venue->set_references( $this );
 		$this->taxonomy->set_references( $this );
-		$this->acf->set_references( $this );
+		$this->cwps->set_references( $this );
+		$this->cai->set_references( $this );
 		$this->cfcr->set_references( $this );
 
 		// We're done.

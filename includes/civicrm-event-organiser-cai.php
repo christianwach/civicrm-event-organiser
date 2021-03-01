@@ -1,6 +1,6 @@
 <?php
 /**
- * ACF Class.
+ * CiviCRM ACF Integration Class.
  *
  * Handles compatibility with the CiviCRM ACF Integration plugin.
  *
@@ -14,13 +14,13 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * CiviCRM Event Organiser ACF Class.
+ * CiviCRM Event Organiser CiviCRM ACF Integration compatibility Class.
  *
  * This class provides compatibility with the CiviCRM ACF Integration plugin.
  *
  * @since 0.4.4
  */
-class CiviCRM_WP_Event_Organiser_ACF {
+class CiviCRM_WP_Event_Organiser_CAI {
 
 	/**
 	 * Plugin (calling) object.
@@ -78,6 +78,11 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	 * @since 0.4.4
 	 */
 	public function initialise() {
+
+		// Bail if there's no ACF plugin present.
+		if ( ! function_exists( 'acf' ) ) {
+			return;
+		}
 
 		// Maybe store reference to CiviCRM ACF Integration.
 		if ( function_exists( 'civicrm_acf_integration' ) ) {
@@ -200,10 +205,10 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	 * @since 0.2
 	 *
 	 * @param array $fields The ACF Field data.
-	 * @param int $event_id The numeric ID of the Event.
+	 * @param int $post_id The numeric ID of the WordPress Post.
 	 * @return array|bool $event_data The CiviCRM Event data.
 	 */
-	public function prepare_from_fields( $fields, $event_id = null ) {
+	public function prepare_from_fields( $fields, $post_id = null ) {
 
 		// Init data for fields.
 		$event_data = [];
@@ -214,10 +219,10 @@ class CiviCRM_WP_Event_Organiser_ACF {
 		}
 
 		// Loop through the field data.
-		foreach( $fields AS $field => $value ) {
+		foreach( $fields AS $selector => $value ) {
 
 			// Get the Field settings.
-			$settings = get_field_object( $field, $event_id );
+			$settings = get_field_object( $selector, $post_id );
 
 			// Get the CiviCRM Custom Field.
 			$custom_field_id = $this->cacf->civicrm->custom_field->custom_field_id_get( $settings );
@@ -250,14 +255,15 @@ class CiviCRM_WP_Event_Organiser_ACF {
 	 *
 	 * @since 0.3
 	 *
-	 * @param int $event_id The numeric ID of the Event.
+	 * @param int $event_id The numeric ID of the CiviCRM Event.
 	 * @param array $fields The ACF Field data.
+	 * @param int $post_id The numeric ID of the WordPress Post.
 	 * @return array|bool $event The CiviCRM Event data, or false on failure.
 	 */
-	public function update_from_fields( $event_id, $fields ) {
+	public function update_from_fields( $event_id, $fields, $post_id = null ) {
 
 		// Build required data.
-		$event_data = $this->prepare_from_fields( $fields, $event_id );
+		$event_data = $this->prepare_from_fields( $fields, $post_id );
 
 		// Add the Event ID.
 		$event_data['id'] = $event_id;
