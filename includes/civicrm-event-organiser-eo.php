@@ -470,16 +470,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		];
 
-		///*
-		$e = new \Exception;
-		$trace = $e->getTraceAsString();
-		error_log( print_r( array(
-			'method' => __METHOD__,
-			'event_data' => $event_data,
-			//'backtrace' => $trace,
-		), true ) );
-		//*/
-
 		// Define post.
 		$post_data = [
 
