@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the CiviCRM Event Organiser package.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.6.1\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.6.2\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-"
 "organiser\n"
-"POT-Creation-Date: 2021-02-22 11:44:24+00:00\n"
+"POT-Creation-Date: 2021-03-01 20:19:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -96,7 +96,7 @@ msgid ""
 msgstr ""
 
 #: assets/templates/manual-sync.php:18 assets/templates/settings.php:18
-#: civicrm-event-organiser.php:360
+#: civicrm-event-organiser.php:374
 #: includes/civicrm-event-organiser-admin.php:340
 msgid "Settings"
 msgstr ""
@@ -227,10 +227,6 @@ msgstr ""
 msgid "Save Changes"
 msgstr ""
 
-#: includes/civicrm-event-organiser-acf.php:294
-msgid "A numerical ID must be present to update an Event."
-msgstr ""
-
 #: includes/civicrm-event-organiser-admin.php:236
 msgid ""
 "CiviCRM Event Organiser needs your attention. Please visit the <a href=\"%s"
@@ -246,7 +242,7 @@ msgstr ""
 msgid "CiviCRM Event Organiser: Settings"
 msgstr ""
 
-#. #-#-#-#-#  civicrm-event-organiser.pot (CiviCRM Event Organiser 0.6.1)  #-#-#-#-#
+#. #-#-#-#-#  civicrm-event-organiser.pot (CiviCRM Event Organiser 0.6.2)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: includes/civicrm-event-organiser-admin.php:314
 #: includes/civicrm-event-organiser-admin.php:324
@@ -345,6 +341,11 @@ msgstr ""
 msgid "Could not sync Event Type"
 msgstr ""
 
+#: includes/civicrm-event-organiser-cai.php:300
+#: includes/civicrm-event-organiser-cwps.php:334
+msgid "A numerical ID must be present to update an Event."
+msgstr ""
+
 #: includes/civicrm-event-organiser-cfcr.php:165
 #: includes/civicrm-event-organiser-cfcr.php:191
 msgid "None selected"
@@ -379,7 +380,7 @@ msgid "Venue not created."
 msgstr ""
 
 #: includes/civicrm-event-organiser-eo-venue.php:707
-#: includes/civicrm-event-organiser-eo.php:814
+#: includes/civicrm-event-organiser-eo.php:794
 msgid "CiviCRM Settings"
 msgstr ""
 
@@ -391,27 +392,27 @@ msgstr ""
 msgid "Phone contact:"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:824
+#: includes/civicrm-event-organiser-eo.php:804
 msgid "Edit Events in CiviCRM"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:956
+#: includes/civicrm-event-organiser-eo.php:936
 msgid "Info and Settings for: %s"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1018
+#: includes/civicrm-event-organiser-eo.php:998
 msgid "View Event in WordPress"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1025
+#: includes/civicrm-event-organiser-eo.php:1005
 msgid "Edit Event in WordPress"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1130
+#: includes/civicrm-event-organiser-eo.php:1110
 msgid "Edit in CiviCRM"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1186
+#: includes/civicrm-event-organiser-eo.php:1166
 msgid "CiviCRM"
 msgstr ""
 
