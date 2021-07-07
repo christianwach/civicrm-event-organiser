@@ -114,7 +114,6 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	public function render_field_edit( $tag, $taxonomy ) {
 
 		$settings = [
-			'quicktags' 	=> [ 'buttons' => 'em,strong,link' ],
 			'textarea_name'	=> 'description',
 			'quicktags' 	=> true,
 			'tinymce' 		=> true,
@@ -127,7 +126,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 			<td><?php wp_editor( htmlspecialchars_decode( $tag->description ), 'html-description', $settings ); ?>
 			<span class="description"><?php _e( 'The description is not prominent by default, however some themes may show it.', 'civicrm-event-organiser' ); ?></span></td>
 			<script type="text/javascript">
-				// Remove the non-html field
+				// Remove the non-HTML field.
 				jQuery( 'textarea#description' ).closest( '.form-field' ).remove();
 			</script>
 		</tr>
@@ -147,7 +146,6 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	public function render_field_add( $taxonomy ) {
 
 		$settings = [
-			'quicktags' 	=> [ 'buttons' => 'em,strong,link' ],
 			'textarea_name'	=> 'description',
 			'quicktags' 	=> true,
 			'tinymce' 		=> true,
@@ -155,21 +153,24 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 		];
 
 		?>
-		<div>
+		<div class="form-field term-description-wrap">
 			<label for="tag-description"><?php _ex( 'Description', 'Taxonomy Description', 'civicrm-event-organiser' ); ?></label>
 			<?php wp_editor( '', 'html-tag-description', $settings ); ?>
 			<p class="description"><?php _e( 'The description is not prominent by default, however some themes may show it.', 'civicrm-event-organiser' ); ?></p>
 			<script type="text/javascript">
-				// Remove the non-html field
+				// Remove the non-HTML field.
 				jQuery( 'textarea#tag-description' ).closest( '.form-field' ).remove();
-
-				jQuery(function() {
-					// Trigger save
+				// Trigger save.
+				jQuery( function() {
+					// This fires when submitted via keyboard.
+					jQuery( '#addtag' ).on( 'keydown', '#submit', function() {
+				   		tinyMCE.triggerSave();
+				    });
+					// This does not fire when submitted via keyboard.
 					jQuery( '#addtag' ).on( 'mousedown', '#submit', function() {
 				   		tinyMCE.triggerSave();
 				    });
 			    });
-
 			</script>
 		</div>
 		<?php
