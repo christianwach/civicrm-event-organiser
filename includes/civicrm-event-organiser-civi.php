@@ -88,6 +88,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		add_action( 'civicrm_buildForm', [ $this, 'form_event_snippet' ], 10, 2 );
 	    add_action( 'wp_ajax_ceo_feature_image', [ $this, 'form_event_image' ] );
 
+		// Filter Attachments to show only those for a User.
+		add_filter( 'ajax_query_attachments_args', [ $this, 'form_event_image_filter_media' ] );
+
 		// Intercept CiviCRM Event form submission process.
 		add_action( 'civicrm_postProcess', [ $this, 'form_event_process' ], 10, 2 );
 
@@ -563,6 +566,28 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// --<
 		return $attr;
+
+	}
+
+
+
+	/**
+	 * Ensure that Users see just their own uploaded media.
+	 *
+	 * @since 0.6.3
+	 *
+	 * @param array $query The existing query.
+	 * @return array $query The modified query.
+	 */
+	public function form_event_image_filter_media( $query ) {
+
+		// Admins and Editors get to see everything.
+		if ( ! current_user_can( 'edit_posts' ) ) {
+			$query['author'] = get_current_user_id();
+		}
+
+		// --<
+		return $query;
 
 	}
 
