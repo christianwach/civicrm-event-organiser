@@ -214,8 +214,6 @@ var CEO_Feature_Image = CEO_Feature_Image || {};
 					post_id = 0;
 				}
 
-				console.log( 'post_id', post_id );
-
 				// Sanity check.
 				if ( file_frame ) {
 					file_frame.open();
