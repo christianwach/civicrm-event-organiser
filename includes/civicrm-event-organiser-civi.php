@@ -476,7 +476,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Add help text.
 		$form->assign(
 			'ceo_attachment_id_help',
-			__( 'If you would like to add a Feature Image to the Event, do so here.', 'civicrm-event-organiser' )
+			__( 'If you would like to add a Feature Image to the Event Organiser Event, choose one here.', 'civicrm-event-organiser' )
 		);
 
 		// Insert template block into the page.
