@@ -18,7 +18,7 @@
   {literal}
 
   // jQuery will not move an item unless it is wrapped.
-  cj('tr.ceo_attachment_id').insertAfter('.crm-event-manage-eventinfo-form-block-description');
+  cj('tr.ceo_attachment_id').insertAfter('.crm-event-manage-eventinfo-form-block-title');
 
   /**
    * Trigger dom_ready methods where necessary.
