@@ -581,8 +581,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function form_event_image_filter_media( $query ) {
 
+		/**
+		 * Filter the capability that is needed to view all media.
+		 *
+		 * @since 0.6.3
+		 *
+		 * @param str The default capability needed to view all media.
+		 */
+		$capability = apply_filters( 'civicrm_event_organiser_filter_media', 'edit_posts' );
+
 		// Admins and Editors get to see everything.
-		if ( ! current_user_can( 'edit_posts' ) ) {
+		if ( ! current_user_can( $capability ) ) {
 			$query['author'] = get_current_user_id();
 		}
 
