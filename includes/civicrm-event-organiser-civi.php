@@ -79,8 +79,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function register_hooks() {
 
-		// Allow plugin to register php and template directories.
-		//add_action( 'civicrm_config', [ $this, 'register_directories' ], 10, 1 );
+		// Register template directory for form amends.
+		add_action( 'civicrm_config', [ $this, 'register_form_directory' ], 10 );
+
+		// Add actions to intercept Event form.
+		add_action( 'civicrm_buildForm', [ $this, 'form_event_new' ], 10, 2 );
+		add_action( 'civicrm_buildForm', [ $this, 'form_event_edit' ], 10, 2 );
+		add_action( 'civicrm_buildForm', [ $this, 'form_event_snippet' ], 10, 2 );
+	    add_action( 'wp_ajax_ceo_feature_image', [ $this, 'form_event_image' ] );
+
+		// Intercept CiviCRM Event form submission process.
+		add_action( 'civicrm_postProcess', [ $this, 'form_event_process' ], 10, 2 );
 
 		// Intercept CiviEvent create/update/delete actions.
 		add_action( 'civicrm_post', [ $this, 'event_created' ], 10, 4 );
@@ -113,29 +122,30 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 
 	/**
-	 * Register directories that CiviCRM searches for php and template files.
+	 * Register directory that CiviCRM searches in for our form template file.
 	 *
 	 * @since 0.1
+	 * @since 0.6.3 Renamed.
 	 *
 	 * @param object $config The CiviCRM config object.
 	 */
-	public function register_directories( &$config ) {
+	public function register_form_directory( &$config ) {
 
 		// Init CiviCRM or die.
 		if ( ! $this->is_active() ) {
 			return;
 		}
 
-		// Define our custom path.
-		$custom_path = CIVICRM_WP_EVENT_ORGANISER_PATH . 'civicrm_custom_templates';
-
 		// Get template instance.
 		$template = CRM_Core_Smarty::singleton();
+
+		// Define our custom path.
+		$custom_path = CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/civicrm';
 
 		// Add our custom template directory.
 		$template->addTemplateDir( $custom_path );
 
-		// Register template directories.
+		// Register template directory.
 		$template_include_path = $custom_path . PATH_SEPARATOR . get_include_path();
 		set_include_path( $template_include_path );
 
@@ -176,6 +186,439 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		 * @return bool $permitted True if allowed, false otherwise.
 		 */
 		return apply_filters( 'civicrm_event_organiser_permitted', $permitted, $permission );
+
+	}
+
+
+
+	//##########################################################################
+
+
+
+	/**
+	 * Add Javascript and template for new Events on page load.
+	 *
+	 * For new CiviCRM Events, the form is not loaded via AJAX so there is no
+	 * need to split the injection of the template and the addition of the
+	 * Javascript across two callbacks.
+	 *
+	 * @see self::form_event_edit()
+	 *
+	 * @since 0.6.3
+	 *
+	 * @param string $formName The CiviCRM form name.
+	 * @param object $form The CiviCRM form object.
+	 */
+	public function form_event_new( $formName, &$form ) {
+
+		// Is this the Event Info form?
+		if ( $formName != 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+			return;
+		}
+
+		// We want the page, so grab "Print" var from form controller.
+		$controller = $form->getVar( 'controller' );
+        if ( ! empty( $controller->_print ) ) {
+        	return;
+        }
+
+		// Disallow users without upload permissions.
+		if ( ! current_user_can( 'upload_files' ) ) {
+			return;
+		}
+
+		// We *must not* have a CiviCRM Event ID.
+		$event_id = $form->getVar( '_id' );
+        if ( ! empty( $event_id ) ) {
+        	return;
+        }
+
+		// Enqueue the WordPress media scripts.
+		wp_enqueue_media();
+
+		// Enqueue our Javascript in footer.
+		wp_enqueue_script(
+			'ceo-feature-image',
+			CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/js/civi-eo-feature-image.js',
+			[ 'jquery' ],
+			CIVICRM_WP_EVENT_ORGANISER_VERSION,
+			true // In footer.
+		);
+
+		// Init localisation.
+		$localisation = [
+			'title' => __( 'Choose Feature Image', 'civicrm-event-organiser' ),
+			'button' => __( 'Set Feature Image', 'civicrm-event-organiser' ),
+		];
+
+		/// Init settings.
+		$settings = [
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'loading' => CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/loading.gif',
+		];
+
+		// Localisation array.
+		$vars = [
+			'localisation' => $localisation,
+			'settings' => $settings,
+		];
+
+		// Localise the WordPress way.
+		wp_localize_script(
+			'ceo-feature-image',
+			'CEO_Feature_Image_Settings',
+			$vars
+		);
+
+		// Add hidden field to hold the Attachment ID.
+		$hidden_field = $form->add( 'hidden', 'ceo_attachment_id', '0' );
+
+		// Build the placeholder image markup.
+		$placeholder_url = CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/placeholder.gif';
+		$img_width = get_option( 'medium_size_w', 300 );
+		$img_style = 'display: none; width: ' . $img_width . 'px; height: 100px;';
+		$markup = '<img src="' . $placeholder_url . '" class="wp-post-image" style="' . $img_style . '">';
+
+		// Add image markup.
+		$form->assign(
+			'ceo_attachment_markup',
+			$markup
+		);
+
+		// Add button ID.
+		$form->assign(
+			'ceo_attachment_id_button_id',
+			'ceo-feature-image-switcher'
+		);
+
+		// Add button text.
+		$form->assign(
+			'ceo_attachment_id_button',
+			__( 'Choose Feature Image', 'civicrm-event-organiser' )
+		);
+
+		// Add help text.
+		$form->assign(
+			'ceo_attachment_id_help',
+			__( 'If you would like to add a Feature Image to the Event, do so here.', 'civicrm-event-organiser' )
+		);
+
+		// Insert template block into the page.
+		CRM_Core_Region::instance('page-body')->add([
+			'template' => 'ceo-featured-image.tpl'
+		]);
+
+	}
+
+
+
+	/**
+	 * Add Javascript on page load.
+	 *
+	 * The "CRM_Event_Form_ManageEvent_EventInfo" form is loaded twice: firstly
+	 * when the page is loaded and secondly as a "snippet" that is AJAX-loaded
+	 * into the tab container. The WordPress Media scripts need to be loaded on
+	 * page load, while the template needs to be loaded into the snippet.
+	 *
+	 * @since 0.6.3
+	 *
+	 * @param string $formName The CiviCRM form name.
+	 * @param object $form The CiviCRM form object.
+	 */
+	public function form_event_edit( $formName, &$form ) {
+
+		// Is this the Event Info form?
+		if ( $formName != 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+			return;
+		}
+
+		// We want the page, so grab "Print" var from form controller.
+		$controller = $form->getVar( 'controller' );
+        if ( ! empty( $controller->_print ) ) {
+        	return;
+        }
+
+		// Disallow users without upload permissions.
+		if ( ! current_user_can( 'upload_files' ) ) {
+			return;
+		}
+
+		// We *must* have a CiviCRM Event ID.
+		$event_id = $form->getVar( '_id' );
+        if ( empty( $event_id ) ) {
+        	return;
+        }
+
+		// Get the Post ID that this Event is mapped to.
+		$post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $event_id );
+		if ( $post_id === false ) {
+			return;
+		}
+
+		// Enqueue the WordPress media scripts.
+		wp_enqueue_media();
+
+		// Enqueue our Javascript in footer.
+		wp_enqueue_script(
+			'ceo-feature-image',
+			CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/js/civi-eo-feature-image.js',
+			[ 'jquery' ],
+			CIVICRM_WP_EVENT_ORGANISER_VERSION,
+			true // In footer.
+		);
+
+		// Init localisation.
+		$localisation = [
+			'title' => __( 'Choose Feature Image', 'civicrm-event-organiser' ),
+			'button' => __( 'Set Feature Image', 'civicrm-event-organiser' ),
+		];
+
+		/// Init settings.
+		$settings = [
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'loading' => CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/loading.gif',
+		];
+
+		// Localisation array.
+		$vars = [
+			'localisation' => $localisation,
+			'settings' => $settings,
+		];
+
+		// Localise the WordPress way.
+		wp_localize_script(
+			'ceo-feature-image',
+			'CEO_Feature_Image_Settings',
+			$vars
+		);
+
+	}
+
+
+
+	/**
+	 * Inject template into AJAX-loaded snippet.
+	 *
+	 * @see self::form_event_edit()
+	 *
+	 * @since 0.6.3
+	 *
+	 * @param string $formName The CiviCRM form name.
+	 * @param object $form The CiviCRM form object.
+	 */
+	public function form_event_snippet( $formName, &$form ) {
+
+		// Is this the Event Info form?
+		if ( $formName != 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+			return;
+		}
+
+		// We want the snippet, so grab "Print" var from form controller.
+		$controller = $form->getVar( 'controller' );
+        if ( empty( $controller->_print ) OR $controller->_print !== 'json' ) {
+        	return;
+        }
+
+		// Disallow users without upload permissions.
+		if ( ! current_user_can( 'upload_files' ) ) {
+			return;
+		}
+
+		// We need the CiviCRM Event ID.
+		$event_id = $form->getVar( '_id' );
+        if ( empty( $event_id ) ) {
+        	return;
+        }
+
+		// Get the Post ID that this Event is mapped to.
+		$post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $event_id );
+		if ( $post_id === false ) {
+			return;
+		}
+
+		// Does this Event have a Feature Image?
+		$attachment_id = '';
+		if ( has_post_thumbnail( $post_id ) ) {
+			$attachment_id = get_post_thumbnail_id( $post_id );
+		}
+
+		// Add hidden field to hold the Attachment ID.
+		$hidden_field = $form->add( 'hidden', 'ceo_attachment_id', $attachment_id );
+
+		// Get the image markup.
+		$placeholder_url = CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/placeholder.gif';
+		$markup = '<img src="' . $placeholder_url . '" class="wp-post-image" style="display: none;">';
+		if ( ! empty( $attachment_id ) ) {
+			$markup = get_the_post_thumbnail( $post_id, 'medium' );
+		}
+
+		// Add image markup.
+		$form->assign(
+			'ceo_attachment_markup',
+			$markup
+		);
+
+		// Add button ID.
+		$form->assign(
+			'ceo_attachment_id_button_id',
+			'ceo-feature-image-switcher-' . $post_id
+		);
+
+		// Add button text.
+		$form->assign(
+			'ceo_attachment_id_button',
+			__( 'Choose Feature Image', 'civicrm-event-organiser' )
+		);
+
+		// Add help text.
+		$form->assign(
+			'ceo_attachment_id_help',
+			__( 'If you would like to add a Feature Image to the Event, do so here.', 'civicrm-event-organiser' )
+		);
+
+		// Insert template block into the page.
+		CRM_Core_Region::instance('page-body')->add([
+			'template' => 'ceo-featured-image.tpl'
+		]);
+
+	}
+
+
+
+	/**
+	 * AJAX handler for Feature Image calls.
+	 *
+	 * @since 0.6.3
+	 */
+	public function form_event_image() {
+
+		// Init response.
+		$data = [
+			'success' => 'false',
+		];
+
+		// Disallow users without upload permissions.
+		if ( ! current_user_can( 'upload_files' ) ) {
+			return $data;
+		}
+
+		// Get Attachment ID.
+		$attachment_id = isset( $_POST['attachment_id'] ) ? (int) trim( $_POST['attachment_id'] ) : 0;
+		if ( ! is_numeric( $attachment_id ) OR $attachment_id === 0 ) {
+			return $data;
+		}
+
+		// Handle Feature Image if there is a Post ID.
+		$post_id = isset( $_POST['post_id'] ) ? (int) trim( $_POST['post_id'] ) : 0;
+		if ( is_numeric( $post_id ) AND $post_id !== 0 ) {
+
+			// Set Feature Image.
+			set_post_thumbnail( $post_id, $attachment_id );
+
+			// Get the Feature Image markup.
+			$markup = get_the_post_thumbnail( $post_id, 'medium' );
+
+		} else {
+
+			// Filter the image class.
+			add_filter( 'wp_get_attachment_image_attributes', [ $this, 'form_event_image_filter' ], 10, 1 );
+
+			// Get the Attachment Image markup.
+			$markup = wp_get_attachment_image( $attachment_id, 'medium', false );
+
+			// Remove filter.
+			remove_filter( 'wp_get_attachment_image_attributes', [ $this, 'form_event_image_filter' ] );
+
+		}
+
+		// Add to data.
+		$data['markup'] = $markup;
+
+		// Overwrite flag.
+		$data['success'] = 'true';
+
+		// Send data to browser.
+		wp_send_json( $data );
+
+	}
+
+
+
+ 	/**
+	 * Adds the feature image class to the list of attachment image attributes.
+	 *
+	 * @since 0.6.3
+	 *
+	 * @param array $attr The existing array of attribute values for the image markup.
+	 * @return array $attr The modified array of attribute values for the image markup.
+	 */
+	public function form_event_image_filter( $attr ) {
+
+		// Make sure the feature image class is present.
+		if ( ! empty( $attr['class'] ) ) {
+			$attr['class'] .= ' wp-post-image';
+		} else {
+			$attr['class'] = 'wp-post-image';
+		}
+
+		// --<
+		return $attr;
+
+	}
+
+
+
+	/**
+	 * Callback for the CiviEvent Component Settings form's postProcess hook.
+	 *
+	 * This is called *after* the Event has been synced to EO, so we can apply
+	 * the Attachment to the EO Event knowing that it exists. Only needs to be
+	 * done for *new* Events.
+	 *
+	 * @since 0.6.3
+	 *
+	 * @param string $formName The CiviCRM form name.
+	 * @param object $form The CiviCRM form object.
+	 */
+	public function form_event_process( $formName, &$form ) {
+
+		// Is this the Event Info form?
+		if ( $formName != 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+			return;
+		}
+
+		// This gets called *three* times!
+		static $done;
+		if ( isset( $done ) AND $done === true ) {
+			return;
+		}
+
+		// Grab submitted values.
+		$values = $form->getSubmitValues();
+
+		// Kick out if the Event is a template.
+		if ( ! empty( $values['is_template'] ) ) {
+			return;
+		}
+
+		// Bail if there's no EO Event ID.
+		if ( empty( $this->eo_event_created_id ) ) {
+			return;
+		}
+
+		// Bail if there's no Feature Image ID.
+		if ( empty( $values['ceo_attachment_id'] ) OR ! is_numeric( $values['ceo_attachment_id'] ) ) {
+			return;
+		}
+
+		// Sanity check.
+		$attachment_id = (int) $values['ceo_attachment_id'];
+
+		// Set Feature Image.
+		set_post_thumbnail( $this->eo_event_created_id, $attachment_id );
+
+		// We're done.
+		$done = true;
 
 	}
 
@@ -247,6 +690,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// Store correspondences.
 		$this->plugin->db->store_event_correspondences( $event_id, [ $occurrence_id => $objectRef->id ] );
+
+		// Store Event IDs for possible use in the "form_event_process" method.
+		$this->civicrm_event_created_id = $objectRef->id;
+		$this->eo_event_created_id = $event_id;
 
 	}
 

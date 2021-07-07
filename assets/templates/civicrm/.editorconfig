@@ -1,0 +1,10 @@
+# CiviCRM Admin Utilities CiviCRM-style editor configuration normalization.
+# @see http://editorconfig.org/
+
+# This is the not top-most .editorconfig file; search in parent directories.
+root = false
+
+# Indentation.
+[*.{php,tpl}]
+indent_style = space
+indent_size = 2
