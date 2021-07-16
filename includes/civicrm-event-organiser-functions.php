@@ -101,7 +101,9 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	$post_id = absint( empty( $post_id ) ? get_the_ID() : $post_id );
 
 	// Bail if not present.
-	if( empty( $post_id ) ) return $links;
+	if ( empty( $post_id ) ) {
+		return $links;
+	}
 
 	// Get plugin reference.
 	$plugin = civicrm_eo();
