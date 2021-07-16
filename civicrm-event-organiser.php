@@ -89,6 +89,15 @@ class CiviCRM_WP_Event_Organiser {
 	public $taxonomy;
 
 	/**
+	 * Shortcodes object.
+	 *
+	 * @since 0.6.3
+	 * @access public
+	 * @var object $shortcodes The Shortcodes object.
+	 */
+	public $shortcodes;
+
+	/**
 	 * Term Description object.
 	 *
 	 * @since 0.2.1
@@ -205,6 +214,9 @@ class CiviCRM_WP_Event_Organiser {
 		// Load our Taxonomy Sync class.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-taxonomy.php' );
 
+		// Load our Shortcodes class.
+		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-shortcodes.php' );
+
 		// Load our template functions.
 		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-functions.php' );
 
@@ -241,6 +253,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo = new CiviCRM_WP_Event_Organiser_EO();
 		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue();
 		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy();
+		$this->shortcodes = new CiviCRM_WP_Event_Organiser_Shortcodes();
 		$this->cwps = new CiviCRM_WP_Event_Organiser_CWPS();
 		$this->cai = new CiviCRM_WP_Event_Organiser_CAI();
 		$this->cfcr = new CiviCRM_WP_Event_Organiser_CFCR();
@@ -252,6 +265,7 @@ class CiviCRM_WP_Event_Organiser {
 		$this->eo->set_references( $this );
 		$this->eo_venue->set_references( $this );
 		$this->taxonomy->set_references( $this );
+		$this->shortcodes->set_references( $this );
 		$this->cwps->set_references( $this );
 		$this->cai->set_references( $this );
 		$this->cfcr->set_references( $this );
