@@ -965,7 +965,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
 
 				// Send data to browser.
-				$this->send_data( $data );
+				wp_send_json( $data );
 				return;
 
 			}
@@ -1072,7 +1072,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Send data to browser.
-		$this->send_data( $data );
+		wp_send_json( $data );
 
 	}
 
@@ -1104,7 +1104,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
 
 				// Send data to browser.
-				$this->send_data( $data );
+				wp_send_json( $data );
 				return;
 
 			}
@@ -1207,7 +1207,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Send data to browser.
-		$this->send_data( $data );
+		wp_send_json( $data );
 
 	}
 
@@ -1239,7 +1239,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
 
 				// Send data to browser.
-				$this->send_data( $data );
+				wp_send_json( $data );
 				return;
 
 			}
@@ -1327,7 +1327,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Send data to browser.
-		$this->send_data( $data );
+		wp_send_json( $data );
 
 	}
 
@@ -1359,7 +1359,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
 
 				// Send data to browser.
-				$this->send_data( $data );
+				wp_send_json( $data );
 				return;
 
 			}
@@ -1443,7 +1443,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Send data to browser.
-		$this->send_data( $data );
+		wp_send_json( $data );
 
 	}
 
@@ -1475,7 +1475,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
 
 				// Send data to browser.
-				$this->send_data( $data );
+				wp_send_json( $data );
 				return;
 
 			}
@@ -1575,7 +1575,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Send data to browser.
-		$this->send_data( $data );
+		wp_send_json( $data );
 
 	}
 
@@ -1607,7 +1607,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				delete_option( '_civi_eo_tax_eo_to_civi_offset' );
 
 				// Send data to browser.
-				$this->send_data( $data );
+				wp_send_json( $data );
 				return;
 
 			}
@@ -1723,7 +1723,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Send data to browser.
-		$this->send_data( $data );
+		wp_send_json( $data );
 
 	}
 
@@ -2700,32 +2700,5 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	}
 
 
-
-	/**
-	 * Send JSON data to the browser.
-	 *
-	 * @since 0.2.4
-	 *
-	 * @param array $data The data to send.
-	 */
-	private function send_data( $data ) {
-
-		// Is this an AJAX request?
-		if ( defined( 'DOING_AJAX' ) AND DOING_AJAX ) {
-
-			// Set reasonable headers.
-			header('Content-type: text/plain');
-			header("Cache-Control: no-cache");
-			header("Expires: -1");
-
-			// Echo.
-			echo json_encode( $data );
-
-			// Die.
-			exit();
-
-		}
-
-	}
 
 } // Class ends.

@@ -289,8 +289,8 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		// init data
 		$data['success'] = 'true';
 
-		// send data to browser
-		$this->send_data( $data );
+		// Send data to browser.
+		wp_send_json( $data );
 
 	}
 
@@ -416,35 +416,6 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 		// Okay to delete now.
 		$this->cfcr->redirect_api->delete( (array) $existing );
-
-	}
-
-
-
-	/**
-	 * Send JSON data to the browser.
-	 *
-	 * @since 0.5.3
-	 *
-	 * @param array $data The data to send.
-	 */
-	private function send_data( $data ) {
-
-		// Is this an AJAX request?
-		if ( defined( 'DOING_AJAX' ) AND DOING_AJAX ) {
-
-			// Set reasonable headers.
-			header('Content-type: text/plain');
-			header("Cache-Control: no-cache");
-			header("Expires: -1");
-
-			// Echo.
-			echo json_encode( $data );
-
-			// Die!
-			exit();
-
-		}
 
 	}
 
