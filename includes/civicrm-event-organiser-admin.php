@@ -319,13 +319,15 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		} else {
 
-			// Add the admin page to the Settings menu.
-			$this->parent_page = add_options_page(
-				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ), // Page title.
-				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ), // Menu title.
+			// Add the admin page to the CiviCRM menu.
+			$this->parent_page = add_submenu_page(
+				'CiviCRM', // Parent slug.
+				__( 'CiviCRM Event Organiser: Settings', 'civicrm-event-organiser' ), // Page title.
+				__( 'Event Organiser', 'civicrm-event-organiser' ), // Menu title.
 				'manage_options', // Required caps.
 				'civi_eo_parent', // Slug name.
-				[ $this, 'page_settings' ] // Callback.
+				[ $this, 'page_settings' ], // Callback.
+				30
 			);
 
 		}

@@ -354,6 +354,14 @@ function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 		return $links;
 	}
 
+	// Add links only when CiviCRM is fully installed.
+	if ( ! defined( 'CIVICRM_INSTALLED' ) ) {
+		return $links;
+	}
+	if ( ! CIVICRM_INSTALLED ) {
+		return $links;
+	}
+
 	// Add settings link.
 	if ( $file == plugin_basename( dirname( __FILE__ ) . '/civicrm-event-organiser.php' ) ) {
 
@@ -361,11 +369,15 @@ function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 		if ( is_network_admin() ) {
 			$link = add_query_arg( [ 'page' => 'civi_eo_parent' ], network_admin_url( 'settings.php' ) );
 		} else {
-			$link = add_query_arg( [ 'page' => 'civi_eo_parent' ], admin_url( 'options-general.php' ) );
+			$link = add_query_arg( [ 'page' => 'civi_eo_parent' ], admin_url( 'admin.php' ) );
 		}
 
 		// Add settings link.
 		$links[] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'Settings', 'civicrm-event-organiser' ) . '</a>';
+
+		// Add Paypal link.
+		$paypal = 'https://www.paypal.me/interactivist';
+		$links[] = '<a href="' . $paypal . '" target="_blank">' . __( 'Donate!', 'civicrm-event-organiser' ) . '</a>';
 
 	}
 
