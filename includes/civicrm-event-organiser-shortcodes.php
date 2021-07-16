@@ -131,14 +131,14 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 			return $markup;
 		}
 
-		// Combine into list.
-		$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
-
-		// Top and tail.
-		$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
-
 		// Is it recurring?
 		if ( eo_recurs() ) {
+
+			// Combine into list.
+			$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
+
+			// Top and tail.
+			$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
 
 			// Wrap in unordered list.
 			$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
@@ -158,7 +158,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 		} else {
 
 			// Show link.
-			$markup .= $list . "\n";
+			$markup .= array_pop( $links );
 
 		}
 
