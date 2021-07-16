@@ -671,7 +671,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$profiles = $this->plugin->civi->get_registration_profiles_select();
 
 		// Include template file.
-		include( CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/settings.php' );
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/settings.php';
 
 	}
 
@@ -704,7 +704,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$types = $this->plugin->taxonomy->get_event_types_select();
 
 		// Include template file.
-		include( CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/manual-sync.php' );
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/manual-sync.php';
 
 	}
 

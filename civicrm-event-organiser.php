@@ -196,38 +196,18 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public function include_files() {
 
-		// Load our Term Description class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-term-html.php' );
-
-		// Load our Admin/DB class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-admin.php' );
-
-		// Load our CiviCRM class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-civi.php' );
-
-		// Load our Event Organiser class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo.php' );
-
-		// Load our Event Organiser Venue Sync class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo-venue.php' );
-
-		// Load our Taxonomy Sync class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-taxonomy.php' );
-
-		// Load our Shortcodes class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-shortcodes.php' );
-
-		// Load our template functions.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-functions.php' );
-
-		// Load our CiviCRM Profile Sync class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cwps.php' );
-
-		// Load our CiviCRM ACF Integration class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cai.php' );
-
-		// Load our Caldera Forms CiviCRM Redirect class.
-		require( CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cfcr.php' );
+		// Load our class files.
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-term-html.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-admin.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-civi.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo-venue.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-taxonomy.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-shortcodes.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-functions.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cwps.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cai.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cfcr.php';
 
 	}
 
