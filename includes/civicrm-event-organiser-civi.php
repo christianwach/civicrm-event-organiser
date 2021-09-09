@@ -933,6 +933,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Assign Event Type value.
 		$civi_event['event_type_id'] = $type_value;
 
+		// CiviEvent registration confirmation screen enabled by default.
+		$civi_event['is_confirm_enabled'] = 1;
+
+		// Get CiviEvent registration confirmation screen value.
+		$is_confirm_enabled = $this->get_registration_confirm_enabled( $post->ID );
+
+		// Set confirmation screen value to our params if we get one.
+		if ( $is_confirm_enabled == 0 ) {
+			$civi_event['is_confirm_enabled'] = 0;
+		}
+
 		/**
 		 * Filter prepared CiviEvent.
 		 *
@@ -2968,6 +2979,54 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// --<
 		return $html;
+
+	}
+
+
+
+	// -------------------------------------------------------------------------
+
+
+
+	/**
+	 * Get the default registration form confirmation page setting for an EO event.
+	 *
+	 * Falls back to the default as set on the plugin settings screen.
+	 * Falls back to false otherwise.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @param int $post_id The numeric ID of an EO event.
+	 * @return int|bool $setting The default registration form confirmation page setting, false on failure.
+	 */
+	public function get_registration_confirm_enabled( $post_id = null ) {
+
+		// Init with impossible value.
+		$setting = false;
+
+		// Do we have a default set?
+		$default = $this->plugin->db->option_get( 'civi_eo_event_default_confirm' );
+
+		// Override with default value if we have one.
+		if ( $default !== '' AND is_numeric( $default ) ) {
+			$setting = absint( $default );
+		}
+
+		// If we have a post.
+		if ( isset( $post_id ) AND is_numeric( $post_id ) ) {
+
+			// Get stored value.
+			$stored_setting = $this->plugin->eo->get_event_registration_confirm( $post_id );
+
+			// Override with stored value if we get a value.
+			if ( $stored_setting !== '' AND is_numeric( $stored_setting ) ) {
+				$setting = absint( $stored_setting );
+			}
+
+		}
+
+		// --<
+		return $setting;
 
 	}
 

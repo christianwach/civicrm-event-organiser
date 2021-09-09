@@ -90,11 +90,22 @@ defined( 'ABSPATH' ) || exit;
 						</select>
 						<p class="description"><?php _e( 'Event Registration Pages require a Profile in order to display correctly.' ); ?></p>
 						<?php if ( $profile_required ) : ?>
-							<p class="description"><?php _e( 'Please select a default Profile for Event Registration Pages.' ); ?></p>
+							<div class="notice notice-warning inline"><p><?php _e( 'Please select a default Profile for Event Registration Pages.' ); ?></p></div>
 						<?php endif; ?>
 					</td>
 				</tr>
 			<?php endif; ?>
+
+			<tr valign="top">
+				<th scope="row"><?php _e( 'Default CiviCRM Event Registration Confirmation Screen Setting', 'civicrm-event-organiser' ); ?></th>
+				<td>
+					<input type="checkbox" id="civi_eo_event_default_confirm" name="civi_eo_event_default_confirm" value="1"<?php echo $confirm_checked; ?>>
+					<label for="civi_eo_event_default_confirm"><?php _e( 'Use a Registration Confirmation Screen for free Events.' ); ?></label>
+					<?php if ( $confirm_required ) : ?>
+						<div class="notice notice-warning inline"><p><?php _e( 'Please choose the default setting for Registration Confirmation Screens.' ); ?></p></div>
+					<?php endif; ?>
+				</td>
+			</tr>
 
 			<?php
 

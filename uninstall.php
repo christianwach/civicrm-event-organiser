@@ -23,6 +23,7 @@ global $civicrm_wp_event_organiser;
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_version' );
 
 // Delete defaults.
+$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_confirm' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_profile' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_role' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_type' );

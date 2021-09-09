@@ -106,6 +106,17 @@ body.js .civi_eo_event_reg_toggle {
 				</p>
 			</div>
 
+			<div class="civi_eo_event_option_block">
+				<p>
+					<label for="civi_eo_event_confirm"><?php _e( 'Use a Confirmation Screen:', 'civicrm-event-organiser' ); ?></label>
+					<input type="checkbox" id="civi_eo_event_confirm" name="civi_eo_event_confirm" value="1"<?php echo $confirm_checked; ?> />
+				</p>
+
+				<p class="description">
+					<?php _e( 'If this is a free Event, use a Registration Confirmation Screen.', 'civicrm-event-organiser' ); ?>
+				</p>
+			</div>
+
 			<?php
 
 			/**

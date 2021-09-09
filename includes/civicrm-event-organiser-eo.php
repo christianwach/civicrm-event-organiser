@@ -608,10 +608,21 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$this->set_event_role( $event_id );
 		}
 
+		// Save event meta if the event has a registration confirmation page setting specified.
+		if (
+			isset( $civi_event['is_confirm_enabled'] ) AND
+			$civi_event['is_confirm_enabled'] == 1
+		) {
+			$this->set_event_registration_confirm( $event_id, $civi_event['is_confirm_enabled'] );
+		} else {
+			$this->set_event_registration_confirm( $event_id, '0' );
+		}
+
 		/*
 		 * Syncing Registration Profiles presents us with some issues: when this
 		 * method is called from an update to a CiviEvent via the CiviCRM admin
 		 * interface, we cannot determine what the new Registration Profile is.
+		 *
 		 * This is because Registration Profiles are updated *after* the
 		 * CiviEvent has been saved in `CRM_Event_Form_ManageEvent_Registration`
 		 * and `CRM_Event_BAO_Event::add($params)` has been called.
@@ -619,12 +630,16 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * Nor can we hook into `civicrm_post` to catch updates to UF_Join items
 		 * because the hook does not fire in class CRM_Core_BAO_UFJoin.
 		 *
-		 * This leaves us with only a few options: (a) We assume that the update
-		 * is being done via the CiviCRM admin interface and hook into
-		 * `civicrm_postProcess` or (b) we find a WordPress hook that fires
-		 * after this process has completed and use that instead. To do so, we
-		 * would need to know some information about the event that is being
-		 * processed right now.
+		 * This leaves us with only a few options:
+		 *
+		 * (a) We assume that the update is being done via the CiviCRM admin
+		 * interface and hook into `civicrm_postProcess`
+		 *
+		 * or:
+		 *
+		 * (b) we find a WordPress hook that fires after this process has
+		 * completed and use that instead. To do so, we would need to know some
+		 * information about the event that is being processed right now.
 		 */
 
 		// Save some data.
@@ -634,6 +649,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		];
 
 		// Let's hook into postProcess for now.
+		// TODO: This will not work when the Event is updated via the API.
 		add_action( 'civicrm_postProcess', [ $this, 'maybe_update_event_registration_profile' ], 10, 2 );
 
 		/**
@@ -847,6 +863,15 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Get registration profiles.
 		$profiles = $this->plugin->civi->get_registration_profiles_select( $event );
+
+		// Get the current confirmation page setting.
+		$confirm_enabled = $this->plugin->civi->get_registration_confirm_enabled( $event->ID );
+
+		// Set checkbox status.
+		$confirm_checked = '';
+		if ( $confirm_enabled ) {
+			$confirm_checked = ' checked="checked"';
+		}
 
 		// Show Event Sync Metabox.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/event-sync-metabox.php';
@@ -1285,6 +1310,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Save registration profile.
 		$this->update_event_registration_profile( $event_id );
 
+		// Save registration confirmation page setting.
+		$this->update_event_registration_confirm( $event_id );
+
 		/**
 		 * Broadcast end of componenents update.
 		 *
@@ -1638,6 +1666,105 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Clear saved data.
 		unset( $this->sync_data );
+
+	}
+
+
+
+	// -------------------------------------------------------------------------
+
+
+
+	/**
+	 * Update event registration confirmation screen value from EO meta box.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @param int $event_id The numeric ID of the event.
+	 * @param str $value Whether the registration confirmation screen is enabled or not.
+	 */
+	public function update_event_registration_confirm( $event_id, $value = '0' ) {
+
+		// Retrieve meta value.
+		if ( isset( $_POST['civi_eo_event_confirm'] ) AND $_POST['civi_eo_event_confirm'] == '1' ) {
+			$value = '1';
+		} else {
+			$value = '0';
+		}
+
+		// Go ahead and set the value.
+		$this->set_event_registration_confirm( $event_id, $value );
+
+	}
+
+
+
+	/**
+	 * Get event registration confirmation screen value.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @param int $post_id The numeric ID of the WP post.
+	 * @return int $setting The event registration confirmation screen setting for the CiviEvent.
+	 */
+	public function get_event_registration_confirm( $post_id ) {
+
+		// Get the meta value.
+		$setting = get_post_meta( $post_id, '_civi_registration_confirm', true );
+
+		// If it's not yet set it will be an empty string, so cast as boolean.
+		if ( $setting === '' ) {
+			$setting = 1; // The default in CiviCRM is to show a confirmation screen.
+		}
+
+		// --<
+		return absint( $setting );
+
+	}
+
+
+
+	/**
+	 * Update event registration confirmation screen value.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @param int $event_id The numeric ID of the event.
+	 * @param int $setting The event registration confirmation screen setting for the CiviEvent.
+	 */
+	public function set_event_registration_confirm( $event_id, $setting = null ) {
+
+		// If not set.
+		if ( is_null( $setting ) ) {
+
+			// Do we have a default set?
+			$default = $this->plugin->db->option_get( 'civi_eo_event_default_confirm' );
+
+			// Override with default value if we get one.
+			if ( $default !== '' AND is_numeric( $default ) ) {
+				$setting = absint( $default );
+			}
+
+		}
+
+		// Update event meta.
+		update_post_meta( $event_id,  '_civi_registration_confirm', $setting );
+
+	}
+
+
+
+	/**
+	 * Delete event registration confirmation screen setting for a CiviEvent.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @param int $post_id The numeric ID of the WP post.
+	 */
+	public function clear_event_registration_confirm( $post_id ) {
+
+		// Delete the meta value.
+		delete_post_meta( $post_id, '_civi_registration_confirm' );
 
 	}
 

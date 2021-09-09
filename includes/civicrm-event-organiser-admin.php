@@ -184,7 +184,14 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Show an admin notice for possibly missing default profile setting.
+		$shown = false;
 		if ( 'fgffgs' == $this->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
+			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
+			$shown = true;
+		}
+
+		// Show an admin notice for possibly missing default confirmation page setting.
+		if ( $shown === false AND 'fgffgs' == $this->option_get( 'civi_eo_event_default_confirm', 'fgffgs' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 		}
 
@@ -660,6 +667,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$profile_required = true;
 		}
 
+		// Check for possibly missing default confirmation page setting.
+		$confirm_required = false;
+		if ( 'fgffgs' == $this->option_get( 'civi_eo_event_default_confirm', 'fgffgs' ) ) {
+			$confirm_required = true;
+		}
+
 		// Get admin page URLs.
 		$urls = $this->page_get_urls();
 
@@ -671,6 +684,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// Get all event registration profiles.
 		$profiles = $this->plugin->civi->get_registration_profiles_select();
+
+		// Get the current confirmation page setting.
+		$confirm_checked = '';
+		$confirm_enabled = $this->plugin->civi->get_registration_confirm_enabled();
+		if ( $confirm_enabled ) {
+			$confirm_checked = ' checked="checked"';
+		}
 
 		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/settings.php';
@@ -904,27 +924,29 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$civi_eo_event_default_role = '0';
 		$civi_eo_event_default_type = '0';
 		$civi_eo_event_default_profile = '0';
+		$civi_eo_event_default_confirm = '';
 
 		// Get variables.
 		extract( $_POST );
 
-		// Sanitise.
-		$civi_eo_event_default_role = absint( $civi_eo_event_default_role );
-
-		// Save option.
+		// Sanitise and save option.
+		$civi_eo_event_default_role = (int) $civi_eo_event_default_role;
 		$this->option_save( 'civi_eo_event_default_role', $civi_eo_event_default_role );
 
-		// Sanitise.
-		$civi_eo_event_default_type = absint( $civi_eo_event_default_type );
-
-		// Save option.
+		// Sanitise and save option.
+		$civi_eo_event_default_type = (int) $civi_eo_event_default_type;
 		$this->option_save( 'civi_eo_event_default_type', $civi_eo_event_default_type );
 
-		// Sanitise.
-		$civi_eo_event_default_profile = absint( $civi_eo_event_default_profile );
+		// Sanitise and save option.
+		$civi_eo_event_default_profile = (int) $civi_eo_event_default_profile;
+		$this->option_save( 'civi_eo_event_default_profile', $civi_eo_event_default_profile );
 
 		// Save option.
-		$this->option_save( 'civi_eo_event_default_profile', $civi_eo_event_default_profile );
+		if ( $civi_eo_event_default_confirm == '1' ) {
+			$this->option_save( 'civi_eo_event_default_confirm', '1' );
+		} else {
+			$this->option_save( 'civi_eo_event_default_confirm', '0' );
+		}
 
 		/**
 		 * Broadcast end of settings update.
