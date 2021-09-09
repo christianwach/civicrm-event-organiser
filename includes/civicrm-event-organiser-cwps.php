@@ -148,6 +148,9 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		// Listen for queries from our Field Group class.
 		add_filter( 'cwps/acf/query_field_group_mapped', [ $this, 'query_field_group_mapped' ], 10, 2 );
 
+		// Listen for queries from the ACF Field class.
+		add_filter( 'cwps/acf/field/query_setting_choices', [ $this, 'query_setting_choices' ], 50, 3 );
+
 		// Listen for queries from our Custom Field class.
 		add_filter( 'cwps/acf/query_custom_fields', [ $this, 'query_custom_fields' ], 10, 2 );
 
@@ -367,6 +370,60 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 
 	// -------------------------------------------------------------------------
+
+
+
+	/**
+	 * Returns the choices for a Setting Field from this Entity when found.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @param array $choices The existing array of choices for the Setting Field.
+	 * @param array $field The ACF Field data array.
+	 * @param array $field_group The ACF Field Group data array.
+	 * @param bool $skip_check True if the check for Field Group should be skipped. Default false.
+	 * @return array $choices The modified array of choices for the Setting Field.
+	 */
+	public function query_setting_choices( $choices, $field, $field_group, $skip_check = false ) {
+
+		// Pass if this is not an Event Field Group.
+		$is_event_field_group = $this->is_event_field_group( $field_group );
+		if ( $is_event_field_group === false ) {
+			return $choices;
+		}
+
+		// Get the Custom Fields for CiviCRM Events.
+		$custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+
+		/**
+		 * Filter the Custom Fields.
+		 *
+		 * @since 0.6.4
+		 *
+		 * @param array The initially empty array of filtered Custom Fields.
+		 * @param array $custom_fields The CiviCRM Custom Fields array.
+		 * @param array $field The ACF Field data array.
+		 */
+		$filtered_fields = apply_filters( 'cwps/acf/query_settings/custom_fields_filter', [], $custom_fields, $field );
+
+		// Pass if not populated.
+		if ( empty( $filtered_fields ) ) {
+			return $choices;
+		}
+
+		// Build Custom Field choices array for dropdown.
+		$custom_field_prefix = $this->cwps->civicrm->custom_field_prefix();
+		foreach( $filtered_fields AS $custom_group_name => $custom_group ) {
+			$custom_fields_label = esc_attr( $custom_group_name );
+			foreach( $custom_group AS $custom_field ) {
+				$choices[$custom_fields_label][$custom_field_prefix . $custom_field['id']] = $custom_field['label'];
+			}
+		}
+
+		// Return populated array.
+		return $choices;
+
+	}
 
 
 
