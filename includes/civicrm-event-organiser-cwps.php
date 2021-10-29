@@ -573,10 +573,15 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 */
 	public function is_event_field_group( $field_group ) {
 
+		// Bail if there's no Field Group ID.
+		if ( empty( $field_group['ID'] ) ) {
+			return false;
+		}
+
 		// Only do this once per Field Group.
 		static $pseudocache;
-		if ( isset( $pseudocache[$field_group['ID']] ) ) {
-			return $pseudocache[$field_group['ID']];
+		if ( isset( $pseudocache[ $field_group['ID'] ] ) ) {
+			return $pseudocache[ $field_group['ID'] ];
 		}
 
 		// Assume not visible.
@@ -596,8 +601,8 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		}
 
 		// Maybe add to pseudo-cache.
-		if ( ! isset( $pseudocache[$field_group['ID']] ) ) {
-			$pseudocache[$field_group['ID']] = $is_visible;
+		if ( ! isset( $pseudocache[ $field_group['ID'] ] ) ) {
+			$pseudocache[ $field_group['ID'] ] = $is_visible;
 		}
 
 		// --<
