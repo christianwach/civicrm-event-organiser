@@ -32,11 +32,11 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	public $plugin;
 
 	/**
-	 * CiviCRM Profile Sync reference.
+	 * CiviCRM Profile Sync plugin reference.
 	 *
 	 * @since 0.6.2
 	 * @access public
-	 * @var object $acf The CiviCRM Profile Sync plugin reference.
+	 * @var object $cwps The CiviCRM Profile Sync plugin reference.
 	 */
 	public $cwps = false;
 
@@ -126,7 +126,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		}
 
 		// Store reference.
-		$this->cwps = $plugin->acf;
+		$this->cwps = $plugin;
 
 		// Register hooks.
 		$this->register_hooks();
@@ -262,7 +262,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			$settings = get_field_object( $selector, $post_id );
 
 			// Get the CiviCRM Custom Field.
-			$custom_field_id = $this->cwps->civicrm->custom_field->custom_field_id_get( $settings );
+			$custom_field_id = $this->cwps->acf->civicrm->custom_field->custom_field_id_get( $settings );
 
 			// Skip if there's no corresponding CiviCRM Custom Field.
 			if ( empty( $custom_field_id ) ) {
@@ -273,7 +273,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			$code = 'custom_' . $custom_field_id;
 
 			// Parse value by field type.
-			$value = $this->cwps->acf->field->value_get_for_civicrm( $value, $settings['type'], $settings );
+			$value = $this->cwps->acf->acf->field->value_get_for_civicrm( $value, $settings['type'], $settings );
 
 			// Add it to the field data.
 			$event_data[$code] = $value;
@@ -393,7 +393,11 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		}
 
 		// Get the Custom Fields for CiviCRM Events.
-		$custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		if ( method_exists( $this->cwps->civicrm->custom_field, 'get_for_entity_type' ) ) {
+			$custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		} else {
+			$custom_fields = $this->cwps->acf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		}
 
 		/**
 		 * Filter the Custom Fields.
@@ -412,7 +416,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		}
 
 		// Build Custom Field choices array for dropdown.
-		$custom_field_prefix = $this->cwps->civicrm->custom_field_prefix();
+		$custom_field_prefix = $this->cwps->acf->civicrm->custom_field_prefix();
 		foreach( $filtered_fields AS $custom_group_name => $custom_group ) {
 			$custom_fields_label = esc_attr( $custom_group_name );
 			foreach( $custom_group AS $custom_field ) {
@@ -477,7 +481,11 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		}
 
 		// Get the Custom Fields for CiviCRM Events.
-		$event_custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		if ( method_exists( $this->cwps->civicrm->custom_field, 'get_for_entity_type' ) ) {
+			$event_custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		} else {
+			$event_custom_fields = $this->cwps->acf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		}
 
 		// Maybe merge with passed in array.
 		if ( ! empty( $event_custom_fields ) ) {
@@ -583,7 +591,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			];
 
 			// Do the check.
-			$is_visible = $this->cwps->acf->field_group->is_visible( $field_group, $params );
+			$is_visible = $this->cwps->acf->acf->field_group->is_visible( $field_group, $params );
 
 		}
 
@@ -640,7 +648,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		$event_id = $args['event_id'];
 
 		// Get all ACF Fields for the Event.
-		$acf_fields = $this->cwps->acf->field->fields_get_for_post( $event_id );
+		$acf_fields = $this->cwps->acf->acf->field->fields_get_for_post( $event_id );
 
 		// Bail if we don't have any Custom Fields in ACF.
 		if ( empty( $acf_fields['custom'] ) ) {
@@ -648,7 +656,11 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		}
 
 		// Get all the Custom Fields for CiviCRM Events.
-		$civicrm_custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		if ( method_exists( $this->cwps->civicrm->custom_field, 'get_for_entity_type' ) ) {
+			$civicrm_custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		} else {
+			$civicrm_custom_fields = $this->cwps->acf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		}
 
 		// Bail if there are none.
 		if ( empty( $civicrm_custom_fields ) ) {
@@ -701,10 +713,10 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			}
 
 			// Parse the value for ACF.
-			$value = $this->cwps->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $event_id );
+			$value = $this->cwps->acf->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $event_id );
 
 			// Update the value of the ACF Field.
-			$this->cwps->acf->field->value_update( $selector, $value, $event_id );
+			$this->cwps->acf->acf->field->value_update( $selector, $value, $event_id );
 
 		}
 
