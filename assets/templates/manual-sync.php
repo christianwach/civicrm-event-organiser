@@ -30,6 +30,10 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php wp_nonce_field( 'civi_eo_manual_sync_action', 'civi_eo_manual_sync_nonce' ); ?>
 
+		<p><?php _e( 'Please note: Manual Sync is only really intended for use on initial setup of this plugin. It may produce inconsistent results once you have linked Event Organiser events and CiviEvents. Always back up before using this feature.', 'civicrm-event-organiser' ); ?></p>
+
+		<hr>
+
 		<p><?php _e( 'Things can be a little complicated on initial setup because there can be data in WordPress or CiviCRM or both. The most robust procedure for setting up the sync between Event Organiser events and CiviEvents is to sync in the following order:', 'civicrm-event-organiser' ); ?></p>
 
 		<ol>
