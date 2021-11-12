@@ -370,6 +370,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 				// Disable corresponding CiviEvent.
 				$return = $this->plugin->civi->disable_civi_event( $civi_event_id );
 
+				// Maybe delete the CiviEvent correspondence for this occurrence.
+				if ( doing_action( 'delete_post' ) ) {
+					$this->plugin->db->clear_event_correspondence( $post_id, $occurrence_id, $civi_event_id );
+				}
+
 			}
 
 		}
@@ -379,19 +384,18 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10, 4 );
 		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_deleted' ], 10, 4 );
 
-		// TODO: Decide if we delete CiviEvents.
-		return;
-
 		// Bail if an event is not being deleted.
 		if ( ! doing_action( 'delete_post' ) ) {
 			return;
 		}
 
+		// Delete all the stored CiviEvent correspondences for this EO Event.
+		//$this->plugin->db->clear_event_correspondences( $post_id, $correspondences );
+
+		// TODO: Decide if we delete CiviEvents.
+
 		// Delete those CiviCRM events - not used at present.
 		//$this->plugin->civi->delete_civi_events( $correspondences );
-
-		// Delete our stored CiviCRM event IDs.
-		//$this->plugin->db->clear_event_correspondences( $post_id );
 
 	}
 

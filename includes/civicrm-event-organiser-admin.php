@@ -2034,11 +2034,14 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @param int $post_id The numeric ID of the WP post.
 	 * @param int $occurrence_id The numeric ID of the Event Organiser event occurrence.
+	 * @param int|bool $civi_event_id The numeric ID of the CiviEvent.
 	 */
-	public function clear_event_correspondence( $post_id, $occurrence_id ) {
+	public function clear_event_correspondence( $post_id, $occurrence_id, $civi_event_id = false ) {
 
-		// Get CiviEvent ID.
-		$civi_event_id = $this->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
+		// Get CiviEvent ID if not passed in.
+		if ( empty( $civi_event_id ) ) {
+			$civi_event_id = $this->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
+		}
 
 		// Get all CiviEvent data held in option.
 		$civi_event_data = $this->get_all_civi_to_eo_correspondences();
@@ -2047,11 +2050,18 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		if ( $civi_event_id !== false ) {
 
 			// Unset the item with this key in the option array.
-			unset( $civi_event_data[$civi_event_id] );
+			if ( isset( $civi_event_data[ $civi_event_id ] ) ) {
+				unset( $civi_event_data[ $civi_event_id ] );
+			}
 
 			// Store updated array.
 			$this->option_save( 'civi_eo_civi_event_data', $civi_event_data );
 
+		}
+
+		// Bail if an event is being deleted.
+		if ( doing_action( 'delete_post' ) ) {
+			return;
 		}
 
 		// Get existing "live".
@@ -2095,11 +2105,14 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @since 0.1
 	 *
 	 * @param int $post_id The numeric ID of the WP post.
+	 * @param array $civi_event_ids The array of CiviCRM Event IDs.
 	 */
-	public function clear_event_correspondences( $post_id ) {
+	public function clear_event_correspondences( $post_id, $civi_event_ids = [] ) {
 
-		// Get CiviEvent IDs from post meta.
-		$civi_event_ids = $this->get_civi_event_ids_by_eo_event_id( $post_id );
+		// Maybe get CiviEvent IDs from post meta.
+		if ( empty( $civi_event_ids ) ) {
+			$civi_event_ids = $this->get_civi_event_ids_by_eo_event_id( $post_id );
+		}
 
 		// Get CiviEvent data held in option.
 		$civi_event_data = $this->get_all_civi_to_eo_correspondences();
@@ -2109,7 +2122,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 			// Unset items with the relevant key in the option array.
 			foreach( $civi_event_ids AS $civi_event_id ) {
-				unset( $civi_event_data[$civi_event_id] );
+				if ( isset( $civi_event_data[ $civi_event_id ] ) ) {
+					unset( $civi_event_data[ $civi_event_id ] );
+				}
 			}
 
 			// Store updated array.
