@@ -16,17 +16,6 @@ Keep Event Organiser plugin Events in sync with CiviCRM Events.
 
 A WordPress plugin for syncing Event Organiser Events, Venues and Event Categories to their corresponding entities in CiviCRM.
 
-### Requirements
-
-This plugin requires at least WordPress 4.9 and CiviCRM 4.7.
-
-It also requires:
-
-* [Event Organiser](https://wordpress.org/plugins/event-organiser/) version 3.0 or greater
-* [Radio Buttons for Taxonomies](https://wordpress.org/plugins/radio-buttons-for-taxonomies/) to ensure only one event type is selected
-
-Be aware that this plugin is in active development. Test often, test thoroughly and open an issue if you find a problem.
-
 #### ACF Integration
 
 This plugin is compatible with [CiviCRM Profile Sync](https://wordpress.org/plugins/civicrm-wp-profile-sync/) which enables integration of Custom Fields on CiviCRM Events with ACF Fields attached to the Event Organiser "Event" Post Type.
@@ -42,6 +31,17 @@ The plugin implements automatic linking to an event's online registration page(s
 ### Apple Calendar compatibility
 
 There is an issue with [Apple Calendar's display of Event Organiser iCal feeds](https://github.com/stephenharris/Event-Organiser/issues/356) which means that Apple Calendar requires special handling. To solve this, you can install the [Event Organiser ICS Feed for Apple Calendar](https://github.com/christianwach/event-organiser-apple-cal) plugin and use its shortcode instead of the one supplied by Event Organiser.
+
+### Requirements
+
+This plugin requires at least WordPress 4.9 and CiviCRM 5.13.
+
+It also requires:
+
+* [Event Organiser](https://wordpress.org/plugins/event-organiser/) version 3.0 or greater
+* [Radio Buttons for Taxonomies](https://wordpress.org/plugins/radio-buttons-for-taxonomies/) to ensure only one event type is selected
+
+Be aware that this plugin is in active development. Test often, test thoroughly and open an issue if you find a problem.
 
 
 
