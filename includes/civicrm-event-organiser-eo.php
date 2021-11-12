@@ -673,6 +673,37 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 
 
+	/**
+	 * Updates the Post Status of an EO event.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @return int $post_id The numeric ID of the EO Event.
+	 * @param str $status The status for the EO Event.
+	 */
+	public function update_event_status( $post_id, $status ) {
+
+		// Remove hooks in case of recursion.
+		remove_action( 'wp_insert_post', [ $this, 'insert_post' ], 10 );
+		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10 );
+
+		// Set the EO Event to the status.
+		$post_data = [
+			'ID' => $post_id,
+			'post_status' => $status,
+		];
+
+		// Do the update.
+		wp_update_post( $post_data );
+
+		// Re-add hooks.
+		add_action( 'wp_insert_post', [ $this, 'insert_post' ], 10, 2 );
+		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10, 1 );
+
+	}
+
+
+
 	// -------------------------------------------------------------------------
 
 

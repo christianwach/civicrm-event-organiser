@@ -845,6 +845,16 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			return;
 		}
 
+		// Clear the correspondence between the Occurrence and the CiviEvent.
+		$post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $objectId );
+		$occurrence_id = $this->plugin->db->get_eo_occurrence_id_by_civi_event_id( $objectId );
+		$this->plugin->db->clear_event_correspondence( $post_id, $occurrence_id, $objectId );
+
+		// Set the EO Event to 'draft' status if it's not a recurring Event.
+		if ( ! eo_recurs( $post_id ) ) {
+			$this->plugin->eo->update_event_status( $post_id, 'draft' );
+		}
+
 	}
 
 
