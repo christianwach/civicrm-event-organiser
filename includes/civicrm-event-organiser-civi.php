@@ -697,21 +697,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Update a single EO event - or create if it doesn't exist.
 		$event_id = $this->plugin->eo->update_event( (array) $objectRef );
 
-		// Kick out if not event object.
+		// Bail if we don't get an Event ID.
 		if ( is_wp_error( $event_id ) ) {
-
-			// Log error.
-			$e = new Exception;
-			$trace = $e->getTraceAsString();
-			error_log( print_r( [
-				'method' => __METHOD__,
-				'error' => $event_id->get_error_message(),
-				'backtrace' => $trace,
-			], true ) );
-
-			// Kick out.
 			return;
-
 		}
 
 		// Get occurrences.
@@ -786,21 +774,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		// Update the EO event.
 		$event_id = $this->plugin->eo->update_event( $updated_event );
 
-		// Kick out if not event object.
+		// Bail if we don't get an Event ID.
 		if ( is_wp_error( $event_id ) ) {
-
-			// Log error first
-			$e = new Exception;
-			$trace = $e->getTraceAsString();
-			error_log( print_r( [
-				'method' => __METHOD__,
-				'error' => $event_id->get_error_message(),
-				'backtrace' => $trace,
-			], true ) );
-
-			// Bail
 			return;
-
 		}
 
 		// Get occurrences.

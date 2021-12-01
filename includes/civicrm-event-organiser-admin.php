@@ -1699,6 +1699,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				// Update a single EO event - or create if it doesn't exist.
 				$event_id = $this->plugin->eo->update_event( $civi_event );
 
+				// Skip if there's an error.
+				if ( is_wp_error( $event_id ) ) {
+					continue;
+				}
+
 				// Get occurrences.
 				$occurrences = eo_get_the_occurrences_of( $event_id );
 

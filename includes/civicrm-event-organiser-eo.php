@@ -442,7 +442,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * @since 0.1
 	 *
 	 * @param array $civi_event An array of data for the CiviEvent.
-	 * @return int $event_id The numeric ID of the event.
+	 * @return int|WP_Error $event_id The numeric ID of the EO Event, or WP_Error on failure.
 	 */
 	public function update_event( $civi_event ) {
 
@@ -474,20 +474,29 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		];
 
-		// Define post.
+		/*
+		 * Init Post array with quick fixes for Windows.
+		 * Note: These may no longer be needed.
+		 */
 		$post_data = [
-
-			// Standard post data.
-			'post_title' => $civi_event['title'],
-			'post_content' => isset( $civi_event['description'] ) ? $civi_event['description'] : '',
-			'post_excerpt' => isset( $civi_event['summary']) ? $civi_event['summary'] : '',
-
-			// Quick fixes for Windows which need to be present.
 			'to_ping' => '',
 			'pinged' => '',
 			'post_content_filtered' => '',
-
 		];
+
+		// We must have at minimum a Post title.
+		$post_data['post_title'] = __( 'Untitled CiviCRM Event', 'civicrm-event-organiser' );
+		if ( ! empty( $civi_event['title'] ) ) {
+			$post_data['post_title'] = $civi_event['title'];
+		}
+
+		// Assign Description and Summary if present.
+		if ( ! empty( $civi_event['description'] ) ) {
+			$post_data['post_content'] = $civi_event['description'];
+		}
+		if ( ! empty( $civi_event['summary'] ) ) {
+			$post_data['post_excerpt'] = $civi_event['summary'];
+		}
 
 		// Test for created date, which may be absent.
 		if ( isset( $civi_event['created_date'] ) AND ! empty( $civi_event['created_date'] ) ) {
@@ -499,6 +508,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$post_data['post_date'] = $datetime->format( 'Y-m-d H:i:s' );
 
 		}
+
+		// Init taxonomy params.
+		$post_data['tax_input'] = [];
 
 		// Init venue as undefined.
 		$venue_id = 0;
@@ -523,6 +535,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		}
 
+		// Add Venue ID if we get one.
+		if ( ! empty( $venue_id ) && is_int( $venue_id ) ) {
+			$post_data['tax_input']['event-venue'] = $venue_id;
+		}
+
 		// Init category as undefined.
 		$terms = [];
 
@@ -537,22 +554,25 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// Does this type have an existing term?
 			$term_id = $this->plugin->taxonomy->get_term_id( $type );
 
-			// If not ten create one and assign term ID.
+			// If not then create one and assign Term ID.
 			if ( $term_id === false ) {
 				$term = $this->plugin->taxonomy->create_term( $type );
-				$term_id = $term['term_id'];
+				if ( $term !== false ) {
+					$term_id = $term['term_id'];
+				}
 			}
 
 			// Define as array.
-			$terms = [ absint( $term_id ) ];
+			if ( is_numeric( $term_id ) ) {
+				$terms = [ (int) $term_id ];
+			}
 
 		}
 
-		// Add to post data.
-		$post_data['tax_input'] = [
-			'event-venue' => [ absint( $venue_id ) ],
-			'event-category' => $terms,
-		];
+		// Add Category if we get one.
+		if ( ! empty( $terms ) ) {
+			$post_data['tax_input']['event-category'] = $terms;
+		}
 
 		// Default to published.
 		$post_data['post_status'] = 'publish';
@@ -586,6 +606,18 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$event_id = eo_insert_event( $post_data, $event_data );
 		} else {
 			$event_id = eo_update_event( $eo_post_id, $post_data, $event_data );
+		}
+
+		// Log and bail if there's an error.
+		if ( is_wp_error( $event_id ) ) {
+			$e = new Exception;
+			$trace = $e->getTraceAsString();
+			error_log( print_r( [
+				'method' => __METHOD__,
+				'error' => $event_id->get_error_message(),
+				'backtrace' => $trace,
+			], true ) );
+			return $event_id;
 		}
 
 		// Re-add hooks.
