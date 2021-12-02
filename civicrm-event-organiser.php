@@ -75,7 +75,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $eo_venue The Event Organiser venue utilities object.
+	 * @var object $eo_venue The Event Organiser Venue utilities object.
 	 */
 	public $eo_venue;
 
@@ -84,7 +84,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.4.2
 	 * @access public
-	 * @var object $taxonomy The taxonomy sync object.
+	 * @var object $taxonomy The Taxonomy sync object.
 	 */
 	public $taxonomy;
 
@@ -102,7 +102,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.2.1
 	 * @access public
-	 * @var object $term_html The HTML term descriptions object.
+	 * @var object $term_html The HTML Term Descriptions object.
 	 */
 	public $term_html;
 

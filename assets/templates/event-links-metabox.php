@@ -34,6 +34,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.3.6
  *
- * @param object $event The EO event object.
+ * @param object $event The EO Event object.
  */
 do_action( 'civicrm_event_organiser_event_links_meta_box_after', $event );

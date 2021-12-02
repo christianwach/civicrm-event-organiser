@@ -110,10 +110,10 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		// Query new Redirect Location.
 		add_action( 'wp_ajax_url_to_post_id', [ $this, 'url_to_post_id' ] );
 
-		// Filter the queried post types.
+		// Filter the queried Post Types.
 		add_filter( 'wp_link_query_args', array( $this, 'query_post_type' ) );
 
-		// Intercept save event components.
+		// Intercept Event components update.
 		add_action( 'civicrm_event_organiser_event_components_updated', [ $this, 'redirect_update' ] );
 
 	}
@@ -125,15 +125,15 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 
 	/**
-	 * Add our component to the Online Registration options in the event metabox.
+	 * Add our component to the Online Registration options in the Event metabox.
 	 *
 	 * @since 0.5.3
 	 *
-	 * @param object $event The EO event object.
+	 * @param object $event The EO Event object.
 	 */
 	public function metabox_append( $event ) {
 
-		// Get linked CiviEvents.
+		// Get linked CiviCRM Events.
 		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event->ID );
 
 		// Bail if there are none.
@@ -215,7 +215,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 
 	/**
-	 * Filter the post types in the switcher.
+	 * Filter the Post Types in the switcher.
 	 *
 	 * @since 0.5.3
 	 *
@@ -247,7 +247,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 
 	/**
-	 * Return the post ID for a given URL.
+	 * Return the Post ID for a given URL.
 	 *
 	 * @since 0.5.3
 	 */
@@ -297,11 +297,11 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 
 	/**
-	 * Update our component with the value from the event metabox.
+	 * Update our component with the value from the Event metabox.
 	 *
 	 * @since 0.5.3
 	 *
-	 * @param int $event_id The numeric ID of the EO event.
+	 * @param int $event_id The numeric ID of the EO Event.
 	 * @param int $redirect_post_id The numeric ID of the WordPress Post.
 	 */
 	public function redirect_update( $event_id, $redirect_post_id = 0 ) {
@@ -323,7 +323,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 			$is_active = absint( $_POST['civi_eo_event_redirect_active'] );
 		}
 
-		// Get linked CiviEvent IDs.
+		// Get linked CiviCRM Event IDs.
 		$civi_event_ids = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event_id );
 
 		// Set multiple status.
@@ -340,7 +340,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		// Get the Redirect Post object.
 		$redirect_post = get_post( $redirect_post_id );
 
-		// Get the CiviEvent ID.
+		// Get the CiviCRM Event ID.
 		$civi_event_id = array_pop( $civi_event_ids );
 
 		// Get existing redirect data.
@@ -376,15 +376,15 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 
 	/**
-	 * Maybe delete the redirect data for an event.
+	 * Maybe delete the redirect data for an Event.
 	 *
 	 * @since 0.5.3
 	 *
-	 * @param int $event_id The numeric ID of the EO event.
+	 * @param int $event_id The numeric ID of the EO Event.
 	 */
 	public function redirect_delete( $event_id ) {
 
-		// Get linked CiviEvent IDs.
+		// Get linked CiviCRM Event IDs.
 		$civi_event_ids = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event_id );
 
 		// Bail if there are none.
@@ -403,7 +403,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 			return;
 		}
 
-		// Get the CiviEvent ID.
+		// Get the CiviCRM Event ID.
 		$civi_event_id = array_pop( $civi_event_ids );
 
 		// Get existing redirect data.

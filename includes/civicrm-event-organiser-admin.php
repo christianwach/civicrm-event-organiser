@@ -75,9 +75,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @var object $step_counts The array of item counts to process per AJAX request.
 	 */
 	public $step_counts = [
-		'tax' => 5, // EO category terms & CiviCRM Event Types.
-		'venue' => 5, // EO venues & CiviCRM locations.
-		'event' => 1, // EO events & CiviCRM events.
+		'tax' => 5, // EO Category Terms & CiviCRM Event Types.
+		'venue' => 5, // EO Venues & CiviCRM Locations.
+		'event' => 1, // EO Events & CiviCRM Events.
 	];
 
 
@@ -151,7 +151,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			add_action( 'admin_menu', [ $this, 'admin_menu' ], 30 );
 		}
 
-		// Override "no category" option.
+		// Override "No Category" option.
 		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', [ $this, 'force_taxonomy' ], 30 );
 
 		// Add AJAX handlers.
@@ -195,7 +195,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 		}
 
-		// Maybe upgrade taxonomy to use "term meta".
+		// Maybe upgrade Taxonomy to use "term meta".
 		if ( $this->plugin->taxonomy->can_query_by_term_meta() ) {
 			if ( 'fgffgs' == $this->option_get( 'civi_eo_term_meta_enabled', 'fgffgs' ) ) {
 				$this->plugin->taxonomy->upgrade();
@@ -530,22 +530,22 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			CIVICRM_WP_EVENT_ORGANISER_VERSION // Version.
 		);
 
-		// Get all CiviEvent types and error check.
+		// Get all CiviCRM Event Types and error check.
 		$all_types = $this->plugin->taxonomy->get_event_types();
 		if ( $all_types === false ) {
 			$all_types['values'] = [];
 		}
 
-		// Get all EO event category terms.
+		// Get all EO Event Category Terms.
 		$all_terms = $this->plugin->taxonomy->get_event_categories();
 
-		// Get all Civi Event locations and error check.
+		// Get all Civi Event Locations and error check.
 		$all_locations = $this->plugin->civi->get_all_locations();
 		if ( $all_locations['is_error'] == '1' ) {
 			$all_locations['values'] = [];
 		}
 
-		// Get all EO venues.
+		// Get all EO Venues.
 		$all_venues = eo_get_venues();
 
 		// Get all Civi Events and error check.
@@ -576,7 +576,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'count' => count( $all_terms ),
 			],
 
-			// CiviCRM locations.
+			// CiviCRM Locations.
 			'locations' => [
 				'total' => __( '{{total}} locations to sync...', 'civicrm-event-organiser' ),
 				'current' => __( 'Processing locations {{from}} to {{to}}', 'civicrm-event-organiser' ),
@@ -584,7 +584,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'count' => count( $all_locations['values'] ),
 			],
 
-			// Event Organiser venues.
+			// Event Organiser Venues.
 			'venues' => [
 				'total' => __( '{{total}} venues to sync...', 'civicrm-event-organiser' ),
 				'current' => __( 'Processing venues {{from}} to {{to}}', 'civicrm-event-organiser' ),
@@ -592,7 +592,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'count' => count( $all_venues ),
 			],
 
-			// CiviCRM events.
+			// CiviCRM Events.
 			'civi_events' => [
 				'total' => __( '{{total}} events to sync...', 'civicrm-event-organiser' ),
 				'current' => __( 'Processing events {{from}} to {{to}}', 'civicrm-event-organiser' ),
@@ -600,7 +600,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'count' => count( $all_civi_events['values'] ),
 			],
 
-			// Event Organiser events.
+			// Event Organiser Events.
 			'eo_events' => [
 				'total' => __( '{{total}} events to sync...', 'civicrm-event-organiser' ),
 				'current' => __( 'Processing events {{from}} to {{to}}', 'civicrm-event-organiser' ),
@@ -676,13 +676,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get admin page URLs.
 		$urls = $this->page_get_urls();
 
-		// Get all participant roles.
+		// Get all Participant Roles.
 		$roles = $this->plugin->civi->get_participant_roles_select( $event = null );
 
 		// Get all Event Types.
 		$types = $this->plugin->taxonomy->get_event_types_select();
 
-		// Get all event registration profiles.
+		// Get all Event Registration Profiles.
 		$profiles = $this->plugin->civi->get_registration_profiles_select();
 
 		// Get the current confirmation page setting.
@@ -719,7 +719,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get admin page URLs.
 		$urls = $this->page_get_urls();
 
-		// Get all participant roles.
+		// Get all Participant Roles.
 		$roles = $this->plugin->civi->get_participant_roles_select( $event = null );
 
 		// Get all Event Types.
@@ -964,7 +964,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Stepped synchronisation of EO category terms to CiviCRM Event Types.
+	 * Stepped synchronisation of EO Category Terms to CiviCRM Event Types.
 	 *
 	 * @since 0.2.4
 	 */
@@ -1010,7 +1010,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		}
 
-		// Since WordPress 4.5.0, the category is specified in the arguments.
+		// Since WordPress 4.5.0, the Category is specified in the arguments.
 		if ( function_exists( 'unregister_taxonomy' ) ) {
 
 			// Construct args.
@@ -1022,7 +1022,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'offset' => $offset,
 			];
 
-			// Get all terms.
+			// Get all Terms.
 			$terms = get_terms( $args );
 
 		} else {
@@ -1035,7 +1035,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				'offset' => $offset,
 			];
 
-			// Get all terms.
+			// Get all Terms.
 			$terms = get_terms( 'event-category', $args );
 
 		}
@@ -1057,16 +1057,16 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$data['from'] = intval( $offset );
 			$data['to'] = $data['from'] + $diff;
 
-			// Sync each event term in turn.
+			// Sync each Event Term in turn.
 			foreach( $terms AS $term ) {
 
-				// Update CiviEvent term - or create if it doesn't exist.
+				// Update CiviCRM Event Term - or create if it doesn't exist.
 				$civi_event_type_id = $this->plugin->taxonomy->update_event_type( $term );
 
 				// Next on failure.
 				if ( $civi_event_type_id === false ) {
 
-					// Log failed event term first.
+					// Log failed Event Term first.
 					$e = new Exception;
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
@@ -1103,7 +1103,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Stepped synchronisation of CiviCRM Event Types to EO category terms.
+	 * Stepped synchronisation of CiviCRM Event Types to EO Category Terms.
 	 *
 	 * @since 0.2.4
 	 */
@@ -1195,7 +1195,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// Sync each Event Type in turn.
 			foreach( $types['values'] AS $type ) {
 
-				// Update CiviEvent term - or create if it doesn't exist.
+				// Update CiviCRM Event Term - or create if it doesn't exist.
 				$eo_term_id = $this->plugin->taxonomy->update_term( $type );
 
 				// Next on failure.
@@ -1238,7 +1238,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Stepped synchronisation of EO venues to CiviCRM locations.
+	 * Stepped synchronisation of EO Venues to CiviCRM Locations.
 	 *
 	 * @since 0.2.4
 	 */
@@ -1284,7 +1284,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		}
 
-		// Get venues.
+		// Get Venues.
 		$venues = eo_get_venues( [
 			'number' => $this->step_counts['venue'],
 			'offset' => $offset,
@@ -1311,8 +1311,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			foreach( $venues AS $venue ) {
 
 				/*
-				 * Manually add venue metadata because since EO version 3.0 it is
-				 * no longer added by default to the venue object.
+				 * Manually add Venue metadata because since EO version 3.0 it is
+				 * no longer added by default to the Venue object.
 				 *
 				 * @see https://github.com/stephenharris/Event-Organiser/commit/646220b336ba9c49d12bd17f5992e1391d0b411f
 				 */
@@ -1329,10 +1329,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				$venue->venue_lat = number_format( floatval( eo_get_venue_lat( $venue_id ) ), 6 );
 				$venue->venue_lng = number_format( floatval( eo_get_venue_lng( $venue_id ) ), 6 );
 
-				// Update Civi location - or create if it doesn't exist.
+				// Update Civi Location - or create if it doesn't exist.
 				$location = $this->plugin->civi->update_location( $venue );
 
-				// Store in EO venue.
+				// Store in EO Venue.
 				$this->plugin->eo_venue->store_civi_location( $venue->term_id, $location );
 
 			}
@@ -1358,7 +1358,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Stepped synchronisation of CiviCRM locations to EO venues.
+	 * Stepped synchronisation of CiviCRM Locations to EO Venues.
 	 *
 	 * @since 0.2.4
 	 */
@@ -1407,7 +1407,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Init CiviCRM.
 		if ( $this->plugin->civi->is_active() ) {
 
-			// Get CiviCRM locations.
+			// Get CiviCRM Locations.
 			$locations = civicrm_api( 'loc_block', 'get', [
 				'version' => '3',
 				'return' => 'all',
@@ -1448,7 +1448,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// Loop.
 			foreach( $locations['values'] AS $location ) {
 
-				// Update EO venue - or create if it doesn't exist.
+				// Update EO Venue - or create if it doesn't exist.
 				$this->plugin->eo_venue->update_venue( $location );
 
 			}
@@ -1474,7 +1474,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Stepped synchronisation of EO events to CiviCRM events.
+	 * Stepped synchronisation of EO Events to CiviCRM Events.
 	 *
 	 * @since 0.2.4
 	 */
@@ -1520,7 +1520,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		}
 
-		// Get "primary" events (i.e. not ordered by occurrence).
+		// Get "primary" Events (i.e. not ordered by Occurrence).
 		$events = eo_get_events( [
 			'numberposts' => $this->step_counts['event'],
 			'offset' => $offset,
@@ -1552,10 +1552,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// Loop.
 			foreach( $events AS $event ) {
 
-				// Get dates for this event.
+				// Get dates for this Event.
 				$dates = $this->plugin->eo->get_all_dates( $event->ID );
 
-				// Update CiviEvent - or create if it doesn't exist.
+				// Update CiviCRM Event - or create if it doesn't exist.
 				$this->plugin->civi->update_civi_events( $event, $dates );
 
 				// Make an array of params.
@@ -1606,7 +1606,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Stepped synchronisation of CiviCRM events to EO events.
+	 * Stepped synchronisation of CiviCRM Events to EO Events.
 	 *
 	 * @since 0.2.4
 	 */
@@ -1655,7 +1655,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Init CiviCRM.
 		if ( $this->plugin->civi->is_active() ) {
 
-			// Get CiviCRM events.
+			// Get CiviCRM Events.
 			$events = civicrm_api( 'event', 'get', [
 				'version' => 3,
 				'is_template' => 0,
@@ -1696,7 +1696,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// Loop.
 			foreach( $events['values'] AS $civi_event ) {
 
-				// Update a single EO event - or create if it doesn't exist.
+				// Update a single EO Event - or create if it doesn't exist.
 				$event_id = $this->plugin->eo->update_event( $civi_event );
 
 				// Skip if there's an error.
@@ -1704,11 +1704,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 					continue;
 				}
 
-				// Get occurrences.
+				// Get Occurrences.
 				$occurrences = eo_get_the_occurrences_of( $event_id );
 
-				// In this context, a CiviEvent can only have an EO event with a
-				// single occurrence associated with it, so use first item.
+				// In this context, a CiviCRM Event can only have an EO Event with a
+				// single Occurrence associated with it, so use first item.
 				$keys = array_keys( $occurrences );
 				$occurrence_id = array_pop( $keys );
 
@@ -1724,7 +1724,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 				];
 
 				/**
-				 * Broadcast that the CiviEvent has been synced.
+				 * Broadcast that the CiviCRM Event has been synced.
 				 *
 				 * Used internally to:
 				 *
@@ -1768,13 +1768,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * limitations on us. Ideally, I suppose, this plugin would define its own table
 	 * for the correspondences, but the existing tables will work.
 	 *
-	 * (a) A CiviEvent needs to know which post ID and which occurrence ID it is synced with.
-	 * (b) An EO event (post) needs to know the CiviEvents which are synced with it.
-	 * (c) An EO occurrence needs to know which CiviEvent it is synced with.
+	 * (a) A CiviCRM Event needs to know which Post ID and which Occurrence ID it is synced with.
+	 * (b) An EO Event (post) needs to know the CiviCRM Events which are synced with it.
+	 * (c) An EO Occurrence needs to know which CiviCRM Event it is synced with.
 	 *
-	 * So, given that CiviCRM seems to have no meta storage for CiviEvents, use a
-	 * WordPress option to store this data. We can now query the data by CiviEvent ID
-	 * and retrieve post ID and occurrence ID. The array looks like:
+	 * So, given that CiviCRM seems to have no meta storage for CiviCRM Events, use a
+	 * WordPress option to store this data. We can now query the data by CiviCRM Event ID
+	 * and retrieve Post ID and Occurrence ID. The array looks like:
 	 *
 	 * array(
 	 *     $civi_event_id => array(
@@ -1788,8 +1788,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *     ...
 	 * )
 	 *
-	 * In the reverse situation, we store an array of correspondences as post meta.
-	 * We will need to know the post ID to get it. The array looks like:
+	 * In the reverse situation, we store an array of correspondences as Post meta.
+	 * We will need to know the Post ID to get it. The array looks like:
 	 *
 	 * array(
 	 *     $occurrence_id => $civi_event_id,
@@ -1799,12 +1799,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * )
 	 *
 	 * In practice, however, if the sequence changes, then EO regenerates the
-	 * occurrences anyway, so our correspondences need to be rebuilt when that
+	 * Occurrences anyway, so our correspondences need to be rebuilt when that
 	 * happens. This makes the occurrence_id linkage useful only when sequences are
 	 * broken.
 	 *
-	 * There is an additional "orphans" array, so that when occurrences are added
-	 * (or added back) to a sequence, the corresponding CiviEvent may be reconnected
+	 * There is an additional "orphans" array, so that when Occurrences are added
+	 * (or added back) to a sequence, the corresponding CiviCRM Event may be reconnected
 	 * as long as none of its date and time data has changed.
 	 * -------------------------------------------------------------------------
 	 */
@@ -1812,22 +1812,22 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Clears all CiviEvents <-> Event Organiser event data.
+	 * Clears all CiviCRM Events <-> Event Organiser Event data.
 	 *
 	 * @since 0.1
 	 */
 	public function clear_all_correspondences() {
 
-		// Construct args for all event posts.
+		// Construct args for all Event Posts.
 		$args = [
 			'post_type' => 'event',
 			'numberposts' => -1,
 		];
 
-		// Get all event posts.
+		// Get all Event Posts.
 		$all_events = get_posts( $args );
 
-		// Delete post meta for all events that we get.
+		// Delete post meta for all Events that we get.
 		if ( count( $all_events ) > 0 ) {
 			foreach( $all_events AS $event ) {
 				delete_post_meta( $post_id, '_civi_eo_civicrm_events' );
@@ -1846,7 +1846,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Rebuilds all CiviEvents <-> Event Organiser event data.
+	 * Rebuilds all CiviCRM Events <-> Event Organiser Event data.
 	 *
 	 * @since 0.1
 	 */
@@ -1857,7 +1857,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			return;
 		}
 
-		// Only rely on the EO event correspondences, because of a bug in the
+		// Only rely on the EO Event correspondences, because of a bug in the
 		// 0.1 version of the plugin which overwrote the civi_to_eo array
 		$eo_to_civi = $this->get_all_eo_to_civi_correspondences();
 
@@ -1872,7 +1872,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Loop through the data.
 		foreach( $eo_to_civi AS $event_id => $civi_event_ids ) {
 
-			// Get occurrences.
+			// Get Occurrences.
 			$occurrences = eo_get_the_occurrences_of( $event_id );
 
 			// Init EO correspondence array.
@@ -1884,10 +1884,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			// Loop through them.
 			foreach( $occurrences AS $occurrence_id => $data ) {
 
-				// Add CiviEvent ID to EO correspondences.
+				// Add CiviCRM Event ID to EO correspondences.
 				$eo_correspondences[$occurrence_id] = $civi_event_ids[$n];
 
-				// Add EO event ID to CiviCRM correspondences.
+				// Add EO Event ID to CiviCRM correspondences.
 				$civi_correspondences[$civi_event_ids[$n]] = [
 					'post_id' => $event_id,
 					'occurrence_id' => $occurrence_id,
@@ -1911,29 +1911,29 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Store CiviEvents <-> Event Organiser event data.
+	 * Store CiviCRM Events <-> Event Organiser Event data.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post.
-	 * @param array $correspondences CiviEvent IDs, keyed by EO occurrence ID.
-	 * @param array $unlinked CiviEvent IDs that have been orphaned from an EO event.
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @param array $correspondences CiviCRM Event IDs, keyed by EO Occurrence ID.
+	 * @param array $unlinked CiviCRM Event IDs that have been orphaned from an EO Event.
 	 */
 	public function store_event_correspondences( $post_id, $correspondences, $unlinked = [] ) {
 
-		// An EO event needs to know the IDs of all the CiviEvents, keyed by EO occurrence ID.
+		// An EO Event needs to know the IDs of all the CiviCRM Events, keyed by EO Occurrence ID.
 		update_post_meta( $post_id, '_civi_eo_civicrm_events', $correspondences );
 
 		// Init array with stored value (or empty array).
 		$civi_event_data = $this->option_get( 'civi_eo_civi_event_data', [] );
 
-		// Each CiviEvent needs to know the IDs of the EO post and the EO occurrence.
+		// Each CiviCRM Event needs to know the IDs of the EO Post and the EO Occurrence.
 		if ( count( $correspondences ) > 0 ) {
 
 			// Construct array.
 			foreach( $correspondences AS $occurrence_id => $civi_event_id ) {
 
-				// Add post ID and occurrence ID, keyed by CiviEvent ID.
+				// Add Post ID and Occurrence ID, keyed by CiviCRM Event ID.
 				$civi_event_data[$civi_event_id] = [
 					'post_id' => $post_id,
 					'occurrence_id' => $occurrence_id,
@@ -1946,7 +1946,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Store updated array as option.
 		$this->option_save( 'civi_eo_civi_event_data', $civi_event_data );
 
-		// Finally, store orphaned CiviEvents.
+		// Finally, store orphaned CiviCRM Events.
 		$this->store_orphaned_events( $post_id, $unlinked );
 
 	}
@@ -1954,11 +1954,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get all event correspondences.
+	 * Get all Event correspondences.
 	 *
 	 * @since 0.1
 	 *
-	 * @return array $correspondences All CiviEvent - Event Organiser correspondences.
+	 * @return array $correspondences All CiviCRM Event - Event Organiser correspondences.
 	 */
 	public function get_all_event_correspondences() {
 
@@ -1979,11 +1979,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get all Event Organiser events for all CiviEvents.
+	 * Get all Event Organiser Events for all CiviCRM Events.
 	 *
 	 * @since 0.1
 	 *
-	 * @return array $eo_event_data The array of all Event Organiser event IDs.
+	 * @return array $eo_event_data The array of all Event Organiser Event IDs.
 	 */
 	public function get_all_civi_to_eo_correspondences() {
 
@@ -1998,24 +1998,24 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get all CiviEvents for all Event Organiser events.
+	 * Get all CiviCRM Events for all Event Organiser Events.
 	 *
 	 * @since 0.1
 	 *
-	 * @return array $eo_event_data The array of all CiviEvent IDs.
+	 * @return array $eo_event_data The array of all CiviCRM Event IDs.
 	 */
 	public function get_all_eo_to_civi_correspondences() {
 
 		// Init civi data.
 		$civi_event_data = [];
 
-		// Construct args for all event posts.
+		// Construct args for all Event Posts.
 		$args = [
 			'post_type' => 'event',
 			'numberposts' => -1,
 		];
 
-		// Get all event posts.
+		// Get all Event Posts.
 		$all_events = get_posts( $args );
 
 		// Get post meta and add to return array if we get some.
@@ -2033,25 +2033,25 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Delete the correspondence between an Event Organiser occurrence and a CiviEvent.
+	 * Delete the correspondence between an Event Organiser Occurrence and a CiviCRM Event.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post.
-	 * @param int $occurrence_id The numeric ID of the Event Organiser event occurrence.
-	 * @param int|bool $civi_event_id The numeric ID of the CiviEvent.
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @param int $occurrence_id The numeric ID of the Event Organiser Event Occurrence.
+	 * @param int|bool $civi_event_id The numeric ID of the CiviCRM Event.
 	 */
 	public function clear_event_correspondence( $post_id, $occurrence_id, $civi_event_id = false ) {
 
-		// Get CiviEvent ID if not passed in.
+		// Get CiviCRM Event ID if not passed in.
 		if ( empty( $civi_event_id ) ) {
 			$civi_event_id = $this->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
 		}
 
-		// Get all CiviEvent data held in option.
+		// Get all CiviCRM Event data held in option.
 		$civi_event_data = $this->get_all_civi_to_eo_correspondences();
 
-		// If we have a CiviEvent ID for this EO occurrence.
+		// If we have a CiviCRM Event ID for this EO Occurrence.
 		if ( $civi_event_id !== false ) {
 
 			// Unset the item with this key in the option array.
@@ -2064,7 +2064,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		}
 
-		// Bail if an event is being deleted.
+		// Bail if an Event is being deleted.
 		if ( doing_action( 'delete_post' ) ) {
 			return;
 		}
@@ -2072,10 +2072,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get existing "live".
 		$correspondences = $this->get_civi_event_ids_by_eo_event_id( $post_id );
 
-		// Is the CiviEvent in the "live" array?
+		// Is the CiviCRM Event in the "live" array?
 		if ( in_array( $civi_event_id, $correspondences ) ) {
 
-			// Ditch the current CiviEvent ID.
+			// Ditch the current CiviCRM Event ID.
 			$correspondences = array_diff( $correspondences, [ $civi_event_id ] );
 
 			// Update the meta value.
@@ -2089,10 +2089,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Get existing "orphans".
 		$orphans = $this->get_orphaned_events_by_eo_event_id( $post_id );
 
-		// Is the CiviEvent in the "orphans" array?
+		// Is the CiviCRM Event in the "orphans" array?
 		if ( in_array( $civi_event_id, $orphans ) ) {
 
-			// Ditch the current CiviEvent ID.
+			// Ditch the current CiviCRM Event ID.
 			$orphans = array_diff( $orphans, [ $civi_event_id ] );
 
 			// Update the meta value.
@@ -2105,24 +2105,24 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Delete all correspondences between an Event Organiser event and CiviEvents.
+	 * Delete all correspondences between an Event Organiser Event and CiviCRM Events.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post.
+	 * @param int $post_id The numeric ID of the WP Post.
 	 * @param array $civi_event_ids The array of CiviCRM Event IDs.
 	 */
 	public function clear_event_correspondences( $post_id, $civi_event_ids = [] ) {
 
-		// Maybe get CiviEvent IDs from post meta.
+		// Maybe get CiviCRM Event IDs from post meta.
 		if ( empty( $civi_event_ids ) ) {
 			$civi_event_ids = $this->get_civi_event_ids_by_eo_event_id( $post_id );
 		}
 
-		// Get CiviEvent data held in option.
+		// Get CiviCRM Event data held in option.
 		$civi_event_data = $this->get_all_civi_to_eo_correspondences();
 
-		// If we have some CiviEvent IDs for this EO event.
+		// If we have some CiviCRM Event IDs for this EO Event.
 		if ( count( $civi_event_ids ) > 0 ) {
 
 			// Unset items with the relevant key in the option array.
@@ -2148,12 +2148,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get Event Organiser event ID for a CiviEvent event ID.
+	 * Get Event Organiser Event ID for a CiviCRM Event Event ID.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $civi_event_id The numeric ID of a CiviEvent event.
-	 * @return int|bool $eo_event_id The numeric ID of the Event Organiser event, or false on failure.
+	 * @param int $civi_event_id The numeric ID of a CiviCRM Event Event.
+	 * @return int|bool $eo_event_id The numeric ID of the Event Organiser Event, or false on failure.
 	 */
 	public function get_eo_event_id_by_civi_event_id( $civi_event_id ) {
 
@@ -2178,12 +2178,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get Event Organiser occurrence ID for a CiviEvent event ID.
+	 * Get Event Organiser Occurrence ID for a CiviCRM Event ID.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $civi_event_id The numeric ID of a CiviEvent event.
-	 * @return int|bool $eo_occurrence_id The numeric ID of the Event Organiser occurrence, or false on failure.
+	 * @param int $civi_event_id The numeric ID of a CiviCRM Event.
+	 * @return int|bool $eo_occurrence_id The numeric ID of the Event Organiser Occurrence, or false on failure.
 	 */
 	public function get_eo_occurrence_id_by_civi_event_id( $civi_event_id ) {
 
@@ -2208,12 +2208,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get CiviEvent IDs (keyed by occurrence ID) for an Event Organiser event ID.
+	 * Get CiviCRM Event IDs (keyed by Occurrence ID) for an Event Organiser Event ID.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post.
-	 * @return array $civi_event_ids All CiviEvent IDs for the post, keyed by occurrence ID.
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @return array $civi_event_ids All CiviCRM Event IDs for the Post, keyed by Occurrence ID.
 	 */
 	public function get_civi_event_ids_by_eo_event_id( $post_id ) {
 
@@ -2233,13 +2233,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get CiviEvent ID for an Event Organiser event occurrence.
+	 * Get CiviCRM Event ID for an Event Organiser Event Occurrence.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post.
-	 * @param int $occurrence_id The numeric ID of the EO event occurrence.
-	 * @return mixed $civi_event_id The CiviEvent ID, or false otherwise.
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @param int $occurrence_id The numeric ID of the EO Event Occurrence.
+	 * @return mixed $civi_event_id The CiviCRM Event ID, or false otherwise.
 	 */
 	public function get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id ) {
 
@@ -2262,28 +2262,28 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Check if a CiviEvent is part of an Event Organiser event sequence.
+	 * Check if a CiviCRM Event is part of an Event Organiser Event sequence.
 	 *
 	 * @since 0.3
 	 *
-	 * @param int $civi_event_id The CiviEvent ID.
-	 * @return bool True if CiviEvent is part of an EO event sequence, false otherwise.
+	 * @param int $civi_event_id The CiviCRM Event ID.
+	 * @return bool True if CiviCRM Event is part of an EO Event sequence, false otherwise.
 	 */
 	public function is_civi_event_in_eo_sequence( $civi_event_id ) {
 
-		// Get the EO event ID for this CiviEvent.
+		// Get the EO Event ID for this CiviCRM Event.
 		$eo_post_id = $this->get_eo_event_id_by_civi_event_id( $civi_event_id );
 
 		// If there is one.
 		if ( $eo_post_id !== false ) {
 
-			// Get the corresponding CiviEvents.
+			// Get the corresponding CiviCRM Events.
 			$civi_event_ids = $this->get_civi_event_ids_by_eo_event_id( $eo_post_id );
 
-			// Does the EO event have multiple CiviEvents?
+			// Does the EO Event have multiple CiviCRM Events?
 			if ( count( $civi_event_ids ) > 1 ) {
 
-				// Yes, this CiviEvent is part of a series.
+				// Yes, this CiviCRM Event is part of a series.
 				return true;
 
 			}
@@ -2302,19 +2302,19 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Store orphaned CiviEvents.
+	 * Store orphaned CiviCRM Events.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post.
-	 * @param array $orphans The CiviEvent IDs that have been orphaned from an EO event.
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @param array $orphans The CiviCRM Event IDs that have been orphaned from an EO Event.
 	 */
 	public function store_orphaned_events( $post_id, $orphans ) {
 
 		// Get existing orphans before we update.
 		$existing = $this->get_orphaned_events_by_eo_event_id( $post_id );
 
-		// An EO event needs to know the IDs of all the orphaned CiviEvents.
+		// An EO Event needs to know the IDs of all the orphaned CiviCRM Events.
 		update_post_meta( $post_id, '_civi_eo_civicrm_events_disabled', $orphans );
 
 		// Get the values that are not present in new orphans.
@@ -2329,7 +2329,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Do we have any orphans to add?
 		if ( count( $to_add ) > 0 ) {
 
-			// Add post IDs, keyed by CiviEvent ID.
+			// Add Post IDs, keyed by CiviCRM Event ID.
 			foreach( $to_add AS $civi_event_id ) {
 				$civi_event_disabled[$civi_event_id] = $post_id;
 			}
@@ -2354,17 +2354,17 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Make a single occurrence orphaned.
+	 * Make a single Occurrence orphaned.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post = EO event.
-	 * @param int $occurrence_id The numeric ID of the EO event occurrence.
-	 * @param int $civi_event_id The numeric ID of the orphaned CiviEvent.
+	 * @param int $post_id The numeric ID of the WP Post = EO Event.
+	 * @param int $occurrence_id The numeric ID of the EO Event Occurrence.
+	 * @param int $civi_event_id The numeric ID of the orphaned CiviCRM Event.
 	 */
 	public function occurrence_orphaned( $post_id, $occurrence_id, $civi_event_id ) {
 
-		// Get existing orphans for this post.
+		// Get existing orphans for this Post.
 		$existing_orphans = $this->get_orphaned_events_by_eo_event_id( $post_id );
 
 		// Get existing "live" correspondences.
@@ -2386,12 +2386,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get orphaned CiviEvents by EO event ID.
+	 * Get orphaned CiviCRM Events by EO Event ID.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post = EO event.
-	 * @return array $civi_event_ids Array of orphaned CiviEvent IDs.
+	 * @param int $post_id The numeric ID of the WP Post = EO Event.
+	 * @return array $civi_event_ids Array of orphaned CiviCRM Event IDs.
 	 */
 	public function get_orphaned_events_by_eo_event_id( $post_id ) {
 
@@ -2411,11 +2411,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get all Event Organiser event IDs for all orphaned CiviEvents.
+	 * Get all Event Organiser Event IDs for all orphaned CiviCRM Events.
 	 *
 	 * @since 0.1
 	 *
-	 * @return array $civi_event_disabled All CiviEvent IDs.
+	 * @return array $civi_event_disabled All CiviCRM Event IDs.
 	 */
 	public function get_eo_event_ids_for_orphans() {
 
@@ -2427,12 +2427,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Get EO event ID by orphaned CiviEvent ID.
+	 * Get EO Event ID by orphaned CiviCRM Event ID.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $civi_event_id The numeric ID of the CiviEvent.
-	 * @return int $eo_event_id The numeric ID of the WP post = EO event.
+	 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
+	 * @return int $eo_event_id The numeric ID of the WP Post = EO Event.
 	 */
 	public function get_eo_event_id_by_orphaned_event_id( $civi_event_id ) {
 
@@ -2461,22 +2461,22 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Debugging method that shows all events.
+	 * Debugging method that shows all Events.
 	 *
 	 * @since 0.1
 	 */
 	public function show_eo_civi_events() {
 
-		// Construct args for all event posts.
+		// Construct args for all Event Posts.
 		$args = [
 			'post_type' => 'event',
 			'numberposts' => -1,
 		];
 
-		// Get all event posts.
+		// Get all Event Posts.
 		$all_events = get_posts( $args );
 
-		// Get all EO events.
+		// Get all EO Events.
 		$all_eo_events = eo_get_events();
 
 		// Get all CiviCRM Events.
@@ -2498,10 +2498,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 					count( $all_civi_events['values'] ) > 0
 				) {
 
-					// Get all event IDs..
+					// Get all Event IDs..
 					$all_civi_event_ids = array_keys( $all_civi_events['values'] );
 
-					// Delete all CiviEvents!
+					// Delete all CiviCRM Events!
 					$delete = $this->plugin->civi->delete_civi_events( $all_civi_event_ids );
 
 				}
@@ -2527,7 +2527,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Disallow "no category" in EO Event category box.
+	 * Disallow "No Category" in EO Event Category box.
 	 *
 	 * @since 0.1
 	 *
@@ -2543,16 +2543,16 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Debugging method to show event taxonomies.
+	 * Debugging method to show Event Taxonomies.
 	 *
 	 * @since 0.1
 	 */
 	public function show_eo_civi_taxonomies() {
 
-		// Get all CiviEvent types.
+		// Get all CiviCRM Event Types.
 		$civi_types = $this->plugin->taxonomy->get_event_types();
 
-		// Get all EO event category terms.
+		// Get all EO Event Category Terms.
 		$eo_types = $this->plugin->taxonomy->get_event_categories();
 
 		error_log( print_r( [
@@ -2570,23 +2570,23 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 
 	/**
-	 * Debugging method to show all venues and locations.
+	 * Debugging method to show all Venues and Locations.
 	 *
 	 * @since 0.1
 	 */
 	public function show_venues_locations() {
 
-		// Get all venues.
+		// Get all Venues.
 		$all_venues = eo_get_venues();
 
-		// Get all CiviCRM Event locations.
+		// Get all CiviCRM Event Locations.
 		$all_locations = $this->plugin->civi->get_all_locations();
 
 		/*
-		// Delete all CiviCRM Event locations.
+		// Delete all CiviCRM Event Locations.
 		$this->plugin->civi->delete_all_locations();
 
-		// Clear all EO Event location IDs.
+		// Clear all EO Event Location IDs.
 		if ( count( $all_venues ) > 0 ) {
 
 			// Loop.

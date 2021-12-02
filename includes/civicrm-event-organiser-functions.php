@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * Add a list of Registration links for an event to the EO event meta list.
+ * Add a list of Registration links for an Event to the EO Event meta list.
  *
  * There have only been appropriate hooks in Event Organiser template files
  * since version 2.12.5, so installs with a prior version of Event Organiser
@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.3
  *
- * @param int $post_id The numeric ID of the WP post.
+ * @param int $post_id The numeric ID of the WP Post.
  */
 function civicrm_event_organiser_register_links( $post_id = null ) {
 
@@ -79,7 +79,7 @@ add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_reg
  *
  * @since 0.3
  *
- * @param int $post_id The numeric ID of the WP post.
+ * @param int $post_id The numeric ID of the WP Post.
  * @return array $links The HTML links to the CiviCRM Registration pages.
  */
 function civicrm_event_organiser_get_register_links( $post_id = null ) {
@@ -97,7 +97,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		return $links;
 	}
 
-	// Need the post ID.
+	// Need the Post ID.
 	$post_id = absint( empty( $post_id ) ? get_the_ID() : $post_id );
 
 	// Bail if not present.
@@ -108,7 +108,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	// Get plugin reference.
 	$plugin = civicrm_eo();
 
-	// Get CiviEvents.
+	// Get CiviCRM Events.
 	$civi_events = $plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
 
 	// Sanity check.
@@ -122,7 +122,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	// Loop through them.
 	foreach( $civi_events AS $civi_event_id ) {
 
-		// Get the full CiviEvent.
+		// Get the full CiviCRM Event.
 		$civi_event = $plugin->civi->get_event_by_id( $civi_event_id );
 
 		// Continue if not found.
@@ -130,12 +130,12 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 			continue;
 		}
 
-		// Skip to next if registration is not open.
+		// Skip to next if Registration is not open.
 		if ( $plugin->civi->is_registration_closed( $civi_event ) ) {
 			continue;
 		}
 
-		// Get link for the registration page.
+		// Get link for the Registration page.
 		$url = $plugin->civi->get_registration_link( $civi_event );
 
 		// Skip to next if empty.
@@ -144,20 +144,20 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		}
 
 		/**
-		 * Filter registration URL.
+		 * Filter Registration URL.
 		 *
 		 * @since 0.3
 		 *
 		 * @param string $url The raw URL to the CiviCRM Registration page.
-		 * @param array $civi_event The array of data that represents a CiviEvent.
-		 * @param int $post_id The numeric ID of the WP post.
+		 * @param array $civi_event The array of data that represents a CiviCRM Event.
+		 * @param int $post_id The numeric ID of the WP Post.
 		 */
 		$url = apply_filters( 'civicrm_event_organiser_registration_url', $url, $civi_event, $post_id );
 
-		// Set different link text for single and multiple occurrences.
+		// Set different link text for single and multiple Occurrences.
 		if ( $multiple ) {
 
-			// Get occurrence ID for this CiviEvent.
+			// Get Occurrence ID for this CiviCRM Event.
 			$occurrence_id = $plugin->db->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
 
 			// Define text.
@@ -174,14 +174,14 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		$link = '<a class="civicrm-event-organiser-register-link" href="' . $url . '">' . $text . '</a>';
 
 		/**
-		 * Filter registration link.
+		 * Filter Registration link.
 		 *
 		 * @since 0.3
 		 *
 		 * @param string $link The HTML link to the CiviCRM Registration page.
 		 * @param string $url The raw URL to the CiviCRM Registration page.
 		 * @param string $text The text content of the link.
-		 * @param int $post_id The numeric ID of the WP post.
+		 * @param int $post_id The numeric ID of the WP Post.
 		 */
 		$links[] = apply_filters( 'civicrm_event_organiser_registration_link', $link, $url, $text, $post_id );
 

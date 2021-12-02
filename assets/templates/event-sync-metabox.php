@@ -38,22 +38,22 @@ body.js .civi_eo_event_reg_toggle {
 	<div class="civi_eo_event_sync_wrapper">
 
 		<p>
-			<label for="civi_eo_event_sync"><?php _e( 'Sync this event with CiviCRM:', 'civicrm-event-organiser' ); ?></label>
+			<label for="civi_eo_event_sync"><?php _e( 'Sync this Event with CiviCRM:', 'civicrm-event-organiser' ); ?></label>
 			<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
 		</p>
 
 		<p class="description">
-			<?php _e( 'Choose whether or not to sync this event to CiviCRM. It is recommended that you finish configuring your event before you sync it to CiviCRM.', 'civicrm-event-organiser' ); ?>
+			<?php _e( 'Choose whether or not to sync this Event to CiviCRM. It is recommended that you finish configuring your Event before you sync it to CiviCRM.', 'civicrm-event-organiser' ); ?>
 		</p>
 
 		<?php if ( $multiple ) : ?>
 			<p>
-				<label for="civi_eo_event_delete_unused"><?php _e( 'Delete unused CiviEvents:', 'civicrm-event-organiser' ); ?></label>
+				<label for="civi_eo_event_delete_unused"><?php _e( 'Delete unused CiviCRM Events:', 'civicrm-event-organiser' ); ?></label>
 				<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
 			</p>
 
 			<p class="description">
-				<?php _e( 'If the sequence has changed, choose whether or not to delete the unused corresponding CiviEvents. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ); ?>
+				<?php _e( 'If the sequence has changed, choose whether or not to delete the unused corresponding CiviCRM Events. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ); ?>
 			</p>
 		<?php endif; ?>
 
@@ -63,10 +63,10 @@ body.js .civi_eo_event_reg_toggle {
 
 <div class="civi_eo_event_options_wrapper">
 
-	<h4><?php _e( 'CiviEvent Options', 'civicrm-event-organiser' ); ?></h4>
+	<h4><?php _e( 'CiviCRM Event Options', 'civicrm-event-organiser' ); ?></h4>
 
 	<p>
-		<?php _e( '<strong>NOTE:</strong> Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ); ?> <?php if ( $multiple ) : ?><?php _e( 'These options will be set for <em>all corresponding CiviEvents</em> when you sync this event to CiviCRM.', 'civicrm-event-organiser' ); ?><?php endif; ?>
+		<?php _e( '<strong>NOTE:</strong> Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ); ?> <?php if ( $multiple ) : ?><?php _e( 'These options will be set for <em>all corresponding CiviCRM Events</em> when you sync this Event to CiviCRM.', 'civicrm-event-organiser' ); ?><?php endif; ?>
 	</p>
 
 	<div class="civi_eo_event_reg_wrapper">
@@ -89,7 +89,7 @@ body.js .civi_eo_event_reg_toggle {
 				</p>
 
 				<p class="description">
-					<?php _e( 'The profile assigned to the online registration form.', 'civicrm-event-organiser' ); ?>
+					<?php _e( 'The profile assigned to the Online Registration form.', 'civicrm-event-organiser' ); ?>
 				</p>
 			</div>
 
@@ -102,7 +102,7 @@ body.js .civi_eo_event_reg_toggle {
 				</p>
 
 				<p class="description">
-					<?php _e( 'This role is automatically assigned to people when they register online for this event and where the registration profile does not allow a role to be selected.', 'civicrm-event-organiser' ); ?>
+					<?php _e( 'This role is automatically assigned to people when they register online for this Event and where the Registration Profile does not allow a role to be selected.', 'civicrm-event-organiser' ); ?>
 				</p>
 			</div>
 
@@ -124,7 +124,7 @@ body.js .civi_eo_event_reg_toggle {
 			 *
 			 * @since 0.5.3
 			 *
-			 * @param object $event The EO event object.
+			 * @param object $event The EO Event object.
 			 */
 			do_action( 'civicrm_event_organiser_event_meta_box_online_reg_after', $event );
 
@@ -141,7 +141,7 @@ body.js .civi_eo_event_reg_toggle {
 	 *
 	 * @since 0.5.3
 	 *
-	 * @param object $event The EO event object.
+	 * @param object $event The EO Event object.
 	 */
 	do_action( 'civicrm_event_organiser_event_meta_box_options_after', $event );
 
@@ -156,6 +156,6 @@ body.js .civi_eo_event_reg_toggle {
  *
  * @since 0.3
  *
- * @param object $event The EO event object.
+ * @param object $event The EO Event object.
  */
 do_action( 'civicrm_event_organiser_event_meta_box_after', $event );

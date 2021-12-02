@@ -2,7 +2,7 @@
 /**
  * Taxonomy Class.
  *
- * Handles sync between the Event Organiser custom taxonomy and CiviCRM Event types.
+ * Handles sync between the Event Organiser custom Taxonomy and CiviCRM Event Types.
  *
  * @package CiviCRM_WP_Event_Organiser
  * @since 0.4.2
@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * CiviCRM Event Organiser Taxonomy Class.
  *
- * This class keeps the Event Organiser custom taxonomy in sync with the CiviCRM
+ * This class keeps the Event Organiser custom Taxonomy in sync with the CiviCRM
  * Event Types.
  *
  * @since 0.4.2
@@ -80,20 +80,20 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 */
 	public function register_hooks() {
 
-		// Intercept WordPress term operations.
+		// Intercept WordPress Term operations.
 		$this->hooks_wordpress_add();
 
 		// Add CiviCRM listeners once CiviCRM is available.
 		add_action( 'civicrm_config', [ $this, 'civicrm_config' ], 10, 1 );
 
-		// Filter Radio Buttons for Taxonomies null term insertion.
+		// Filter Radio Buttons for Taxonomies null Term insertion.
 		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', [ $this, 'skip_null_term' ], 20, 1 );
 		add_filter( 'radio_buttons_for_taxonomies_no_term_event-category', [ $this, 'skip_null_term' ], 20, 1 );
 
-		// Hide "Parent Category" dropdown in event category metaboxes.
+		// Hide "Parent Category" dropdown in Event Category metaboxes.
 		add_action( 'add_meta_boxes_event', [ $this, 'terms_dropdown_intercept' ], 3 );
 
-		// Ensure new events have the default term checked.
+		// Ensure new Events have the default Term checked.
 		add_filter( 'wp_terms_checklist_args', [ $this, 'term_default_checked' ], 10, 2 );
 
 		// Create custom filters that mirror 'the_content'.
@@ -130,14 +130,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 */
 	public function hooks_wordpress_add() {
 
-		// Intercept new term creation.
+		// Intercept new Term creation.
 		add_action( 'created_term', [ $this, 'intercept_create_term' ], 20, 3 );
 
-		// Intercept term updates.
+		// Intercept Term updates.
 		add_action( 'edit_terms', [ $this, 'intercept_pre_update_term' ], 20, 2 );
 		add_action( 'edited_term', [ $this, 'intercept_update_term' ], 20, 3 );
 
-		// Intercept term deletion.
+		// Intercept Term deletion.
 		add_action( 'delete_term', [ $this, 'intercept_delete_term' ], 20, 4 );
 
 	}
@@ -250,7 +250,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.5
 	 *
-	 * @return bool True if terms can be queried by their "term meta", false otherwise.
+	 * @return bool True if Terms can be queried by their "term meta", false otherwise.
 	 */
 	public function can_query_by_term_meta() {
 
@@ -267,13 +267,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Upgrade all synced terms to store linkage in "term_meta".
+	 * Upgrade all synced Terms to store linkage in "term_meta".
 	 *
 	 * @since 0.4.5
 	 */
 	public function upgrade() {
 
-		// Bail if term meta queries aren't available.
+		// Bail if "term meta" queries aren't available.
 		if ( ! $this->can_query_by_term_meta() ) {
 			return;
 		}
@@ -286,13 +286,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Upgrade all synced terms to store linkage in "term_meta".
+	 * Upgrade all synced Terms to store linkage in "term_meta".
 	 *
 	 * @since 0.4.5
 	 */
 	public function upgrade_terms() {
 
-		// Get all terms in the Event Category taxonomy.
+		// Get all Terms in the Event Category Taxonomy.
 		$terms = $this->get_event_categories();
 
 		// Bail if we don't have any.
@@ -300,7 +300,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return;
 		}
 
-		// Step through the terms.
+		// Step through the Terms.
 		foreach( $terms AS $term ) {
 
 			// Get the corresponding CiviCRM Event Type.
@@ -311,7 +311,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 				continue;
 			}
 
-			// Add the Event Type ID to the term's meta.
+			// Add the Event Type ID to the Term's meta.
 			$this->add_term_meta( $term->term_id, $event_type_id );
 
 		}
@@ -325,19 +325,19 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get event category terms.
+	 * Get Event Category Terms.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $post_id The numeric ID of the WP post.
-	 * @return array $terms The EO event category terms.
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @return array $terms The EO Event Category Terms.
 	 */
 	public function get_event_categories( $post_id = false ) {
 
-		// If ID is false, get all terms.
+		// If ID is false, get all Terms.
 		if ( $post_id === false ) {
 
-			// Since WordPress 4.5.0, the category is specified in the arguments.
+			// Since WordPress 4.5.0, the Category is specified in the arguments.
 			if ( function_exists( 'unregister_taxonomy' ) ) {
 
 				// Construct args.
@@ -347,7 +347,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 					'hide_empty' => 0
 				];
 
-				// Get all terms.
+				// Get all Terms.
 				$terms = get_terms( $args );
 
 			} else {
@@ -358,14 +358,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 					'hide_empty' => 0
 				];
 
-				// Get all terms.
+				// Get all Terms.
 				$terms = get_terms( 'event-category', $args );
 
 			}
 
 		} else {
 
-			// Get terms for the post.
+			// Get Terms for the Post.
 			$terms = get_the_terms( $post_id, 'event-category' );
 
 		}
@@ -378,22 +378,22 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Hook into the creation of an EO event category term.
+	 * Hook into the creation of an EO Event Category Term.
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $term_id The numeric ID of the new term.
-	 * @param array $tt_id The numeric ID of the new term.
+	 * @param array $term_id The numeric ID of the new Term.
+	 * @param array $tt_id The numeric ID of the new Term.
 	 * @param string $taxonomy Should be (an array containing) 'event-category'.
 	 */
 	public function intercept_create_term( $term_id, $tt_id, $taxonomy ) {
 
-		// Only look for terms in the EO taxonomy.
+		// Only look for Terms in the EO Taxonomy.
 		if ( $taxonomy != 'event-category' ) {
 			return;
 		}
 
-		// Get term object.
+		// Get Term object.
 		$term = get_term_by( 'id', $term_id, 'event-category' );
 
 		// Unhook CiviCRM.
@@ -410,26 +410,26 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Hook into updates to an EO event category term before the term is updated
-	 * because we need to get the corresponding CiviCRM Event Type before the WP term
+	 * Hook into updates to an EO Event Category Term before the Term is updated
+	 * because we need to get the corresponding CiviCRM Event Type before the WP Term
 	 * is updated.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $term_id The numeric ID of the new term.
-	 * @param string $taxonomy The taxonomy containing the term.
+	 * @param int $term_id The numeric ID of the new Term.
+	 * @param string $taxonomy The Taxonomy containing the Term.
 	 */
 	public function intercept_pre_update_term( $term_id, $taxonomy = null ) {
 
-		// Did we get a taxonomy passed in?
+		// Did we get a Taxonomy passed in?
 		if ( is_null( $taxonomy ) ) {
 
-			// No, get reference to term object.
+			// No, get reference to Term object.
 			$term = $this->get_term_by_id( $term_id );
 
 		} else {
 
-			// Get term.
+			// Get Term.
 			$term = get_term_by( 'id', $term_id, $taxonomy );
 
 		}
@@ -445,7 +445,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return;
 		}
 
-		// Check taxonomy.
+		// Check Taxonomy.
 		if ( $term->taxonomy != 'event-category' ) {
 			return;
 		}
@@ -458,30 +458,30 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Hook into updates to an EO event category term.
+	 * Hook into updates to an EO Event Category Term.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $term_id The numeric ID of the edited term.
-	 * @param array $tt_id The numeric ID of the edited term taxonomy.
+	 * @param int $term_id The numeric ID of the edited Term.
+	 * @param array $tt_id The numeric ID of the edited Term Taxonomy.
 	 * @param string $taxonomy Should be (an array containing) 'event-category'.
 	 */
 	public function intercept_update_term( $term_id, $tt_id, $taxonomy ) {
 
-		// Only look for terms in the EO taxonomy.
+		// Only look for Terms in the EO Taxonomy.
 		if ( $taxonomy != 'event-category' ) {
 			return;
 		}
 
-		// Assume we have no edited term.
+		// Assume we have no edited Term.
 		$old_term = null;
 
-		// Use it if we have the term stored.
+		// Use it if we have the Term stored.
 		if ( isset( $this->term_edited ) ) {
 			$old_term = $this->term_edited;
 		}
 
-		// Get current term object.
+		// Get current Term object.
 		$new_term = get_term_by( 'id', $term_id, 'event-category' );
 
 		// Unhook CiviCRM.
@@ -498,19 +498,19 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Hook into deletion of an EO event category term - requires WordPress 3.5+
+	 * Hook into deletion of an EO Event Category Term - requires WordPress 3.5+
 	 * because of the 4th parameter.
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $term_id The numeric ID of the deleted term.
-	 * @param array $tt_id The numeric ID of the deleted term taxonomy.
-	 * @param string $taxonomy Name of the taxonomy.
-	 * @param object $deleted_term The deleted term object.
+	 * @param int $term_id The numeric ID of the deleted Term.
+	 * @param array $tt_id The numeric ID of the deleted Term Taxonomy.
+	 * @param string $taxonomy Name of the Taxonomy.
+	 * @param object $deleted_term The deleted Term object.
 	 */
 	public function intercept_delete_term( $term_id, $tt_id, $taxonomy, $deleted_term ) {
 
-		// Only look for terms in the EO taxonomy.
+		// Only look for Terms in the EO Taxonomy.
 		if ( $taxonomy != 'event-category' ) {
 			return;
 		}
@@ -529,12 +529,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Create an EO event category term.
+	 * Create an EO Event Category Term.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $event_type The CiviCRM Event Type.
-	 * @return array $result Array containing EO event category term data.
+	 * @return array $result Array containing EO Event Category Term data.
 	 */
 	public function create_term( $event_type ) {
 
@@ -567,11 +567,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return false;
 		}
 
-		// Add the Event Type ID to the term's meta.
+		// Add the Event Type ID to the Term's meta.
 		$this->add_term_meta( $result['term_id'], intval( $event_type['id'] ) );
 
 		/*
-		 * WordPress does not have an "Active/Inactive" term state by default,
+		 * WordPress does not have an "Active/Inactive" Term state by default,
 		 * but we can add a "term meta" value to hold this.
 		 *
 		 * @see eventorganiser_add_tax_meta()
@@ -588,13 +588,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Update an EO event category term.
+	 * Update an EO Event Category Term.
 	 *
 	 * @since 0.1
 	 *
 	 * @param array $new_type The CiviCRM Event Type.
 	 * @param array $old_type The CiviCRM Event Type prior to the update.
-	 * @return int|bool $term_id The ID of the updated EO event category term.
+	 * @return int|bool $term_id The ID of the updated EO Event Category Term.
 	 */
 	public function update_term( $new_type, $old_type = null ) {
 
@@ -609,21 +609,21 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// If the new query produces a result.
 		if ( $term instanceof WP_Term ) {
 
-			// Grab the found term ID.
+			// Grab the found Term ID.
 			$term_id = $term->term_id;
 
 		// Fall back to old behaviour if none found.
 		} else {
 
-			// If we're updating a term.
+			// If we're updating a Term.
 			if ( ! is_null( $old_type ) ) {
 
-				// Does this type have an existing term?
+				// Does this Event Type have an existing Term?
 				$term_id = $this->get_term_id( $old_type );
 
 			} else {
 
-				// Get matching event term ID.
+				// Get matching Event Term ID.
 				$term_id = $this->get_term_id( $new_type );
 
 			}
@@ -633,7 +633,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// If we don't get one.
 		if ( $term_id === false ) {
 
-			// Create term,
+			// Create Term.
 			$result = $this->create_term( $new_type );
 
 			// How did we do?
@@ -649,7 +649,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Define description if present.
 		$description = isset( $new_type['description'] ) ? $new_type['description'] : '';
 
-		// Construct term.
+		// Construct Term.
 		$args = [
 			'name' => $new_type['label'],
 			'slug' => sanitize_title( $new_type['name'] ),
@@ -659,7 +659,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Unhook listeners.
 		$this->hooks_wordpress_remove();
 
-		// Update term.
+		// Update Term.
 		$result = wp_update_term( $term_id, 'event-category', $args );
 
 		// Rehook listeners.
@@ -672,7 +672,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		/*
-		 * WordPress does not have an "Active/Inactive" term state by default,
+		 * WordPress does not have an "Active/Inactive" Term state by default,
 		 * but we can add a "term meta" value to hold this.
 		 *
 		 * @see eventorganiser_add_tax_meta()
@@ -689,26 +689,26 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Delete an EO event category term.
+	 * Delete an EO Event Category Term.
 	 *
 	 * @since 0.4.6
 	 *
-	 * @param int $term_id The term to delete.
-	 * @return int|bool $term_id The ID of the updated EO event category term.
+	 * @param int $term_id The Term to delete.
+	 * @return int|bool $term_id The ID of the updated EO Event Category Term.
 	 */
 	public function delete_term( $term_id ) {
 
 		// Unhook listeners.
 		$this->hooks_wordpress_remove();
 
-		// Delete the term.
+		// Delete the Term.
 		$result = wp_delete_term( $term_id, 'event-category' );
 
 		// Rehook listeners.
 		$this->hooks_wordpress_add();
 
-		// True on success, false if term does not exist. Zero on attempted
-		// deletion of default Category. WP_Error if the taxonomy does not exist.
+		// True on success, false if Term does not exist. Zero on attempted
+		// deletion of default Category. WP_Error if the Taxonomy does not exist.
 		return $result;
 
 	}
@@ -716,12 +716,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get the EO event category term for a given CiviCRM Event Type.
+	 * Get the EO Event Category Term for a given CiviCRM Event Type.
 	 *
 	 * @since 0.1
 	 *
 	 * @param array $event_type The CiviCRM Event Type.
-	 * @return int|bool $term_id The ID of the updated EO event category term.
+	 * @return int|bool $term_id The ID of the updated EO Event Category Term.
 	 */
 	public function get_term_id( $event_type ) {
 
@@ -741,7 +741,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return $term->term_id;
 		}
 
-		// Try and match by term name <-> type label.
+		// Try and match by Term name <-> Type label.
 		$term = get_term_by( 'name', $event_type['label'], 'event-category' );
 
 		// How did we do?
@@ -749,7 +749,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return $term->term_id;
 		}
 
-		// Try and match by term slug <-> type label.
+		// Try and match by Term slug <-> Type label.
 		$term = get_term_by( 'slug', sanitize_title( $event_type['label'] ), 'event-category' );
 
 		// How did we do?
@@ -757,7 +757,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return $term->term_id;
 		}
 
-		// Try and match by term slug <-> type name.
+		// Try and match by Term slug <-> Type name.
 		$term = get_term_by( 'slug', sanitize_title( $event_type['name'] ), 'event-category' );
 
 		// How did we do?
@@ -773,7 +773,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get a term without knowing its taxonomy - this was necessary before WordPress
+	 * Get a Term without knowing its Taxonomy - this was necessary before WordPress
 	 * passed $taxonomy to the 'edit_terms' action in WP 3.7:
 	 *
 	 * @see http://core.trac.wordpress.org/ticket/22542
@@ -781,10 +781,10 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $term_id The ID of the term whose taxonomy we want.
+	 * @param int $term_id The ID of the Term whose Taxonomy we want.
 	 * @param string $output Passed to get_term.
 	 * @param string $filter Passed to get_term.
-	 * @return object $term The WP term object passed by reference.
+	 * @return object $term The WP Term object passed by reference.
 	 */
 	public function &get_term_by_id( $term_id, $output = OBJECT, $filter = 'raw' ) {
 
@@ -813,7 +813,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return $null;
 		}
 
-		// Get taxonomy name.
+		// Get Taxonomy name.
 		$taxonomy = $tax->taxonomy;
 
 		// --<
@@ -825,12 +825,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 	/**
 	 * Never let Radio Buttons for Taxonomies filter get_terms() to add a null
-	 * term because CiviCRM requires an event to have a term.
+	 * Term because CiviCRM requires an Event to have a Term.
 	 *
 	 * @since 0.3.5
 	 *
-	 * @param bool $set True if null term is to be set, false otherwise.
-	 * @return bool $set True if null term is to be set, false otherwise.
+	 * @param bool $set True if null Term is to be set, false otherwise.
+	 * @return bool $set True if null Term is to be set, false otherwise.
 	 */
 	public function skip_null_term( $set ) {
 
@@ -869,7 +869,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 */
 	public function terms_dropdown_clear( $output, $parsed_args ) {
 
-		// Only clear Event Organiser category.
+		// Only clear Event Organiser Category.
 		if ( $parsed_args['taxonomy'] != 'event-category' ) {
 			return $output;
 		}
@@ -885,32 +885,32 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Make sure new EO Events have the default term checked if no term has been
+	 * Make sure new EO Events have the default Term checked if no Term has been
 	 * chosen - e.g. on the "Add New Event" screen.
 	 *
 	 * @since 0.4.2
 	 *
 	 * @param array $args An array of arguments.
-	 * @param int $post_id The post ID.
+	 * @param int $post_id The Post ID.
 	 */
 	public function term_default_checked( $args, $post_id ) {
 
-		// Only modify Event Organiser category.
+		// Only modify Event Organiser Category.
 		if ( $args['taxonomy'] != 'event-category' ) {
 			return $args;
 		}
 
-		// If this is a post.
+		// If this is a Post.
 		if ( $post_id ) {
 
-			// Get existing terms.
+			// Get existing Terms.
 			$args['selected_cats'] = wp_get_object_terms(
 				$post_id,
 				$args['taxonomy'],
 				array_merge( $args, [ 'fields' => 'ids' ] )
 			);
 
-			// Bail if a category is already set.
+			// Bail if a Category is already set.
 			if ( ! empty( $args['selected_cats'] ) ) {
 				return $args;
 			}
@@ -933,7 +933,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return $args;
 		}
 
-		// Get corresponding term ID.
+		// Get corresponding Term ID.
 		$term_id = $this->get_term_id( $event_type );
 
 		// Bail if something went wrong.
@@ -956,12 +956,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get the EO event category term for a given CiviCRM Event Type.
+	 * Get the EO Event Category Term for a given CiviCRM Event Type.
 	 *
 	 * @since 0.4.5
 	 *
 	 * @param array $event_type The array of CiviCRM Event Type data.
-	 * @return WP_Term|bool $term The term object, or false on failure.
+	 * @return WP_Term|bool $term The Term object, or false on failure.
 	 */
 	public function get_term_by_meta( $event_type ) {
 
@@ -970,7 +970,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return false;
 		}
 
-		// Query terms for the term with the ID of the Event Type in meta data.
+		// Query Terms for the Term with the ID of the Event Type in meta data.
 		$args = [
 			'hide_empty' => false,
 			'meta_query' => [
@@ -982,7 +982,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			],
 		];
 
-		// Get what should only be a single term.
+		// Get what should only be a single Term.
 		$terms = get_terms( 'event-category', $args );
 
 		// Bail if there are no results.
@@ -1015,7 +1015,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Init return.
 		$term = false;
 
-		// Grab term data.
+		// Grab Term data.
 		if ( count( $terms ) === 1 ) {
 			$term = array_pop( $terms );
 		}
@@ -1028,11 +1028,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get CiviCRM Event Type for an EO event category term.
+	 * Get CiviCRM Event Type for an EO Event Category Term.
 	 *
 	 * @since 0.4.5
 	 *
-	 * @param int $term_id The numeric ID of the term.
+	 * @param int $term_id The numeric ID of the Term.
 	 * @return int|bool $event_type_id The ID of the CiviCRM Event Type, or false on failure.
 	 */
 	public function get_term_meta( $term_id ) {
@@ -1042,7 +1042,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return false;
 		}
 
-		// Get the Event Type ID from the term's meta.
+		// Get the Event Type ID from the Term's meta.
 		$event_type_id = get_term_meta( $term_id, $this->term_meta_key, true );
 
 		// Bail if there is no result.
@@ -1058,24 +1058,24 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Add meta data to an EO event category term.
+	 * Add meta data to an EO Event Category Term.
 	 *
 	 * @since 0.4.5
 	 *
-	 * @param int $term_id The numeric ID of the term.
+	 * @param int $term_id The numeric ID of the Term.
 	 * @param int $event_type_id The  numeric ID of the CiviCRM Event Type.
 	 * @return int|bool $meta_id The ID of the meta, or false on failure.
 	 */
 	public function add_term_meta( $term_id, $event_type_id ) {
 
-		// Add the Event Type ID to the term's meta.
+		// Add the Event Type ID to the Term's meta.
 		$meta_id = add_term_meta( $term_id, $this->term_meta_key, intval( $event_type_id ), true );
 
 		// Log something if there's an error.
 		if ( $meta_id === false ) {
 
 			/*
-			 * This probably means that the term already has its term meta set.
+			 * This probably means that the Term already has its "term meta" set.
 			 * Uncomment the following to debug if you need to.
 			 */
 
@@ -1093,7 +1093,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		}
 
-		// Log a message if the term_id is ambiguous between taxonomies.
+		// Log a message if the term_id is ambiguous between Taxonomies.
 		if ( is_wp_error( $meta_id ) ) {
 
 			// Log error message.
@@ -1128,7 +1128,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.6
 	 *
-	 * @param object $event The event object.
+	 * @param object $event The Event object.
 	 * @param string $hook The hook name.
 	 */
 	public function event_type_created( $event, $hook ) {
@@ -1153,7 +1153,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			$description = $event_type->description;
 		}
 
-		// Construct term data.
+		// Construct Term data.
 		$term_data = [
 			'id' => $event_type->id,
 			'label' => $event_type->label,
@@ -1164,7 +1164,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Unhook listeners.
 		$this->hooks_wordpress_remove();
 
-		// Create EO term.
+		// Create EO Term.
 		$result = $this->create_term( $term_data );
 
 		// Rehook listeners.
@@ -1183,7 +1183,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.6
 	 *
-	 * @param object $event The event object.
+	 * @param object $event The Event object.
 	 * @param string $hook The hook name.
 	 */
 	public function event_type_pre_update( $event, $hook ) {
@@ -1221,7 +1221,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.6
 	 *
-	 * @param object $event The event object.
+	 * @param object $event The Event object.
 	 * @param string $hook The hook name.
 	 */
 	public function event_type_updated( $event, $hook ) {
@@ -1263,7 +1263,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Unhook listeners.
 		$this->hooks_wordpress_remove();
 
-		// Update EO term - or create if it doesn't exist.
+		// Update EO Term - or create if it doesn't exist.
 		$result = $this->update_term( $event_type );
 
 		// Rehook listeners.
@@ -1278,7 +1278,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.6
 	 *
-	 * @param object $event The event object.
+	 * @param object $event The Event object.
 	 * @param string $hook The hook name.
 	 */
 	public function event_type_pre_delete( $event, $hook ) {
@@ -1306,7 +1306,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Unhook listeners.
 		$this->hooks_wordpress_remove();
 
-		// Delete term.
+		// Delete Term.
 		$success = $this->delete_term( $term_id );
 
 		// Rehook listeners.
@@ -1325,8 +1325,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param object $new_term The new EO event category term.
-	 * @param object $old_term The EO event category term as it was before update.
+	 * @param object $new_term The new EO Event Category Term.
+	 * @param object $old_term The EO Event Category Term as it was before update.
 	 * @return int|bool $event_type_id The CiviCRM Event Type ID, or false on failure.
 	 */
 	public function update_event_type( $new_term, $old_term = null ) {
@@ -1362,13 +1362,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			$params['description'] = apply_filters( 'civicrm_eo_term_content', $new_term->description );
 		}
 
-		// First check if the term has the ID in its "term meta".
+		// First check if the Term has the ID in its "term meta".
 		$event_type_id = $this->get_term_meta( $new_term->term_id );
 
 		// Short-circuit if we found it.
 		if ( $event_type_id === false ) {
 
-			// If we're updating a term.
+			// If we're updating a Term.
 			if ( ! is_null( $old_term ) ) {
 
 				// Get existing Event Type ID.
@@ -1425,7 +1425,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param object $term The EO event category term.
+	 * @param object $term The EO Event Category Term.
 	 * @return array|bool CiviCRM API data array on success, false on failure.
 	 */
 	public function delete_event_type( $term ) {
@@ -1482,16 +1482,16 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get a CiviCRM Event Type by term.
+	 * Get a CiviCRM Event Type by Term.
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param object $term The EO event category term.
+	 * @param object $term The EO Event Category Term.
 	 * @return int|bool $event_type_id The numeric ID of the CiviCRM Event Type, or false on failure.
 	 */
 	public function get_event_type_id( $term ) {
 
-		// First check if the term has the ID in its "term meta".
+		// First check if the Term has the ID in its "term meta".
 		$event_type_id = $this->get_term_meta( $term->term_id );
 
 		// Short-circuit if we found it.
@@ -1747,7 +1747,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 				// Init selected,
 				$selected = '';
 
-				// Override selected if this value is the same as in the post.
+				// Override selected if this value is the same as in the Post.
 				if ( $existing_value === $event_type_value ) {
 					$selected = ' selected="selected"';
 				}
@@ -1770,12 +1770,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 
 	/**
-	 * Get the default Event Type value for a post, but fall back to the default as set
+	 * Get the default Event Type value for a Post, but fall back to the default as set
 	 * on the admin screen, Fall back to false otherwise.
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param object $post The WP event object.
+	 * @param object $post The WP Event object.
 	 * @return int|bool $existing_value The numeric ID of the CiviCRM Event Type, or false if none exists.
 	 */
 	public function get_default_event_type_value( $post = null ) {
@@ -1791,13 +1791,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			$existing_value = absint( $default );
 		}
 
-		// If we have a post,
+		// If we have a Post.
 		if ( isset( $post ) AND is_object( $post ) ) {
 
-			// Get the terms for this post - there should only be one,
+			// Get the Terms for this Post - there should only be one.
 			$cat = get_the_terms( $post->ID, 'event-category' );
 
-			// Error check,
+			// Error check.
 			if ( is_wp_error( $cat ) ) {
 				return false;
 			}
@@ -1805,13 +1805,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			// Did we get any?
 			if ( is_array( $cat ) AND count( $cat ) > 0 ) {
 
-				// Get first term object (keyed by term ID),
+				// Get first Term object (keyed by Term ID).
 				$term = array_shift( $cat );
 
-				// Get type ID for this term,
+				// Get type ID for this Term.
 				$existing_id = $this->get_event_type_id( $term );
 
-				// Convert to value,
+				// Convert to value.
 				$existing_value = $this->get_event_type_value( $existing_id );
 
 			}

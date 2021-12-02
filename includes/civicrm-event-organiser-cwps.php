@@ -160,10 +160,10 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		// Exclude "Event" from being mapped to a Contact Type.
 		add_filter( 'cwps/acf/post_types/get_all', [ $this, 'post_types_filter' ], 10, 1 );
 
-		// Listen for a CiviEvent being synced to an EO Event.
+		// Listen for a CiviCRM Event being synced to an EO Event.
 		add_action( 'civicrm_event_organiser_admin_civi_to_eo_sync', [ $this, 'sync_to_eo' ], 10, 1 );
 
-		// Listen for an EO Event being synced to a CiviEvent.
+		// Listen for an EO Event being synced to a CiviCRM Event.
 		add_action( 'civicrm_event_organiser_admin_eo_to_civi_sync', [ $this, 'sync_to_civi' ], 10, 1 );
 
 	}
@@ -196,7 +196,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			return;
 		}
 
-		// Get existing CiviEvents from post meta.
+		// Get existing CiviCRM Events from post meta.
 		$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $args['post_id'] );
 
 		// Bail if we have no correspondences.
@@ -587,10 +587,10 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		// Assume not visible.
 		$is_visible = false;
 
-		// Bail if no location rules exist.
+		// Bail if no Location Rules exist.
 		if ( ! empty( $field_group['location'] ) ) {
 
-			// Define params to test for Event location.
+			// Define params to test for Event Location.
 			$params = [
 				'post_type' => 'event',
 			];
@@ -639,7 +639,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 
 	/**
-	 * Intercept when a CiviEvent has been synced to an EO Event.
+	 * Intercept when a CiviCRM Event has been synced to an EO Event.
 	 *
 	 * Update any associated ACF Fields with their Custom Field values.
 	 *
@@ -681,7 +681,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			}
 		}
 
-		// CiviEvent data contains the associated Custom Field data! *smile*
+		// CiviCRM Event data contains the associated Custom Field data! *smile*
 		$custom_field_data = [];
 		foreach( $args['civi_event'] AS $key => $value ) {
 			// CiviCRM only appends populated Custom Fields.
@@ -730,7 +730,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 
 	/**
-	 * Intercept when an EO Event has been synced to a CiviEvent.
+	 * Intercept when an EO Event has been synced to a CiviCRM Event.
 	 *
 	 * Update any associated Custom Fields with their ACF Field values.
 	 *
