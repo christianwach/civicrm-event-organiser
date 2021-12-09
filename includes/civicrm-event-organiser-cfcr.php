@@ -49,8 +49,8 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	 */
 	public function __construct() {
 
-		// Add CiviCRM hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'initialise' ] );
+		// Initialise after "Caldera Forms CiviCRM Redirect" is loaded.
+		add_action( 'plugins_loaded', [ $this, 'initialise' ], 50 );
 
 	}
 
