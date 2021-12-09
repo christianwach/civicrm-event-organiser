@@ -345,7 +345,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Add settings page.
 		$this->settings_page = add_submenu_page(
 			'civi_eo_parent', // Parent slug
-			__( 'CiviCRM Event Organiser: Settings', 'civicrm-event-organiser' ), // Page title.
+			__( 'Settings: CiviCRM Event Organiser', 'civicrm-event-organiser' ), // Page title.
 			__( 'Settings', 'civicrm-event-organiser' ), // Menu title.
 			'manage_options', // Required caps.
 			'civi_eo_settings', // Slug name.
@@ -359,7 +359,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Add manual sync page.
 		$this->sync_page = add_submenu_page(
 			'civi_eo_parent', // Parent slug.
-			__( 'CiviCRM Event Organiser: Manual Sync', 'civicrm-event-organiser' ), // Page title.
+			__( 'Manual Sync: CiviCRM Event Organiser', 'civicrm-event-organiser' ), // Page title.
 			__( 'Manual Sync', 'civicrm-event-organiser' ), // Menu title.
 			'manage_options', // Required caps.
 			'civi_eo_manual_sync', // Slug name.
