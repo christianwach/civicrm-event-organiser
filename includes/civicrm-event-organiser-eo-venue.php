@@ -102,7 +102,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 
 
- 	// -------------------------------------------------------------------------
+	// -------------------------------------------------------------------------
 
 
 
@@ -258,7 +258,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// Only do this once.
 		static $term_deleted;
-		if ( isset( $term_deleted ) AND $term_deleted === $deleted_term->term_id ) {
+		if ( isset( $term_deleted ) && $term_deleted === $deleted_term->term_id ) {
 			return;
 		}
 
@@ -276,9 +276,9 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Did we get a CiviCRM Location ID?
 		if (
 			isset( $venue_meta['_civi_loc_id'] )
-			AND
+			&&
 			is_array( $venue_meta['_civi_loc_id'] )
-			AND
+			&&
 			count( $venue_meta['_civi_loc_id'] ) === 1
 		) {
 
@@ -344,7 +344,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		if ( empty( $location['address']['street_address'] ) ) {
 
 			// Log and move on.
-			$e = new Exception;
+			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
 				'method' => __METHOD__,
@@ -366,35 +366,35 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		];
 
 		// Add country if present.
-		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) AND ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
+		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) && ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
 			$args['country'] = $location['api.Address.getsingle']['country_id.name'];
 		}
 
 		// Add state if present.
-		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) AND ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
+		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) && ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
 			$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
 		}
 
 		// Add street address if present.
-		if ( isset( $location['address']['street_address'] ) AND ! empty( $location['address']['street_address'] ) ) {
+		if ( isset( $location['address']['street_address'] ) && ! empty( $location['address']['street_address'] ) ) {
 			$args['address'] = $location['address']['street_address'];
 		}
 
 		// Add city if present.
-		if ( isset( $location['address']['city'] ) AND ! empty( $location['address']['city'] ) ) {
+		if ( isset( $location['address']['city'] ) && ! empty( $location['address']['city'] ) ) {
 			$args['city'] = $location['address']['city'];
 		}
 
 		// Add postcode if present.
-		if ( isset( $location['address']['postal_code'] ) AND ! empty( $location['address']['postal_code'] ) ) {
+		if ( isset( $location['address']['postal_code'] ) && ! empty( $location['address']['postal_code'] ) ) {
 			$args['postcode'] = $location['address']['postal_code'];
 		}
 
 		// Add geocodes if present.
-		if ( isset( $location['address']['geo_code_1'] ) AND ! empty( $location['address']['geo_code_1'] ) ) {
+		if ( isset( $location['address']['geo_code_1'] ) && ! empty( $location['address']['geo_code_1'] ) ) {
 			$args['latitude'] = $location['address']['geo_code_1'];
 		}
-		if ( isset( $location['address']['geo_code_2'] ) AND ! empty( $location['address']['geo_code_2'] ) ) {
+		if ( isset( $location['address']['geo_code_2'] ) && ! empty( $location['address']['geo_code_2'] ) ) {
 			$args['longtitude'] = $location['address']['geo_code_2'];
 		}
 
@@ -414,7 +414,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		 *
 		 * @param bool False by default, which does not force unique slugs.
 		 */
-		if ( $existing_venue OR apply_filters( 'civicrm_event_organiser_force_unique_slug', false ) ) {
+		if ( $existing_venue || apply_filters( 'civicrm_event_organiser_force_unique_slug', false ) ) {
 
 			// Create a slug we know will be unique.
 			$args['slug'] = sanitize_title( $name . '-' . $location['id'] );
@@ -429,10 +429,10 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
 
 		// If we get an error.
-		if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) {
+		if ( is_wp_error( $result ) || ! isset( $result['term_id'] ) ) {
 
 			// Log and bail.
-			$e = new Exception;
+			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
 				'method' => __METHOD__,
@@ -448,26 +448,26 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Create Venue meta data.
 
 		// Do we have an email for the Location?
-		if ( isset( $location['email']['email'] ) AND ! empty( $location['email']['email'] ) ) {
+		if ( isset( $location['email']['email'] ) && ! empty( $location['email']['email'] ) ) {
 
 			// Yes, get it.
 			$email = $location['email']['email'];
 
 			// Store email in meta.
-			eo_update_venue_meta( $result['term_id'],  '_civi_email', esc_sql( $email ) );
+			eo_update_venue_meta( $result['term_id'], '_civi_email', esc_sql( $email ) );
 
 		}
 
 		// Do we have a phone number for the Location?
-		if ( isset( $location['phone']['phone'] ) AND ! empty( $location['phone']['phone'] ) ) {
+		if ( isset( $location['phone']['phone'] ) && ! empty( $location['phone']['phone'] ) ) {
 
-			// Store phone in meta
-			eo_update_venue_meta( $result['term_id'],  '_civi_phone', esc_sql( $location['phone']['phone'] ) );
+			// Store phone in meta.
+			eo_update_venue_meta( $result['term_id'], '_civi_phone', esc_sql( $location['phone']['phone'] ) );
 
 		}
 
 		// Store Location ID.
-		eo_update_venue_meta( $result['term_id'],  '_civi_loc_id', $location['id'] );
+		eo_update_venue_meta( $result['term_id'], '_civi_loc_id', $location['id'] );
 
 		// --<
 		return $result['term_id'];
@@ -521,42 +521,42 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 			// Construct args.
 			$args = [
-				'name' => $venue->name, // Can't update name yet (locations don't have one)
-				//'description' => $location['description'], // CiviCRM has no Location description at present
-				//'state' => $location['address']['county'], // CiviCRM county is an ID not a string
-				//'country' => $location['address']['country'], // CiviCRM country is an ID not a string
+				'name' => $venue->name, // Can't update name yet - locations don't have one.
+				//'description' => $location['description'], // CiviCRM has no Location description at present.
+				//'state' => $location['address']['county'], // CiviCRM county is an ID not a string.
+				//'country' => $location['address']['country'], // CiviCRM country is an ID not a string.
 			];
 
 			// Add country if present.
-			if (  ! isset($location['api.Address.getsingle']['is_error']) AND ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
+			if ( ! isset( $location['api.Address.getsingle']['is_error'] ) && ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
 				$args['country'] = $location['api.Address.getsingle']['country_id.name'];
 			}
 
 			// Add state if present.
-			if (  ! isset($location['api.Address.getsingle']['is_error']) AND ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
+			if ( ! isset( $location['api.Address.getsingle']['is_error'] ) && ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
 				$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
 			}
 
 			// Add street address if present.
-			if ( isset( $location['address']['street_address'] ) AND ! empty( $location['address']['street_address'] ) ) {
+			if ( isset( $location['address']['street_address'] ) && ! empty( $location['address']['street_address'] ) ) {
 				$args['address'] = $location['address']['street_address'];
 			}
 
 			// Add city if present.
-			if ( isset( $location['address']['city'] ) AND ! empty( $location['address']['city'] ) ) {
+			if ( isset( $location['address']['city'] ) && ! empty( $location['address']['city'] ) ) {
 				$args['city'] = $location['address']['city'];
 			}
 
 			// Add postcode if present.
-			if ( isset( $location['address']['postal_code'] ) AND ! empty( $location['address']['postal_code'] ) ) {
+			if ( isset( $location['address']['postal_code'] ) && ! empty( $location['address']['postal_code'] ) ) {
 				$args['postcode'] = $location['address']['postal_code'];
 			}
 
 			// Add geocodes if present.
-			if ( isset( $location['address']['geo_code_1'] ) AND ! empty( $location['address']['geo_code_1'] ) ) {
+			if ( isset( $location['address']['geo_code_1'] ) && ! empty( $location['address']['geo_code_1'] ) ) {
 				$args['latitude'] = $location['address']['geo_code_1'];
 			}
-			if ( isset( $location['address']['geo_code_2'] ) AND ! empty( $location['address']['geo_code_2'] ) ) {
+			if ( isset( $location['address']['geo_code_2'] ) && ! empty( $location['address']['geo_code_2'] ) ) {
 				$args['longtitude'] = $location['address']['geo_code_2'];
 			}
 
@@ -570,20 +570,20 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
 
 			// Bail if we get an error.
-			if ( is_wp_error( $result ) OR ! isset( $result['term_id'] ) ) {
+			if ( is_wp_error( $result ) || ! isset( $result['term_id'] ) ) {
 				return false;
 			}
 
 			// Create Venue meta data, if present.
 			if ( isset( $location['email']['email'] ) ) {
-				eo_update_venue_meta( $result['term_id'],  '_civi_email', esc_sql( $location['email']['email'] ) );
+				eo_update_venue_meta( $result['term_id'], '_civi_email', esc_sql( $location['email']['email'] ) );
 			}
 			if ( isset( $location['phone']['phone'] ) ) {
-				eo_update_venue_meta( $result['term_id'],  '_civi_phone', esc_sql( $location['phone']['phone'] ) );
+				eo_update_venue_meta( $result['term_id'], '_civi_phone', esc_sql( $location['phone']['phone'] ) );
 			}
 
 			// Always store Location ID.
-			eo_update_venue_meta( $result['term_id'],  '_civi_loc_id', $location['id'] );
+			eo_update_venue_meta( $result['term_id'], '_civi_loc_id', $location['id'] );
 
 		}
 
@@ -623,7 +623,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$venue_id = $wpdb->get_var( $sql );
 
 		// If we get one, return it.
-		if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) {
+		if ( isset( $venue_id ) && ! is_null( $venue_id ) && $venue_id > 0 ) {
 			return $venue_id;
 		}
 
@@ -634,7 +634,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Do we have geo data?
 		if (
 			isset( $location['address']['geo_code_1'] )
-			AND
+			&&
 			isset( $location['address']['geo_code_2'] )
 		) {
 
@@ -657,7 +657,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			$venue_id = $wpdb->get_var( $sql );
 
 			// If we get one, return it.
-			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) {
+			if ( isset( $venue_id ) && ! is_null( $venue_id ) && $venue_id > 0 ) {
 				return $venue_id;
 			}
 
@@ -681,7 +681,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			$venue_id = $wpdb->get_var( $sql );
 
 			// If we get one, return it.
-			if ( isset( $venue_id ) AND ! is_null( $venue_id ) AND $venue_id > 0 ) {
+			if ( isset( $venue_id ) && ! is_null( $venue_id ) && $venue_id > 0 ) {
 				return $venue_id;
 			}
 
@@ -800,16 +800,18 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		$single = false;
-		if ( ! is_array($terms) ) {
+		if ( ! is_array( $terms ) ) {
 			$single = true;
 			$terms = [ $terms ];
 		}
 
-		if( empty( $terms ) ) return $terms;
+		if ( empty( $terms ) ) {
+			return $terms;
+		}
 
 		// Check if its array of Terms or Term IDs.
 		$first_element = reset( $terms );
-		if ( is_object( $first_element ) ){
+		if ( is_object( $first_element ) ) {
 			$term_ids = wp_list_pluck( $terms, 'term_id' );
 		} else {
 			$term_ids = $terms;
@@ -817,24 +819,26 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		update_meta_cache( 'eo_venue', $term_ids );
 
-		// Loop through,
-		foreach( $terms AS $term ) {
+		// Loop through.
+		foreach ( $terms as $term ) {
 
-			// Skip if not useful,
-			if( ! is_object( $term ) ) continue;
+			// Skip if not useful.
+			if ( ! is_object( $term ) ) {
+				continue;
+			}
 
 			// Get Term ID.
 			$term_id = (int) $term->term_id;
 
-			if( ! isset( $term->venue_civi_email ) ) {
+			if ( ! isset( $term->venue_civi_email ) ) {
 				$term->venue_civi_email = eo_get_venue_meta( $term_id, '_civi_email', true );
 			}
 
-			if( ! isset( $term->venue_civi_phone ) ) {
+			if ( ! isset( $term->venue_civi_phone ) ) {
 				$term->venue_civi_phone = eo_get_venue_meta( $term_id, '_civi_phone', true );
 			}
 
-			if( ! isset( $term->venue_civi_id ) ) {
+			if ( ! isset( $term->venue_civi_id ) ) {
 				$term->venue_civi_id = eo_get_venue_meta( $term_id, '_civi_loc_id', true );
 			}
 
@@ -865,7 +869,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		if ( absint( $civi_loc_block['count'] ) == 1 ) {
 
 			// Update Venue meta.
-			eo_update_venue_meta( $venue_id,  '_civi_loc_id', absint( $civi_loc_block['id'] ) );
+			eo_update_venue_meta( $venue_id, '_civi_loc_id', absint( $civi_loc_block['id'] ) );
 
 		}
 
@@ -903,7 +907,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function clear_civi_location( $venue_id ) {
 
 		// Update Venue meta.
-		eo_delete_venue_meta( $venue_id,  '_civi_loc_id' );
+		eo_delete_venue_meta( $venue_id, '_civi_loc_id' );
 
 	}
 
@@ -942,7 +946,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	private function _save_venue_components( $venue_id ) {
 
 		// Skip if neither email nor phone is set.
-		if ( ! isset( $_POST['civi_eo_venue_email'] ) AND ! isset( $_POST['civi_eo_venue_phone'] ) ) {
+		if ( ! isset( $_POST['civi_eo_venue_email'] ) && ! isset( $_POST['civi_eo_venue_phone'] ) ) {
 			return;
 		}
 
@@ -988,8 +992,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function clear_venue_components( $venue_id ) {
 
 		// Delete Venue meta.
-		eo_delete_venue_meta( $venue_id,  '_civi_email' );
-		eo_delete_venue_meta( $venue_id,  '_civi_phone' );
+		eo_delete_venue_meta( $venue_id, '_civi_email' );
+		eo_delete_venue_meta( $venue_id, '_civi_phone' );
 
 	}
 
@@ -1014,7 +1018,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		// Update Venue meta.
-		eo_update_venue_meta( $venue_id,  '_civi_email', esc_sql( $value ) );
+		eo_update_venue_meta( $venue_id, '_civi_email', esc_sql( $value ) );
 
 	}
 
@@ -1033,7 +1037,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Use CiviCRM to validate?
 
 		// Update Venue meta.
-		eo_update_venue_meta( $venue_id,  '_civi_phone', esc_sql( $venue_phone ) );
+		eo_update_venue_meta( $venue_id, '_civi_phone', esc_sql( $venue_phone ) );
 
 	}
 

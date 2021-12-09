@@ -120,7 +120,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	$multiple = ( count( $civi_events ) > 1 ) ? true : false;
 
 	// Loop through them.
-	foreach( $civi_events AS $civi_event_id ) {
+	foreach ( $civi_events as $civi_event_id ) {
 
 		// Get the full CiviCRM Event.
 		$civi_event = $plugin->civi->get_event_by_id( $civi_event_id );

@@ -15,14 +15,16 @@ defined( 'ABSPATH' ) || exit;
 <div class="wrap">
 
 	<h1 class="nav-tab-wrapper">
-		<a href="<?php echo $urls['settings']; ?>" class="nav-tab nav-tab-active"><?php _e( 'Settings', 'civicrm-event-organiser' ); ?></a>
-		<a href="<?php echo $urls['manual_sync']; ?>" class="nav-tab"><?php _e( 'Manual Sync', 'civicrm-event-organiser' ); ?></a>
+		<a href="<?php echo $urls['settings']; ?>" class="nav-tab nav-tab-active"><?php esc_html_e( 'Settings', 'civicrm-event-organiser' ); ?></a>
+		<a href="<?php echo $urls['manual_sync']; ?>" class="nav-tab"><?php esc_html_e( 'Manual Sync', 'civicrm-event-organiser' ); ?></a>
 	</h1>
 
 	<?php
 
 	// If we've got any messages, show them.
-	if ( isset( $messages ) AND ! empty( $messages ) ) echo $messages;
+	if ( isset( $messages ) && ! empty( $messages ) ) {
+		echo $messages;
+	}
 
 	?>
 
@@ -30,9 +32,9 @@ defined( 'ABSPATH' ) || exit;
 
 		<?php wp_nonce_field( 'civi_eo_settings_action', 'civi_eo_settings_nonce' ); ?>
 
-		<h3><?php _e( 'General Settings', 'civicrm-event-organiser' ); ?></h3>
+		<h3><?php esc_html_e( 'General Settings', 'civicrm-event-organiser' ); ?></h3>
 
-		<p><?php _e( 'The following options configure some CiviCRM and Event Organiser defaults.', 'civicrm-event-organiser' ); ?></p>
+		<p><?php esc_html_e( 'The following options configure some CiviCRM and Event Organiser defaults.', 'civicrm-event-organiser' ); ?></p>
 
 		<?php
 
@@ -60,7 +62,7 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php if ( $types != '' ) : ?>
 				<tr valign="top">
-					<th scope="row"><label for="civi_eo_event_default_type"><?php _e( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ); ?></label></th>
+					<th scope="row"><label for="civi_eo_event_default_type"><?php esc_html_e( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ); ?></label></th>
 					<td>
 						<select id="civi_eo_event_default_type" name="civi_eo_event_default_type">
 							<?php echo $types; ?>
@@ -71,38 +73,38 @@ defined( 'ABSPATH' ) || exit;
 
 			<?php if ( $roles != '' ) : ?>
 				<tr valign="top">
-					<th scope="row"><label for="civi_eo_event_default_role"><?php _e( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ); ?></label></th>
+					<th scope="row"><label for="civi_eo_event_default_role"><?php esc_html_e( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ); ?></label></th>
 					<td>
 						<select id="civi_eo_event_default_role" name="civi_eo_event_default_role">
 							<?php echo $roles; ?>
 						</select>
-						<p class="description"><?php _e( 'This will be the Participant Role that is set for Event Registrations when there is a Registration Profile that does not contain a Participant Role selector.' ); ?></p>
+						<p class="description"><?php esc_html_e( 'This will be the Participant Role that is set for Event Registrations when there is a Registration Profile that does not contain a Participant Role selector.', 'civicrm-event-organiser' ); ?></p>
 					</td>
 				</tr>
 			<?php endif; ?>
 
 			<?php if ( $profiles != '' ) : ?>
 				<tr valign="top">
-					<th scope="row"><label for="civi_eo_event_default_profile"><?php _e( 'Default CiviCRM Event Registration Profile', 'civicrm-event-organiser' ); ?></label></th>
+					<th scope="row"><label for="civi_eo_event_default_profile"><?php esc_html_e( 'Default CiviCRM Event Registration Profile', 'civicrm-event-organiser' ); ?></label></th>
 					<td>
 						<select id="civi_eo_event_default_profile" name="civi_eo_event_default_profile">
 							<?php echo $profiles; ?>
 						</select>
-						<p class="description"><?php _e( 'Event Registration Pages require a Profile in order to display correctly.' ); ?></p>
+						<p class="description"><?php esc_html_e( 'Event Registration Pages require a Profile in order to display correctly.', 'civicrm-event-organiser' ); ?></p>
 						<?php if ( $profile_required ) : ?>
-							<div class="notice notice-warning inline"><p><?php _e( 'Please select a default Profile for Event Registration Pages.' ); ?></p></div>
+							<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please select a default Profile for Event Registration Pages.', 'civicrm-event-organiser' ); ?></p></div>
 						<?php endif; ?>
 					</td>
 				</tr>
 			<?php endif; ?>
 
 			<tr valign="top">
-				<th scope="row"><?php _e( 'Default CiviCRM Event Registration Confirmation Screen Setting', 'civicrm-event-organiser' ); ?></th>
+				<th scope="row"><?php esc_html_e( 'Default CiviCRM Event Registration Confirmation Screen Setting', 'civicrm-event-organiser' ); ?></th>
 				<td>
 					<input type="checkbox" id="civi_eo_event_default_confirm" name="civi_eo_event_default_confirm" value="1"<?php echo $confirm_checked; ?>>
-					<label for="civi_eo_event_default_confirm"><?php _e( 'Use a Registration Confirmation Screen for free Events.' ); ?></label>
+					<label for="civi_eo_event_default_confirm"><?php esc_html_e( 'Use a Registration Confirmation Screen for free Events.', 'civicrm-event-organiser' ); ?></label>
 					<?php if ( $confirm_required ) : ?>
-						<div class="notice notice-warning inline"><p><?php _e( 'Please choose the default setting for Registration Confirmation Screens.' ); ?></p></div>
+						<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please choose the default setting for Registration Confirmation Screens.', 'civicrm-event-organiser' ); ?></p></div>
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -134,7 +136,7 @@ defined( 'ABSPATH' ) || exit;
 		<hr>
 
 		<p class="submit">
-			<input class="button-primary" type="submit" id="civi_eo_settings_submit" name="civi_eo_settings_submit" value="<?php _e( 'Save Changes', 'civicrm-event-organiser' ); ?>" />
+			<input class="button-primary" type="submit" id="civi_eo_settings_submit" name="civi_eo_settings_submit" value="<?php esc_attr_e( 'Save Changes', 'civicrm-event-organiser' ); ?>" />
 		</p>
 
 	</form>

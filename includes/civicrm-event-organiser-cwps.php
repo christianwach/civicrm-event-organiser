@@ -216,7 +216,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		remove_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10 );
 
 		// Loop through the CiviCRM Events and update.
-		foreach( $correspondences AS $event_id ) {
+		foreach ( $correspondences as $event_id ) {
 			$this->update_from_fields( $event_id, $fields );
 		}
 
@@ -256,7 +256,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		}
 
 		// Loop through the field data.
-		foreach( $fields AS $selector => $value ) {
+		foreach ( $fields as $selector => $value ) {
 
 			// Get the Field settings.
 			$settings = get_field_object( $selector, $post_id );
@@ -276,7 +276,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			$value = $this->cwps->acf->acf->field->value_get_for_civicrm( $value, $settings['type'], $settings );
 
 			// Add it to the field data.
-			$event_data[$code] = $value;
+			$event_data[ $code ] = $value;
 
 		}
 
@@ -330,7 +330,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 		// Log and bail if there's no Event ID.
 		if ( empty( $event['id'] ) ) {
-			$e = new Exception;
+			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
 				'method' => __METHOD__,
@@ -350,7 +350,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		$result = civicrm_api( 'Event', 'create', $params );
 
 		// Bail if there's an error.
-		if ( ! empty( $result['is_error'] ) AND $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
 			return $event_data;
 		}
 
@@ -417,10 +417,10 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 		// Build Custom Field choices array for dropdown.
 		$custom_field_prefix = $this->cwps->acf->civicrm->custom_field_prefix();
-		foreach( $filtered_fields AS $custom_group_name => $custom_group ) {
+		foreach ( $filtered_fields as $custom_group_name => $custom_group ) {
 			$custom_fields_label = esc_attr( $custom_group_name );
-			foreach( $custom_group AS $custom_field ) {
-				$choices[$custom_fields_label][$custom_field_prefix . $custom_field['id']] = $custom_field['label'];
+			foreach ( $custom_group as $custom_field ) {
+				$choices[ $custom_fields_label ][ $custom_field_prefix . $custom_field['id'] ] = $custom_field['label'];
 			}
 		}
 
@@ -441,7 +441,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 *
 	 * @param bool $mapped The existing mapping flag.
 	 * @param array $field_group The array of ACF Field Group data.
-	 * @param bool $mapped True if the Field Group is mapped, or pass through if not mapped.
+	 * @return bool $mapped True if the Field Group is mapped, or pass through if not mapped.
 	 */
 	public function query_field_group_mapped( $mapped, $field_group ) {
 
@@ -470,7 +470,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 *
 	 * @param array $custom_fields The existing Custom Fields.
 	 * @param array $field_group The array of ACF Field Group data.
-	 * @param array $custom_fields The populated array of CiviCRM Custom Fields params.
+	 * @return array $custom_fields The populated array of CiviCRM Custom Fields params.
 	 */
 	public function query_custom_fields( $custom_fields, $field_group ) {
 
@@ -517,7 +517,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		$event_post_ids = [];
 
 		// Let's tease out the context from the Custom Field data.
-		foreach( $args['custom_fields'] AS $field ) {
+		foreach ( $args['custom_fields'] as $field ) {
 
 			// Skip if it is not attached to a Event.
 			if ( $field['entity_table'] != 'civicrm_event' ) {
@@ -674,8 +674,8 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 		// Flatten the array since we don't need labels.
 		$custom_fields = [];
-		foreach( $civicrm_custom_fields AS $key => $field_group ) {
-			foreach( $field_group AS $custom_field ) {
+		foreach ( $civicrm_custom_fields as $key => $field_group ) {
+			foreach ( $field_group as $custom_field ) {
 				$custom_field['type'] = $custom_field['data_type'];
 				$custom_fields[] = $custom_field;
 			}
@@ -683,23 +683,23 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 		// CiviCRM Event data contains the associated Custom Field data! *smile*
 		$custom_field_data = [];
-		foreach( $args['civi_event'] AS $key => $value ) {
+		foreach ( $args['civi_event'] as $key => $value ) {
 			// CiviCRM only appends populated Custom Fields.
 			if ( substr( $key, 0, 7 ) == 'custom_' ) {
 				$index = str_replace( 'custom_', '', $key );
-				$custom_field_data[$index] = $value;
+				$custom_field_data[ $index ] = $value;
 			}
 		}
 
 		// Let's run through each Custom Field in turn.
-		foreach( $acf_fields['custom'] AS $selector => $custom_field_ref ) {
+		foreach ( $acf_fields['custom'] as $selector => $custom_field_ref ) {
 
 			// Prime with an empty string.
 			$value = '';
 
 			// Safely get the value from the Custom Field values.
-			if ( isset( $custom_field_data[$custom_field_ref] ) ) {
-				$value = $custom_field_data[$custom_field_ref];
+			if ( isset( $custom_field_data[ $custom_field_ref ] ) ) {
+				$value = $custom_field_data[ $custom_field_ref ];
 			}
 
 			// Grab the CiviCRM field definition.
@@ -711,8 +711,8 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 				// Overwrite value if the raw value exists.
 				$key = $field['id'] . '_id';
-				if ( isset( $custom_field_data[$key] ) ) {
-					$value = $custom_field_data[$key];
+				if ( isset( $custom_field_data[ $key ] ) ) {
+					$value = $custom_field_data[ $key ];
 				}
 
 			}

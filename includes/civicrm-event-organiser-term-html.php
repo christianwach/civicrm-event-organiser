@@ -108,23 +108,23 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 *
 	 * @since 0.2.1
 	 *
-	 * @param $tag The WordPress tag.
-	 * @param $taxonomy The WordPress Taxonomy.
+	 * @param object $tag The WordPress tag object.
+	 * @param str $taxonomy The WordPress Taxonomy.
 	 */
 	public function render_field_edit( $tag, $taxonomy ) {
 
 		$settings = [
-			'textarea_name'	=> 'description',
-			'quicktags' 	=> true,
-			'tinymce' 		=> true,
-			'editor_css'	=> '<style>#wp-html-description-editor-container .wp-editor-area { height: 250px; }</style>'
+			'textarea_name' => 'description',
+			'quicktags'     => true,
+			'tinymce'       => true,
+			'editor_css'    => '<style>#wp-html-description-editor-container .wp-editor-area { height: 250px; }</style>',
 		];
 
 		?>
 		<tr>
 			<th scope="row" valign="top"><label for="description"><?php _ex( 'Description', 'Taxonomy Description', 'civicrm-event-organiser' ); ?></label></th>
 			<td><?php wp_editor( htmlspecialchars_decode( $tag->description ), 'html-description', $settings ); ?>
-			<span class="description"><?php _e( 'The description is not prominent by default, however some themes may show it.', 'civicrm-event-organiser' ); ?></span></td>
+			<span class="description"><?php esc_html_e( 'The description is not prominent by default, however some themes may show it.', 'civicrm-event-organiser' ); ?></span></td>
 			<script type="text/javascript">
 				// Remove the non-HTML field.
 				jQuery( 'textarea#description' ).closest( '.form-field' ).remove();
@@ -141,22 +141,22 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 *
 	 * @since 0.2.1
 	 *
-	 * @param $taxonomy The WordPress Taxonomy.
+	 * @param str $taxonomy The WordPress Taxonomy.
 	 */
 	public function render_field_add( $taxonomy ) {
 
 		$settings = [
-			'textarea_name'	=> 'description',
-			'quicktags' 	=> true,
-			'tinymce' 		=> true,
-			'editor_css'	=> '<style>#wp-html-tag-description-editor-container .wp-editor-area { height: 150px; }</style>'
+			'textarea_name' => 'description',
+			'quicktags'     => true,
+			'tinymce'       => true,
+			'editor_css'    => '<style>#wp-html-tag-description-editor-container .wp-editor-area { height: 150px; }</style>',
 		];
 
 		?>
 		<div class="form-field term-description-wrap">
 			<label for="tag-description"><?php _ex( 'Description', 'Taxonomy Description', 'civicrm-event-organiser' ); ?></label>
 			<?php wp_editor( '', 'html-tag-description', $settings ); ?>
-			<p class="description"><?php _e( 'The description is not prominent by default, however some themes may show it.', 'civicrm-event-organiser' ); ?></p>
+			<p class="description"><?php esc_html_e( 'The description is not prominent by default, however some themes may show it.', 'civicrm-event-organiser' ); ?></p>
 			<script type="text/javascript">
 				// Remove the non-HTML field.
 				jQuery( 'textarea#tag-description' ).closest( '.form-field' ).remove();
@@ -164,13 +164,13 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 				jQuery( function() {
 					// This fires when submitted via keyboard.
 					jQuery( '#addtag' ).on( 'keydown', '#submit', function() {
-				   		tinyMCE.triggerSave();
-				    });
+						tinyMCE.triggerSave();
+					});
 					// This does not fire when submitted via keyboard.
 					jQuery( '#addtag' ).on( 'mousedown', '#submit', function() {
-				   		tinyMCE.triggerSave();
-				    });
-			    });
+						tinyMCE.triggerSave();
+					});
+				});
 			</script>
 		</div>
 		<?php

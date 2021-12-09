@@ -222,7 +222,7 @@ class CiviCRM_WP_Event_Organiser {
 
 		// Only do this once.
 		static $done;
-		if ( isset( $done ) AND $done === true ) {
+		if ( isset( $done ) && $done === true ) {
 			return;
 		}
 

@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 </style>
 
 <ul class="civi_eo_event_list">
-	<?php foreach( $links AS $link ) : ?>
+	<?php foreach ( $links as $link ) : ?>
 		<li><?php echo $link; ?></li>
 	<?php endforeach; ?>
 </ul>

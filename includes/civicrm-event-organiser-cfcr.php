@@ -81,7 +81,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 		// Maybe store reference to CFC Forms CiviCRM Redirect.
 		if ( defined( 'CFC_REDIRECT_VERSION' ) ) {
-			$this->cfcr = new stdClass;
+			$this->cfcr = new stdClass();
 			$this->cfcr->redirect_api = new \CFCR\Api\DB();
 		}
 
@@ -111,7 +111,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		add_action( 'wp_ajax_url_to_post_id', [ $this, 'url_to_post_id' ] );
 
 		// Filter the queried Post Types.
-		add_filter( 'wp_link_query_args', array( $this, 'query_post_type' ) );
+		add_filter( 'wp_link_query_args', [ $this, 'query_post_type' ] );
 
 		// Intercept Event components update.
 		add_action( 'civicrm_event_organiser_event_components_updated', [ $this, 'redirect_update' ] );
@@ -154,7 +154,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 		// Build list of redirects.
 		$redirects = [];
-		foreach( $civi_events AS $civi_event_id ) {
+		foreach ( $civi_events as $civi_event_id ) {
 			$redirect_data = $this->cfcr->redirect_api->get_by_entity_id( $civi_event_id );
 			if ( ! empty( $redirect_data ) ) {
 				$redirects[] = $redirect_data;
@@ -225,9 +225,9 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	public function query_post_type( $query ) {
 
 		// Is this our metabox calling?
-		$cfcr = isset( $_POST['cfcr'] ) ? $_POST['cfcr'] : '';
+		$cfcr = isset( $_POST['cfcr'] ) ? wp_unslash( $_POST['cfcr'] ) : '';
 		$is_cfcr = false;
-		if ( ! empty( $cfcr ) AND $cfcr === 'true' ) {
+		if ( ! empty( $cfcr ) && $cfcr === 'true' ) {
 			$is_cfcr = true;
 		}
 
@@ -265,7 +265,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Get Post URL.
-		$post_url = isset( $_POST['post_url'] ) ? trim( $_POST['post_url'] ) : '';
+		$post_url = isset( $_POST['post_url'] ) ? trim( wp_unslash( $_POST['post_url'] ) ) : '';
 
 		// Sanity checks.
 		if ( empty( $post_url ) ) {
