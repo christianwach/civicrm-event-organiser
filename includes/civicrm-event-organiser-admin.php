@@ -77,7 +77,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public $step_counts = [
 		'tax' => 5, // EO Category Terms & CiviCRM Event Types.
 		'venue' => 5, // EO Venues & CiviCRM Locations.
-		'event' => 1, // EO Events & CiviCRM Events.
+		'event' => 10, // EO Events & CiviCRM Events.
 	];
 
 
