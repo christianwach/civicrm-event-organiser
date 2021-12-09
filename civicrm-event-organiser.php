@@ -1,16 +1,17 @@
-<?php /*
---------------------------------------------------------------------------------
-Plugin Name: CiviCRM Event Organiser
-Description: Sync Event Organiser Events with CiviCRM Events.
-Version: 0.6.5
-Author: Christian Wach
-Author URI: https://haystack.co.uk
-Plugin URI: https://github.com/christianwach/civicrm-event-organiser
-Text Domain: civicrm-event-organiser
-Domain Path: /languages
-Network: false
---------------------------------------------------------------------------------
-*/
+<?php
+/**
+ * Plugin Name: CiviCRM Event Organiser
+ * Description: Sync Event Organiser Events with CiviCRM Events.
+ * Version: 0.6.5
+ * Author: Christian Wach
+ * Author URI: https://haystack.co.uk
+ * Plugin URI: https://github.com/christianwach/civicrm-event-organiser
+ * Text Domain: civicrm-event-organiser
+ * Domain Path: /languages
+ * Network: false
+ *
+ * @package CiviCRM_WP_Event_Organiser
+ */
 
 
 
