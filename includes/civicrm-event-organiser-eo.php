@@ -148,19 +148,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Access Event Organiser option.
 		$installed_version = get_option( 'eventorganiser_version', 'etueue' );
 
+		// Assume we're okay.
+		$eo_active = true;
+
 		// This plugin will not work without Event Organiser v3+.
 		if ( $installed_version === 'etueue' || version_compare( $installed_version, '3', '<' ) ) {
 
 			// Let's show an admin notice.
 			add_action( 'admin_notices', [ $this->plugin->db, 'dependency_alert' ] );
 
-			// Set flag.
+			// We're not okay.
 			$eo_active = false;
-
-		} else {
-
-			// Set flag.
-			$eo_active = true;
 
 		}
 
@@ -626,31 +624,22 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10, 1 );
 
 		// Save Event meta if the Event has Online Registration enabled.
-		if (
-			isset( $civi_event['is_online_registration'] ) &&
-			$civi_event['is_online_registration'] == 1
-		) {
-			$this->set_event_registration( $event_id, $civi_event['is_online_registration'] );
+		if ( ! empty( $civi_event['is_online_registration'] ) ) {
+			$this->set_event_registration( $event_id, (int) $civi_event['is_online_registration'] );
 		} else {
 			$this->set_event_registration( $event_id );
 		}
 
 		// Save Event meta if the Event has a Participant Role specified.
-		if (
-			isset( $civi_event['default_role_id'] ) &&
-			! empty( $civi_event['default_role_id'] )
-		) {
+		if ( ! empty( $civi_event['default_role_id'] ) ) {
 			$this->set_event_role( $event_id, $civi_event['default_role_id'] );
 		} else {
 			$this->set_event_role( $event_id );
 		}
 
 		// Save Event meta if the Event has a Registration Confirmation page setting specified.
-		if (
-			isset( $civi_event['is_confirm_enabled'] ) &&
-			$civi_event['is_confirm_enabled'] == 1
-		) {
-			$this->set_event_registration_confirm( $event_id, $civi_event['is_confirm_enabled'] );
+		if ( ! empty( $civi_event['is_confirm_enabled'] ) ) {
+			$this->set_event_registration_confirm( $event_id, (int) $civi_event['is_confirm_enabled'] );
 		} else {
 			$this->set_event_registration_confirm( $event_id, '0' );
 		}
@@ -1076,7 +1065,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( ! is_numeric( $object->_defaultValues['id'] ) ) {
 			return;
 		}
-		$event_id = intval( $object->_defaultValues['id'] );
+		$event_id = (int) $object->_defaultValues['id'];
 
 		// Get the Post ID that this Event is mapped to.
 		$post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $event_id );
@@ -1612,7 +1601,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Retrieve meta value.
-		$profile_id = absint( $_POST['civi_eo_event_profile'] );
+		$profile_id = (int) wp_unslash( $_POST['civi_eo_event_profile'] );
 
 		// Update Event meta.
 		update_post_meta( $event_id, '_civi_registration_profile', $profile_id );
@@ -1752,7 +1741,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_event_registration_confirm( $event_id, $value = '0' ) {
 
 		// Retrieve meta value.
-		if ( isset( $_POST['civi_eo_event_confirm'] ) && $_POST['civi_eo_event_confirm'] == '1' ) {
+		if ( isset( $_POST['civi_eo_event_confirm'] ) && wp_unslash( $_POST['civi_eo_event_confirm'] ) == '1' ) {
 			$value = '1';
 		} else {
 			$value = '0';

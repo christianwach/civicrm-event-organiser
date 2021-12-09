@@ -362,39 +362,44 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// Construct args.
 		$args = [
-			//'description' => $location['description'], // CiviCRM has no Location description at present
+			//'description' => $location['description'], // CiviCRM has no Location description at present.
 		];
 
-		// Add country if present.
-		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) && ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
-			$args['country'] = $location['api.Address.getsingle']['country_id.name'];
-		}
+		// Add Address sub-query data if present.
+		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) ) {
 
-		// Add state if present.
-		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) && ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
-			$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
+			// Maybe add country.
+			if ( ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
+				$args['country'] = $location['api.Address.getsingle']['country_id.name'];
+			}
+
+			// Maybe add state.
+			if ( ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
+				$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
+			}
+
 		}
 
 		// Add street address if present.
-		if ( isset( $location['address']['street_address'] ) && ! empty( $location['address']['street_address'] ) ) {
+		if ( ! empty( $location['address']['street_address'] ) ) {
 			$args['address'] = $location['address']['street_address'];
 		}
 
 		// Add city if present.
-		if ( isset( $location['address']['city'] ) && ! empty( $location['address']['city'] ) ) {
+		if ( ! empty( $location['address']['city'] ) ) {
 			$args['city'] = $location['address']['city'];
 		}
 
 		// Add postcode if present.
-		if ( isset( $location['address']['postal_code'] ) && ! empty( $location['address']['postal_code'] ) ) {
+		if ( ! empty( $location['address']['postal_code'] ) ) {
 			$args['postcode'] = $location['address']['postal_code'];
 		}
 
 		// Add geocodes if present.
-		if ( isset( $location['address']['geo_code_1'] ) && ! empty( $location['address']['geo_code_1'] ) ) {
+		if ( ! empty( $location['address']['geo_code_1'] ) ) {
 			$args['latitude'] = $location['address']['geo_code_1'];
 		}
-		if ( isset( $location['address']['geo_code_2'] ) && ! empty( $location['address']['geo_code_2'] ) ) {
+		if ( ! empty( $location['address']['geo_code_2'] ) ) {
 			$args['longtitude'] = $location['address']['geo_code_2'];
 		}
 
@@ -527,36 +532,41 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 				//'country' => $location['address']['country'], // CiviCRM country is an ID not a string.
 			];
 
-			// Add country if present.
-			if ( ! isset( $location['api.Address.getsingle']['is_error'] ) && ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
-				$args['country'] = $location['api.Address.getsingle']['country_id.name'];
-			}
+			// Add Address sub-query data if present.
+			if ( ! isset( $location['api.Address.getsingle']['is_error'] ) ) {
 
-			// Add state if present.
-			if ( ! isset( $location['api.Address.getsingle']['is_error'] ) && ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
-				$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
+				// Maybe add country.
+				if ( ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
+					$args['country'] = $location['api.Address.getsingle']['country_id.name'];
+				}
+
+				// Maybe add state.
+				if ( ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
+					$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
+				}
+
 			}
 
 			// Add street address if present.
-			if ( isset( $location['address']['street_address'] ) && ! empty( $location['address']['street_address'] ) ) {
+			if ( ! empty( $location['address']['street_address'] ) ) {
 				$args['address'] = $location['address']['street_address'];
 			}
 
 			// Add city if present.
-			if ( isset( $location['address']['city'] ) && ! empty( $location['address']['city'] ) ) {
+			if ( ! empty( $location['address']['city'] ) ) {
 				$args['city'] = $location['address']['city'];
 			}
 
 			// Add postcode if present.
-			if ( isset( $location['address']['postal_code'] ) && ! empty( $location['address']['postal_code'] ) ) {
+			if ( ! empty( $location['address']['postal_code'] ) ) {
 				$args['postcode'] = $location['address']['postal_code'];
 			}
 
 			// Add geocodes if present.
-			if ( isset( $location['address']['geo_code_1'] ) && ! empty( $location['address']['geo_code_1'] ) ) {
+			if ( ! empty( $location['address']['geo_code_1'] ) ) {
 				$args['latitude'] = $location['address']['geo_code_1'];
 			}
-			if ( isset( $location['address']['geo_code_2'] ) && ! empty( $location['address']['geo_code_2'] ) ) {
+			if ( ! empty( $location['address']['geo_code_2'] ) ) {
 				$args['longtitude'] = $location['address']['geo_code_2'];
 			}
 
@@ -575,10 +585,10 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			}
 
 			// Create Venue meta data, if present.
-			if ( isset( $location['email']['email'] ) ) {
+			if ( ! empty( $location['email']['email'] ) ) {
 				eo_update_venue_meta( $result['term_id'], '_civi_email', esc_sql( $location['email']['email'] ) );
 			}
-			if ( isset( $location['phone']['phone'] ) ) {
+			if ( ! empty( $location['phone']['phone'] ) ) {
 				eo_update_venue_meta( $result['term_id'], '_civi_phone', esc_sql( $location['phone']['phone'] ) );
 			}
 
