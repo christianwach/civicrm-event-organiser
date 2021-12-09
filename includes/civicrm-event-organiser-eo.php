@@ -615,6 +615,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 			error_log( print_r( [
 				'method' => __METHOD__,
 				'error' => $event_id->get_error_message(),
+				'civi_event' => $civi_event,
 				'backtrace' => $trace,
 			], true ) );
 			return $event_id;
