@@ -1605,7 +1605,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @since 0.1
 	 *
 	 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
-	 * @return array $result A CiviCRM result array.
+	 * @return array|bool $result The CiviCRM API result array or false otherwise.
 	 */
 	public function disable_civi_event( $civi_event_id ) {
 
@@ -1614,19 +1614,28 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			return false;
 		}
 
-		// Init Event array.
-		$civi_event = [
+		/**
+		 * Allow plugins to skip disabling CiviCRM Events.
+		 *
+		 * @since 0.6.6
+		 *
+		 * @param bool False by default, pass true to skip.
+		 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
+		 */
+		$skip = apply_filters( 'ceo_skip_disable_civi_event', false, $civi_event_id );
+		if ( $skip === true ) {
+			return false;
+		}
+
+		// Build params.
+		$params = [
 			'version' => 3,
+			'id' => $civi_event_id,
+			'is_active' => 0,
 		];
 
-		// Assign ID so we perform an update.
-		$civi_event['id'] = $civi_event_id;
-
-		// Set "disabled" flag - see below.
-		$civi_event['is_active'] = 0;
-
 		// Use API to update Event.
-		$result = civicrm_api( 'Event', 'create', $civi_event );
+		$result = civicrm_api( 'Event', 'create', $params );
 
 		// Log failures and return boolean false.
 		if ( $result['is_error'] == '1' ) {
@@ -1637,7 +1646,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => $result['error_message'],
-				'civi_event' => $civi_event,
+				'params' => $params,
 				'backtrace' => $trace,
 			], true ) );
 
