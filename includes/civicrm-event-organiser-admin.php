@@ -1157,9 +1157,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		if ( $opt_group_id !== false ) {
 
 			// Get Event Types (descriptions will be present if not null).
-			$types = civicrm_api( 'option_value', 'get', [
-				'option_group_id' => $opt_group_id,
+			$types = civicrm_api( 'OptionValue', 'get', [
 				'version' => 3,
+				'option_group_id' => $opt_group_id,
 				'options' => [
 					'limit' => $this->step_counts['tax'],
 					'offset' => $offset,
@@ -1411,8 +1411,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		if ( $this->plugin->civi->is_active() ) {
 
 			// Get CiviCRM Locations.
-			$locations = civicrm_api( 'loc_block', 'get', [
-				'version' => '3',
+			$locations = civicrm_api( 'LocBlock', 'get', [
+				'version' => 3,
 				'return' => 'all',
 				'options' => [
 					'limit' => $this->step_counts['tax'],
@@ -1659,7 +1659,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		if ( $this->plugin->civi->is_active() ) {
 
 			// Get CiviCRM Events.
-			$events = civicrm_api( 'event', 'get', [
+			$events = civicrm_api( 'Event', 'get', [
 				'version' => 3,
 				'is_template' => 0,
 				'options' => [

@@ -1389,7 +1389,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Create (or update) the Event Type.
-		$result = civicrm_api( 'option_value', 'create', $params );
+		$result = civicrm_api( 'OptionValue', 'create', $params );
 
 		// Error check.
 		if ( ! empty( $result['is_error'] ) && $result['is_error'] == '1' ) {
@@ -1455,7 +1455,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		];
 
 		// Delete the Event Type.
-		$result = civicrm_api( 'option_value', 'delete', $params );
+		$result = civicrm_api( 'OptionValue', 'delete', $params );
 
 		// Error check.
 		if ( ! empty( $result['is_error'] ) && $result['is_error'] == '1' ) {
@@ -1523,7 +1523,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		];
 
 		// Get the item.
-		$result = civicrm_api( 'option_value', 'getsingle', $params );
+		$result = civicrm_api( 'OptionValue', 'getsingle', $params );
 
 		// Bail if we get an error.
 		if ( ! empty( $result['is_error'] ) && $result['is_error'] == '1' ) {
@@ -1594,7 +1594,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		];
 
 		// Get the item.
-		$result = civicrm_api( 'option_value', 'getsingle', $params );
+		$result = civicrm_api( 'OptionValue', 'getsingle', $params );
 
 		/*
 		[result] => Array
@@ -1666,15 +1666,15 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Define params to get items sorted by weight.
 		$params = [
-			'option_group_id' => $opt_group_id,
 			'version' => 3,
+			'option_group_id' => $opt_group_id,
 			'options' => [
 				'sort' => 'weight ASC',
 			],
 		];
 
 		// Get them (descriptions will be present if not null).
-		$result = civicrm_api( 'option_value', 'get', $params );
+		$result = civicrm_api( 'OptionValue', 'get', $params );
 
 		// Error check.
 		if ( ! empty( $result['is_error'] ) && $result['is_error'] == '1' ) {
@@ -1850,13 +1850,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Define params to get item.
 		$params = [
-			'option_group_id' => $opt_group_id,
 			'version' => 3,
+			'option_group_id' => $opt_group_id,
 			'id' => $event_type_id,
 		];
 
 		// Get them (descriptions will be present if not null).
-		$event_type = civicrm_api( 'option_value', 'getsingle', $params );
+		$event_type = civicrm_api( 'OptionValue', 'getsingle', $params );
 
 		// --<
 		return $event_type;
@@ -1890,13 +1890,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Define params to get item.
 		$params = [
-			'option_group_id' => $opt_group_id,
 			'version' => 3,
+			'option_group_id' => $opt_group_id,
 			'value' => $event_type_value,
 		];
 
 		// Get them (descriptions will be present if not null).
-		$event_type = civicrm_api( 'option_value', 'getsingle', $params );
+		$event_type = civicrm_api( 'OptionValue', 'getsingle', $params );
 
 		// --<
 		return $event_type;
@@ -1935,12 +1935,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 			// Define params to get Event Type option group.
 			$params = [
-				'name' => 'event_type',
 				'version' => 3,
+				'name' => 'event_type',
 			];
 
 			// Get it.
-			$result = civicrm_api( 'option_group', 'getsingle', $params );
+			$result = civicrm_api( 'OptionGroup', 'getsingle', $params );
 
 			// Error check.
 			if ( isset( $result['id'] ) && is_numeric( $result['id'] ) && $result['id'] > 0 ) {

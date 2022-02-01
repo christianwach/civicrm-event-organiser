@@ -983,7 +983,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			$civi_event['end_date'] = $date['end'];
 
 			// Use API to create Event.
-			$result = civicrm_api( 'event', 'create', $civi_event );
+			$result = civicrm_api( 'Event', 'create', $civi_event );
 
 			// Log failures and skip to next.
 			if ( isset( $result['is_error'] ) && $result['is_error'] == '1' ) {
@@ -1126,7 +1126,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				$civi_event['end_date'] = $date['end'];
 
 				// Use API to create Event.
-				$result = civicrm_api( 'event', 'create', $civi_event );
+				$result = civicrm_api( 'Event', 'create', $civi_event );
 
 				// Log failures and skip to next.
 				if ( $result['is_error'] == '1' ) {
@@ -1230,7 +1230,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				$civi_event['id'] = $civi_id;
 
 				// Use API to update Event.
-				$result = civicrm_api( 'event', 'create', $civi_event );
+				$result = civicrm_api( 'Event', 'create', $civi_event );
 
 				// Log failures and skip to next.
 				if ( $result['is_error'] == '1' ) {
@@ -1276,7 +1276,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				$civi_event['end_date'] = $eo_date['end'];
 
 				// Use API to create Event.
-				$result = civicrm_api( 'event', 'create', $civi_event );
+				$result = civicrm_api( 'Event', 'create', $civi_event );
 
 				// Log failures and skip to next.
 				if ( $result['is_error'] == '1' ) {
@@ -1506,7 +1506,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		];
 
 		// Call API.
-		$events = civicrm_api( 'event', 'get', $params );
+		$events = civicrm_api( 'Event', 'get', $params );
 
 		// Log failures and return boolean false.
 		if ( $events['is_error'] == '1' ) {
@@ -1568,7 +1568,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			];
 
 			// Okay, let's do it.
-			$result = civicrm_api( 'event', 'delete', $params );
+			$result = civicrm_api( 'Event', 'delete', $params );
 
 			// Log failures and skip to next.
 			if ( $result['is_error'] == '1' ) {
@@ -1626,7 +1626,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		$civi_event['is_active'] = 0;
 
 		// Use API to update Event.
-		$result = civicrm_api( 'event', 'create', $civi_event );
+		$result = civicrm_api( 'Event', 'create', $civi_event );
 
 		// Log failures and return boolean false.
 		if ( $result['is_error'] == '1' ) {
@@ -1675,7 +1675,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		];
 
 		// Call API.
-		$event = civicrm_api( 'event', 'getsingle', $params );
+		$event = civicrm_api( 'Event', 'getsingle', $params );
 
 		// Log failures and return boolean false.
 		if ( isset( $event['is_error'] ) && $event['is_error'] == '1' ) {
@@ -1892,7 +1892,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		];
 
 		// Delete via API.
-		$result = civicrm_api( 'loc_block', 'delete', $params );
+		$result = civicrm_api( 'LocBlock', 'delete', $params );
 
 		// Log failure and return boolean false.
 		if ( $result['is_error'] == '1' ) {
@@ -1962,7 +1962,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		];
 
 		// Call API.
-		$location = civicrm_api( 'loc_block', 'get', $params );
+		$location = civicrm_api( 'LocBlock', 'get', $params );
 
 		// Log failure and return boolean false.
 		if ( $location['is_error'] == '1' ) {
@@ -2009,7 +2009,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			];
 
 			// Call API.
-			$location = civicrm_api( 'loc_block', 'get', $params );
+			$location = civicrm_api( 'LocBlock', 'get', $params );
 
 			// Log error and return boolean false.
 			if ( isset( $location['is_error'] ) && $location['is_error'] == '1' ) {
@@ -2083,7 +2083,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		];
 
 		// Call API.
-		$locations = civicrm_api( 'loc_block', 'get', $params );
+		$locations = civicrm_api( 'LocBlock', 'get', $params );
 
 		// Log failure and return boolean false.
 		if ( $locations['is_error'] == '1' ) {
@@ -2134,7 +2134,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			];
 
 			// Delete via API.
-			$result = civicrm_api( 'loc_block', 'delete', $params );
+			$result = civicrm_api( 'LocBlock', 'delete', $params );
 
 		}
 
@@ -2174,7 +2174,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		];
 
 		// Call API ('get' returns an array keyed by the item).
-		$result = civicrm_api( 'loc_block', 'get', $params );
+		$result = civicrm_api( 'LocBlock', 'get', $params );
 
 		// Log failure and return boolean false.
 		if ( $result['is_error'] == '1' || $result['count'] != 1 ) {
@@ -2316,7 +2316,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		}
 
 		// Call API.
-		$location = civicrm_api( 'loc_block', 'create', $params );
+		$location = civicrm_api( 'LocBlock', 'create', $params );
 
 		// Did we do okay?
 		if ( isset( $location['is_error'] ) && $location['is_error'] == '1' ) {
@@ -2412,7 +2412,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// First, get participant_role option_group ID.
 		$opt_group = [
-			'version' => '3',
+			'version' => 3,
 			'name' => 'participant_role',
 		];
 
@@ -2421,7 +2421,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// Next, get option_values for that group.
 		$opt_values = [
-			'version' => '3',
+			'version' => 3,
 			'is_active' => 1,
 			'option_group_id' => $participant_role['id'],
 			'options' => [
@@ -2739,7 +2739,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			}
 
 			// Call API.
-			$result = civicrm_api( 'uf_join', 'create', $params );
+			$result = civicrm_api( 'UFJoin', 'create', $params );
 
 			// Test for errors.
 			if ( isset( $result['is_error'] ) && $result['is_error'] == '1' ) {
@@ -2793,7 +2793,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		];
 
 		// Query via API.
-		$result = civicrm_api( 'uf_join', 'getsingle', $params );
+		$result = civicrm_api( 'UFJoin', 'getsingle', $params );
 
 		// Return false if we get an error.
 		if ( isset( $result['is_error'] ) && $result['is_error'] == '1' ) {
@@ -2876,7 +2876,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		];
 
 		// Get them via API.
-		$result = civicrm_api( 'uf_group', 'get', $params );
+		$result = civicrm_api( 'UFGroup', 'get', $params );
 
 		// Error check.
 		if ( isset( $result['is_error'] ) && $result['is_error'] == '1' ) {
@@ -3058,7 +3058,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		}
 
 		// Query API.
-		$existing_email_data = civicrm_api( 'email', 'get', $email_params );
+		$existing_email_data = civicrm_api( 'Email', 'get', $email_params );
 
 		// Did we get one?
 		if (
@@ -3083,7 +3083,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				$existing_email['email'] = $venue->venue_civi_email;
 
 				// Update it.
-				$existing_email = civicrm_api( 'email', 'create', $existing_email );
+				$existing_email = civicrm_api( 'Email', 'create', $existing_email );
 
 			}
 
@@ -3145,7 +3145,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		}
 
 		// Query API.
-		$existing_phone_data = civicrm_api( 'phone', 'get', $phone_params );
+		$existing_phone_data = civicrm_api( 'Phone', 'get', $phone_params );
 
 		// Did we get one?
 		if (
@@ -3171,7 +3171,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				$existing_phone['phone_numeric'] = $numeric;
 
 				// Update it.
-				$existing_phone = civicrm_api( 'phone', 'create', $existing_phone );
+				$existing_phone = civicrm_api( 'Phone', 'create', $existing_phone );
 
 			}
 
@@ -3255,7 +3255,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		}
 
 		// Query API.
-		$existing_address_data = civicrm_api( 'address', 'get', $address_params );
+		$existing_address_data = civicrm_api( 'Address', 'get', $address_params );
 
 		// Did we get one?
 		if ( $existing_address_data['is_error'] == 0 && $existing_address_data['count'] > 0 ) {
@@ -3289,7 +3289,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 				// Can't do country in CiviCRM yet.
 
 				// Update it.
-				$existing_address = civicrm_api( 'address', 'create', $existing_address );
+				$existing_address = civicrm_api( 'Address', 'create', $existing_address );
 
 			}
 
