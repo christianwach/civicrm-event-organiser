@@ -241,11 +241,12 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 *
 	 * @since 0.2
 	 *
+	 * @param int $event_id The numeric ID of the CiviCRM Event.
 	 * @param array $fields The ACF Field data.
 	 * @param int $post_id The numeric ID of the WordPress Post.
 	 * @return array|bool $event_data The CiviCRM Event data.
 	 */
-	public function prepare_from_fields( $fields, $post_id = null ) {
+	public function prepare_from_fields( $event_id, $fields, $post_id = null ) {
 
 		// Init data for fields.
 		$event_data = [];
@@ -272,8 +273,17 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			// Build Custom Field code.
 			$code = 'custom_' . $custom_field_id;
 
-			// Parse value by field type.
-			$value = $this->cwps->acf->acf->field->value_get_for_civicrm( $value, $settings['type'], $settings );
+			// Build args for value conversion.
+			$args = [
+				'identifier' => 'event',
+				'entity_id' => $event_id,
+				'custom_field_id' => $custom_field_id,
+				'field_name' => '',
+				'selector' => $selector,
+				'post_id' => $post_id,
+			];
+
+			$value = $this->cwps->acf->acf->field->value_get_for_civicrm( $value, $settings['type'], $settings, $args );
 
 			// Add it to the field data.
 			$event_data[ $code ] = $value;
@@ -300,7 +310,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	public function update_from_fields( $event_id, $fields, $post_id = null ) {
 
 		// Build required data.
-		$event_data = $this->prepare_from_fields( $fields, $post_id );
+		$event_data = $this->prepare_from_fields( $event_id, $fields, $post_id );
 
 		// Add the Event ID.
 		$event_data['id'] = $event_id;
