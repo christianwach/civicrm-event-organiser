@@ -2078,7 +2078,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$correspondences = $this->get_civi_event_ids_by_eo_event_id( $post_id );
 
 		// Is the CiviCRM Event in the "live" array?
-		if ( in_array( $civi_event_id, $correspondences ) ) {
+		if ( is_array( $correspondences ) && in_array( $civi_event_id, $correspondences ) ) {
 
 			// Ditch the current CiviCRM Event ID.
 			$correspondences = array_diff( $correspondences, [ $civi_event_id ] );
@@ -2095,7 +2095,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$orphans = $this->get_orphaned_events_by_eo_event_id( $post_id );
 
 		// Is the CiviCRM Event in the "orphans" array?
-		if ( in_array( $civi_event_id, $orphans ) ) {
+		if ( is_array( $orphans ) && in_array( $civi_event_id, $orphans ) ) {
 
 			// Ditch the current CiviCRM Event ID.
 			$orphans = array_diff( $orphans, [ $civi_event_id ] );
