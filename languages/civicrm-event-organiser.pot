@@ -1,15 +1,15 @@
-# Copyright (C) 2021 CiviCRM Event Organiser
+# Copyright (C) 2022 CiviCRM Event Organiser
 # This file is distributed under the same license as the CiviCRM Event Organiser package.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.6.5\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.6.6\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-"
 "organiser\n"
-"POT-Creation-Date: 2021-12-09 18:03:34+00:00\n"
+"POT-Creation-Date: 2022-03-24 18:11:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
@@ -272,11 +272,10 @@ msgstr ""
 
 #: includes/civicrm-event-organiser-admin.php:320
 #: includes/civicrm-event-organiser-admin.php:332
-#: includes/civicrm-event-organiser-admin.php:348
 msgid "CiviCRM Event Organiser: Settings"
 msgstr ""
 
-#. #-#-#-#-#  civicrm-event-organiser.pot (CiviCRM Event Organiser 0.6.5)  #-#-#-#-#
+#. #-#-#-#-#  civicrm-event-organiser.pot (CiviCRM Event Organiser 0.6.6)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: includes/civicrm-event-organiser-admin.php:321
 #: includes/civicrm-event-organiser-admin.php:464
@@ -287,8 +286,12 @@ msgstr ""
 msgid "Event Organiser"
 msgstr ""
 
+#: includes/civicrm-event-organiser-admin.php:348
+msgid "Settings: CiviCRM Event Organiser"
+msgstr ""
+
 #: includes/civicrm-event-organiser-admin.php:362
-msgid "CiviCRM Event Organiser: Manual Sync"
+msgid "Manual Sync: CiviCRM Event Organiser"
 msgstr ""
 
 #: includes/civicrm-event-organiser-admin.php:485
@@ -378,7 +381,7 @@ msgid "Could not sync Event Type"
 msgstr ""
 
 #: includes/civicrm-event-organiser-cai.php:300
-#: includes/civicrm-event-organiser-cwps.php:337
+#: includes/civicrm-event-organiser-cwps.php:350
 msgid "A numerical ID must be present to update an Event."
 msgstr ""
 
@@ -421,7 +424,7 @@ msgstr ""
 msgid "You must have some CiviCRM Event Types defined"
 msgstr ""
 
-#: includes/civicrm-event-organiser-civi.php:1974
+#: includes/civicrm-event-organiser-civi.php:1983
 msgid "Could not get CiviCRM Location by ID"
 msgstr ""
 
