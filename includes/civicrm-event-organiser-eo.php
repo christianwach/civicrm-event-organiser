@@ -1272,42 +1272,24 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Init dates.
 		$all_dates = [];
 
-		// Get all dates.
-		$all_event_dates = new WP_Query( [
-			'post_type' => 'event',
-			'posts_per_page' => -1,
-			'event_series' => $post_id,
-			'group_events_by' => 'occurrence',
-		] );
+		// Get Occurrences.
+		$occurrences = eo_get_the_occurrences_of( $post_id );
+		if ( empty( $occurrences ) ) {
+			return $all_dates;
+		}
 
-		// If we have some.
-		if ( $all_event_dates->have_posts() ) {
+		// Loop through them.
+		foreach ( $occurrences as $occurrence_id => $occurrence ) {
 
-			// Loop through them.
-			while ( $all_event_dates->have_posts() ) {
+			// Build an array, formatted for CiviCRM.
+			$date = [];
+			$date['occurrence_id'] = $occurrence_id;
+			$date['start'] = eo_get_the_start( 'Y-m-d H:i:s', $post_id, $occurrence_id );
+			$date['end'] = eo_get_the_end( 'Y-m-d H:i:s', $post_id, $occurrence_id );
+			$date['human'] = eo_get_the_start( 'g:ia, M jS, Y', $post_id, $occurrence_id );
 
-				// Get the Post.
-				$all_event_dates->the_post();
-
-				// Access Post.
-				global $post;
-
-				// Init.
-				$date = [];
-
-				// Add to our array, formatted for CiviCRM.
-				$date['occurrence_id'] = $post->occurrence_id;
-				$date['start'] = eo_get_the_start( 'Y-m-d H:i:s' );
-				$date['end'] = eo_get_the_end( 'Y-m-d H:i:s' );
-				$date['human'] = eo_get_the_start( 'g:ia, M jS, Y' );
-
-				// Add to our array.
-				$all_dates[] = $date;
-
-			}
-
-			// Reset Post data.
-			wp_reset_postdata();
+			// Add to our return array.
+			$all_dates[] = $date;
 
 		}
 
