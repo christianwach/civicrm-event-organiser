@@ -535,7 +535,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Add Venue ID if we get one.
 		if ( ! empty( $venue_id ) && is_int( $venue_id ) ) {
-			$post_data['tax_input']['event-venue'] = $venue_id;
+			$post_data['tax_input']['event-venue'] = [ $venue_id ];
 		}
 
 		// Init Category as undefined.
@@ -603,7 +603,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( $eo_post_id === false ) {
 			$event_id = eo_insert_event( $post_data, $event_data );
 		} else {
-			$event_id = eo_update_event( $eo_post_id, $post_data, $event_data );
+			$event_id = eo_update_event( $eo_post_id, $event_data, $post_data );
 		}
 
 		// Log and bail if there's an error.
