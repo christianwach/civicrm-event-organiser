@@ -6,6 +6,7 @@
  * Author: Christian Wach
  * Author URI: https://haystack.co.uk
  * Plugin URI: https://github.com/christianwach/civicrm-event-organiser
+ * GitHub Plugin URI: https://github.com/christianwach/civicrm-event-organiser
  * Text Domain: civicrm-event-organiser
  * Domain Path: /languages
  * Network: false
