@@ -2,7 +2,31 @@
 /**
  * Event Organiser Venue Class.
  *
- * Handles functionality related to EO Venues.
+ * Handles functionality related to Event Organiser Venues.
+ *
+ * Each Event Organiser Venue maps to a CiviCRM LocBlock and stores that mapping
+ * in the "_civi_loc_id" value in its Term Meta.
+ *
+ * A CiviCRM LocBlock for an Event in the CiviCRM UI (though the code allows for
+ * more "Blocks" than those shown in the UI) consists of:
+ *
+ * * Address x 1
+ * * Email x 2
+ * * Phone x 2
+ *
+ * The Address record is used to populate the Venue itself. Email and Phone records
+ * are stored in the Venue's Term Meta.
+ *
+ * Note that CiviCRM incorrectly duplicates LocBlocks (and the "Blocks" that are
+ * associated with it) when using the Event Location UI. I suspect that this
+ * happened as a result of the switch to API4 in CiviCRM 5.31:
+ *
+ * @see https://github.com/civicrm/civicrm-core/pull/18586
+ *
+ * For this code to work correctly again, a patch needs to be applied to CiviCRM.
+ *
+ * @see https://lab.civicrm.org/dev/core/-/issues/2103
+ * @see https://github.com/civicrm/civicrm-core/pull/23041
  *
  * @package CiviCRM_WP_Event_Organiser
  * @since 0.1
@@ -16,14 +40,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * CiviCRM Event Organiser Venues Class.
  *
- * A class that encapsulates functionality related to EO Venues.
+ * A class that encapsulates functionality related to Event Organiser Venues.
  *
  * @since 0.1
  */
 class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	/**
-	 * Plugin (calling) object.
+	 * Plugin object.
 	 *
 	 * @since 0.1
 	 * @access public
@@ -34,34 +58,21 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 
 	/**
-	 * Initialises this object.
-	 *
-	 * @since 0.1
-	 */
-	public function __construct() {
-
-		// Add hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'register_hooks' ] );
-
-	}
-
-
-
-	/**
-	 * Set references to other objects.
+	 * Constructor.
 	 *
 	 * @since 0.1
 	 *
 	 * @param object $parent The parent object.
 	 */
-	public function set_references( $parent ) {
+	public function __construct( $parent ) {
 
 		// Store reference.
 		$this->plugin = $parent;
 
+		// Add hooks when plugin is loaded.
+		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'register_hooks' ] );
+
 	}
-
-
 
 	/**
 	 * Register hooks on BuddyPress loaded.
@@ -91,20 +102,16 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Add our Venue meta box.
 		add_action( 'add_meta_boxes', [ $this, 'venue_meta_box' ] );
 
-		// Filter Terms after EO does.
+		// Filter Terms after Event Organiser does.
 		add_filter( 'wp_get_object_terms', [ $this, 'update_venue_meta' ], 20, 4 );
 
-		// Intercept Terms after EO does.
+		// Intercept Terms after Event Organiser does.
 		add_filter( 'get_terms', [ $this, 'update_venue_meta_cache' ], 20, 2 );
 		add_filter( 'get_event-venue', [ $this, 'update_venue_meta_cache' ], 20, 2 );
 
 	}
 
-
-
 	// -------------------------------------------------------------------------
-
-
 
 	/**
 	 * Intercept insert Venue.
@@ -120,17 +127,17 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			return;
 		}
 
-		// Save custom EO components.
-		$this->_save_venue_components( $venue_id );
+		// Save custom Event Organiser components.
+		$this->save_venue_components( $venue_id );
 
 		// Get full Venue.
 		$venue = eo_get_venue_by( 'id', $venue_id );
 
 		/*
-		 * Manually add Venue metadata because since EO version 3.0 it is
+		 * Manually add Venue metadata because since Event Organiser 3.0 it is
 		 * no longer added by default to the Venue object.
 		 */
-		$address  = eo_get_venue_address( $venue_id );
+		$address = eo_get_venue_address( $venue_id );
 		$venue->venue_address  = isset( $address['address'] ) ? $address['address'] : '';
 		$venue->venue_postal   = isset( $address['postcode'] ) ? $address['postcode'] : '';
 		$venue->venue_postcode = isset( $address['postcode'] ) ? $address['postcode'] : '';
@@ -141,14 +148,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$venue->venue_lng = number_format( floatval( eo_get_venue_lng( $venue_id ) ), 6 );
 
 		// Create CiviCRM Event Location.
-		$location = $this->plugin->civi->update_location( $venue );
+		$location = $this->plugin->civi->location->update_location( $venue );
 
 		// Store loc_block ID.
 		$this->store_civi_location( $venue_id, $location );
 
 	}
-
-
 
 	/**
 	 * Intercept save Venue.
@@ -164,17 +169,17 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			return;
 		}
 
-		// Save custom EO components.
-		$this->_save_venue_components( $venue_id );
+		// Save custom Event Organiser components.
+		$this->save_venue_components( $venue_id );
 
 		// Get full Venue.
 		$venue = eo_get_venue_by( 'id', $venue_id );
 
 		/*
-		 * Manually add Venue metadata because since EO version 3.0 it is
+		 * Manually add Venue metadata because since Event Organiser 3.0 it is
 		 * no longer added by default to the Venue object.
 		 */
-		$address  = eo_get_venue_address( $venue_id );
+		$address = eo_get_venue_address( $venue_id );
 		$venue->venue_address  = isset( $address['address'] ) ? $address['address'] : '';
 		$venue->venue_postal   = isset( $address['postcode'] ) ? $address['postcode'] : '';
 		$venue->venue_postcode = isset( $address['postcode'] ) ? $address['postcode'] : '';
@@ -185,14 +190,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$venue->venue_lng = number_format( floatval( eo_get_venue_lng( $venue_id ) ), 6 );
 
 		// Update CiviCRM Event Location.
-		$location = $this->plugin->civi->update_location( $venue );
+		$location = $this->plugin->civi->location->update_location( $venue );
 
 		// Store loc_block ID.
 		$this->store_civi_location( $venue->term_id, $location );
 
 	}
-
-
 
 	/**
 	 * Intercept before delete Venue Term.
@@ -222,8 +225,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
 	 * Intercept before delete Venue Term by 'delete_$taxonomy' hook.
 	 *
@@ -244,8 +245,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$this->delete_venue_meta( $deleted_term );
 
 	}
-
-
 
 	/**
 	 * Delete anything associated with this Venue.
@@ -283,19 +282,17 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		) {
 
 			// Delete CiviCRM Event Location.
-			$this->plugin->civi->delete_location_by_id( $venue_meta['_civi_loc_id'][0] );
+			$this->plugin->civi->location->delete_location_by_id( $venue_meta['_civi_loc_id'][0] );
 
 		}
 
 		// Delete components.
-		$this->_delete_venue_components( $venue_id );
+		$this->delete_venue_components( $venue_id );
 
 		// Set flag.
 		$term_deleted = $deleted_term->term_id;
 
 	}
-
-
 
 	/**
 	 * Intercept after delete Venue.
@@ -312,16 +309,14 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		// Delete components.
-		$this->_delete_venue_components( $venue_id );
+		$this->delete_venue_components( $venue_id );
 
 		// $venue_meta = eo_get_venue_meta( $venue_id, '', false );
 
 	}
 
-
-
 	/**
-	 * Create an EO Venue given a CiviCRM Event Location.
+	 * Create an Event Organiser Venue given a CiviCRM Event Location.
 	 *
 	 * @since 0.1
 	 *
@@ -433,10 +428,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		add_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ], 10, 1 );
 		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
 
-		// If we get an error.
+		// Log and bail if we get an error.
 		if ( is_wp_error( $result ) || ! isset( $result['term_id'] ) ) {
-
-			// Log and bail.
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -447,7 +440,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 				'backtrace' => $trace,
 			], true ) );
 			return;
-
 		}
 
 		// Create Venue meta data.
@@ -479,10 +471,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
-	 * Update an EO Venue given a CiviCRM Event Location.
+	 * Update an Event Organiser Venue given a CiviCRM Event Location.
 	 *
 	 * @since 0.1
 	 *
@@ -602,10 +592,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
-	 * Get an EO Venue ID given a CiviCRM Event Location.
+	 * Get an Event Organiser Venue ID given a CiviCRM Event Location.
 	 *
 	 * @since 0.1
 	 *
@@ -702,8 +690,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
 	 * Register Venue meta box.
 	 *
@@ -723,14 +709,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
 	 * Define Venue meta box.
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $venue The EO Venue object.
+	 * @param object $venue The Event Organiser Venue object.
 	 */
 	public function venue_meta_box_render( $venue ) {
 
@@ -761,12 +745,11 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/*
 	 * -------------------------------------------------------------------------
 	 * The next two methods have been adapted from Event Organiser so we can add
-	 * our custom data to the Venue object when standard EO functions are called
+	 * our custom data to the Venue object when standard Event Organiser functions
+	 * are called.
 	 * -------------------------------------------------------------------------
 	 */
 
@@ -788,8 +771,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		return $this->update_venue_meta_cache( $terms, $taxonomies );
 
 	}
-
-
 
 	/**
 	 * Updates Venue meta cache when Event Venues are retrieved.
@@ -863,10 +844,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
-	 * Store a CiviCRM Location Block ID for a given EO Venue ID.
+	 * Store a CiviCRM Location Block ID for a given Event Organiser Venue ID.
 	 *
 	 * @since 0.1
 	 *
@@ -885,10 +864,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
-	 * Get a CiviCRM Event loc_block ID for a given EO Venue ID.
+	 * Get a CiviCRM Event loc_block ID for a given Event Organiser Venue ID.
 	 *
 	 * @since 0.1
 	 *
@@ -905,10 +882,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
-	 * Clear a CiviCRM Event loc_block ID for a given EO Venue ID.
+	 * Clear a CiviCRM Event loc_block ID for a given Event Organiser Venue ID.
 	 *
 	 * @since 0.1
 	 *
@@ -921,11 +896,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	// -------------------------------------------------------------------------
-
-
 
 	/**
 	 * Check current user's permission to edit Venue Taxonomy.
@@ -944,8 +915,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
 	 * Save custom components that sync with CiviCRM.
 	 *
@@ -953,7 +922,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @param int $venue_id The numeric ID of the Venue.
 	 */
-	private function _save_venue_components( $venue_id ) {
+	private function save_venue_components( $venue_id ) {
 
 		// Skip if neither email nor phone is set.
 		if ( ! isset( $_POST['civi_eo_venue_email'] ) && ! isset( $_POST['civi_eo_venue_phone'] ) ) {
@@ -975,8 +944,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
 	 * Delete custom components that sync with CiviCRM.
 	 *
@@ -984,13 +951,11 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @param int $venue_id The numeric ID of the Venue.
 	 */
-	private function _delete_venue_components( $venue_id ) {
+	private function delete_venue_components( $venue_id ) {
 
-		// EO garbage-collects when it deletes a Venue, so no need.
+		// Event Organiser garbage-collects when it deletes a Venue, so no need.
 
 	}
-
-
 
 	/**
 	 * Clear custom components that sync with CiviCRM.
@@ -1006,8 +971,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		eo_delete_venue_meta( $venue_id, '_civi_phone' );
 
 	}
-
-
 
 	/**
 	 * Update Venue email value.
@@ -1032,8 +995,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-
-
 	/**
 	 * Update Venue phone value.
 	 *
@@ -1050,7 +1011,5 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		eo_update_venue_meta( $venue_id, '_civi_phone', esc_sql( $venue_phone ) );
 
 	}
-
-
 
 } // Class ends.

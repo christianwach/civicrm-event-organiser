@@ -30,7 +30,7 @@ defined( 'ABSPATH' ) || exit;
 class CiviCRM_WP_Event_Organiser_Term_Description {
 
 	/**
-	 * Plugin (calling) object.
+	 * Plugin object.
 	 *
 	 * @since 0.2.1
 	 * @access public
@@ -41,34 +41,21 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 
 
 	/**
-	 * Initialises this object.
-	 *
-	 * @since 0.2.1
-	 */
-	public function __construct() {
-
-		// Register hooks on admin init.
-		add_action( 'admin_init', [ $this, 'register_hooks' ] );
-
-	}
-
-
-
-	/**
-	 * Set references to other objects.
+	 * Constructor.
 	 *
 	 * @since 0.2.1
 	 *
 	 * @param object $parent The parent object.
 	 */
-	public function set_references( $parent ) {
+	public function __construct( $parent ) {
 
 		// Store reference.
 		$this->plugin = $parent;
 
+		// Register hooks on admin init.
+		add_action( 'admin_init', [ $this, 'register_hooks' ] );
+
 	}
-
-
 
 	/**
 	 * Register hooks on plugin init.
@@ -97,11 +84,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 
 	}
 
-
-
 	// -------------------------------------------------------------------------
-
-
 
 	/**
 	 * Add the WYSIWYG editor to the "edit" field.
@@ -133,8 +116,6 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 		<?php
 
 	}
-
-
 
 	/**
 	 * Add the WYSIWYG editor to the "add" field.
@@ -176,7 +157,5 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 		<?php
 
 	}
-
-
 
 } // Class ends.

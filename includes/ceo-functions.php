@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * Add a list of Registration links for an Event to the EO Event meta list.
+ * Add a list of Registration links for an Event to the Event Organiser Event meta list.
  *
  * There have only been appropriate hooks in Event Organiser template files
  * since version 2.12.5, so installs with a prior version of Event Organiser
@@ -75,7 +75,7 @@ add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_reg
 
 
 /**
- * Get the Registration links for an EO Event.
+ * Get the Registration links for an Event Organiser Event.
  *
  * @since 0.3
  *
@@ -109,7 +109,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	$plugin = civicrm_eo();
 
 	// Get CiviCRM Events.
-	$civi_events = $plugin->db->get_civi_event_ids_by_eo_event_id( $post_id );
+	$civi_events = $plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
 
 	// Sanity check.
 	if ( empty( $civi_events ) ) {
@@ -123,7 +123,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	foreach ( $civi_events as $civi_event_id ) {
 
 		// Get the full CiviCRM Event.
-		$civi_event = $plugin->civi->get_event_by_id( $civi_event_id );
+		$civi_event = $plugin->civi->event->get_event_by_id( $civi_event_id );
 
 		// Continue if not found.
 		if ( $civi_event === false ) {
@@ -131,12 +131,12 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		}
 
 		// Skip to next if Registration is not open.
-		if ( $plugin->civi->is_registration_closed( $civi_event ) ) {
+		if ( $plugin->civi->registration->is_registration_closed( $civi_event ) ) {
 			continue;
 		}
 
 		// Get link for the Registration page.
-		$url = $plugin->civi->get_registration_link( $civi_event );
+		$url = $plugin->civi->registration->get_registration_link( $civi_event );
 
 		// Skip to next if empty.
 		if ( empty( $url ) ) {
@@ -158,7 +158,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		if ( $multiple ) {
 
 			// Get Occurrence ID for this CiviCRM Event.
-			$occurrence_id = $plugin->db->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
+			$occurrence_id = $plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
 
 			// Define text.
 			$text = sprintf(

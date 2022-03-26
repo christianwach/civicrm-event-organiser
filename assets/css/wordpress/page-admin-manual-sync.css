@@ -6,6 +6,25 @@
  * @package CiviCRM_WP_Event_Organiser
  */
 
+
+/* Admin Screen setup
+----------------------------------*/
+#welcome-panel {
+	background: white;
+	margin: 11px 0;
+	padding: 0 12px 12px;
+	border: 1px solid #c3c4c7;
+	box-shadow: 0 1px 1px rgb(0 0 0 / 4%);
+}
+
+#welcome-panel::before {
+	background: none;
+	height: auto;
+}
+
+
+/* Admin Style amends
+----------------------------------*/
 .form-table td.progress-bar-hidden {
 	margin: 0;
 	padding: 0;
@@ -13,11 +32,13 @@
 	vertical-align: top;
 }
 
+
 /*! jQuery UI - v1.11.4 - 2016-03-30
 * http://jqueryui.com
 * Includes: core.css, progressbar.css, theme.css
 * To view and modify this theme, visit http://jqueryui.com/themeroller/?ffDefault=Verdana%2CArial%2Csans-serif&fwDefault=normal&fsDefault=1.1em&cornerRadius=4px&bgColorHeader=cccccc&bgTextureHeader=highlight_soft&bgImgOpacityHeader=75&borderColorHeader=aaaaaa&fcHeader=222222&iconColorHeader=222222&bgColorContent=ffffff&bgTextureContent=flat&bgImgOpacityContent=75&borderColorContent=aaaaaa&fcContent=222222&iconColorContent=222222&bgColorDefault=e6e6e6&bgTextureDefault=glass&bgImgOpacityDefault=75&borderColorDefault=d3d3d3&fcDefault=555555&iconColorDefault=888888&bgColorHover=dadada&bgTextureHover=glass&bgImgOpacityHover=75&borderColorHover=999999&fcHover=212121&iconColorHover=454545&bgColorActive=ffffff&bgTextureActive=glass&bgImgOpacityActive=65&borderColorActive=aaaaaa&fcActive=212121&iconColorActive=454545&bgColorHighlight=fbf9ee&bgTextureHighlight=glass&bgImgOpacityHighlight=55&borderColorHighlight=fcefa1&fcHighlight=363636&iconColorHighlight=2e83ff&bgColorError=fef1ec&bgTextureError=glass&bgImgOpacityError=95&borderColorError=cd0a0a&fcError=cd0a0a&iconColorError=cd0a0a&bgColorOverlay=aaaaaa&bgTextureOverlay=flat&bgImgOpacityOverlay=0&opacityOverlay=30&bgColorShadow=aaaaaa&bgTextureShadow=flat&bgImgOpacityShadow=0&opacityShadow=30&thicknessShadow=8px&offsetTopShadow=-8px&offsetLeftShadow=-8px&cornerRadiusShadow=8px
 * Copyright jQuery Foundation and other contributors; Licensed MIT */
+
 
 /* Layout helpers
 ----------------------------------*/
@@ -120,10 +141,10 @@
 	background-image: none;
 }
 
+
 /* Component containers
 ----------------------------------*/
 .ui-widget {
-	font-family: Verdana,Arial,sans-serif;
 	font-size: 1.1em;
 }
 .ui-widget .ui-widget {
@@ -133,7 +154,6 @@
 .ui-widget select,
 .ui-widget textarea,
 .ui-widget button {
-	font-family: Verdana,Arial,sans-serif;
 	font-size: 1em;
 }
 .ui-widget-content {
@@ -146,7 +166,7 @@
 }
 .ui-widget-header {
 	border: 1px solid #aaaaaa;
-	background: #cccccc url("../images/ui-bg_highlight-soft_75_cccccc_1x100.png") 50% 50% repeat-x;
+	background: #cccccc url("../../images/progressbar/ui-bg_highlight-soft_75_cccccc_1x100.png") 50% 50% repeat-x;
 	color: #222222;
 	font-weight: bold;
 }
@@ -154,13 +174,14 @@
 	color: #222222;
 }
 
+
 /* Interaction states
 ----------------------------------*/
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
 	border: 1px solid #d3d3d3;
-	background: #e6e6e6 url("../images/ui-bg_glass_75_e6e6e6_1x400.png") 50% 50% repeat-x;
+	background: #e6e6e6 url("../../images/progressbar/ui-bg_glass_75_e6e6e6_1x400.png") 50% 50% repeat-x;
 	font-weight: normal;
 	color: #555555;
 }
@@ -177,7 +198,7 @@
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
 	border: 1px solid #999999;
-	background: #dadada url("../images/ui-bg_glass_75_dadada_1x400.png") 50% 50% repeat-x;
+	background: #dadada url("../../images/progressbar/ui-bg_glass_75_dadada_1x400.png") 50% 50% repeat-x;
 	font-weight: normal;
 	color: #212121;
 }
@@ -196,7 +217,7 @@
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
 	border: 1px solid #aaaaaa;
-	background: #ffffff url("../images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
+	background: #ffffff url("../../images/progressbar/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
 	font-weight: normal;
 	color: #212121;
 }
@@ -207,13 +228,14 @@
 	text-decoration: none;
 }
 
+
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-highlight,
 .ui-widget-content .ui-state-highlight,
 .ui-widget-header .ui-state-highlight {
 	border: 1px solid #fcefa1;
-	background: #fbf9ee url("../images/ui-bg_glass_55_fbf9ee_1x400.png") 50% 50% repeat-x;
+	background: #fbf9ee url("../../images/progressbar/ui-bg_glass_55_fbf9ee_1x400.png") 50% 50% repeat-x;
 	color: #363636;
 }
 .ui-state-highlight a,
@@ -225,7 +247,7 @@
 .ui-widget-content .ui-state-error,
 .ui-widget-header .ui-state-error {
 	border: 1px solid #cd0a0a;
-	background: #fef1ec url("../images/ui-bg_glass_95_fef1ec_1x400.png") 50% 50% repeat-x;
+	background: #fef1ec url("../../images/progressbar/ui-bg_glass_95_fef1ec_1x400.png") 50% 50% repeat-x;
 	color: #cd0a0a;
 }
 .ui-state-error a,
@@ -261,6 +283,7 @@
 	filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */
 }
 
+
 /* Icons
 ----------------------------------*/
 
@@ -271,27 +294,27 @@
 }
 .ui-icon,
 .ui-widget-content .ui-icon {
-	background-image: url("../images/ui-icons_222222_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_222222_256x240.png");
 }
 .ui-widget-header .ui-icon {
-	background-image: url("../images/ui-icons_222222_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_222222_256x240.png");
 }
 .ui-state-default .ui-icon {
-	background-image: url("../images/ui-icons_888888_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_888888_256x240.png");
 }
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon {
-	background-image: url("../images/ui-icons_454545_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_454545_256x240.png");
 }
 .ui-state-active .ui-icon {
-	background-image: url("../images/ui-icons_454545_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_454545_256x240.png");
 }
 .ui-state-highlight .ui-icon {
-	background-image: url("../images/ui-icons_2e83ff_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_2e83ff_256x240.png");
 }
 .ui-state-error .ui-icon,
 .ui-state-error-text .ui-icon {
-	background-image: url("../images/ui-icons_cd0a0a_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_cd0a0a_256x240.png");
 }
 
 /* positioning */
@@ -517,6 +540,7 @@
 	border-radius: 8px;
 }
 
+
 /*!
  * jQuery UI CSS Framework 1.11.4
  * http://jqueryui.com
@@ -527,6 +551,7 @@
  *
  * http://api.jqueryui.com/category/theming/
  */
+
 
 /* Layout helpers
 ----------------------------------*/
@@ -629,6 +654,7 @@
 	background-image: none;
 }
 
+
 /*!
  * jQuery UI CSS Framework 1.11.4
  * http://jqueryui.com
@@ -646,7 +672,6 @@
 /* Component containers
 ----------------------------------*/
 .ui-widget {
-	font-family: Verdana,Arial,sans-serif;
 	font-size: 1.1em;
 }
 .ui-widget .ui-widget {
@@ -656,7 +681,6 @@
 .ui-widget select,
 .ui-widget textarea,
 .ui-widget button {
-	font-family: Verdana,Arial,sans-serif;
 	font-size: 1em;
 }
 .ui-widget-content {
@@ -669,7 +693,7 @@
 }
 .ui-widget-header {
 	border: 1px solid #aaaaaa;
-	background: #cccccc url("../images/ui-bg_highlight-soft_75_cccccc_1x100.png") 50% 50% repeat-x;
+	background: #cccccc url("../../images/progressbar/ui-bg_highlight-soft_75_cccccc_1x100.png") 50% 50% repeat-x;
 	color: #222222;
 	font-weight: bold;
 }
@@ -677,13 +701,14 @@
 	color: #222222;
 }
 
+
 /* Interaction states
 ----------------------------------*/
 .ui-state-default,
 .ui-widget-content .ui-state-default,
 .ui-widget-header .ui-state-default {
 	border: 1px solid #d3d3d3;
-	background: #e6e6e6 url("../images/ui-bg_glass_75_e6e6e6_1x400.png") 50% 50% repeat-x;
+	background: #e6e6e6 url("../../images/progressbar/ui-bg_glass_75_e6e6e6_1x400.png") 50% 50% repeat-x;
 	font-weight: normal;
 	color: #555555;
 }
@@ -700,7 +725,7 @@
 .ui-widget-content .ui-state-focus,
 .ui-widget-header .ui-state-focus {
 	border: 1px solid #999999;
-	background: #dadada url("../images/ui-bg_glass_75_dadada_1x400.png") 50% 50% repeat-x;
+	background: #dadada url("../../images/progressbar/ui-bg_glass_75_dadada_1x400.png") 50% 50% repeat-x;
 	font-weight: normal;
 	color: #212121;
 }
@@ -719,7 +744,7 @@
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
 	border: 1px solid #aaaaaa;
-	background: #ffffff url("../images/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
+	background: #ffffff url("../../images/progressbar/ui-bg_glass_65_ffffff_1x400.png") 50% 50% repeat-x;
 	font-weight: normal;
 	color: #212121;
 }
@@ -730,13 +755,14 @@
 	text-decoration: none;
 }
 
+
 /* Interaction Cues
 ----------------------------------*/
 .ui-state-highlight,
 .ui-widget-content .ui-state-highlight,
 .ui-widget-header .ui-state-highlight {
 	border: 1px solid #fcefa1;
-	background: #fbf9ee url("../images/ui-bg_glass_55_fbf9ee_1x400.png") 50% 50% repeat-x;
+	background: #fbf9ee url("../../images/progressbar/ui-bg_glass_55_fbf9ee_1x400.png") 50% 50% repeat-x;
 	color: #363636;
 }
 .ui-state-highlight a,
@@ -748,7 +774,7 @@
 .ui-widget-content .ui-state-error,
 .ui-widget-header .ui-state-error {
 	border: 1px solid #cd0a0a;
-	background: #fef1ec url("../images/ui-bg_glass_95_fef1ec_1x400.png") 50% 50% repeat-x;
+	background: #fef1ec url("../../images/progressbar/ui-bg_glass_95_fef1ec_1x400.png") 50% 50% repeat-x;
 	color: #cd0a0a;
 }
 .ui-state-error a,
@@ -784,6 +810,7 @@
 	filter:Alpha(Opacity=35); /* support: IE8 - See #6059 */
 }
 
+
 /* Icons
 ----------------------------------*/
 
@@ -794,27 +821,27 @@
 }
 .ui-icon,
 .ui-widget-content .ui-icon {
-	background-image: url("../images/ui-icons_222222_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_222222_256x240.png");
 }
 .ui-widget-header .ui-icon {
-	background-image: url("../images/ui-icons_222222_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_222222_256x240.png");
 }
 .ui-state-default .ui-icon {
-	background-image: url("../images/ui-icons_888888_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_888888_256x240.png");
 }
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon {
-	background-image: url("../images/ui-icons_454545_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_454545_256x240.png");
 }
 .ui-state-active .ui-icon {
-	background-image: url("../images/ui-icons_454545_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_454545_256x240.png");
 }
 .ui-state-highlight .ui-icon {
-	background-image: url("../images/ui-icons_2e83ff_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_2e83ff_256x240.png");
 }
 .ui-state-error .ui-icon,
 .ui-state-error-text .ui-icon {
-	background-image: url("../images/ui-icons_cd0a0a_256x240.png");
+	background-image: url("../../images/progressbar/ui-icons_cd0a0a_256x240.png");
 }
 
 /* positioning */
@@ -1054,5 +1081,7 @@
 	left: 1%;
 	top: 4px;
 	font-weight: bold;
-	text-shadow: 1px 1px 0 #fff;
+	text-shadow: 1px 1px 0 #ddd;
+	/* text-transform: uppercase; */
+	font-size: 14px;
 }

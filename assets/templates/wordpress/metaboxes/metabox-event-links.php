@@ -11,7 +11,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-?><!-- assets/templates/event-links-metabox.php -->
+?><!-- assets/templates/wordpress/metaboxes/metabox-event-links.php -->
 <style>
 .civi_eo_event_list li {
 	margin: 0.5em 0;
@@ -34,6 +34,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.3.6
  *
- * @param object $event The EO Event object.
+ * @param object $event The Event Organiser Event object.
  */
 do_action( 'civicrm_event_organiser_event_links_meta_box_after', $event );

@@ -11,7 +11,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-?><!-- assets/templates/event-sync-metabox.php -->
+?><!-- assets/templates/wordpress/metaboxes/metabox-event-sync.php -->
 <style>
 .civi_eo_event_sync_wrapper {
 	border-bottom: 2px solid #ddd;
@@ -124,7 +124,7 @@ body.js .civi_eo_event_reg_toggle {
 			 *
 			 * @since 0.5.3
 			 *
-			 * @param object $event The EO Event object.
+			 * @param object $event The Event Organiser Event object.
 			 */
 			do_action( 'civicrm_event_organiser_event_meta_box_online_reg_after', $event );
 
@@ -141,7 +141,7 @@ body.js .civi_eo_event_reg_toggle {
 	 *
 	 * @since 0.5.3
 	 *
-	 * @param object $event The EO Event object.
+	 * @param object $event The Event Organiser Event object.
 	 */
 	do_action( 'civicrm_event_organiser_event_meta_box_options_after', $event );
 
@@ -156,6 +156,6 @@ body.js .civi_eo_event_reg_toggle {
  *
  * @since 0.3
  *
- * @param object $event The EO Event object.
+ * @param object $event The Event Organiser Event object.
  */
 do_action( 'civicrm_event_organiser_event_meta_box_after', $event );

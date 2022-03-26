@@ -1,11 +1,11 @@
 <?php
 /**
- * CiviCRM ACF Integration Class.
+ * CiviCRM Profile Sync compatibility Class.
  *
- * Handles compatibility with the CiviCRM ACF Integration plugin.
+ * Handles compatibility with the CiviCRM Profile Sync plugin.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.4.4
+ * @since 0.6.2
  */
 
 // Exit if accessed directly.
@@ -14,68 +14,55 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * CiviCRM Event Organiser CiviCRM ACF Integration compatibility Class.
+ * CiviCRM Event Organiser CiviCRM Profile Sync compatibility Class.
  *
- * This class provides compatibility with the CiviCRM ACF Integration plugin.
+ * This class provides compatibility with the CiviCRM Profile Sync plugin.
  *
- * @since 0.4.4
+ * @since 0.6.2
  */
-class CiviCRM_WP_Event_Organiser_CAI {
+class CiviCRM_WP_Event_Organiser_CWPS {
 
 	/**
-	 * Plugin (calling) object.
+	 * Plugin object.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 * @access public
 	 * @var object $plugin The plugin object.
 	 */
 	public $plugin;
 
 	/**
-	 * CiviCRM ACF Integration reference.
+	 * CiviCRM Profile Sync plugin reference.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 * @access public
-	 * @var object $acf The CiviCRM ACF Integration plugin reference.
+	 * @var object $cwps The CiviCRM Profile Sync plugin reference.
 	 */
-	public $cacf = false;
+	public $cwps = false;
 
 
 
 	/**
-	 * Initialises this object.
+	 * Constructor.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
+	 *
+	 * @param object $parent The parent object.
 	 */
-	public function __construct() {
+	public function __construct( $parent ) {
+
+		// Store reference.
+		$this->plugin = $parent;
 
 		// Add CiviCRM hooks when plugin is loaded.
 		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'initialise' ] );
 
 	}
 
-
-
-	/**
-	 * Set references to other objects.
-	 *
-	 * @since 0.4.4
-	 *
-	 * @param object $parent The parent object.
-	 */
-	public function set_references( $parent ) {
-
-		// Store reference.
-		$this->plugin = $parent;
-
-	}
-
-
-
 	/**
 	 * Do stuff on plugin init.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 */
 	public function initialise() {
 
@@ -84,63 +71,95 @@ class CiviCRM_WP_Event_Organiser_CAI {
 			return;
 		}
 
-		// Maybe store reference to CiviCRM ACF Integration.
+		// Prefer CiviCRM ACF Integration if present.
 		if ( function_exists( 'civicrm_acf_integration' ) ) {
-			$this->cacf = civicrm_acf_integration();
-		}
-
-		// Bail if CiviCRM ACF Integration isn't detected.
-		if ( $this->cacf === false ) {
 			return;
 		}
+
+		// Bail if there's no CiviCRM Profile Sync plugin present.
+		if ( ! defined( 'CIVICRM_WP_PROFILE_SYNC_VERSION' ) ) {
+			return;
+		}
+
+		// Bail if CiviCRM Profile Sync is not version 0.4 or greater.
+		if ( version_compare( CIVICRM_WP_PROFILE_SYNC_VERSION, '0.4', '<' ) ) {
+			return;
+		}
+
+		// Wait for next action to finish set up.
+		add_action( 'sanitize_comment_cookies', [ $this, 'setup_instance' ] );
+
+	}
+
+	/**
+	 * Wait until "plugins_loaded" has finished to set up instance.
+	 *
+	 * This is necessary because the order in which plugins load cannot be
+	 * guaranteed and we need to find out if CiviCRM Profile Sync has fully
+	 * loaded its ACF classes.
+	 *
+	 * @since 0.6.2
+	 */
+	public function setup_instance() {
+
+		// Grab reference to CiviCRM Profile Sync.
+		$plugin = civicrm_wp_profile_sync();
+
+		// Bail if CiviCRM Profile Sync hasn't loaded ACF.
+		if ( ! $plugin->acf->is_loaded() ) {
+			return;
+		}
+
+		// Store reference.
+		$this->cwps = $plugin;
 
 		// Register hooks.
 		$this->register_hooks();
 
 	}
 
-
-
 	/**
 	 * Register hooks on plugin init.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 */
 	public function register_hooks() {
 
-		// Listen for Events from the Mapper that require Event updates.
-		add_action( 'civicrm_acf_integration_mapper_acf_fields_saved', [ $this, 'acf_fields_saved' ], 10, 1 );
+		// Listen for events from the Mapper that require Event updates.
+		add_action( 'cwps/acf/mapper/acf_fields/saved', [ $this, 'acf_fields_saved' ], 10, 1 );
 
 		// Listen for queries from our Field Group class.
-		add_filter( 'civicrm_acf_integration_query_field_group_mapped', [ $this, 'query_field_group_mapped' ], 10, 2 );
+		add_filter( 'cwps/acf/query_field_group_mapped', [ $this, 'query_field_group_mapped' ], 10, 2 );
+
+		// Listen for queries from the ACF Field class.
+		add_filter( 'cwps/acf/field/query_setting_choices', [ $this, 'query_setting_choices' ], 50, 3 );
 
 		// Listen for queries from our Custom Field class.
-		add_filter( 'civicrm_acf_integration_query_custom_fields', [ $this, 'query_custom_fields' ], 10, 2 );
+		add_filter( 'cwps/acf/query_custom_fields', [ $this, 'query_custom_fields' ], 10, 2 );
 
 		// Listen for queries from the Custom Field class.
-		add_filter( 'civicrm_acf_integration_query_post_id', [ $this, 'query_post_id' ], 10, 2 );
+		add_filter( 'cwps/acf/query_post_id', [ $this, 'query_post_id' ], 10, 2 );
+
+		// Listen for queries from the Attachment class.
+		add_filter( 'cwps/acf/query_entity_table', [ $this, 'query_entity_table' ], 10, 2 );
 
 		// Exclude "Event" from being mapped to a Contact Type.
-		add_filter( 'civicrm_acf_integration_post_types_get_all', [ $this, 'post_types_filter' ], 10, 1 );
+		add_filter( 'cwps/acf/post_types/get_all', [ $this, 'post_types_filter' ], 10, 1 );
 
-		// Listen for a CiviCRM Event being synced to an EO Event.
+		// Listen for a CiviCRM Event being synced to an Event Organiser Event.
 		add_action( 'civicrm_event_organiser_admin_civi_to_eo_sync', [ $this, 'sync_to_eo' ], 10, 1 );
 
-		// Listen for an EO Event being synced to a CiviCRM Event.
+		// Listen for an Event Organiser Event being synced to a CiviCRM Event.
 		add_action( 'civicrm_event_organiser_admin_eo_to_civi_sync', [ $this, 'sync_to_civi' ], 10, 1 );
 
 	}
 
-
-
 	// -------------------------------------------------------------------------
 
-
-
 	/**
-	 * Update the CiviCRM Events when the ACF Fields on an EO Event have been updated.
+	 * Update the CiviCRM Events when the ACF Fields on an Event Organiser Event have been updated.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 *
 	 * @param array $args The array of WordPress params.
 	 */
@@ -154,13 +173,13 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		// We need the Post itself.
 		$post = get_post( $args['post_id'] );
 
-		// Bail if this is not an EO Event.
+		// Bail if this is not an Event Organiser Event.
 		if ( $post->post_type != 'event' ) {
 			return;
 		}
 
 		// Get existing CiviCRM Events from post meta.
-		$correspondences = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $args['post_id'] );
+		$correspondences = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $args['post_id'] );
 
 		// Bail if we have no correspondences.
 		if ( count( $correspondences ) === 0 ) {
@@ -176,7 +195,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		$fields = get_fields( $args['post_id'] );
 
 		// We only ever update a CiviCRM Event via ACF.
-		remove_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10 );
 
 		// Loop through the CiviCRM Events and update.
 		foreach ( $correspondences as $event_id ) {
@@ -184,11 +203,9 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		}
 
 		// Restore hook.
-		add_action( 'civicrm_post', [ $this->plugin->civi, 'event_updated' ], 10, 4 );
+		add_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10, 4 );
 
 	}
-
-
 
 	/**
 	 * Prepare the required CiviCRM Event data from a set of ACF Fields.
@@ -204,11 +221,12 @@ class CiviCRM_WP_Event_Organiser_CAI {
 	 *
 	 * @since 0.2
 	 *
+	 * @param int $event_id The numeric ID of the CiviCRM Event.
 	 * @param array $fields The ACF Field data.
 	 * @param int $post_id The numeric ID of the WordPress Post.
 	 * @return array|bool $event_data The CiviCRM Event data.
 	 */
-	public function prepare_from_fields( $fields, $post_id = null ) {
+	public function prepare_from_fields( $event_id, $fields, $post_id = null ) {
 
 		// Init data for fields.
 		$event_data = [];
@@ -225,7 +243,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 			$settings = get_field_object( $selector, $post_id );
 
 			// Get the CiviCRM Custom Field.
-			$custom_field_id = $this->cacf->civicrm->custom_field->custom_field_id_get( $settings );
+			$custom_field_id = $this->cwps->acf->civicrm->custom_field->custom_field_id_get( $settings );
 
 			// Skip if there's no corresponding CiviCRM Custom Field.
 			if ( empty( $custom_field_id ) ) {
@@ -235,8 +253,17 @@ class CiviCRM_WP_Event_Organiser_CAI {
 			// Build Custom Field code.
 			$code = 'custom_' . $custom_field_id;
 
-			// Parse value by field type.
-			$value = $this->cacf->acf->field->value_get_for_civicrm( $settings['type'], $value );
+			// Build args for value conversion.
+			$args = [
+				'identifier' => 'event',
+				'entity_id' => $event_id,
+				'custom_field_id' => $custom_field_id,
+				'field_name' => '',
+				'selector' => $selector,
+				'post_id' => $post_id,
+			];
+
+			$value = $this->cwps->acf->acf->field->value_get_for_civicrm( $value, $settings['type'], $settings, $args );
 
 			// Add it to the field data.
 			$event_data[ $code ] = $value;
@@ -247,8 +274,6 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		return $event_data;
 
 	}
-
-
 
 	/**
 	 * Update a CiviCRM Event with data from ACF Fields.
@@ -263,7 +288,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 	public function update_from_fields( $event_id, $fields, $post_id = null ) {
 
 		// Build required data.
-		$event_data = $this->prepare_from_fields( $fields, $post_id );
+		$event_data = $this->prepare_from_fields( $event_id, $fields, $post_id );
 
 		// Add the Event ID.
 		$event_data['id'] = $event_id;
@@ -276,12 +301,10 @@ class CiviCRM_WP_Event_Organiser_CAI {
 
 	}
 
-
-
 	/**
 	 * Update a CiviCRM Event with a given set of data.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 *
 	 * @param array $event The CiviCRM Event data.
 	 * @return array|bool $event_data The array Event data from the CiviCRM API, or false on failure.
@@ -330,19 +353,71 @@ class CiviCRM_WP_Event_Organiser_CAI {
 
 	}
 
-
-
 	// -------------------------------------------------------------------------
 
+	/**
+	 * Returns the choices for a Setting Field from this Entity when found.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @param array $choices The existing array of choices for the Setting Field.
+	 * @param array $field The ACF Field data array.
+	 * @param array $field_group The ACF Field Group data array.
+	 * @param bool $skip_check True if the check for Field Group should be skipped. Default false.
+	 * @return array $choices The modified array of choices for the Setting Field.
+	 */
+	public function query_setting_choices( $choices, $field, $field_group, $skip_check = false ) {
 
+		// Pass if this is not an Event Field Group.
+		$is_event_field_group = $this->is_event_field_group( $field_group );
+		if ( $is_event_field_group === false ) {
+			return $choices;
+		}
+
+		// Get the Custom Fields for CiviCRM Events.
+		if ( method_exists( $this->cwps->civicrm->custom_field, 'get_for_entity_type' ) ) {
+			$custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		} else {
+			$custom_fields = $this->cwps->acf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		}
+
+		/**
+		 * Filter the Custom Fields.
+		 *
+		 * @since 0.6.4
+		 *
+		 * @param array The initially empty array of filtered Custom Fields.
+		 * @param array $custom_fields The CiviCRM Custom Fields array.
+		 * @param array $field The ACF Field data array.
+		 */
+		$filtered_fields = apply_filters( 'cwps/acf/query_settings/custom_fields_filter', [], $custom_fields, $field );
+
+		// Pass if not populated.
+		if ( empty( $filtered_fields ) ) {
+			return $choices;
+		}
+
+		// Build Custom Field choices array for dropdown.
+		$custom_field_prefix = $this->cwps->acf->civicrm->custom_field_prefix();
+		foreach ( $filtered_fields as $custom_group_name => $custom_group ) {
+			$custom_fields_label = esc_attr( $custom_group_name );
+			foreach ( $custom_group as $custom_field ) {
+				$choices[ $custom_fields_label ][ $custom_field_prefix . $custom_field['id'] ] = $custom_field['label'];
+			}
+		}
+
+		// Return populated array.
+		return $choices;
+
+	}
 
 	/**
 	 * Listen for queries from the Field Group class.
 	 *
 	 * This method responds with a Boolean if it detects that this Field Group
-	 * maps to the EO Event Post Type.
+	 * maps to the Event Organiser Event Post Type.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 *
 	 * @param bool $mapped The existing mapping flag.
 	 * @param array $field_group The array of ACF Field Group data.
@@ -366,12 +441,10 @@ class CiviCRM_WP_Event_Organiser_CAI {
 
 	}
 
-
-
 	/**
 	 * Listen for queries from the Custom Field class.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 *
 	 * @param array $custom_fields The existing Custom Fields.
 	 * @param array $field_group The array of ACF Field Group data.
@@ -386,7 +459,11 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		}
 
 		// Get the Custom Fields for CiviCRM Events.
-		$event_custom_fields = $this->cacf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		if ( method_exists( $this->cwps->civicrm->custom_field, 'get_for_entity_type' ) ) {
+			$event_custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		} else {
+			$event_custom_fields = $this->cwps->acf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		}
 
 		// Maybe merge with passed in array.
 		if ( ! empty( $event_custom_fields ) ) {
@@ -398,15 +475,13 @@ class CiviCRM_WP_Event_Organiser_CAI {
 
 	}
 
-
-
 	/**
 	 * Listen for queries from the Custom Field class.
 	 *
 	 * This method responds with a "Post ID" if it detects that the set of Custom
 	 * Fields maps to an Event.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 *
 	 * @param array|bool $post_ids The existing "Post IDs".
 	 * @param array $args The array of CiviCRM Custom Fields params.
@@ -426,7 +501,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 			}
 
 			// Get the "Post ID" that this Event is mapped to.
-			$post_id = $this->plugin->db->get_eo_event_id_by_civi_event_id( $field['entity_id'] );
+			$post_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $field['entity_id'] );
 
 			// Skip to next if not found.
 			if ( $post_id === false ) {
@@ -458,16 +533,42 @@ class CiviCRM_WP_Event_Organiser_CAI {
 
 	}
 
+	/**
+	 * Listen for queries from the Attachment class.
+	 *
+	 * This method responds with an "Entity Table" if it detects that the ACF
+	 * Field Group maps to an Event.
+	 *
+	 * @since 0.6.6
+	 *
+	 * @param array $entity_tables The existing "Entity Tables".
+	 * @param array $field_group The array of ACF Field Group params.
+	 * @return array $entity_tables The mapped "Entity Tables".
+	 */
+	public function query_entity_table( $entity_tables, $field_group ) {
 
+		// Bail if this is not an Event Field Group.
+		$is_visible = $this->is_event_field_group( $field_group );
+		if ( $is_visible === false ) {
+			return $entity_tables;
+		}
+
+		// Append our "Entity Table" if not already present.
+		if ( ! in_array( 'civicrm_event', $entity_tables ) ) {
+			$entity_tables[] = 'civicrm_event';
+		}
+
+		// --<
+		return $entity_tables;
+
+	}
 
 	// -------------------------------------------------------------------------
-
-
 
 	/**
 	 * Check if this Field Group has been mapped to the Event Post Type.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 *
 	 * @param array $field_group The Field Group to check.
 	 * @return bool True if the Field Group has been mapped to the Event Post Type, or false otherwise.
@@ -497,7 +598,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 			];
 
 			// Do the check.
-			$is_visible = $this->cacf->acf->field_group->is_visible( $field_group, $params );
+			$is_visible = $this->cwps->acf->acf->field_group->is_visible( $field_group, $params );
 
 		}
 
@@ -511,12 +612,10 @@ class CiviCRM_WP_Event_Organiser_CAI {
 
 	}
 
-
-
 	/**
 	 * Exclude "Event" from being mapped to a Contact Type.
 	 *
-	 * @since 0.4.4
+	 * @since 0.6.2
 	 *
 	 * @param array $post_types The array of WordPress Post Types.
 	 * @return array $post_types The modified array of WordPress Post Types.
@@ -533,20 +632,16 @@ class CiviCRM_WP_Event_Organiser_CAI {
 
 	}
 
-
-
 	// -------------------------------------------------------------------------
 
-
-
 	/**
-	 * Intercept when a CiviCRM Event has been synced to an EO Event.
+	 * Intercept when a CiviCRM Event has been synced to an Event Organiser Event.
 	 *
 	 * Update any associated ACF Fields with their Custom Field values.
 	 *
 	 * @since 0.5.2
 	 *
-	 * @param array $args The array of CiviCRM Event and EO Event params.
+	 * @param array $args The array of CiviCRM Event and Event Organiser Event params.
 	 */
 	public function sync_to_eo( $args ) {
 
@@ -554,7 +649,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		$event_id = $args['event_id'];
 
 		// Get all ACF Fields for the Event.
-		$acf_fields = $this->cacf->acf->field->fields_get_for_post( $event_id );
+		$acf_fields = $this->cwps->acf->acf->field->fields_get_for_post( $event_id );
 
 		// Bail if we don't have any Custom Fields in ACF.
 		if ( empty( $acf_fields['custom'] ) ) {
@@ -562,7 +657,11 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		}
 
 		// Get all the Custom Fields for CiviCRM Events.
-		$civicrm_custom_fields = $this->cacf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		if ( method_exists( $this->cwps->civicrm->custom_field, 'get_for_entity_type' ) ) {
+			$civicrm_custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		} else {
+			$civicrm_custom_fields = $this->cwps->acf->civicrm->custom_field->get_for_entity_type( 'Event', '' );
+		}
 
 		// Bail if there are none.
 		if ( empty( $civicrm_custom_fields ) ) {
@@ -615,25 +714,23 @@ class CiviCRM_WP_Event_Organiser_CAI {
 			}
 
 			// Parse the value for ACF.
-			$value = $this->cacf->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $event_id );
+			$value = $this->cwps->acf->civicrm->custom_field->value_get_for_acf( $value, $field, $selector, $event_id );
 
 			// Update the value of the ACF Field.
-			$this->cacf->acf->field->value_update( $selector, $value, $event_id );
+			$this->cwps->acf->acf->field->value_update( $selector, $value, $event_id );
 
 		}
 
 	}
 
-
-
 	/**
-	 * Intercept when an EO Event has been synced to a CiviCRM Event.
+	 * Intercept when an Event Organiser Event has been synced to a CiviCRM Event.
 	 *
 	 * Update any associated Custom Fields with their ACF Field values.
 	 *
 	 * @since 0.5.2
 	 *
-	 * @param array $args The array of CiviCRM Event and EO Event params.
+	 * @param array $args The array of CiviCRM Event and Event Organiser Event params.
 	 */
 	public function sync_to_civi( $args ) {
 
@@ -644,7 +741,5 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		$this->acf_fields_saved( $args );
 
 	}
-
-
 
 } // Class ends.

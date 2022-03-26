@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 class CiviCRM_WP_Event_Organiser_Shortcodes {
 
 	/**
-	 * Plugin (calling) object.
+	 * Plugin object.
 	 *
 	 * @since 0.6.3
 	 * @access public
@@ -34,34 +34,21 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 
 
 	/**
-	 * Initialises this object.
-	 *
-	 * @since 0.6.3
-	 */
-	public function __construct() {
-
-		// Add CiviCRM hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'initialise' ] );
-
-	}
-
-
-
-	/**
-	 * Set references to other objects.
+	 * Constructor.
 	 *
 	 * @since 0.6.3
 	 *
 	 * @param object $parent The parent object.
 	 */
-	public function set_references( $parent ) {
+	public function __construct( $parent ) {
 
 		// Store reference.
 		$this->plugin = $parent;
 
+		// Add CiviCRM hooks when plugin is loaded.
+		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'initialise' ] );
+
 	}
-
-
 
 	/**
 	 * Do stuff on plugin init.
@@ -75,8 +62,6 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 
 	}
 
-
-
 	/**
 	 * Register hooks on plugin init.
 	 *
@@ -89,11 +74,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 
 	}
 
-
-
 	// -------------------------------------------------------------------------
-
-
 
 	/**
 	 * Adds the CiviCRM Register link to an Event via a Shortcode.
@@ -166,7 +147,5 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 		return $markup;
 
 	}
-
-
 
 } // Class ends.

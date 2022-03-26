@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
 class CiviCRM_WP_Event_Organiser_CFCR {
 
 	/**
-	 * Plugin (calling) object.
+	 * Plugin object.
 	 *
 	 * @since 0.5.3
 	 * @access public
@@ -46,31 +46,18 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	 * Initialises this object.
 	 *
 	 * @since 0.5.3
+	 *
+	 * @param object $parent The parent object.
 	 */
-	public function __construct() {
+	public function __construct( $parent ) {
+
+		// Store reference.
+		$this->plugin = $parent;
 
 		// Initialise after "Caldera Forms CiviCRM Redirect" is loaded.
 		add_action( 'plugins_loaded', [ $this, 'initialise' ], 50 );
 
 	}
-
-
-
-	/**
-	 * Set references to other objects.
-	 *
-	 * @since 0.5.3
-	 *
-	 * @param object $parent The parent object.
-	 */
-	public function set_references( $parent ) {
-
-		// Store reference.
-		$this->plugin = $parent;
-
-	}
-
-
 
 	/**
 	 * Do stuff on plugin init.
@@ -95,8 +82,6 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 	}
 
-
-
 	/**
 	 * Register hooks on plugin init.
 	 *
@@ -118,23 +103,19 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 	}
 
-
-
 	// -------------------------------------------------------------------------
-
-
 
 	/**
 	 * Add our component to the Online Registration options in the Event metabox.
 	 *
 	 * @since 0.5.3
 	 *
-	 * @param object $event The EO Event object.
+	 * @param object $event The Event Organiser Event object.
 	 */
 	public function metabox_append( $event ) {
 
 		// Get linked CiviCRM Events.
-		$civi_events = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event->ID );
+		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
 
 		// Bail if there are none.
 		if ( empty( $civi_events ) ) {
@@ -173,12 +154,12 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Include template file.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/event-cfcr-metabox.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-event-cfcr.php';
 
 		// Add our metabox JavaScript in the footer.
 		wp_enqueue_script(
 			'civi_eo_event_metabox_cfcr_js',
-			CIVICRM_WP_EVENT_ORGANISER_URL . '/assets/js/civi-eo-event-metabox-cfcr.js',
+			CIVICRM_WP_EVENT_ORGANISER_URL . '/assets/js/wordpress/metabox-event-cfcr.js',
 			[ 'wplink' ],
 			CIVICRM_WP_EVENT_ORGANISER_VERSION,
 			true
@@ -212,8 +193,6 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 	}
 
-
-
 	/**
 	 * Filter the Post Types in the switcher.
 	 *
@@ -243,8 +222,6 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		return $query;
 
 	}
-
-
 
 	/**
 	 * Return the Post ID for a given URL.
@@ -294,14 +271,12 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 	}
 
-
-
 	/**
 	 * Update our component with the value from the Event metabox.
 	 *
 	 * @since 0.5.3
 	 *
-	 * @param int $event_id The numeric ID of the EO Event.
+	 * @param int $event_id The numeric ID of the Event Organiser Event.
 	 * @param int $redirect_post_id The numeric ID of the WordPress Post.
 	 */
 	public function redirect_update( $event_id, $redirect_post_id = 0 ) {
@@ -324,7 +299,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Get linked CiviCRM Event IDs.
-		$civi_event_ids = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event_id );
+		$civi_event_ids = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event_id );
 
 		// Set multiple status.
 		$multiple = false;
@@ -373,19 +348,17 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 	}
 
-
-
 	/**
 	 * Maybe delete the redirect data for an Event.
 	 *
 	 * @since 0.5.3
 	 *
-	 * @param int $event_id The numeric ID of the EO Event.
+	 * @param int $event_id The numeric ID of the Event Organiser Event.
 	 */
 	public function redirect_delete( $event_id ) {
 
 		// Get linked CiviCRM Event IDs.
-		$civi_event_ids = $this->plugin->db->get_civi_event_ids_by_eo_event_id( $event_id );
+		$civi_event_ids = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event_id );
 
 		// Bail if there are none.
 		if ( empty( $civi_event_ids ) ) {
@@ -418,7 +391,5 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		$this->cfcr->redirect_api->delete( (array) $existing );
 
 	}
-
-
 
 } // Class ends.

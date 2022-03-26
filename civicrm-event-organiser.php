@@ -9,7 +9,6 @@
  * GitHub Plugin URI: https://github.com/christianwach/civicrm-event-organiser
  * Text Domain: civicrm-event-organiser
  * Domain Path: /languages
- * Network: false
  *
  * @package CiviCRM_WP_Event_Organiser
  */
@@ -53,6 +52,15 @@ class CiviCRM_WP_Event_Organiser {
 	 * @var object $db The Admin object.
 	 */
 	public $db;
+
+	/**
+	 * Mapping object.
+	 *
+	 * @since 0.7
+	 * @access public
+	 * @var object $mapping The Mapping object.
+	 */
+	public $mapping;
 
 	/**
 	 * CiviCRM object.
@@ -152,8 +160,6 @@ class CiviCRM_WP_Event_Organiser {
 
 	}
 
-
-
 	/**
 	 * Do stuff on plugin init.
 	 *
@@ -189,8 +195,6 @@ class CiviCRM_WP_Event_Organiser {
 
 	}
 
-
-
 	/**
 	 * Include files.
 	 *
@@ -198,22 +202,30 @@ class CiviCRM_WP_Event_Organiser {
 	 */
 	public function include_files() {
 
+		// Only do this once.
+		static $done;
+		if ( isset( $done ) && $done === true ) {
+			return;
+		}
+
 		// Load our class files.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-term-html.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-admin.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-civi.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-eo-venue.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-taxonomy.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-shortcodes.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-functions.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cwps.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cai.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm-event-organiser-cfcr.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-term-html.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/ceo-admin.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-mapping.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/ceo-civicrm.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/eo/ceo-eo.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/eo/ceo-eo-venue.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-taxonomy.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-shortcodes.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-functions.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/ceo-cwps.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/ceo-cai.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/ceo-cfcr.php';
+
+		// We're done.
+		$done = true;
 
 	}
-
-
 
 	/**
 	 * Set up this plugin's objects.
@@ -229,35 +241,22 @@ class CiviCRM_WP_Event_Organiser {
 		}
 
 		// Initialise objects.
-		$this->term_html = new CiviCRM_WP_Event_Organiser_Term_Description();
-		$this->db = new CiviCRM_WP_Event_Organiser_Admin();
-		$this->civi = new CiviCRM_WP_Event_Organiser_CiviCRM();
-		$this->eo = new CiviCRM_WP_Event_Organiser_EO();
-		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue();
-		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy();
-		$this->shortcodes = new CiviCRM_WP_Event_Organiser_Shortcodes();
-		$this->cwps = new CiviCRM_WP_Event_Organiser_CWPS();
-		$this->cai = new CiviCRM_WP_Event_Organiser_CAI();
-		$this->cfcr = new CiviCRM_WP_Event_Organiser_CFCR();
-
-		// Store references.
-		$this->term_html->set_references( $this );
-		$this->db->set_references( $this );
-		$this->civi->set_references( $this );
-		$this->eo->set_references( $this );
-		$this->eo_venue->set_references( $this );
-		$this->taxonomy->set_references( $this );
-		$this->shortcodes->set_references( $this );
-		$this->cwps->set_references( $this );
-		$this->cai->set_references( $this );
-		$this->cfcr->set_references( $this );
+		$this->term_html = new CiviCRM_WP_Event_Organiser_Term_Description( $this );
+		$this->db = new CiviCRM_WP_Event_Organiser_Admin( $this );
+		$this->mapping = new CiviCRM_WP_Event_Organiser_Mapping( $this );
+		$this->civi = new CiviCRM_WP_Event_Organiser_CiviCRM( $this );
+		$this->eo = new CiviCRM_WP_Event_Organiser_EO( $this );
+		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue( $this );
+		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy( $this );
+		$this->shortcodes = new CiviCRM_WP_Event_Organiser_Shortcodes( $this );
+		$this->cwps = new CiviCRM_WP_Event_Organiser_CWPS( $this );
+		$this->cai = new CiviCRM_WP_Event_Organiser_CAI( $this );
+		$this->cfcr = new CiviCRM_WP_Event_Organiser_CFCR( $this );
 
 		// We're done.
 		$done = true;
 
 	}
-
-
 
 	/**
 	 * Do stuff on plugin activation.
@@ -268,8 +267,6 @@ class CiviCRM_WP_Event_Organiser {
 
 	}
 
-
-
 	/**
 	 * Do stuff on plugin deactivation.
 	 *
@@ -279,11 +276,7 @@ class CiviCRM_WP_Event_Organiser {
 
 	}
 
-
-
 	// -------------------------------------------------------------------------
-
-
 
 	/**
 	 * Load translation files.
@@ -304,17 +297,106 @@ class CiviCRM_WP_Event_Organiser {
 
 	}
 
+	// -------------------------------------------------------------------------
 
+	/**
+	 * Check if CiviCRM is network activated.
+	 *
+	 * @since 0.7
+	 *
+	 * @return bool $civicrm_network_active True if network activated, false otherwise.
+	 */
+	public function is_civicrm_network_activated() {
+
+		// Only need to test once.
+		static $civicrm_network_active;
+		if ( isset( $civicrm_network_active ) ) {
+			return $civicrm_network_active;
+		}
+
+		// If not multisite, it cannot be.
+		if ( ! is_multisite() ) {
+			$civicrm_network_active = false;
+			return $civicrm_network_active;
+		}
+
+		// If CiviCRM's constant is not defined, we'll never know.
+		if ( ! defined( 'CIVICRM_PLUGIN_FILE' ) ) {
+			$civicrm_network_active = false;
+			return $civicrm_network_active;
+		}
+
+		// Make sure plugin file is included when outside admin.
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+
+		// Get path from 'plugins' directory to CiviCRM's directory.
+		$civicrm = plugin_basename( CIVICRM_PLUGIN_FILE );
+
+		// Test if network active.
+		$civicrm_network_active = is_plugin_active_for_network( $civicrm );
+
+		// --<
+		return $civicrm_network_active;
+
+	}
+
+	/**
+	 * Check if CiviCRM Admin Utilities is hiding CiviCRM except on main site.
+	 *
+	 * @since 0.7
+	 *
+	 * @return bool $civicrm_hidden True if CAU is hiding CiviCRM, false otherwise.
+	 */
+	public function is_civicrm_main_site_only() {
+
+		// Only need to test once.
+		static $civicrm_hidden;
+		if ( isset( $civicrm_hidden ) ) {
+			return $civicrm_hidden;
+		}
+
+		// If not multisite, it cannot be.
+		if ( ! is_multisite() ) {
+			$civicrm_hidden = false;
+			return $civicrm_hidden;
+		}
+
+		// Bail if CiviCRM is not network-activated.
+		if ( ! $this->is_civicrm_network_activated() ) {
+			$civicrm_hidden = false;
+			return $civicrm_hidden;
+		}
+
+		// If CAU's constant is not defined, we'll never know.
+		if ( ! defined( 'CIVICRM_ADMIN_UTILITIES_VERSION' ) ) {
+			$civicrm_hidden = false;
+			return $civicrm_hidden;
+		}
+
+		// Grab the CAU plugin reference.
+		$cau = civicrm_au();
+
+		// Bail if CAU's multisite object is not defined.
+		if ( empty( $cau->multisite ) ) {
+			$civicrm_hidden = false;
+			return $civicrm_hidden;
+		}
+
+		// Bail if not hidden.
+		if ( $cau->multisite->setting_get( 'main_site_only', '0' ) == '0' ) {
+			$civicrm_hidden = false;
+			return $civicrm_hidden;
+		}
+
+		// CAU is hiding CiviCRM.
+		$civicrm_hidden = true;
+		return $civicrm_hidden;
+
+	}
 
 } // Class ends.
-
-
-
-// Declare as global.
-global $civicrm_wp_event_organiser;
-
-// Init plugin.
-$civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser();
 
 
 
@@ -329,9 +411,18 @@ function civicrm_eo() {
 
 	// Return instance.
 	global $civicrm_wp_event_organiser;
+
+	// Instantiate plugin if not yet instantiated.
+	if ( ! isset( $civicrm_wp_event_organiser ) ) {
+		$civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser();
+	}
+
 	return $civicrm_wp_event_organiser;
 
 }
+
+// Bootstrap plugin.
+civicrm_eo();
 
 
 

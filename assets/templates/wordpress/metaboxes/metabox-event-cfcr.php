@@ -11,7 +11,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-?><!-- assets/templates/event-cfcr-metabox.php -->
+?><!-- assets/templates/wordpress/metaboxes/metabox-event-cfcr.php -->
 <style>
 .civi_eo_event_cfcr_post_link p {
 	font-size: 120%;
