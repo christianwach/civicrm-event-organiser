@@ -243,9 +243,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		 *
 		 * @since 0.7
 		 *
-		 * @param string The default capability for access to Settings Page.
+		 * @param string The default capability for access to Settings.
 		 */
-		$capability = apply_filters( 'ceo/admin/page/settings/cap', 'manage_options' );
+		$capability = apply_filters( 'ceo/admin/settings/cap', 'manage_options' );
 
 		// Check user permissions.
 		if ( ! current_user_can( $capability ) ) {
@@ -323,12 +323,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function option_get( $key, $default = null ) {
 
-		// Get site option if multisite and network activated.
-		if ( $this->is_network_activated() ) {
-			$value = get_site_option( $key, $default );
-		} else {
-			$value = get_option( $key, $default );
-		}
+		// Get local site option.
+		$value = get_option( $key, $default );
 
 		// --<
 		return $value;
@@ -345,12 +341,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function option_save( $key, $value ) {
 
-		// Update site option if multisite and network activated.
-		if ( $this->is_network_activated() ) {
-			update_site_option( $key, $value );
-		} else {
-			update_option( $key, $value );
-		}
+		// Update local site option.
+		update_option( $key, $value );
 
 	}
 
@@ -363,12 +355,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function option_delete( $key ) {
 
-		// Delete site option if multisite and network activated.
-		if ( $this->is_network_activated() ) {
-			delete_site_option( $key );
-		} else {
-			delete_option( $key );
-		}
+		// Delete local site option.
+		delete_option( $key );
 
 	}
 

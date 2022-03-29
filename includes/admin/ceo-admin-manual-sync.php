@@ -129,12 +129,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 */
 	public function register_hooks() {
 
-		// Add menu to Network submenu or Settings submenu.
-		if ( $this->admin->is_network_activated() ) {
-			add_action( 'network_admin_menu', [ $this, 'admin_menu' ], 30 );
-		} else {
-			add_action( 'admin_menu', [ $this, 'admin_menu' ], 30 );
-		}
+		// Add menu item.
+		add_action( 'admin_menu', [ $this, 'admin_menu' ], 30 );
 
 		// Add our meta boxes.
 		add_action( 'add_meta_boxes', [ $this, 'meta_boxes_add' ], 11, 1 );
@@ -158,8 +154,17 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 */
 	public function admin_menu() {
 
+		/**
+		 * Set access capability but allow overrides.
+		 *
+		 * @since 0.7
+		 *
+		 * @param string The default capability for access to Settings.
+		 */
+		$capability = apply_filters( 'ceo/admin/settings/cap', 'manage_options' );
+
 		// Check user permissions.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( $capability ) ) {
 			return;
 		}
 
@@ -532,8 +537,17 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			return;
 		}
 
-		// Bail if user cannot access CiviCRM.
-		if ( ! current_user_can( 'access_civicrm' ) ) {
+		/**
+		 * Set access capability but allow overrides.
+		 *
+		 * @since 0.7
+		 *
+		 * @param string The default capability for access to Settings.
+		 */
+		$capability = apply_filters( 'ceo/admin/settings/cap', 'manage_options' );
+
+		// Check user permissions.
+		if ( ! current_user_can( $capability ) ) {
 			return;
 		}
 

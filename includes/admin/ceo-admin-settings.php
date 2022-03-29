@@ -163,12 +163,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 */
 	public function register_hooks() {
 
-		// Add menu to Network submenu or Settings submenu.
-		if ( $this->admin->is_network_activated() ) {
-			add_action( 'network_admin_menu', [ $this, 'admin_menu' ], 30 );
-		} else {
-			add_action( 'admin_menu', [ $this, 'admin_menu' ], 30 );
-		}
+		// Add menu item.
+		add_action( 'admin_menu', [ $this, 'admin_menu' ], 30 );
 
 		// Add our meta boxes.
 		add_action( 'add_meta_boxes', [ $this, 'meta_boxes_add' ], 11, 1 );
@@ -184,43 +180,30 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 */
 	public function admin_menu() {
 
-		// We must be network admin in multisite.
-		if ( is_multisite() && ! is_super_admin() ) {
-			return;
-		}
+		/**
+		 * Set access capability but allow overrides.
+		 *
+		 * @since 0.7
+		 *
+		 * @param string The default capability for access to Settings.
+		 */
+		$capability = apply_filters( 'ceo/admin/settings/cap', 'manage_options' );
 
 		// Check user permissions.
-		if ( ! current_user_can( 'manage_options' ) ) {
+		if ( ! current_user_can( $capability ) ) {
 			return;
 		}
 
-		// Multisite and network activated?
-		if ( $this->admin->is_network_activated() ) {
-
-			// Add the admin page to the Network Settings menu.
-			$this->parent_page = add_submenu_page(
-				'settings.php',
-				__( 'Settings: CiviCRM Event Organiser', 'civicrm-event-organiser' ), // Page title.
-				__( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ), // Menu title.
-				'manage_options', // Required caps.
-				$this->parent_page_slug, // Slug name.
-				[ $this, 'page_settings' ] // Callback.
-			);
-
-		} else {
-
-			// Add the admin page to the CiviCRM menu.
-			$this->parent_page = add_submenu_page(
-				'CiviCRM', // Parent slug.
-				__( 'Settings: CiviCRM Event Organiser', 'civicrm-event-organiser' ), // Page title.
-				__( 'Event Organiser', 'civicrm-event-organiser' ), // Menu title.
-				'manage_options', // Required caps.
-				$this->parent_page_slug, // Slug name.
-				[ $this, 'page_settings' ], // Callback.
-				30
-			);
-
-		}
+		// Add the admin page to the CiviCRM menu.
+		$this->parent_page = add_submenu_page(
+			'CiviCRM', // Parent slug.
+			__( 'Settings: CiviCRM Event Organiser', 'civicrm-event-organiser' ), // Page title.
+			__( 'Event Organiser', 'civicrm-event-organiser' ), // Menu title.
+			'manage_options', // Required caps.
+			$this->parent_page_slug, // Slug name.
+			[ $this, 'page_settings' ], // Callback.
+			30
+		);
 
 		// Register our form submit hander.
 		add_action( 'load-' . $this->parent_page, [ $this, 'form_submitted' ] );
@@ -463,9 +446,9 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		 *
 		 * @since 0.7
 		 *
-		 * @param string The default capability for access to Settings Page.
+		 * @param string The default capability for access to Settings.
 		 */
-		$capability = apply_filters( 'ceo/admin/page/settings/cap', 'manage_options' );
+		$capability = apply_filters( 'ceo/admin/settings/cap', 'manage_options' );
 
 		// Check user permissions.
 		if ( ! current_user_can( $capability ) ) {
