@@ -131,13 +131,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Access Event Organiser option.
-		$installed_version = get_option( 'eventorganiser_version', 'etueue' );
+		$installed_version = defined( 'EVENT_ORGANISER_VER' ) ? EVENT_ORGANISER_VER : '0';
 
 		// Assume we're okay.
 		$eo_active = true;
 
 		// This plugin will not work without Event Organiser v3+.
-		if ( $installed_version === 'etueue' || version_compare( $installed_version, '3', '<' ) ) {
+		if ( $installed_version === '0' || version_compare( $installed_version, '3', '<' ) ) {
 
 			// Let's show an admin notice.
 			add_action( 'admin_notices', [ $this->plugin->db, 'dependency_alert' ] );
