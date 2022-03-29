@@ -171,11 +171,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function register_form_directory( &$config ) {
 
-		// Init CiviCRM or die.
-		if ( ! $this->is_active() ) {
-			return;
-		}
-
 		// Get template instance.
 		$template = CRM_Core_Smarty::singleton();
 
