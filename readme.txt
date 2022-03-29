@@ -49,6 +49,8 @@ Be aware that this plugin is in active development. Test often, test thoroughly 
 
 == Installation ==
 
+Note: If installing on WordPress multisite, do not network-activate *CiviCRM Event Organiser*. Only activate it on the sites that *Event Organiser* is activated - even if *Event Organiser* itself is network-activated.
+
 1. Extract the plugin archive
 1. Upload plugin files to your `/wp-content/plugins/` directory
 1. Activate the plugin through the 'Plugins' menu in WordPress

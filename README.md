@@ -46,6 +46,8 @@ Be aware that this plugin is in active development. Test often, test thoroughly 
 
 ### Installation
 
+Note: If installing on WordPress multisite, do not network-activate *CiviCRM Event Organiser*. Only activate it on the sites that *Event Organiser* is activated - even if *Event Organiser* is network-activated.
+
 There are two ways to install from GitHub:
 
 ##### ZIP Download
@@ -53,7 +55,7 @@ There are two ways to install from GitHub:
 If you have downloaded *CiviCRM Event Organiser* as a ZIP file from the GitHub repository, do the following to install and activate the plugin:
 
 1. Unzip the .zip file and rename the enclosing folder so that the plugin's files are located directly inside `/wp-content/plugins/civicrm-event-organiser`
-2. Activate the plugin (if on WP multisite, only activate the plugin on the main site, or wherever *Event Organiser* is activated)
+2. Activate the plugin
 3. Go to the plugin's admin page and follow the instructions
 4. You are done!
 
