@@ -177,6 +177,11 @@ class CiviCRM_WP_Event_Organiser {
 			return;
 		}
 
+		// Bail if CiviCRM is not fully installed.
+		if ( ! defined( 'CIVICRM_INSTALLED' ) || ! CIVICRM_INSTALLED ) {
+			return false;
+		}
+
 		// Include files.
 		$this->include_files();
 
