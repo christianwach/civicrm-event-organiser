@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the CiviCRM Event Organiser package.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.6.6\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.7a\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-"
 "organiser\n"
-"POT-Creation-Date: 2022-03-24 18:11:23+00:00\n"
+"POT-Creation-Date: 2022-03-29 15:07:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13,501 +13,494 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: assets/templates/event-cfcr-metabox.php:29
-msgid "Registration Page Redirect"
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-batch.php:23
+msgid "Stop"
 msgstr ""
 
-#: assets/templates/event-cfcr-metabox.php:39
-msgid "Choose New"
-msgstr ""
-
-#: assets/templates/event-cfcr-metabox.php:39
-msgid "Delete"
-msgstr ""
-
-#: assets/templates/event-cfcr-metabox.php:43
-msgid "Is active?"
-msgstr ""
-
-#: assets/templates/event-cfcr-metabox.php:51
-msgid ""
-"Redirect from an Event Registration Form to a Post or Page containing a "
-"Caldera Form."
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:41
-msgid "Sync this Event with CiviCRM:"
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:46
-msgid ""
-"Choose whether or not to sync this Event to CiviCRM. It is recommended that "
-"you finish configuring your Event before you sync it to CiviCRM."
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:51
-msgid "Delete unused CiviCRM Events:"
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:56
-msgid ""
-"If the sequence has changed, choose whether or not to delete the unused "
-"corresponding CiviCRM Events. If you do not delete them, they will be set to "
-"\"disabled\"."
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:66
-msgid "CiviCRM Event Options"
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:69
-msgid ""
-"%1$sNOTE%2$s: Changes that you make will override the defaults set on the "
-"CiviCRM Event Organiser Settings page."
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:69
-msgid ""
-"These options will be set for %1$sall corresponding CiviCRM Events%2$s when "
-"you sync this Event to CiviCRM."
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:76
-msgid "Enable Online Registration:"
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:85
-msgid "Online Registration Profile:"
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:92
-msgid "The profile assigned to the Online Registration form."
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:98
-msgid "Participant Role:"
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:105
-msgid ""
-"This role is automatically assigned to people when they register online for "
-"this Event and where the Registration Profile does not allow a role to be "
-"selected."
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:111
-msgid "Use a Confirmation Screen:"
-msgstr ""
-
-#: assets/templates/event-sync-metabox.php:116
-msgid "If this is a free Event, use a Registration Confirmation Screen."
-msgstr ""
-
-#: assets/templates/manual-sync.php:18 assets/templates/settings.php:18
-#: civicrm-event-organiser.php:377
-#: includes/civicrm-event-organiser-admin.php:349
-msgid "Settings"
-msgstr ""
-
-#: assets/templates/manual-sync.php:19 assets/templates/settings.php:19
-#: includes/civicrm-event-organiser-admin.php:363
-msgid "Manual Sync"
-msgstr ""
-
-#: assets/templates/manual-sync.php:35
-msgid ""
-"Please note: Manual Sync is only really intended for use on initial setup of "
-"this plugin. It may produce inconsistent results once you have linked Event "
-"Organiser Events and CiviCRM Events. Always back up before using this "
-"feature."
-msgstr ""
-
-#: assets/templates/manual-sync.php:39
-msgid ""
-"Things can be a little complicated on initial setup because there can be "
-"data in WordPress or CiviCRM or both. The most robust procedure for setting "
-"up the sync between Event Organiser Events and CiviCRM Events is to sync in "
-"the following order:"
-msgstr ""
-
-#: assets/templates/manual-sync.php:42
-msgid "Only sync Event Categories with CiviCRM Event Types"
-msgstr ""
-
-#: assets/templates/manual-sync.php:43
-msgid "Only sync EO Venues with CiviCRM Locations"
-msgstr ""
-
-#: assets/templates/manual-sync.php:44
-msgid "Only sync EO Events with CiviCRM Events."
-msgstr ""
-
-#: assets/templates/manual-sync.php:47
-msgid ""
-"Your set up may require some direct manipulation of the data, but the "
-"following procedures should help get things moving."
-msgstr ""
-
-#: assets/templates/manual-sync.php:51
-msgid "Event Type Synchronisation"
-msgstr ""
-
-#: assets/templates/manual-sync.php:57
-msgid "Event Organiser Categories to CiviCRM Event Types"
-msgstr ""
-
-#: assets/templates/manual-sync.php:58 assets/templates/manual-sync.php:68
-#: assets/templates/manual-sync.php:86 assets/templates/manual-sync.php:96
-#: assets/templates/manual-sync.php:114 assets/templates/manual-sync.php:124
-msgid "Sync Now"
-msgstr ""
-
-#: assets/templates/manual-sync.php:58 assets/templates/manual-sync.php:68
-#: assets/templates/manual-sync.php:86 assets/templates/manual-sync.php:96
-#: assets/templates/manual-sync.php:114 assets/templates/manual-sync.php:124
-msgid "Continue Sync"
-msgstr ""
-
-#: assets/templates/manual-sync.php:58 assets/templates/manual-sync.php:68
-#: assets/templates/manual-sync.php:86 assets/templates/manual-sync.php:96
-#: assets/templates/manual-sync.php:114 assets/templates/manual-sync.php:124
-msgid "Stop Sync"
-msgstr ""
-
-#: assets/templates/manual-sync.php:67
-msgid "CiviCRM Event Types to Event Organiser Categories"
-msgstr ""
-
-#: assets/templates/manual-sync.php:79
-msgid "Venue Synchronisation"
-msgstr ""
-
-#: assets/templates/manual-sync.php:85
-msgid "Event Organiser Venues to CiviCRM Event Locations"
-msgstr ""
-
-#: assets/templates/manual-sync.php:95
-msgid "CiviCRM Event Locations to Event Organiser Venues"
-msgstr ""
-
-#: assets/templates/manual-sync.php:107
-msgid "Event Synchronisation"
-msgstr ""
-
-#: assets/templates/manual-sync.php:113
-msgid "Event Organiser Events to CiviCRM Events"
-msgstr ""
-
-#: assets/templates/manual-sync.php:123
-msgid "CiviCRM Events to Event Organiser Events"
-msgstr ""
-
-#: assets/templates/settings.php:35
-msgid "General Settings"
-msgstr ""
-
-#: assets/templates/settings.php:37
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:12
 msgid ""
 "The following options configure some CiviCRM and Event Organiser defaults."
 msgstr ""
 
-#: assets/templates/settings.php:65
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:40
 msgid "Default CiviCRM Event Type"
 msgstr ""
 
-#: assets/templates/settings.php:76
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:51
 msgid "Default CiviCRM Participant Role for Events"
 msgstr ""
 
-#: assets/templates/settings.php:81
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:56
 msgid ""
 "This will be the Participant Role that is set for Event Registrations when "
 "there is a Registration Profile that does not contain a Participant Role "
 "selector."
 msgstr ""
 
-#: assets/templates/settings.php:88
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:63
 msgid "Default CiviCRM Event Registration Profile"
 msgstr ""
 
-#: assets/templates/settings.php:93
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:68
 msgid ""
 "Event Registration Pages require a Profile in order to display correctly."
 msgstr ""
 
-#: assets/templates/settings.php:95
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:70
 msgid "Please select a default Profile for Event Registration Pages."
 msgstr ""
 
-#: assets/templates/settings.php:102
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:77
 msgid "Default CiviCRM Event Registration Confirmation Screen Setting"
 msgstr ""
 
-#: assets/templates/settings.php:105
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:80
 msgid "Use a Registration Confirmation Screen for free Events."
 msgstr ""
 
-#: assets/templates/settings.php:107
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:82
 msgid ""
 "Please choose the default setting for Registration Confirmation Screens."
 msgstr ""
 
-#: assets/templates/settings.php:139
-msgid "Save Changes"
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-submit.php:16
+msgid "Save your settings here."
 msgstr ""
 
-#: civicrm-event-organiser.php:381
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-submit.php:24
+msgid "Update"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-category-type.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-civicrm-eo.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-eo-civicrm.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-location-venue.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-type-category.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-venue-location.php:14
+msgid "Sync Now"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-category-type.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-civicrm-eo.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-eo-civicrm.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-location-venue.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-type-category.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-venue-location.php:14
+msgid "Continue Sync"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-category-type.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-civicrm-eo.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-eo-civicrm.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-location-venue.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-type-category.php:14
+#: assets/templates/wordpress/metaboxes/metabox-admin-sync-venue-location.php:14
+msgid "Stop Sync"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:29
+msgid "Registration Page Redirect"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:39
+msgid "Choose New"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:39
+msgid "Delete"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:43
+msgid "Is active?"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:51
+msgid ""
+"Redirect from an Event Registration Form to a Post or Page containing a "
+"Caldera Form."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:41
+msgid "Sync this Event with CiviCRM:"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:46
+msgid ""
+"Choose whether or not to sync this Event to CiviCRM. It is recommended that "
+"you finish configuring your Event before you sync it to CiviCRM."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:51
+msgid "Delete unused CiviCRM Events:"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:56
+msgid ""
+"If the sequence has changed, choose whether or not to delete the unused "
+"corresponding CiviCRM Events. If you do not delete them, they will be set to "
+"\"disabled\"."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:66
+msgid "CiviCRM Event Options"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:69
+msgid ""
+"%1$sNOTE%2$s: Changes that you make will override the defaults set on the "
+"CiviCRM Event Organiser Settings page."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:69
+msgid ""
+"These options will be set for %1$sall corresponding CiviCRM Events%2$s when "
+"you sync this Event to CiviCRM."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:76
+msgid "Enable Online Registration:"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:85
+msgid "Online Registration Profile:"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:92
+msgid "The profile assigned to the Online Registration form."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:98
+msgid "Participant Role:"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:105
+msgid ""
+"This role is automatically assigned to people when they register online for "
+"this Event and where the Registration Profile does not allow a role to be "
+"selected."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:111
+msgid "Use a Confirmation Screen:"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:116
+msgid "If this is a free Event, use a Registration Confirmation Screen."
+msgstr ""
+
+#. #-#-#-#-#  civicrm-event-organiser.pot (CiviCRM Event Organiser 0.7a)  #-#-#-#-#
+#. Plugin Name of the plugin/theme
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:14
+#: assets/templates/wordpress/pages/page-admin-settings.php:14
+msgid "CiviCRM Event Organiser"
+msgstr ""
+
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:17
+#: assets/templates/wordpress/pages/page-admin-settings.php:18
+#: civicrm-event-organiser.php:474 includes/admin/ceo-admin-settings.php:218
+#: includes/admin/ceo-admin-settings.php:461
+msgid "Settings"
+msgstr ""
+
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:37
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:57
+msgid ""
+"Things can be a little complicated on initial setup because there can be "
+"data in WordPress or CiviCRM or both. The recommended procedure is to sync "
+"in the following order:"
+msgstr ""
+
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:40
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:60
+msgid "Sync Event Organiser Categories with CiviCRM Event Types"
+msgstr ""
+
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:41
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:61
+msgid "Sync Event Organiser Venues with CiviCRM Locations"
+msgstr ""
+
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:42
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:62
+msgid "Finally, sync Event Organiser Events with CiviCRM Events."
+msgstr ""
+
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:45
+#: assets/templates/wordpress/pages/page-admin-manual-sync.php:65
+msgid ""
+"Please note: Manual Sync is intended for use on initial setup and may "
+"produce inconsistent results once you have linked Events. Always back up "
+"before using this feature."
+msgstr ""
+
+#: civicrm-event-organiser.php:478
 msgid "Donate!"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:243
+#: includes/admin/ceo-admin-manual-sync.php:174
+msgid "Manual Sync: CiviCRM Event Organiser"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:175
+#: includes/admin/ceo-admin-manual-sync.php:504
+msgid "Manual Sync"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:276
+#: includes/admin/ceo-admin-settings.php:332
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:379
+msgid "{{total}} event types to sync..."
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:380
+msgid "Processing event types {{from}} to {{to}}"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:381
+msgid "Processing event types {{from}} to {{to}} complete"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:387
+msgid "{{total}} categories to sync..."
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:388
+msgid "Processing categories {{from}} to {{to}}"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:389
+msgid "Processing categories {{from}} to {{to}} complete"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:395
+msgid "{{total}} locations to sync..."
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:396
+msgid "Processing locations {{from}} to {{to}}"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:397
+msgid "Processing locations {{from}} to {{to}} complete"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:403
+msgid "{{total}} venues to sync..."
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:404
+msgid "Processing venues {{from}} to {{to}}"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:405
+msgid "Processing venues {{from}} to {{to}} complete"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:411
+#: includes/admin/ceo-admin-manual-sync.php:419
+msgid "{{total}} events to sync..."
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:412
+#: includes/admin/ceo-admin-manual-sync.php:420
+msgid "Processing events {{from}} to {{to}}"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:413
+#: includes/admin/ceo-admin-manual-sync.php:421
+msgid "Processing events {{from}} to {{to}} complete"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:427
+msgid "All done!"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:557
+msgid "Event Organiser Categories &rarr; CiviCRM Event Types"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:570
+msgid "CiviCRM Event Types &rarr; Event Organiser Categories"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:583
+msgid "Event Organiser Venues &rarr; CiviCRM Event Locations"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:596
+msgid "CiviCRM Event Locations &rarr; Event Organiser Venues"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:609
+msgid "Event Organiser Events &rarr; CiviCRM Events"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:622
+msgid "CiviCRM Events &rarr; Event Organiser Events"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:903
+msgid "Could not sync Event Term"
+msgstr ""
+
+#: includes/admin/ceo-admin-manual-sync.php:1036
+msgid "Could not sync Event Type"
+msgstr ""
+
+#: includes/admin/ceo-admin-multisite.php:112
+msgid ""
+"CiviCRM Event Organiser should not be network-activated. Please activate it "
+"on individual sites instead."
+msgstr ""
+
+#: includes/admin/ceo-admin-settings.php:200
+#: includes/admin/ceo-admin-settings.php:217
+msgid "Settings: CiviCRM Event Organiser"
+msgstr ""
+
+#: includes/admin/ceo-admin-settings.php:201
+msgid "Event Organiser"
+msgstr ""
+
+#: includes/admin/ceo-admin-settings.php:471
+msgid "General Settings"
+msgstr ""
+
+#: includes/admin/ceo-admin.php:272
 msgid ""
 "CiviCRM Event Organiser needs your attention. Please visit the <a href=\"%s"
 "\">Settings Page</a>."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:267
+#: includes/admin/ceo-admin.php:294
 msgid "CiviCRM Event Organiser requires Event Organiser version 3 or higher."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:320
-#: includes/civicrm-event-organiser-admin.php:332
-msgid "CiviCRM Event Organiser: Settings"
+#: includes/ceo-functions.php:53 includes/ceo-shortcodes.php:131
+msgid "Registration Links"
 msgstr ""
 
-#. #-#-#-#-#  civicrm-event-organiser.pot (CiviCRM Event Organiser 0.6.6)  #-#-#-#-#
-#. Plugin Name of the plugin/theme
-#: includes/civicrm-event-organiser-admin.php:321
-#: includes/civicrm-event-organiser-admin.php:464
-msgid "CiviCRM Event Organiser"
+#: includes/ceo-functions.php:165
+msgid "Register for %s"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:333
-msgid "Event Organiser"
+#: includes/ceo-functions.php:170
+msgid "Register"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:348
-msgid "Settings: CiviCRM Event Organiser"
+#: includes/ceo-taxonomy.php:751
+msgid "Empty Term"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:362
-msgid "Manual Sync: CiviCRM Event Organiser"
+#: includes/ceo-term-html.php:108 includes/ceo-term-html.php:138
+msgctxt "Taxonomy Description"
+msgid "Description"
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:485
+#: includes/ceo-term-html.php:110 includes/ceo-term-html.php:140
 msgid ""
-"For further information about using CiviCRM Event Organiser, please refer to "
-"the README.md that comes with this plugin."
+"The description is not prominent by default, however some themes may show it."
 msgstr ""
 
-#: includes/civicrm-event-organiser-admin.php:568
-msgid "{{total}} event types to sync..."
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:569
-msgid "Processing event types {{from}} to {{to}}"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:570
-msgid "Processing event types {{from}} to {{to}} complete"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:576
-msgid "{{total}} categories to sync..."
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:577
-msgid "Processing categories {{from}} to {{to}}"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:578
-msgid "Processing categories {{from}} to {{to}} complete"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:584
-msgid "{{total}} locations to sync..."
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:585
-msgid "Processing locations {{from}} to {{to}}"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:586
-msgid "Processing locations {{from}} to {{to}} complete"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:592
-msgid "{{total}} venues to sync..."
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:593
-msgid "Processing venues {{from}} to {{to}}"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:594
-msgid "Processing venues {{from}} to {{to}} complete"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:600
-#: includes/civicrm-event-organiser-admin.php:608
-msgid "{{total}} events to sync..."
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:601
-#: includes/civicrm-event-organiser-admin.php:609
-msgid "Processing events {{from}} to {{to}}"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:602
-#: includes/civicrm-event-organiser-admin.php:610
-msgid "Processing events {{from}} to {{to}} complete"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:616
-msgid "All done!"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:662
-#: includes/civicrm-event-organiser-admin.php:717
-msgid "You do not have permission to access this page."
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:1077
-msgid "Could not sync Event Term"
-msgstr ""
-
-#: includes/civicrm-event-organiser-admin.php:1212
-msgid "Could not sync Event Type"
-msgstr ""
-
-#: includes/civicrm-event-organiser-cai.php:300
-#: includes/civicrm-event-organiser-cwps.php:350
-msgid "A numerical ID must be present to update an Event."
-msgstr ""
-
-#: includes/civicrm-event-organiser-cfcr.php:165
-#: includes/civicrm-event-organiser-cfcr.php:191
-msgid "None selected"
-msgstr ""
-
-#: includes/civicrm-event-organiser-cfcr.php:189
-msgid "Choose Redirect Location"
-msgstr ""
-
-#: includes/civicrm-event-organiser-cfcr.php:190
-msgid "Set Redirect Location"
-msgstr ""
-
-#: includes/civicrm-event-organiser-civi.php:253
-#: includes/civicrm-event-organiser-civi.php:300
-#: includes/civicrm-event-organiser-civi.php:375
-#: includes/civicrm-event-organiser-civi.php:473
+#: includes/civicrm/ceo-civicrm-event.php:178
+#: includes/civicrm/ceo-civicrm-event.php:225
+#: includes/civicrm/ceo-civicrm-event.php:299
+#: includes/civicrm/ceo-civicrm-event.php:395
 msgid "Choose Feature Image"
 msgstr ""
 
-#: includes/civicrm-event-organiser-civi.php:254
-#: includes/civicrm-event-organiser-civi.php:376
+#: includes/civicrm/ceo-civicrm-event.php:179
+#: includes/civicrm/ceo-civicrm-event.php:300
 msgid "Set Feature Image"
 msgstr ""
 
-#: includes/civicrm-event-organiser-civi.php:306
+#: includes/civicrm/ceo-civicrm-event.php:231
 msgid "If you would like to add a Feature Image to the Event, do so here."
 msgstr ""
 
-#: includes/civicrm-event-organiser-civi.php:479
+#: includes/civicrm/ceo-civicrm-event.php:401
 msgid ""
 "If you would like to add a Feature Image to the Event Organiser Event, "
 "choose one here."
 msgstr ""
 
-#: includes/civicrm-event-organiser-civi.php:916
+#: includes/civicrm/ceo-civicrm-event.php:831
 msgid "You must have some CiviCRM Event Types defined"
 msgstr ""
 
-#: includes/civicrm-event-organiser-civi.php:1983
+#: includes/civicrm/ceo-civicrm-location.php:243
 msgid "Could not get CiviCRM Location by ID"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo-venue.php:351
+#: includes/compat/ceo-cai.php:275 includes/compat/ceo-cwps.php:323
+msgid "A numerical ID must be present to update an Event."
+msgstr ""
+
+#: includes/compat/ceo-cfcr.php:146 includes/compat/ceo-cfcr.php:172
+msgid "None selected"
+msgstr ""
+
+#: includes/compat/ceo-cfcr.php:170
+msgid "Choose Redirect Location"
+msgstr ""
+
+#: includes/compat/ceo-cfcr.php:171
+msgid "Set Redirect Location"
+msgstr ""
+
+#: includes/eo/ceo-eo-venue.php:346
 msgid "Street Address is empty."
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo-venue.php:361
+#: includes/eo/ceo-eo-venue.php:356
 msgid "Untitled venue"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo-venue.php:444
+#: includes/eo/ceo-eo-venue.php:437
 msgid "Venue not created."
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo-venue.php:717
-#: includes/civicrm-event-organiser-eo.php:865
+#: includes/eo/ceo-eo-venue.php:703 includes/eo/ceo-eo.php:817
 msgid "CiviCRM Settings"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo-venue.php:752
+#: includes/eo/ceo-eo-venue.php:736
 msgid "Email contact:"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo-venue.php:757
+#: includes/eo/ceo-eo-venue.php:741
 msgid "Phone contact:"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:486
+#: includes/eo/ceo-eo.php:453
 msgid "Untitled CiviCRM Event"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:875
+#: includes/eo/ceo-eo.php:827
 msgid "Edit Events in CiviCRM"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1016
+#: includes/eo/ceo-eo.php:964
 msgid "Info and Settings for: %s"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1078
+#: includes/eo/ceo-eo.php:1022
 msgid "View Event in WordPress"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1085
+#: includes/eo/ceo-eo.php:1029
 msgid "Edit Event in WordPress"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1190
+#: includes/eo/ceo-eo.php:1132
 msgid "Edit in CiviCRM"
 msgstr ""
 
-#: includes/civicrm-event-organiser-eo.php:1246
+#: includes/eo/ceo-eo.php:1186
 msgid "CiviCRM"
-msgstr ""
-
-#: includes/civicrm-event-organiser-functions.php:53
-#: includes/civicrm-event-organiser-shortcodes.php:150
-msgid "Registration Links"
-msgstr ""
-
-#: includes/civicrm-event-organiser-functions.php:165
-msgid "Register for %s"
-msgstr ""
-
-#: includes/civicrm-event-organiser-functions.php:170
-msgid "Register"
-msgstr ""
-
-#: includes/civicrm-event-organiser-taxonomy.php:799
-msgid "Empty Term"
-msgstr ""
-
-#: includes/civicrm-event-organiser-term-html.php:125
-#: includes/civicrm-event-organiser-term-html.php:157
-msgctxt "Taxonomy Description"
-msgid "Description"
-msgstr ""
-
-#: includes/civicrm-event-organiser-term-html.php:127
-#: includes/civicrm-event-organiser-term-html.php:159
-msgid ""
-"The description is not prominent by default, however some themes may show it."
 msgstr ""
 
 #. Plugin URI of the plugin/theme
