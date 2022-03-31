@@ -555,7 +555,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 		// Append our "Entity Table" if not already present.
 		if ( ! in_array( 'civicrm_event', $entity_tables ) ) {
-			$entity_tables[] = 'civicrm_event';
+			$entity_tables['civicrm_event'] = __( 'Event', 'civicrm-event-organiser' );
 		}
 
 		// --<
