@@ -99,12 +99,17 @@ class CiviCRM_WP_Event_Organiser_Admin_Multisite {
 	/**
 	 * Determine when to show the Admin Notice.
 	 *
-	 * @since 0.7
+	 * @since 0.7.1
 	 */
 	public function activation_warning() {
 
 		// Check user permissions.
 		if ( ! current_user_can( 'manage_network_options' ) ) {
+			return;
+		}
+
+		// Bail if this plugin is not network-activated.
+		if ( ! $this->plugin->is_network_activated() ) {
 			return;
 		}
 

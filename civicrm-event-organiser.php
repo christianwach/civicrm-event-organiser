@@ -305,6 +305,45 @@ class CiviCRM_WP_Event_Organiser {
 	// -------------------------------------------------------------------------
 
 	/**
+	 * Check if this plugin is network activated.
+	 *
+	 * @since 0.7.1
+	 *
+	 * @return bool $is_network_active True if network activated, false otherwise.
+	 */
+	public function is_network_activated() {
+
+		// Only need to test once.
+		static $is_network_active;
+
+		// Have we done this already?
+		if ( isset( $is_network_active ) ) {
+			return $is_network_active;
+		}
+
+		// If not multisite, it cannot be.
+		if ( ! is_multisite() ) {
+			$is_network_active = false;
+			return $is_network_active;
+		}
+
+		// Make sure plugin file is included when outside admin.
+		if ( ! function_exists( 'is_plugin_active_for_network' ) ) {
+			require_once ABSPATH . '/wp-admin/includes/plugin.php';
+		}
+
+		// Get path from 'plugins' directory to this plugin.
+		$this_plugin = plugin_basename( CIVICRM_WP_EVENT_ORGANISER_FILE );
+
+		// Test if network active.
+		$is_network_active = is_plugin_active_for_network( $this_plugin );
+
+		// --<
+		return $is_network_active;
+
+	}
+
+	/**
 	 * Check if CiviCRM is network activated.
 	 *
 	 * @since 0.7
