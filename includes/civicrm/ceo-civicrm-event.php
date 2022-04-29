@@ -1660,7 +1660,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			return $result;
 		}
 
-		// Check loc_block_id.
+		// Check LocBlock ID.
 		$result = $this->_validate_loc_block_id();
 		if ( is_wp_error( $result ) ) {
 			return $result;

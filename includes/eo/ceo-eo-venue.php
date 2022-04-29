@@ -144,13 +144,14 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$venue->venue_city     = isset( $address['city'] ) ? $address['city'] : '';
 		$venue->venue_country  = isset( $address['country'] ) ? $address['country'] : '';
 		$venue->venue_state    = isset( $address['state'] ) ? $address['state'] : '';
+
 		$venue->venue_lat = number_format( floatval( eo_get_venue_lat( $venue_id ) ), 6 );
 		$venue->venue_lng = number_format( floatval( eo_get_venue_lng( $venue_id ) ), 6 );
 
 		// Create CiviCRM Event Location.
 		$location = $this->plugin->civi->location->update_location( $venue );
 
-		// Store loc_block ID.
+		// Store LocBlock ID.
 		$this->store_civi_location( $venue_id, $location );
 
 	}
@@ -186,14 +187,15 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$venue->venue_city     = isset( $address['city'] ) ? $address['city'] : '';
 		$venue->venue_country  = isset( $address['country'] ) ? $address['country'] : '';
 		$venue->venue_state    = isset( $address['state'] ) ? $address['state'] : '';
+
 		$venue->venue_lat = number_format( floatval( eo_get_venue_lat( $venue_id ) ), 6 );
 		$venue->venue_lng = number_format( floatval( eo_get_venue_lng( $venue_id ) ), 6 );
 
 		// Update CiviCRM Event Location.
 		$location = $this->plugin->civi->location->update_location( $venue );
 
-		// Store loc_block ID.
-		$this->store_civi_location( $venue->term_id, $location );
+		// Store LocBlock ID.
+		$this->store_civi_location( $venue_id, $location );
 
 	}
 
@@ -363,29 +365,29 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Add Address sub-query data if present.
 		if ( ! isset( $location['api.Address.getsingle']['is_error'] ) ) {
 
-			// Maybe add country.
+			// Maybe add Country.
 			if ( ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
 				$args['country'] = $location['api.Address.getsingle']['country_id.name'];
 			}
 
-			// Maybe add state.
+			// Maybe add State/Province.
 			if ( ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
 				$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
 			}
 
 		}
 
-		// Add street address if present.
+		// Add Street Address if present.
 		if ( ! empty( $location['address']['street_address'] ) ) {
 			$args['address'] = $location['address']['street_address'];
 		}
 
-		// Add city if present.
+		// Add City if present.
 		if ( ! empty( $location['address']['city'] ) ) {
 			$args['city'] = $location['address']['city'];
 		}
 
-		// Add postcode if present.
+		// Add Postcode if present.
 		if ( ! empty( $location['address']['postal_code'] ) ) {
 			$args['postcode'] = $location['address']['postal_code'];
 		}
@@ -444,13 +446,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// Create Venue meta data.
 
-		// Do we have an email for the Location?
+		// Do we have an Email for the Location?
 		if ( isset( $location['email']['email'] ) && ! empty( $location['email']['email'] ) ) {
 
 			// Yes, get it.
 			$email = $location['email']['email'];
 
-			// Store email in meta.
+			// Store Email in meta.
 			eo_update_venue_meta( $result['term_id'], '_civi_email', esc_sql( $email ) );
 
 		}
@@ -516,40 +518,38 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 			// Construct args.
 			$args = [
-				'name' => $venue->name, // Can't update name yet - locations don't have one.
+				'name' => $venue->name, // Can't update name yet - Locations don't have one.
 				//'description' => $location['description'], // CiviCRM has no Location description at present.
-				//'state' => $location['address']['county'], // CiviCRM county is an ID not a string.
-				//'country' => $location['address']['country'], // CiviCRM country is an ID not a string.
 			];
 
-			// Add Address sub-query data if present.
-			if ( ! isset( $location['api.Address.getsingle']['is_error'] ) ) {
-
-				// Maybe add country.
-				if ( ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
-					$args['country'] = $location['api.Address.getsingle']['country_id.name'];
-				}
-
-				// Maybe add state.
-				if ( ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
-					$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
-				}
-
-			}
-
-			// Add street address if present.
+			// Add Street Address if present.
 			if ( ! empty( $location['address']['street_address'] ) ) {
 				$args['address'] = $location['address']['street_address'];
 			}
 
-			// Add city if present.
+			// Add City if present.
 			if ( ! empty( $location['address']['city'] ) ) {
 				$args['city'] = $location['address']['city'];
 			}
 
-			// Add postcode if present.
+			// Add Postcode if present.
 			if ( ! empty( $location['address']['postal_code'] ) ) {
 				$args['postcode'] = $location['address']['postal_code'];
+			}
+
+			// Add Address sub-query data if present.
+			if ( empty( $location['api.Address.getsingle']['is_error'] ) ) {
+
+				// Maybe add Country.
+				if ( ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
+					$args['country'] = $location['api.Address.getsingle']['country_id.name'];
+				}
+
+				// Maybe add State.
+				if ( ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
+					$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
+				}
+
 			}
 
 			// Add geocodes if present.
@@ -560,17 +560,17 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 				$args['longtitude'] = $location['address']['geo_code_2'];
 			}
 
-			// Remove actions to prevent recursion.
+			// Remove callback to prevent recursion.
 			remove_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10 );
 
 			// Insert Venue.
 			$result = eo_update_venue( $venue_id, $args );
 
-			// Add actions again.
+			// Restore callback.
 			add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
 
 			// Bail if we get an error.
-			if ( is_wp_error( $result ) || ! isset( $result['term_id'] ) ) {
+			if ( is_wp_error( $result ) || empty( $result['term_id'] ) ) {
 				return false;
 			}
 
@@ -662,10 +662,10 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		// ---------------------------------------------------------------------
-		// Lastly, see if we have an identical street address
+		// Lastly, see if we have an identical Street Address
 		// ---------------------------------------------------------------------
 
-		// Do we have street data?
+		// Do we have Street Address data?
 		if ( isset( $location['address']['street_address'] ) ) {
 
 			$sql = $wpdb->prepare(
@@ -845,32 +845,32 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	}
 
 	/**
-	 * Store a CiviCRM Location Block ID for a given Event Organiser Venue ID.
+	 * Store a CiviCRM LocBlock ID for a given Event Organiser Venue ID.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $venue_id The numeric ID of the Venue.
-	 * @param array $civi_loc_block The array of CiviCRM Location Block data.
+	 * @param array $civi_loc_block The array of CiviCRM LocBlock data.
 	 */
 	public function store_civi_location( $venue_id, $civi_loc_block ) {
 
-		// $civi_loc_block comes in standard API return format.
-		if ( absint( $civi_loc_block['count'] ) == 1 ) {
-
-			// Update Venue meta.
-			eo_update_venue_meta( $venue_id, '_civi_loc_id', absint( $civi_loc_block['id'] ) );
-
+		// Skip if there's no LocBlock ID.
+		if ( empty( $civi_loc_block['id'] ) ) {
+			return;
 		}
+
+		// Update Venue meta.
+		eo_update_venue_meta( $venue_id, '_civi_loc_id', absint( $civi_loc_block['id'] ) );
 
 	}
 
 	/**
-	 * Get a CiviCRM Event loc_block ID for a given Event Organiser Venue ID.
+	 * Get a CiviCRM Event LocBlock ID for a given Event Organiser Venue ID.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $venue_id The numeric ID of the Venue.
-	 * @return int $loc_block_id The numeric ID of the CiviCRM loc_block.
+	 * @return int $loc_block_id The numeric ID of the CiviCRM LocBlock.
 	 */
 	public function get_civi_location( $venue_id ) {
 
@@ -883,7 +883,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	}
 
 	/**
-	 * Clear a CiviCRM Event loc_block ID for a given Event Organiser Venue ID.
+	 * Clear a CiviCRM Event LocBlock ID for a given Event Organiser Venue ID.
 	 *
 	 * @since 0.1
 	 *
@@ -891,7 +891,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 */
 	public function clear_civi_location( $venue_id ) {
 
-		// Update Venue meta.
+		// Delete Venue meta.
 		eo_delete_venue_meta( $venue_id, '_civi_loc_id' );
 
 	}
@@ -924,7 +924,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 */
 	private function save_venue_components( $venue_id ) {
 
-		// Skip if neither email nor phone is set.
+		// Skip if neither Email nor phone is set.
 		if ( ! isset( $_POST['civi_eo_venue_email'] ) && ! isset( $_POST['civi_eo_venue_phone'] ) ) {
 			return;
 		}
@@ -932,7 +932,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Check nonce.
 		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
 
-		// Save email if set.
+		// Save Email if set.
 		if ( isset( $_POST['civi_eo_venue_email'] ) ) {
 			$this->update_venue_email( $venue_id, $_POST['civi_eo_venue_email'] );
 		}
@@ -973,19 +973,19 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	}
 
 	/**
-	 * Update Venue email value.
+	 * Update Venue Email value.
 	 *
 	 * @since 0.1
 	 *
 	 * @param int $venue_id The numeric ID of the Venue.
-	 * @param str $venue_email The email associated with the Venue.
+	 * @param str $venue_email The Email associated with the Venue.
 	 */
 	public function update_venue_email( $venue_id, $venue_email ) {
 
 		// Retrieve meta value.
 		$value = sanitize_email( $venue_email );
 
-		// Validate as email address.
+		// Validate as Email address.
 		if ( ! is_email( $value ) ) {
 			return;
 		}

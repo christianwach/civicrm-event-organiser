@@ -1158,7 +1158,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				$location = $this->plugin->civi->location->update_location( $venue );
 
 				// Store in Event Organiser Venue.
-				$this->plugin->eo_venue->store_civi_location( $venue->term_id, $location );
+				$this->plugin->eo_venue->store_civi_location( $venue_id, $location );
 
 			}
 

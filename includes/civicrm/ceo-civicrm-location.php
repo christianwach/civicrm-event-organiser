@@ -58,6 +58,81 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 */
 	public function register_hooks() {
 
+		// Add callbacks for LocBlock updates.
+		//add_action( 'civicrm_post', [ $this, 'locblock_edited' ], 10, 4 );
+
+	}
+
+	/**
+	 * Act when a LocBlock has been updated.
+	 *
+	 * Disabled for now.
+	 *
+	 * @since 0.7.1
+	 *
+	 * @param string $op The type of database operation.
+	 * @param string $object_name The type of object.
+	 * @param integer $object_id The ID of the object.
+	 * @param object $object_ref The object.
+	 */
+	public function locblock_edited( $op, $object_name, $object_id, $object_ref ) {
+
+		// Target our operation.
+		if ( $op != 'edit' ) {
+			return;
+		}
+
+		// Target our object type.
+		if ( $object_name != 'LocBlock' ) {
+			return;
+		}
+
+		// Kick out if not LocBlock object.
+		if ( ! ( $object_ref instanceof CRM_Core_DAO_LocBlock ) ) {
+			return;
+		}
+
+		// Get the full LocBlock data.
+		$location = $this->get_location_by_id( $object_id );
+
+		// Get corresponding Event Organiser Venue ID.
+		$venue_id = $this->plugin->eo_venue->get_venue_id( $location );
+
+		// Skip if there isn't one.
+		if ( empty( $venue_id ) ) {
+			return;
+		}
+
+		// Build params to get the CiviCRM Events with this LocBlock.
+		$params = [
+			'version' => 3,
+			'sequential' => 1,
+			'loc_block_id' => $location['id'],
+		];
+
+		// Call the API.
+		$result = civicrm_api( 'Event', 'get', $params );
+
+		// Bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+			return;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return;
+		}
+
+		// Bail if any of the Events are not part of a sequence.
+		foreach ( $result['values'] as $event ) {
+			if ( ! $this->plugin->mapping->is_civi_event_in_eo_sequence( $event['id'] ) ) {
+				return;
+			}
+		}
+
+		// Update the Venue.
+		$venue_id = $this->plugin->eo_venue->update_venue( $location );
+
 	}
 
 	/**
@@ -82,12 +157,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		// If this Venue already has a CiviCRM Event Location.
 		if ( $location !== false ) {
 
-			// Is there a record on the Event Organiser side?
+			// Use it if there's a record on the Event Organiser side.
 			if ( ! isset( $venue->venue_civi_id ) ) {
-
-				// Use the result and fake the property.
-				$venue->venue_civi_id = $location['id'];
-
+				$venue->venue_civi_id = (int) $location['id'];
 			}
 
 		} else {
@@ -140,11 +212,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	/**
 	 * Delete a CiviCRM Event Location given a Location ID.
 	 *
-	 * Be aware that only the CiviCRM loc_block is deleted - not the items that
-	 * constitute it. Email, phone and address will still exist but not be
-	 * associated as a loc_block.
+	 * Be aware that only the CiviCRM LocBlock is deleted - not the items that
+	 * constitute it. Email, Phone and Address will still exist but not be
+	 * associated as a LocBlock.
 	 *
-	 * The next iteration of this plugin should probably refine the loc_block
+	 * The next iteration of this plugin should probably refine the LocBlock
 	 * sync process to take this into account.
 	 *
 	 * @since 0.1
@@ -198,66 +270,54 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 */
 	public function get_location( $venue ) {
 
-		// Init CiviCRM or die.
+		// Init return.
+		$location = false;
+
+		// Bail if no CiviCRM.
 		if ( ! $this->civicrm->is_active() ) {
-			return false;
+			return $location;
 		}
 
 		// ---------------------------------------------------------------------
-		// Try by sync ID
+		// Try by LocBlock ID stored in Venue Term meta.
 		// ---------------------------------------------------------------------
-
-		// Init a empty.
-		$civi_id = 0;
-
-		// If sync ID is present.
-		if (
-			isset( $venue->venue_civi_id )
-			&&
-			is_numeric( $venue->venue_civi_id )
-			&&
-			$venue->venue_civi_id > 0
-		) {
-
-			// Use it.
-			$civi_id = $venue->venue_civi_id;
-
+		$loc_block_id = 0;
+		if ( ! empty( $venue->venue_civi_id ) && is_numeric( $venue->venue_civi_id ) ) {
+			$loc_block_id = $venue->venue_civi_id;
 		}
 
 		// Construct get-by-id array.
 		$params = [
 			'version' => 3,
-			'id' => $civi_id,
+			'id' => $loc_block_id,
 			'return' => 'all',
 		];
 
 		// Call API.
-		$location = civicrm_api( 'LocBlock', 'get', $params );
+		$result = civicrm_api( 'LocBlock', 'get', $params );
 
-		// Log failure and return boolean false.
-		if ( $location['is_error'] == '1' ) {
+		// Log on failure and bail.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == '1' ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
 				'method' => __METHOD__,
 				'message' => __( 'Could not get CiviCRM Location by ID', 'civicrm-event-organiser' ),
-				'civicrm' => $location['error_message'],
 				'params' => $params,
+				'result' => $result,
 				'backtrace' => $trace,
 			], true ) );
-			return false;
+			return $location;
 		}
 
 		// Return the result if we get one.
-		if ( absint( $location['count'] ) > 0 && is_array( $location['values'] ) ) {
-
-			// Found by ID.
-			return array_shift( $location['values'] );
-
+		if ( absint( $result['count'] ) > 0 && is_array( $result['values'] ) ) {
+			$location = array_shift( $result['values'] );
+			return $location;
 		}
 
 		// ---------------------------------------------------------------------
-		// Now try by Location
+		// Now try by Location.
 		// ---------------------------------------------------------------------
 
 		/*
@@ -421,7 +481,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			'version' => 3,
 			'id' => $loc_id,
 			'return' => 'all',
-			// Get country and state name.
+			// Get Country and State name.
 			'api.Address.getsingle' => [
 				'sequential' => 1,
 				'id' => "\$value.address_id",
@@ -460,33 +520,29 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * Creates (or updates) a CiviCRM Event Location given an Event Organiser Venue.
 	 *
 	 * The only disadvantage to this method is that, for example, if we update
-	 * the email and that email already exists in the DB, it will not be found
-	 * and associated - but rather the existing email will be updated. Same goes
-	 * for phone. This is not a deal-breaker, but not very DRY either.
+	 * the Email and that Email already exists in the DB, it will not be found
+	 * and associated - but rather the existing Email will be updated. Same goes
+	 * for Phone. This is not a deal-breaker, but not very DRY either.
 	 *
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param object $venue The Event Organiser Venue object.
 	 * @param array $location The existing CiviCRM Location data.
-	 * @return array $location The CiviCRM Location data.
+	 * @return array|bool $location The CiviCRM Location data, or false on failure.
 	 */
 	public function create_civi_loc_block( $venue, $location ) {
 
-		// Init CiviCRM or die.
+		// Bail if no CiviCRM.
 		if ( ! $this->civicrm->is_active() ) {
-			return [];
+			return false;
 		}
 
 		// Init create/update flag.
 		$op = 'create';
 
 		// Update if our Venue already has a Location.
-		if (
-			isset( $venue->venue_civi_id ) &&
-			is_numeric( $venue->venue_civi_id ) &&
-			$venue->venue_civi_id > 0
-		) {
+		if ( ! empty( $venue->venue_civi_id ) && is_numeric( $venue->venue_civi_id ) ) {
 			$op = 'update';
 		}
 
@@ -496,68 +552,83 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		];
 
 		/*
-		 * First, see if the loc_block email, phone and address already exist.
+		 * First, see if the LocBlock Email, Phone and Address already exist.
 		 *
 		 * If they don't, we need params returned that trigger their creation on
 		 * the CiviCRM side. If they do, then we may need to update or delete them
-		 * before we include the data in the 'civicrm_api' call.
+		 * before we include the data in the CiviCRM API call.
 		 */
 
-		// If we have an email.
-		if ( isset( $venue->venue_civi_email ) && ! empty( $venue->venue_civi_email ) ) {
+		// If we have a Venue Email.
+		if ( ! empty( $venue->venue_civi_email ) ) {
 
-			// Check email.
+			// Check Email.
 			$email = $this->maybe_update_email( $venue, $location, $op );
 
-			// If we get a new email.
-			if ( is_array( $email ) ) {
+			// Skip if there's an error.
+			if ( $email !== false ) {
 
-				// Add to params.
-				$params['email'] = $email;
+				// If we get a new Email.
+				if ( is_array( $email ) ) {
 
-			} else {
+					// Add Email to params.
+					$params['email'] = $email;
 
-				// Add existing ID to params.
-				$params['email_id'] = $email;
+				} else {
+
+					// Add existing Email ID to params.
+					$params['email_id'] = $email;
+
+				}
 
 			}
 
 		}
 
-		// If we have a phone number.
-		if ( isset( $venue->venue_civi_phone ) && ! empty( $venue->venue_civi_phone ) ) {
+		// If we have a Phone Number.
+		if ( ! empty( $venue->venue_civi_phone ) ) {
 
-			// Check phone.
+			// Check Phone record.
 			$phone = $this->maybe_update_phone( $venue, $location, $op );
 
-			// If we get a new phone.
-			if ( is_array( $phone ) ) {
+			// Skip if there's an error.
+			if ( $phone !== false ) {
 
-				// Add to params.
-				$params['phone'] = $phone;
+				// If we get a new Phone record.
+				if ( is_array( $phone ) ) {
 
-			} else {
+					// Add Phone to params.
+					$params['phone'] = $phone;
 
-				// Add existing ID to params.
-				$params['phone_id'] = $phone;
+				} else {
+
+					// Add existing Phone ID to params.
+					$params['phone_id'] = $phone;
+
+				}
 
 			}
 
 		}
 
-		// Check address.
+		// Check Address.
 		$address = $this->maybe_update_address( $venue, $location, $op );
 
-		// If we get a new address.
-		if ( is_array( $address ) ) {
+		// Skip if there's an error.
+		if ( $address !== false ) {
 
-			// Add to params.
-			$params['address'] = $address;
+			// If we get a new Address record.
+			if ( is_array( $address ) ) {
 
-		} else {
+				// Add Address to params.
+				$params['address'] = $address;
 
-			// Add existing ID to params.
-			$params['address_id'] = $address;
+			} else {
+
+				// Add existing Address ID to params.
+				$params['address_id'] = $address;
+
+			}
 
 		}
 
@@ -569,21 +640,29 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 
 		}
 
-		// Call API.
-		$location = civicrm_api( 'LocBlock', 'create', $params );
+		// Call CiviCRM API.
+		$result = civicrm_api( 'LocBlock', 'create', $params );
 
 		// Log and bail if there's an error.
-		if ( ! empty( $location['is_error'] ) ) {
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
 				'method' => __METHOD__,
-				'message' => $location['error_message'],
 				'params' => $params,
+				'result' => $result,
 				'backtrace' => $trace,
 			], true ) );
 			return false;
 		}
+
+		// Bail if there's no result array.
+		if ( empty( $result['values'] ) ) {
+			return false;
+		}
+
+		// The new Location is the entry in the values array.
+		$location = array_pop( $result['values'] );
 
 		/*
 		 * We now need to create a dummy CiviCRM Event, or this Venue will not show
@@ -599,7 +678,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Query email via API and update if necessary.
+	 * Query Email via API and update if necessary.
 	 *
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
@@ -607,22 +686,30 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * @param object $venue The Event Organiser Venue object.
 	 * @param array $location The CiviCRM Location data.
 	 * @param string $op The operation - either 'create' or 'update'.
-	 * @return int|array $email_data Integer if found, array if not found.
+	 * @return int|array|bool $email_data Integer if found, array if not found, false on failure.
 	 */
 	private function maybe_update_email( $venue, $location = null, $op = 'create' ) {
 
-		// If the Location has an existing email.
+		// Init return.
+		$email_data = false;
+
+		// Try and init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $email_data;
+		}
+
+		// If the Location has an existing Email.
 		if ( ! is_null( $location ) && isset( $location['email']['id'] ) ) {
 
 			// Check by ID.
 			$email_params = [
 				'version' => 3,
-				'id' => $location['email']['id'],
+				'id' => (int) $location['email']['id'],
 			];
 
 		} else {
 
-			// Check by email.
+			// Check by Email values.
 			$email_params = [
 				'version' => 3,
 				'contact_id' => null,
@@ -633,15 +720,25 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 
 		}
 
-		// Query API.
+		// Query CiviCRM API.
 		$existing_email_data = civicrm_api( 'Email', 'get', $email_params );
 
+		// Bail if there's an error.
+		if ( ! empty( $existing_email_data['is_error'] ) && $existing_email_data['is_error'] == 1 ) {
+			$e = new Exception();
+			$trace = $e->getTraceAsString();
+			error_log( print_r( [
+				'method' => __METHOD__,
+				'message' => __( 'Could not fetch CiviCRM Email.', 'civicrm-event-organiser' ),
+				'params' => $email_params,
+				'result' => $existing_email_data,
+				'backtrace' => $trace,
+			], true ) );
+			return $email_data;
+		}
+
 		// Did we get one?
-		if (
-			$existing_email_data['is_error'] == 0 &&
-			$existing_email_data['count'] > 0 &&
-			is_array( $existing_email_data['values'] )
-		) {
+		if ( ! empty( $existing_email_data['values'] ) ) {
 
 			// Get first one.
 			$existing_email = array_shift( $existing_email_data['values'] );
@@ -652,29 +749,43 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 				// Add API version.
 				$existing_email['version'] = 3;
 
-				// Add null contact ID as this seems to be required.
+				// Add "null" Contact ID as this seems to be required.
 				$existing_email['contact_id'] = null;
 
-				// Replace with updated email.
+				// Replace with updated Email.
 				$existing_email['email'] = $venue->venue_civi_email;
 
-				// Update it.
-				$existing_email = civicrm_api( 'Email', 'create', $existing_email );
+				// Update the Email record in CiviCRM.
+				$result = civicrm_api( 'Email', 'create', $existing_email );
+
+				// Log something if there's an error.
+				if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+					$e = new Exception();
+					$trace = $e->getTraceAsString();
+					error_log( print_r( [
+						'method' => __METHOD__,
+						'message' => __( 'Could not update CiviCRM Email.', 'civicrm-event-organiser' ),
+						'params' => $existing_email,
+						'result' => $result,
+						'backtrace' => $trace,
+					], true ) );
+				}
 
 			}
 
 			// Get its ID.
-			$email_data = $existing_email['id'];
+			$email_data = (int) $existing_email['id'];
 
-		} else {
-
-			// Define new email.
-			$email_data = [
-				'location_type_id' => 1,
-				'email' => $venue->venue_civi_email,
-			];
+			// --<
+			return $email_data;
 
 		}
+
+		// Define new Email.
+		$email_data = [
+			'location_type_id' => 1,
+			'email' => $venue->venue_civi_email,
+		];
 
 		// --<
 		return $email_data;
@@ -682,7 +793,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	}
 
 	/**
-	 * Query phone via API and update if necessary.
+	 * Query Phone via API and update if necessary.
 	 *
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
@@ -690,29 +801,36 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * @param object $venue The Event Organiser Venue object.
 	 * @param array $location The CiviCRM Location data.
 	 * @param string $op The operation - either 'create' or 'update'.
-	 * @return int|array $phone_data Integer if found, array if not found.
+	 * @return int|array|bool $phone_data Integer if found, array if not found, or false on failure.
 	 */
 	private function maybe_update_phone( $venue, $location = null, $op = 'create' ) {
 
-		// Create numeric version of phone number.
+		// Init return.
+		$phone_data = false;
+
+		// Try and init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $phone_data;
+		}
+
+		// Create numeric version of Phone Number.
 		$numeric = preg_replace( '/[^0-9]/', '', $venue->venue_civi_phone );
 
-		// If the Location has an existing email.
+		// If the Location has an existing Email.
 		if ( ! is_null( $location ) && isset( $location['phone']['id'] ) ) {
 
-			// Check by ID.
+			// Check by existing Phone ID.
 			$phone_params = [
 				'version' => 3,
-				'id' => $location['phone']['id'],
+				'id' => (int) $location['phone']['id'],
 			];
 
 		} else {
 
-			// Check phone by its numeric field.
+			// Check Phone by its numeric field.
 			$phone_params = [
 				'version' => 3,
 				'contact_id' => null,
-				//'is_primary' => 0,
 				'location_type_id' => 1,
 				'phone_numeric' => $numeric,
 			];
@@ -722,12 +840,22 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		// Query API.
 		$existing_phone_data = civicrm_api( 'Phone', 'get', $phone_params );
 
+		// Bail if there's an error.
+		if ( ! empty( $existing_phone_data['is_error'] ) && $existing_phone_data['is_error'] == 1 ) {
+			$e = new Exception();
+			$trace = $e->getTraceAsString();
+			error_log( print_r( [
+				'method' => __METHOD__,
+				'message' => __( 'Could not fetch CiviCRM Phone.', 'civicrm-event-organiser' ),
+				'params' => $phone_params,
+				'result' => $existing_phone_data,
+				'backtrace' => $trace,
+			], true ) );
+			return $phone_data;
+		}
+
 		// Did we get one?
-		if (
-			$existing_phone_data['is_error'] == 0 &&
-			$existing_phone_data['count'] > 0 &&
-			is_array( $existing_phone_data['values'] )
-		) {
+		if ( ! empty( $existing_phone_data['values'] ) ) {
 
 			// Get first one.
 			$existing_phone = array_shift( $existing_phone_data['values'] );
@@ -738,31 +866,45 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 				// Add API version.
 				$existing_phone['version'] = 3;
 
-				// Add null contact ID as this seems to be required.
+				// Add "null" Contact ID as this seems to be required.
 				$existing_phone['contact_id'] = null;
 
-				// Replace with updated phone.
+				// Replace with updated Phone Number.
 				$existing_phone['phone'] = $venue->venue_civi_phone;
 				$existing_phone['phone_numeric'] = $numeric;
 
-				// Update it.
-				$existing_phone = civicrm_api( 'Phone', 'create', $existing_phone );
+				// Update the Phone record in CiviCRM.
+				$result = civicrm_api( 'Phone', 'create', $existing_phone );
+
+				// Log something if there's an error.
+				if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+					$e = new Exception();
+					$trace = $e->getTraceAsString();
+					error_log( print_r( [
+						'method' => __METHOD__,
+						'message' => __( 'Could not update CiviCRM Phone.', 'civicrm-event-organiser' ),
+						'params' => $existing_phone,
+						'result' => $result,
+						'backtrace' => $trace,
+					], true ) );
+				}
 
 			}
 
 			// Get its ID.
-			$phone_data = $existing_phone['id'];
+			$phone_data = (int) $existing_phone['id'];
 
-		} else {
-
-			// Define new phone.
-			$phone_data = [
-				'location_type_id' => 1,
-				'phone' => $venue->venue_civi_phone,
-				'phone_numeric' => $numeric,
-			];
+			// --<
+			return $phone_data;
 
 		}
+
+		// Define new Phone.
+		$phone_data = [
+			'location_type_id' => 1,
+			'phone' => $venue->venue_civi_phone,
+			'phone_numeric' => $numeric,
+		];
 
 		// --<
 		return $phone_data;
@@ -770,7 +912,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	}
 
 	/**
-	 * Query address via API and update if necessary.
+	 * Query Address via API and update if necessary.
 	 *
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
@@ -778,42 +920,47 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * @param object $venue The Event Organiser Venue object.
 	 * @param array $location The CiviCRM Location data.
 	 * @param string $op The operation - either 'create' or 'update'.
-	 * @return int|array $address_data Integer if found, array if not found.
+	 * @return int|array $address_data Integer if found, array if not found, or false on failure.
 	 */
 	private function maybe_update_address( $venue, $location = null, $op = 'create' ) {
 
-		// If the Location has an existing address.
+		// Init return.
+		$address_data = false;
+
+		// Try and init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $address_data;
+		}
+
+		// If the Location has an existing Address.
 		if ( ! is_null( $location ) && isset( $location['address']['id'] ) ) {
 
-			// Check by ID.
+			// Check by Address ID.
 			$address_params = [
 				'version' => 3,
-				'id' => $location['address']['id'],
+				'id' => (int) $location['address']['id'],
 			];
 
 		} else {
 
-			// Check address.
+			// Check Address by values.
 			$address_params = [
 				'version' => 3,
-				'contact_id' => null,
-				//'is_primary' => 0,
 				'location_type_id' => 1,
-				//'county' => $venue->venue_state, // Can't do county in CiviCRM yet.
-				//'country' => $venue->venue_country, // Can't do country in CiviCRM yet.
+				'contact_id' => null,
 			];
 
-			// Add street address if present.
+			// Add Street Address if present.
 			if ( ! empty( $venue->venue_address ) ) {
 				$address_params['street_address'] = $venue->venue_address;
 			}
 
-			// Add city if present.
+			// Add City if present.
 			if ( ! empty( $venue->venue_city ) ) {
 				$address_params['city'] = $venue->venue_city;
 			}
 
-			// Add postcode if present.
+			// Add Postcode if present.
 			if ( ! empty( $venue->venue_postcode ) ) {
 				$address_params['postal_code'] = $venue->venue_postcode;
 			}
@@ -828,11 +975,25 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 
 		}
 
-		// Query API.
+		// Query CiviCRM API.
 		$existing_address_data = civicrm_api( 'Address', 'get', $address_params );
 
+		// Bail if there's an error.
+		if ( ! empty( $existing_address_data['is_error'] ) && $existing_address_data['is_error'] == 1 ) {
+			$e = new Exception();
+			$trace = $e->getTraceAsString();
+			error_log( print_r( [
+				'method' => __METHOD__,
+				'message' => __( 'Could not fetch CiviCRM Address.', 'civicrm-event-organiser' ),
+				'params' => $address_params,
+				'result' => $existing_address_data,
+				'backtrace' => $trace,
+			], true ) );
+			return $address_data;
+		}
+
 		// Did we get one?
-		if ( $existing_address_data['is_error'] == 0 && $existing_address_data['count'] > 0 ) {
+		if ( ! empty( $existing_address_data['values'] ) ) {
 
 			// Get first one.
 			$existing_address = array_shift( $existing_address_data['values'] );
@@ -843,65 +1004,132 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 				// Add API version.
 				$existing_address['version'] = 3;
 
-				// Add null contact ID as this seems to be required.
+				// Add "null" Contact ID as this seems to be required.
 				$existing_address['contact_id'] = null;
 
-				// Replace street address.
-				$existing_address['street_address'] = $venue->venue_address;
+				// Replace or clear Street Address.
+				if ( ! empty( $venue->venue_address ) ) {
+					$existing_address['street_address'] = $venue->venue_address;
+				} else {
+					$existing_address['street_address'] = '';
+				}
 
-				// Replace city.
-				$existing_address['city'] = $venue->venue_city;
+				// Replace or clear City.
+				if ( ! empty( $venue->venue_city ) ) {
+					$existing_address['city'] = $venue->venue_city;
+				} else {
+					$existing_address['city'] = '';
+				}
 
-				// Replace postcode.
-				$existing_address['postal_code'] = $venue->venue_postcode;
+				// Replace or clear Postcode.
+				if ( ! empty( $venue->venue_postcode ) ) {
+					$existing_address['postal_code'] = $venue->venue_postcode;
+				} else {
+					$existing_address['postal_code'] = '';
+				}
 
-				// Replace geocodes.
-				$existing_address['geo_code_1'] = $venue->venue_lat;
-				$existing_address['geo_code_2'] = $venue->venue_lng;
+				// When we have a Country.
+				if ( ! empty( $venue->venue_country ) ) {
 
-				// Can't do county in CiviCRM yet.
-				// Can't do country in CiviCRM yet.
+					// Replace Country.
+					$country = $this->country_get_by_name( $venue->venue_country );
+					if ( $country !== false ) {
+						$existing_address['country_id'] = $country['id'];
+					}
 
-				// Update it.
-				$existing_address = civicrm_api( 'Address', 'create', $existing_address );
+					// Replace State/Province.
+					if ( ! empty( $venue->venue_state ) && ! empty( $country ) ) {
+						$state_province = $this->state_province_get_by_name( $venue->venue_state, $country['id'] );
+						if ( $state_province !== false ) {
+							$existing_address['state_province_id'] = $state_province['id'];
+						}
+					}
+
+				}
+
+				// Replace or clear geocodes.
+				if ( ! empty( $venue->venue_lat ) ) {
+					$existing_address['geo_code_1'] = $venue->venue_lat;
+				} else {
+					$existing_address['geo_code_1'] = '';
+				}
+				if ( ! empty( $venue->venue_lng ) ) {
+					$existing_address['geo_code_2'] = $venue->venue_lng;
+				} else {
+					$existing_address['geo_code_2'] = '';
+				}
+
+				// Update the Address in CiviCRM.
+				$result = civicrm_api( 'Address', 'create', $existing_address );
+
+				// Log something if there's an error.
+				if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+					$e = new Exception();
+					$trace = $e->getTraceAsString();
+					error_log( print_r( [
+						'method' => __METHOD__,
+						'message' => __( 'Could not update CiviCRM Address.', 'civicrm-event-organiser' ),
+						'params' => $existing_address,
+						'result' => $result,
+						'backtrace' => $trace,
+					], true ) );
+				}
 
 			}
 
-			// Get its ID.
-			$address_data = $existing_address['id'];
+			// Return the existing Address ID.
+			$address_data = (int) $existing_address['id'];
 
-		} else {
+			// --<
+			return $address_data;
 
-			// Define new address.
-			$address_data = [
-				'location_type_id' => 1,
-				//'county' => $venue->venue_state, // Can't do county in CiviCRM yet.
-				//'country' => $venue->venue_country, // Can't do country in CiviCRM yet.
-			];
+		}
 
-			// Add street address if present.
-			if ( ! empty( $venue->venue_address ) ) {
-				$address_data['street_address'] = $venue->venue_address;
+		// Define new Address.
+		$address_data = [
+			'location_type_id' => 1,
+		];
+
+		// Add Street Address if present.
+		if ( ! empty( $venue->venue_address ) ) {
+			$address_data['street_address'] = $venue->venue_address;
+		}
+
+		// Add City if present.
+		if ( ! empty( $venue->venue_city ) ) {
+			$address_data['city'] = $venue->venue_city;
+		}
+
+		// Add Postcode if present.
+		if ( ! empty( $venue->venue_postcode ) ) {
+			$address_data['postal_code'] = $venue->venue_postcode;
+		}
+
+		// When we have a Country.
+		if ( ! empty( $venue->venue_country ) ) {
+
+			// Maybe add Country.
+			$country = $this->country_get_by_name( $venue->venue_country );
+			if ( $country !== false ) {
+				$address_data['country_id'] = $country['id'];
 			}
 
-			// Add city if present.
-			if ( ! empty( $venue->venue_city ) ) {
-				$address_data['city'] = $venue->venue_city;
+			// Maybe add State/Province.
+			if ( ! empty( $venue->venue_state ) && ! empty( $country ) ) {
+				$state_province = $this->state_province_get_by_name( $venue->venue_state, $country['id'] );
+				if ( $state_province !== false ) {
+					$address_data['state_province_id'] = $state_province['id'];
+				}
 			}
 
-			// Add postcode if present.
-			if ( ! empty( $venue->venue_postcode ) ) {
-				$address_data['postal_code'] = $venue->venue_postcode;
-			}
+		}
 
-			// Add geocodes if present.
-			if ( ! empty( $venue->venue_lat ) ) {
-				$address_data['geo_code_1'] = $venue->venue_lat;
-			}
-			if ( ! empty( $venue->venue_lng ) ) {
-				$address_data['geo_code_2'] = $venue->venue_lng;
-			}
-
+		// Add geocodes if present.
+		if ( ! empty( $venue->venue_lat ) ) {
+			$address_data['geo_code_1'] = $venue->venue_lat;
+		}
+		if ( ! empty( $venue->venue_lng ) ) {
+			$address_data['geo_code_2'] = $venue->venue_lng;
 		}
 
 		// --<
@@ -910,62 +1138,388 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	}
 
 	/**
-	 * Has an address changed?
+	 * Has an Address changed?
 	 *
 	 * It's worth noting that when there is no data for a property of a CiviCRM
-	 * Location, it will no exist as an entry in the data array. This is not
+	 * Location, it will not exist as an entry in the data array. This is not
 	 * the case for Event Organiser Venues, whose objects always contain all
 	 * properties, whether they have a value or not.
 	 *
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param object $venue The Event Organiser Venue object being updated.
-	 * @param array $location The existing CiviCRM Location data.
+	 * @param object $venue The Event Organiser Venue object.
+	 * @param array $address The array of CiviCRM Address data.
 	 * @return bool $is_changed True if changed, false otherwise.
 	 */
-	private function is_address_changed( $venue, $location ) {
+	private function is_address_changed( $venue, $address ) {
 
-		// Check street address.
-		if ( ! isset( $location['street_address'] ) ) {
-			$location['street_address'] = '';
+		// Check Street Address.
+		if ( ! isset( $address['street_address'] ) ) {
+			$address['street_address'] = '';
 		}
-		if ( $location['street_address'] != $venue->venue_address ) {
+		if ( $address['street_address'] != $venue->venue_address ) {
 			return true;
 		}
 
-		// Check city.
-		if ( ! isset( $location['city'] ) ) {
-			$location['city'] = '';
+		// Check City.
+		if ( ! isset( $address['city'] ) ) {
+			$address['city'] = '';
 		}
-		if ( $location['city'] != $venue->venue_city ) {
+		if ( $address['city'] != $venue->venue_city ) {
 			return true;
 		}
 
-		// Check postcode.
-		if ( ! isset( $location['postal_code'] ) ) {
-			$location['postal_code'] = '';
+		// Check Postcode.
+		if ( ! isset( $address['postal_code'] ) ) {
+			$address['postal_code'] = '';
 		}
-		if ( $location['postal_code'] != $venue->venue_postcode ) {
+		if ( $address['postal_code'] != $venue->venue_postcode ) {
 			return true;
+		}
+
+		// Check Country.
+		if ( ! empty( $address['country_id'] ) ) {
+			$country = $this->country_get_by_id( $address['country_id'] );
+			if ( $country !== false ) {
+				if ( ! empty( $venue->venue_country ) ) {
+					if ( $country['name'] != $venue->venue_country ) {
+						return true;
+					}
+				}
+			}
+		} else {
+			// There's a Venue Country but no Address Country ID.
+			if ( ! empty( $venue->venue_country ) ) {
+				return true;
+			}
+		}
+
+		// Check State/Province.
+		if ( ! empty( $address['state_province_id'] ) ) {
+			$state_province = $this->state_province_get_by_id( $address['state_province_id'] );
+			if ( $state_province !== false ) {
+				if ( ! empty( $venue->venue_state ) ) {
+					if ( $state_province['name'] != $venue->venue_state ) {
+						return true;
+					}
+				}
+			}
+		} else {
+			// There's a Venue State but no Address State/Province ID.
+			if ( ! empty( $venue->venue_state ) ) {
+				return true;
+			}
 		}
 
 		// Check geocodes.
-		if ( ! isset( $location['geo_code_1'] ) ) {
-			$location['geo_code_1'] = '';
+		if ( ! isset( $address['geo_code_1'] ) ) {
+			$address['geo_code_1'] = '';
 		}
-		if ( $location['geo_code_1'] != $venue->venue_lat ) {
+		if ( $address['geo_code_1'] != $venue->venue_lat ) {
 			return true;
 		}
-		if ( ! isset( $location['geo_code_2'] ) ) {
-			$location['geo_code_2'] = '';
+		if ( ! isset( $address['geo_code_2'] ) ) {
+			$address['geo_code_2'] = '';
 		}
-		if ( $location['geo_code_2'] != $venue->venue_lng ) {
+		if ( $address['geo_code_2'] != $venue->venue_lng ) {
 			return true;
 		}
 
 		// --<
 		return false;
+
+	}
+
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Get a Country by its numeric ID.
+	 *
+	 * @since 0.7.1
+	 *
+	 * @param integer $country_id The numeric ID of the Country.
+	 * @return array $country The array of Country data.
+	 */
+	public function country_get_by_id( $country_id ) {
+
+		// Init return.
+		$country = [];
+
+		// Try and init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $country;
+		}
+
+		// Params to get the Country.
+		$params = [
+			'version' => 3,
+			'sequential' => 1,
+			'id' => $country_id,
+		];
+
+		// Call the CiviCRM API.
+		$result = civicrm_api( 'Country', 'get', $params );
+
+		// Bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+			return $country;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return $country;
+		}
+
+		// The result set should contain only one item.
+		$country = array_pop( $result['values'] );
+
+		// --<
+		return $country;
+
+	}
+
+	/**
+	 * Get a Country by its "short name".
+	 *
+	 * @since 0.7.1
+	 *
+	 * @param string $country_short The "short name" of the Country.
+	 * @return array $country The array of Country data, empty on failure.
+	 */
+	public function country_get_by_short( $country_short ) {
+
+		// Init return.
+		$country = [];
+
+		// Try and init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $country;
+		}
+
+		// Params to get the Country.
+		$params = [
+			'version' => 3,
+			'sequential' => 1,
+			'iso_code' => $country_short,
+		];
+
+		// Call the CiviCRM API.
+		$result = civicrm_api( 'Country', 'get', $params );
+
+		// Bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+			return $country;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return $country;
+		}
+
+		// The result set should contain only one item.
+		$country = array_pop( $result['values'] );
+
+		// --<
+		return $country;
+
+	}
+
+	/**
+	 * Get a Country by its name.
+	 *
+	 * @since 0.7.1
+	 *
+	 * @param string $name The name of the Country.
+	 * @return array $country The array of Country data, empty on failure.
+	 */
+	public function country_get_by_name( $name ) {
+
+		// Init return.
+		$country = [];
+
+		// Try and init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $country;
+		}
+
+		// Params to get the Country.
+		$params = [
+			'version' => 3,
+			'sequential' => 1,
+			'name' => $name,
+		];
+
+		// Call the CiviCRM API.
+		$result = civicrm_api( 'Country', 'get', $params );
+
+		// Bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+			return $country;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return $country;
+		}
+
+		// The result set should contain only one item.
+		$country = array_pop( $result['values'] );
+
+		// --<
+		return $country;
+
+	}
+
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Get a State/Province by its numeric ID.
+	 *
+	 * @since 0.7.1
+	 *
+	 * @param integer $state_province_id The numeric ID of the State/Province.
+	 * @return array $state_province The array of State/Province data.
+	 */
+	public function state_province_get_by_id( $state_province_id ) {
+
+		// Init return.
+		$state_province = [];
+
+		// Try and init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $state_province;
+		}
+
+		// Params to get the State/Province.
+		$params = [
+			'version' => 3,
+			'sequential' => 1,
+			'state_province_id' => $state_province_id,
+		];
+
+		// Call the CiviCRM API.
+		$result = civicrm_api( 'StateProvince', 'get', $params );
+
+		// Bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+			return $state_province;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return $state_province;
+		}
+
+		// The result set should contain only one item.
+		$state_province = array_pop( $result['values'] );
+
+		// --<
+		return $state_province;
+
+	}
+
+	/**
+	 * Get a State/Province by its "short name".
+	 *
+	 * @since 0.7.1
+	 *
+	 * @param string $abbreviation The short name of the State/Province.
+	 * @param integer $country_id The numeric ID of the Country.
+	 * @return array $state_province The array of State/Province data.
+	 */
+	public function state_province_get_by_short( $abbreviation, $country_id = 0 ) {
+
+		// Init return.
+		$state_province = [];
+
+		// Try and init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $state_province;
+		}
+
+		// Params to get the State/Province.
+		$params = [
+			'version' => 3,
+			'sequential' => 1,
+			'abbreviation' => $abbreviation,
+		];
+
+		// Add Country ID if present.
+		if ( $country_id !== 0 ) {
+			$params['country_id'] = $country_id;
+		}
+
+		// Call the CiviCRM API.
+		$result = civicrm_api( 'StateProvince', 'get', $params );
+
+		// Bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+			return $state_province;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return $state_province;
+		}
+
+		// The result set should contain only one item.
+		$state_province = array_pop( $result['values'] );
+
+		// --<
+		return $state_province;
+
+	}
+
+	/**
+	 * Get a State/Province by its name.
+	 *
+	 * @since 0.7.1
+	 *
+	 * @param string $name The name of the State/Province.
+	 * @param integer $country_id The numeric ID of the Country.
+	 * @return array $state_province The array of State/Province data.
+	 */
+	public function state_province_get_by_name( $name, $country_id = 0 ) {
+
+		// Init return.
+		$state_province = [];
+
+		// Try and init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $state_province;
+		}
+
+		// Params to get the State/Province.
+		$params = [
+			'version' => 3,
+			'sequential' => 1,
+			'name' => $name,
+		];
+
+		// Add Country ID if present.
+		if ( $country_id !== 0 ) {
+			$params['country_id'] = $country_id;
+		}
+
+		// Call the CiviCRM API.
+		$result = civicrm_api( 'StateProvince', 'get', $params );
+
+		// Bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+			return $state_province;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return $state_province;
+		}
+
+		// The result set should contain only one item.
+		$state_province = array_pop( $result['values'] );
+
+		// --<
+		return $state_province;
 
 	}
 
