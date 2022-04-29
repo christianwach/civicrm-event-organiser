@@ -2,10 +2,10 @@
 # This file is distributed under the same license as the CiviCRM Event Organiser package.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.7a\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.7.1a\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-"
 "organiser\n"
-"POT-Creation-Date: 2022-03-29 15:07:58+00:00\n"
+"POT-Creation-Date: 2022-04-29 15:10:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -188,7 +188,7 @@ msgstr ""
 msgid "If this is a free Event, use a Registration Confirmation Screen."
 msgstr ""
 
-#. #-#-#-#-#  civicrm-event-organiser.pot (CiviCRM Event Organiser 0.7a)  #-#-#-#-#
+#. #-#-#-#-#  civicrm-event-organiser.pot (CiviCRM Event Organiser 0.7.1a)  #-#-#-#-#
 #. Plugin Name of the plugin/theme
 #: assets/templates/wordpress/pages/page-admin-manual-sync.php:14
 #: assets/templates/wordpress/pages/page-admin-settings.php:14
@@ -197,7 +197,7 @@ msgstr ""
 
 #: assets/templates/wordpress/pages/page-admin-manual-sync.php:17
 #: assets/templates/wordpress/pages/page-admin-settings.php:18
-#: civicrm-event-organiser.php:474 includes/admin/ceo-admin-settings.php:218
+#: civicrm-event-organiser.php:513 includes/admin/ceo-admin-settings.php:218
 #: includes/admin/ceo-admin-settings.php:461
 msgid "Settings"
 msgstr ""
@@ -233,7 +233,7 @@ msgid ""
 "before using this feature."
 msgstr ""
 
-#: civicrm-event-organiser.php:478
+#: civicrm-event-organiser.php:517
 msgid "Donate!"
 msgstr ""
 
@@ -350,7 +350,7 @@ msgstr ""
 msgid "Could not sync Event Type"
 msgstr ""
 
-#: includes/admin/ceo-admin-multisite.php:112
+#: includes/admin/ceo-admin-multisite.php:117
 msgid ""
 "CiviCRM Event Organiser should not be network-activated. Please activate it "
 "on individual sites instead."
@@ -383,11 +383,11 @@ msgstr ""
 msgid "Registration Links"
 msgstr ""
 
-#: includes/ceo-functions.php:165
+#: includes/ceo-functions.php:163
 msgid "Register for %s"
 msgstr ""
 
-#: includes/ceo-functions.php:170
+#: includes/ceo-functions.php:168
 msgid "Register"
 msgstr ""
 
@@ -427,12 +427,36 @@ msgid ""
 "choose one here."
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-event.php:831
+#: includes/civicrm/ceo-civicrm-event.php:829
 msgid "You must have some CiviCRM Event Types defined"
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-location.php:243
+#: includes/civicrm/ceo-civicrm-location.php:305
 msgid "Could not get CiviCRM Location by ID"
+msgstr ""
+
+#: includes/civicrm/ceo-civicrm-location.php:732
+msgid "Could not fetch CiviCRM Email."
+msgstr ""
+
+#: includes/civicrm/ceo-civicrm-location.php:767
+msgid "Could not update CiviCRM Email."
+msgstr ""
+
+#: includes/civicrm/ceo-civicrm-location.php:849
+msgid "Could not fetch CiviCRM Phone."
+msgstr ""
+
+#: includes/civicrm/ceo-civicrm-location.php:885
+msgid "Could not update CiviCRM Phone."
+msgstr ""
+
+#: includes/civicrm/ceo-civicrm-location.php:987
+msgid "Could not fetch CiviCRM Address."
+msgstr ""
+
+#: includes/civicrm/ceo-civicrm-location.php:1071
+msgid "Could not update CiviCRM Address."
 msgstr ""
 
 #: includes/compat/ceo-cai.php:275 includes/compat/ceo-cwps.php:323
@@ -451,15 +475,19 @@ msgstr ""
 msgid "Set Redirect Location"
 msgstr ""
 
-#: includes/eo/ceo-eo-venue.php:346
+#: includes/compat/ceo-cwps.php:558
+msgid "Event"
+msgstr ""
+
+#: includes/eo/ceo-eo-venue.php:348
 msgid "Street Address is empty."
 msgstr ""
 
-#: includes/eo/ceo-eo-venue.php:356
+#: includes/eo/ceo-eo-venue.php:358
 msgid "Untitled venue"
 msgstr ""
 
-#: includes/eo/ceo-eo-venue.php:437
+#: includes/eo/ceo-eo-venue.php:439
 msgid "Venue not created."
 msgstr ""
 
@@ -483,23 +511,23 @@ msgstr ""
 msgid "Edit Events in CiviCRM"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:964
+#: includes/eo/ceo-eo.php:962
 msgid "Info and Settings for: %s"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1022
+#: includes/eo/ceo-eo.php:1020
 msgid "View Event in WordPress"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1029
+#: includes/eo/ceo-eo.php:1027
 msgid "Edit Event in WordPress"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1132
+#: includes/eo/ceo-eo.php:1128
 msgid "Edit in CiviCRM"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1186
+#: includes/eo/ceo-eo.php:1182
 msgid "CiviCRM"
 msgstr ""
 
