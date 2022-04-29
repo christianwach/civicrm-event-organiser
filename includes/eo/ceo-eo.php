@@ -939,8 +939,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 			// Get CiviCRM Event.
 			$civi_event = $this->plugin->civi->event->get_event_by_id( $civi_event_id );
-
-			// Continue if not found.
 			if ( $civi_event === false ) {
 				continue;
 			}
@@ -1096,8 +1094,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 			/*
 			// Get CiviCRM Event.
 			$civi_event = $this->plugin->civi->event->get_event_by_id( $civi_event_id );
-
-			// Continue if not found.
 			if ( $civi_event === false ) {
 				continue;
 			}

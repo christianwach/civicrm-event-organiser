@@ -682,8 +682,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Get full Event data.
 		$updated_event = $this->get_event_by_id( $objectId );
-
-		// Bail if not found.
 		if ( $updated_event === false ) {
 			return;
 		}
@@ -1080,8 +1078,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 			// Get full CiviCRM Event.
 			$full_civi_event = $this->get_event_by_id( $civi_event_id );
-
-			// Continue if not found.
 			if ( $full_civi_event === false ) {
 				continue;
 			}
@@ -1105,8 +1101,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 				// Get full CiviCRM Event.
 				$orphaned_civi_event = $this->get_event_by_id( $civi_event_id );
-
-				// Continue if not found.
 				if ( $orphaned_civi_event === false ) {
 					continue;
 				}
@@ -1543,42 +1537,53 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	}
 
 	/**
-	 * Get a CiviCRM Event by ID.
+	 * Gets a CiviCRM Event by ID.
 	 *
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
-	 * @return array|bool $event The CiviCRM Event Location data, or false if not found.
+	 * @param int $event_id The numeric ID of the CiviCRM Event.
+	 * @return array|bool $event The array of CiviCRM Event data, or false if not found.
 	 */
-	public function get_event_by_id( $civi_event_id ) {
+	public function get_event_by_id( $event_id ) {
 
-		// Init CiviCRM or die.
+		// Init return.
+		$event = false;
+
+		// Bail if no CiviCRM.
 		if ( ! $this->civicrm->is_active() ) {
-			return false;
+			return $event;
 		}
 
-		// Construct Locations array.
+		// Construct params.
 		$params = [
 			'version' => 3,
-			'id' => $civi_event_id,
+			'id' => $event_id,
 		];
 
 		// Call API.
-		$event = civicrm_api( 'Event', 'getsingle', $params );
+		$result = civicrm_api( 'Event', 'get', $params );
 
-		// Log failures and return boolean false.
-		if ( isset( $event['is_error'] ) && $event['is_error'] == '1' ) {
+		// Log failures and bail.
+		if ( isset( $result['is_error'] ) && $result['is_error'] == '1' ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
 				'method' => __METHOD__,
-				'message' => $event['error_message'],
 				'params' => $params,
+				'result' => $result,
 				'backtrace' => $trace,
 			], true ) );
-			return false;
+			return $event;
 		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return $event;
+		}
+
+		// The result set should contain only one item.
+		$event = array_pop( $result['values'] );
 
 		// --<
 		return $event;

@@ -124,8 +124,6 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 
 		// Get the full CiviCRM Event.
 		$civi_event = $plugin->civi->event->get_event_by_id( $civi_event_id );
-
-		// Continue if not found.
 		if ( $civi_event === false ) {
 			continue;
 		}

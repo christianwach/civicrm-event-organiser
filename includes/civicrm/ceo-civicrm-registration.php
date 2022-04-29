@@ -244,20 +244,21 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			return $default;
 		}
 
-		// Get CiviCRM Events for this Event Organiser Event.
+		// Get the CiviCRM Event IDs for this Event Organiser Event.
 		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post->ID );
+		if ( empty( $civi_events ) || ! is_array( $civi_events ) ) {
+			return $default;
+		}
 
-		// Did we get any?
-		if ( is_array( $civi_events ) && count( $civi_events ) > 0 ) {
+		// Get the first CiviCRM Event, though any would do as they all have the same value.
+		$civi_event = $this->get_event_by_id( array_shift( $civi_events ) );
+		if ( $civi_event === false ) {
+			return $default;
+		}
 
-			// Get the first CiviCRM Event, though any would do as they all have the same value.
-			$civi_event = $this->get_event_by_id( array_shift( $civi_events ) );
-
-			// Set checkbox to ticked if Online Registration is selected.
-			if ( $civi_event !== false && $civi_event['is_error'] == '0' && $civi_event['is_online_registration'] == '1' ) {
-				$default = ' checked="checked"';
-			}
-
+		// Set checkbox to ticked if Online Registration is selected.
+		if ( isset( $civi_event['is_online_registration'] ) && $civi_event['is_online_registration'] == '1' ) {
+			$default = ' checked="checked"';
 		}
 
 		// --<
