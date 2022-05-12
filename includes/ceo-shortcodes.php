@@ -90,6 +90,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 		// Init defaults.
 		$defaults = [
 			'event_id' => null, // Default to the current Event.
+			'wrap' => null, // Default to previous markup.
 		];
 
 		// Parse attributes.
@@ -105,7 +106,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 		$element = null;
 		if ( ! empty( $shortcode_atts['wrap'] ) ) {
 			$wrapper = trim( $shortcode_atts['wrap'] );
-			if ( in_array( $wrapper, [ 'button' ] ) ) {
+			if ( $wrapper === 'button' ) {
 				$element = $wrapper;
 			}
 		}
@@ -124,7 +125,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 		// Wrap links if required.
 		if ( ! empty( $element ) ) {
 			array_walk( $links, function( &$item ) use( $element ) {
-				$item = '<' . $element . '>' . $item . '</' . $element . '>';
+				$item = '<' . $element . ' type="' . $element . '">' . $item . '</' . $element . '>';
 			} );
 		}
 
