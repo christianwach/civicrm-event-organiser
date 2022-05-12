@@ -101,6 +101,15 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 			$post_id = (int) trim( $shortcode_atts['event_id'] );
 		}
 
+		// Get the HTML wrapper element if the attribute exists.
+		$element = null;
+		if ( ! empty( $shortcode_atts['wrap'] ) ) {
+			$wrapper = trim( $shortcode_atts['wrap'] );
+			if ( in_array( $wrapper, [ 'button' ] ) ) {
+				$element = $wrapper;
+			}
+		}
+
 		// Init return.
 		$markup = '';
 
@@ -110,6 +119,13 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 		// Bail if there are none.
 		if ( empty( $links ) ) {
 			return $markup;
+		}
+
+		// Wrap links if required.
+		if ( ! empty( $element ) ) {
+			array_walk( $links, function( &$item ) use( $element ) {
+				$item = '<' . $element . '>' . $item . '</' . $element . '>';
+			} );
 		}
 
 		// Is it recurring?
