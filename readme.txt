@@ -43,6 +43,10 @@ It also requires:
 * [Event Organiser](https://wordpress.org/plugins/event-organiser/) version 3.0 or greater
 * [Radio Buttons for Taxonomies](https://wordpress.org/plugins/radio-buttons-for-taxonomies/) to ensure only one event type is selected
 
+#### Locations fixes
+
+If you are using a version of CiviCRM lower than *CiviCRM 5.49.0* then you should apply [this patch](https://github.com/civicrm/civicrm-core/pull/23041) to get Event Locations to work as expected.
+
 Be aware that this plugin is in active development. Test often, test thoroughly and open an issue if you find a problem.
 
 
