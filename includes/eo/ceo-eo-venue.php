@@ -641,11 +641,11 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 			$sql = $wpdb->prepare(
 				"SELECT eo_venue_id FROM $wpdb->eo_venuemeta
 				WHERE
-					( meta_key = '_lat' AND meta_value = '%f' )
+					( meta_key = '_lat' AND meta_value = %f )
 				AND
 				eo_venue_id = (
 					SELECT eo_venue_id FROM $wpdb->eo_venuemeta WHERE
-					( meta_key = '_lng' AND meta_value = '%f' )
+					( meta_key = '_lng' AND meta_value = %f )
 				)",
 				floatval( $location['address']['geo_code_1'] ),
 				floatval( $location['address']['geo_code_2'] )
