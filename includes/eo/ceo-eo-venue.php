@@ -97,7 +97,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		add_action( 'delete_event-venue', [ $this, 'delete_venue' ], 20, 3 );
 
 		// Intercept after delete Venue.
-		add_action( 'eventorganiser_delete_venue', [ $this, 'deleted_venue' ], 10, 1 );
+		add_action( 'eventorganiser_venue_deleted', [ $this, 'deleted_venue' ], 10, 1 );
 
 		// Add our Venue meta box.
 		add_action( 'add_meta_boxes', [ $this, 'venue_meta_box' ] );
