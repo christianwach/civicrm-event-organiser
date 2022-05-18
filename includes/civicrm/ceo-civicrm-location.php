@@ -1014,6 +1014,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 					$existing_address['street_address'] = '';
 				}
 
+				// Replace Address Name when it is different to Street Address.
+				if ( ! empty( $venue->name ) && $existing_address['street_address'] !== $venue->name ) {
+					$existing_address['name'] = $venue->name;
+				}
+
 				// Replace or clear City.
 				if ( ! empty( $venue->venue_city ) ) {
 					$existing_address['city'] = $venue->venue_city;
@@ -1090,10 +1095,19 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			'location_type_id' => 1,
 		];
 
-		// Add Street Address if present.
+		// Get Street Address if present.
+		$street_address = '';
 		if ( ! empty( $venue->venue_address ) ) {
-			$address_data['street_address'] = $venue->venue_address;
+			$street_address = $venue->venue_address;
 		}
+
+		// Add Address Name when it is different to Street Address.
+		if ( ! empty( $venue->name ) && $street_address !== $venue->name ) {
+			$address_data['name'] = $venue->name;
+		}
+
+		// Add Street Address.
+		$address_data['street_address'] = $street_address;
 
 		// Add City if present.
 		if ( ! empty( $venue->venue_city ) ) {
@@ -1153,6 +1167,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * @return bool $is_changed True if changed, false otherwise.
 	 */
 	private function is_address_changed( $venue, $address ) {
+
+		// Check Address Name.
+		if ( ! isset( $address['name'] ) ) {
+			$address['name'] = '';
+		}
+		if ( $address['name'] != $venue->name ) {
+			return true;
+		}
 
 		// Check Street Address.
 		if ( ! isset( $address['street_address'] ) ) {

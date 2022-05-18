@@ -333,29 +333,31 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		/*
-		 * Event Organiser will return a WP_Error object if there is already a
-		 * Venue with the same name as the one being created. So, during the
-		 * sync process, it is possible that poorly-named (or partially-named)
-		 * Locations will trigger this. For now, log this and carry on.
+		 * CiviCRM does not show the "Address Name" Field for Locations by default
+		 * but it can be enabled on the CiviCRM "Address Settings" screen.
+		 *
+		 * When creating a Venue from a Location, the "Address Name" Field is only
+		 * populated when the "Address Settings" have been modified to show it.
+		 *
+		 * We use it if it has a value, but need to fall back to using the "Street
+		 * Address" Field when empty.
 		 */
-		if ( empty( $location['address']['street_address'] ) ) {
+		if ( ! empty( $location['address']['name'] ) ) {
 
-			// Log and move on.
-			$e = new Exception();
-			$trace = $e->getTraceAsString();
-			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => __( 'Street Address is empty.', 'civicrm-event-organiser' ),
-				'location' => $location,
-				'backtrace' => $trace,
-			], true ) );
+			// Use "Address Name" Field.
+			$name = $location['address']['name'];
+
+		} else {
+
+			// Set a sensible default.
+			$name = __( 'Untitled venue', 'civicrm-event-organiser' );
+
+			// Construct name from "Street Address" Field if we have it.
+			if ( ! empty( $location['address']['street_address'] ) ) {
+				$name = $location['address']['street_address'];
+			}
 
 		}
-
-		// Construct name.
-		$name = ! empty( $location['address']['street_address'] ) ?
-				$location['address']['street_address'] :
-				__( 'Untitled venue', 'civicrm-event-organiser' );
 
 		// Construct args.
 		$args = [
@@ -408,11 +410,17 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$existing_venue = eo_get_venue_by( 'slug', sanitize_title( $name ) );
 
 		/**
-		 * Check if there an existing Venue with the slug about to be used. Also
-		 * allow overrides to force the creation of a unique slug.
+		 * Force the creation of a unique slug.
 		 *
-		 * Force the use of a unique slug with the following code:
+		 * Event Organiser will return a WP_Error object if there is already a
+		 * Venue with the same name as the one being created.
+		 *
+		 * When there isn't an existing Venue, you can force the use of a unique
+		 * slug with the following code:
+		 *
 		 * add_filter( 'civicrm_event_organiser_force_unique_slug', '__return_true' );
+		 *
+		 * @since 0.3.5
 		 *
 		 * @param bool False by default, which does not force unique slugs.
 		 */
@@ -516,11 +524,45 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 			}
 
+			// Use the Venue Name by default.
+			$name = $venue->name;
+
+			/*
+			 * CiviCRM does not show the "Address Name" Field for Locations by
+			 * default but it can be enabled on the CiviCRM "Address Settings"
+			 * screen.
+			 *
+			 * When updating a Venue from a Location, the "Address Name" Field
+			 * is populated when the "Address Settings" have been modified to
+			 * show it or when the Venue has been previously synced to CiviCRM.
+			 *
+			 * We use it if it has a value, but need to fall back to using the
+			 * "Street Address" Field when empty.
+			 *
+			 */
+			if ( ! empty( $location['address']['name'] ) ) {
+
+				// Get Street Address.
+				$street_address = '';
+				if ( ! empty( $location['address']['street_address'] ) ) {
+					$street_address = $location['address']['street_address'];
+				}
+
+				// Use the Address Name if different to Street Address.
+				if ( $location['address']['name'] !== $street_address ) {
+					$name = $location['address']['name'];
+				}
+
+			}
+
 			// Construct args.
 			$args = [
-				'name' => $venue->name, // Can't update name yet - Locations don't have one.
-				//'description' => $location['description'], // CiviCRM has no Location description at present.
+				'name' => $name,
 			];
+
+			// CiviCRM has no Location description at present.
+			// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
+			//$args['description'] => $location['description'];
 
 			// Add Street Address if present.
 			if ( ! empty( $location['address']['street_address'] ) ) {
