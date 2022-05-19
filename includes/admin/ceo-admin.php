@@ -209,14 +209,32 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			$shown = true;
 		}
 
-		// Show an admin notice for possibly missing default confirmation page setting.
+		// Show an admin notice for possibly missing default Confirmation Page setting.
 		if ( $shown === false && 'fgffgs' === $this->option_get( 'civi_eo_event_default_confirm', 'fgffgs' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
+			$shown = true;
 		}
 
 		// Show an admin notice for possibly missing default Confirmation Email setting.
 		if ( $shown === false && 'fgffgs' === $this->option_get( 'civi_eo_event_default_send_email', 'fgffgs' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
+			$shown = true;
+		}
+
+		// Show an admin notice for possibly missing default Confirmation Email "From Name" setting.
+		if ( $shown === false && ! empty( $this->option_get( 'civi_eo_event_default_send_email' ) ) ) {
+			if ( empty( $this->option_get( 'civi_eo_event_default_send_email_from_name' ) ) ) {
+				add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
+				$shown = true;
+			}
+		}
+
+		// Show an admin notice for possibly missing default Confirmation Email "From Email" setting.
+		if ( $shown === false && ! empty( $this->option_get( 'civi_eo_event_default_send_email' ) ) ) {
+			if ( empty( $this->option_get( 'civi_eo_event_default_send_email_from' ) ) ) {
+				add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
+				$shown = true;
+			}
 		}
 
 		/*

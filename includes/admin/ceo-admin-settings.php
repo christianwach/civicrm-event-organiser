@@ -211,6 +211,10 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Add WordPress scripts and help text.
 		add_action( 'admin_head-' . $this->parent_page, [ $this, 'admin_head' ], 50 );
 
+		// Add scripts and styles.
+		add_action( 'admin_print_styles-' . $this->parent_page, [ $this, 'page_settings_css' ] );
+		add_action( 'admin_print_scripts-' . $this->parent_page, [ $this, 'page_settings_js' ] );
+
 		// Add settings page.
 		$this->settings_page = add_submenu_page(
 			$this->parent_page_slug, // Parent slug
@@ -229,6 +233,10 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 
 		// Ensure correct menu item is highlighted.
 		add_action( 'admin_head-' . $this->settings_page, [ $this, 'admin_menu_highlight' ], 50 );
+
+		// Add scripts and styles.
+		add_action( 'admin_print_styles-' . $this->settings_page, [ $this, 'page_settings_css' ] );
+		add_action( 'admin_print_scripts-' . $this->settings_page, [ $this, 'page_settings_js' ] );
 
 	}
 
@@ -371,6 +379,42 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	}
 
 	/**
+	 * Enqueue any styles needed by our admin "Settings" page.
+	 *
+	 * @since 0.7.2
+	 */
+	public function page_settings_css() {
+
+		// Add admin css.
+		wp_enqueue_style(
+			'civi_eo_settings_css',
+			plugins_url( 'assets/css/wordpress/page-admin-settings.css', CIVICRM_WP_EVENT_ORGANISER_FILE ),
+			null,
+			CIVICRM_WP_EVENT_ORGANISER_VERSION,
+			'all' // Media.
+		);
+
+	}
+
+	/**
+	 * Enqueue required scripts on the "Settings" page.
+	 *
+	 * @since 0.7.2
+	 */
+	public function page_settings_js() {
+
+		// Enqueue javascript.
+		wp_enqueue_script(
+			'civi_eo_settings_js',
+			plugins_url( 'assets/js/wordpress/page-admin-settings.js', CIVICRM_WP_EVENT_ORGANISER_FILE ),
+			[ 'jquery' ],
+			CIVICRM_WP_EVENT_ORGANISER_VERSION, // Version.
+			true // In footer.
+		);
+
+	}
+
+	/**
 	 * Get our Settings Page screens.
 	 *
 	 * @since 0.7
@@ -465,11 +509,21 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 			'core' // Vertical placement: options are 'core', 'high', 'low'.
 		);
 
-		// Create General Settings metabox.
+		// Create "General Event Settings" metabox.
 		add_meta_box(
 			'ceo_general',
-			__( 'General Settings', 'civicrm-event-organiser' ),
+			__( 'General Event Settings', 'civicrm-event-organiser' ),
 			[ $this, 'meta_box_general_render' ], // Callback.
+			$screen_id, // Screen ID.
+			'normal', // Column: options are 'normal' and 'side'.
+			'core' // Vertical placement: options are 'core', 'high', 'low'.
+		);
+
+		// Create "Online Registration Settings" metabox.
+		add_meta_box(
+			'ceo_registration',
+			__( 'Online Registration Settings', 'civicrm-event-organiser' ),
+			[ $this, 'meta_box_registration_render' ], // Callback.
 			$screen_id, // Screen ID.
 			'normal', // Column: options are 'normal' and 'side'.
 			'core' // Vertical placement: options are 'core', 'high', 'low'.
@@ -496,6 +550,24 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 */
 	public function meta_box_general_render() {
 
+		// Get all Participant Roles.
+		$roles = $this->plugin->civi->registration->get_participant_roles_select( $event = null );
+
+		// Get all Event Types.
+		$types = $this->plugin->taxonomy->get_event_types_select();
+
+		// Include template file.
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php';
+
+	}
+
+	/**
+	 * Render Online Registration Settings meta box on Admin screen.
+	 *
+	 * @since 0.7.2
+	 */
+	public function meta_box_registration_render() {
+
 		// Check for possibly missing default profile setting.
 		$profile_required = false;
 		if ( 'fgffgs' == $this->admin->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
@@ -514,12 +586,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 			$send_email_required = true;
 		}
 
-		// Get all Participant Roles.
-		$roles = $this->plugin->civi->registration->get_participant_roles_select( $event = null );
-
-		// Get all Event Types.
-		$types = $this->plugin->taxonomy->get_event_types_select();
-
 		// Get all Event Registration Profiles.
 		$profiles = $this->plugin->civi->registration->get_registration_profiles_select();
 
@@ -530,15 +596,38 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 			$confirm_checked = ' checked="checked"';
 		}
 
-		// Get the current confirmation email setting.
+		// Get the current Confirmation Email setting.
 		$send_email_checked = '';
 		$send_email_enabled = $this->plugin->civi->registration->get_registration_send_email_enabled();
 		if ( $send_email_enabled ) {
 			$send_email_checked = ' checked="checked"';
 		}
 
+		// Set default checks for Confirmation Email sub-fields.
+		$send_email_from_name_required = false;
+		$send_email_from_required = false;
+
+		// If Confirmation Email is enabled.
+		if ( $send_email_enabled ) {
+
+			// Check for possibly empty default Confirmation Email "From Name" setting.
+			if ( empty( $this->admin->option_get( 'civi_eo_event_default_send_email_from_name', 'fgffgs' ) ) ) {
+				$send_email_from_name_required = true;
+			}
+
+			// Check for possibly empty default Confirmation Email "From Email" setting.
+			if ( empty( $this->admin->option_get( 'civi_eo_event_default_send_email_from', 'fgffgs' ) ) ) {
+				$send_email_from_required = true;
+			}
+
+		}
+
+		// Set default values for Confirmation Email sub-fields.
+		$send_email_from_name = $this->plugin->civi->registration->get_registration_send_email_from_name();
+		$send_email_from = $this->plugin->civi->registration->get_registration_send_email_from();
+
 		// Include template file.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php';
 
 	}
 
@@ -578,6 +667,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$civi_eo_event_default_profile = '0';
 		$civi_eo_event_default_confirm = '';
 		$civi_eo_event_default_send_email = '';
+		$civi_eo_event_default_send_email_from_name = '';
+		$civi_eo_event_default_send_email_from = '';
 
 		// Get variables.
 		extract( $_POST );
@@ -594,19 +685,27 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$civi_eo_event_default_profile = (int) $civi_eo_event_default_profile;
 		$this->admin->option_save( 'civi_eo_event_default_profile', $civi_eo_event_default_profile );
 
-		// Save option.
+		// Save Confirmation Page option.
 		if ( $civi_eo_event_default_confirm == '1' ) {
 			$this->admin->option_save( 'civi_eo_event_default_confirm', '1' );
 		} else {
 			$this->admin->option_save( 'civi_eo_event_default_confirm', '0' );
 		}
 
-		// Save option.
+		// Save Confirmation Email option.
 		if ( $civi_eo_event_default_send_email == '1' ) {
 			$this->admin->option_save( 'civi_eo_event_default_send_email', '1' );
 		} else {
 			$this->admin->option_save( 'civi_eo_event_default_send_email', '0' );
 		}
+
+		// Save Confirmation Email "From Name" option.
+		$civi_eo_event_default_send_email_from_name = sanitize_text_field( wp_unslash( $civi_eo_event_default_send_email_from_name ) );
+		$this->admin->option_save( 'civi_eo_event_default_send_email_from_name', $civi_eo_event_default_send_email_from_name );
+
+		// Save Confirmation Email "From Email" option.
+		$civi_eo_event_default_send_email_from = sanitize_email( wp_unslash( $civi_eo_event_default_send_email_from ) );
+		$this->admin->option_save( 'civi_eo_event_default_send_email_from', $civi_eo_event_default_send_email_from );
 
 		/**
 		 * Broadcast end of settings update.

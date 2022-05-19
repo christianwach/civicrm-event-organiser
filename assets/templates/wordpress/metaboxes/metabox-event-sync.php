@@ -27,6 +27,15 @@ body.js .civi_eo_event_reg_toggle {
 	<?php if ( ! $reg_checked ) : ?>display: none;<?php endif; ?>
 }
 
+body.js .civi_eo_event_send_email_toggle {
+	<?php if ( ! $send_email_checked ) : ?>display: none;<?php endif; ?>
+}
+
+.civi_eo_event_send_email_toggle {
+	border-top: 1px solid transparent;
+	border-top: 1px solid transparent;
+}
+
 .civi_eo_event_option_block {
 	border-bottom: 2px solid #eee;
 	padding-bottom: 0.8em;
@@ -126,6 +135,17 @@ body.js .civi_eo_event_reg_toggle {
 				<p class="description">
 					<?php esc_html_e( 'Email includes date(s), location and contact information. If this is a paid Event, the Email is also the receipt.', 'civicrm-event-organiser' ); ?>
 				</p>
+
+				<div class="civi_eo_event_send_email_toggle">
+					<p>
+						<label for="civi_eo_event_send_email_from_name"><?php esc_html_e( 'From Name:', 'civicrm-event-organiser' ); ?></label>
+						<input type="text" class="widefat" id="civi_eo_event_send_email_from_name" name="civi_eo_event_send_email_from_name" value="<?php echo esc_attr( $send_email_from_name ); ?>" />
+					</p>
+					<p>
+						<label for="civi_eo_event_send_email_from"><?php esc_html_e( 'From Email:', 'civicrm-event-organiser' ); ?></label>
+						<input type="text" class="widefat" id="civi_eo_event_send_email_from" name="civi_eo_event_send_email_from" value="<?php echo esc_attr( $send_email_from ); ?>" />
+					</p>
+				</div>
 			</div>
 
 			<?php

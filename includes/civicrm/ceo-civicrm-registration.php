@@ -761,4 +761,80 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 	}
 
+	/**
+	 * Get the default Confirmation Email "From Name" setting for an Event Organiser Event.
+	 *
+	 * Falls back to the default as set on the plugin settings screen.
+	 * Falls back to false otherwise.
+	 *
+	 * @since 0.7.2
+	 *
+	 * @param int $post_id The numeric ID of an Event Organiser Event.
+	 * @return string $setting The default Confirmation Email "From Name" setting.
+	 */
+	public function get_registration_send_email_from_name( $post_id = null ) {
+
+		// Init as empty.
+		$setting = '';
+
+		// Use default value if we have one.
+		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_from_name' );
+		if ( ! empty( $default ) ) {
+			$setting = $default;
+		}
+
+		// If we have a Post.
+		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
+
+			// Override with stored value if we get a value.
+			$stored_setting = $this->plugin->eo->get_event_registration_send_email_from_name( $post_id );
+			if ( ! empty( $stored_setting ) ) {
+				$setting = $stored_setting;
+			}
+
+		}
+
+		// --<
+		return $setting;
+
+	}
+
+	/**
+	 * Get the default Confirmation Email "From Email" setting for an Event Organiser Event.
+	 *
+	 * Falls back to the default as set on the plugin settings screen.
+	 * Falls back to false otherwise.
+	 *
+	 * @since 0.7.2
+	 *
+	 * @param int $post_id The numeric ID of an Event Organiser Event.
+	 * @return string $setting The default Confirmation Email "From Email" setting.
+	 */
+	public function get_registration_send_email_from( $post_id = null ) {
+
+		// Init as empty.
+		$setting = '';
+
+		// Use default value if we have one.
+		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_from' );
+		if ( ! empty( $default ) ) {
+			$setting = $default;
+		}
+
+		// If we have a Post.
+		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
+
+			// Override with stored value if we get a value.
+			$stored_setting = $this->plugin->eo->get_event_registration_send_email_from( $post_id );
+			if ( ! empty( $stored_setting ) ) {
+				$setting = $stored_setting;
+			}
+
+		}
+
+		// --<
+		return $setting;
+
+	}
+
 } // Class ends.

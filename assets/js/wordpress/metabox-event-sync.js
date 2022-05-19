@@ -171,6 +171,29 @@ var CiviCRM_Event_Organiser_Event_Metabox = CiviCRM_Event_Organiser_Event_Metabo
 
 			});
 
+			/**
+			 * Toggle accordion depending on state of "Confirmation Email" checkbox.
+			 *
+			 * @since 0.5.3
+			 *
+			 * @param {Object} e The click event object.
+			 */
+			$('#civi_eo_event_send_email').click( function(e) {
+
+				var current_on;
+
+				// Get checked state.
+				current_on = $(this).prop( 'checked' );
+
+				// Toggle visibility of "Confirmation Email" section.
+				if ( current_on ) {
+					$('.civi_eo_event_send_email_toggle').slideDown( 'slow' );
+				} else {
+					$('.civi_eo_event_send_email_toggle').slideUp( 'slow' );
+				}
+
+			});
+
 		};
 
 	};

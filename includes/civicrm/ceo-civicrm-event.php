@@ -792,7 +792,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		if ( is_numeric( $location_id ) ) {
 
 			// Add to our params.
-			$civi_event['loc_block_id'] = $location_id;
+			$civi_event['loc_block_id'] = (int) $location_id;
 
 			// Set CiviCRM to add map.
 			$civi_event['is_map'] = 1;
@@ -818,7 +818,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Add existing Participant Role ID to our params if we get one.
 		if ( $existing_id !== false && is_numeric( $existing_id ) && $existing_id != 0 ) {
-			$civi_event['default_role_id'] = $existing_id;
+			$civi_event['default_role_id'] = (int) $existing_id;
 		}
 
 		// Get Event Type pseudo-ID (or value), because it is required in CiviCRM.
@@ -849,9 +849,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		// Get CiviCRM Event Confirmation Email value.
 		$is_email_confirm = $this->registration->get_registration_send_email_enabled( $post->ID );
 
-		// Set Confirmation Email value to our params if we get one.
+		// Set Confirmation Email value if we get one.
 		if ( ! empty( $civi_event['is_online_registration'] ) && ! empty( $is_email_confirm ) ) {
 			$civi_event['is_email_confirm'] = 1;
+		}
+
+		// Set Confirmation Email sub-fields to our params if enabled.
+		if ( ! empty( $civi_event['is_email_confirm'] ) ) {
+			$civi_event['confirm_from_name'] = $this->registration->get_registration_send_email_from_name( $post->ID );
+			$civi_event['confirm_from_email'] = $this->registration->get_registration_send_email_from( $post->ID );
 		}
 
 		/**
