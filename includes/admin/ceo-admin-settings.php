@@ -508,6 +508,12 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 			$confirm_required = true;
 		}
 
+		// Check for possibly missing default Confirmation Email setting.
+		$send_email_required = false;
+		if ( 'fgffgs' == $this->admin->option_get( 'civi_eo_event_default_send_email', 'fgffgs' ) ) {
+			$send_email_required = true;
+		}
+
 		// Get all Participant Roles.
 		$roles = $this->plugin->civi->registration->get_participant_roles_select( $event = null );
 
@@ -522,6 +528,13 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$confirm_enabled = $this->plugin->civi->registration->get_registration_confirm_enabled();
 		if ( $confirm_enabled ) {
 			$confirm_checked = ' checked="checked"';
+		}
+
+		// Get the current confirmation email setting.
+		$send_email_checked = '';
+		$send_email_enabled = $this->plugin->civi->registration->get_registration_send_email_enabled();
+		if ( $send_email_enabled ) {
+			$send_email_checked = ' checked="checked"';
 		}
 
 		// Include template file.
@@ -564,6 +577,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$civi_eo_event_default_type = '0';
 		$civi_eo_event_default_profile = '0';
 		$civi_eo_event_default_confirm = '';
+		$civi_eo_event_default_send_email = '';
 
 		// Get variables.
 		extract( $_POST );
@@ -585,6 +599,13 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 			$this->admin->option_save( 'civi_eo_event_default_confirm', '1' );
 		} else {
 			$this->admin->option_save( 'civi_eo_event_default_confirm', '0' );
+		}
+
+		// Save option.
+		if ( $civi_eo_event_default_send_email == '1' ) {
+			$this->admin->option_save( 'civi_eo_event_default_send_email', '1' );
+		} else {
+			$this->admin->option_save( 'civi_eo_event_default_send_email', '0' );
 		}
 
 		/**

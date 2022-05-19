@@ -214,6 +214,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 		}
 
+		// Show an admin notice for possibly missing default Confirmation Email setting.
+		if ( $shown === false && 'fgffgs' === $this->option_get( 'civi_eo_event_default_send_email', 'fgffgs' ) ) {
+			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
+		}
+
 		/*
 		// Show an admin notice when a batch process is required.
 		if ( $shown === false && 'fgffgs' !== $this->option_get( 'civi_eo_batch_process', 'fgffgs' ) ) {

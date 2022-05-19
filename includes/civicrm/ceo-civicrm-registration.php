@@ -717,4 +717,48 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 	}
 
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Get the default Confirmation Email setting for an Event Organiser Event.
+	 *
+	 * Falls back to the default as set on the plugin settings screen.
+	 * Falls back to false otherwise.
+	 *
+	 * @since 0.7.2
+	 *
+	 * @param int $post_id The numeric ID of an Event Organiser Event.
+	 * @return int|bool $setting The default Confirmation Email setting, false on failure.
+	 */
+	public function get_registration_send_email_enabled( $post_id = null ) {
+
+		// Init with impossible value.
+		$setting = false;
+
+		// Do we have a default set?
+		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email' );
+
+		// Override with default value if we have one.
+		if ( $default !== '' && is_numeric( $default ) ) {
+			$setting = absint( $default );
+		}
+
+		// If we have a Post.
+		if ( isset( $post_id ) && is_numeric( $post_id ) ) {
+
+			// Get stored value.
+			$stored_setting = $this->plugin->eo->get_event_registration_send_email( $post_id );
+
+			// Override with stored value if we get a value.
+			if ( $stored_setting !== '' && is_numeric( $stored_setting ) ) {
+				$setting = absint( $stored_setting );
+			}
+
+		}
+
+		// --<
+		return $setting;
+
+	}
+
 } // Class ends.

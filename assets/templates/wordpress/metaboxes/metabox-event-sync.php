@@ -117,6 +117,17 @@ body.js .civi_eo_event_reg_toggle {
 				</p>
 			</div>
 
+			<div class="civi_eo_event_option_block">
+				<p>
+					<label for="civi_eo_event_send_email"><?php esc_html_e( 'Send Confirmation Email:', 'civicrm-event-organiser' ); ?></label>
+					<input type="checkbox" id="civi_eo_event_send_email" name="civi_eo_event_send_email" value="1"<?php echo $send_email_checked; ?> />
+				</p>
+
+				<p class="description">
+					<?php esc_html_e( 'Email includes date(s), location and contact information. If this is a paid Event, the Email is also the receipt.', 'civicrm-event-organiser' ); ?>
+				</p>
+			</div>
+
 			<?php
 
 			/**

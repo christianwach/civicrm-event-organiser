@@ -810,13 +810,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			$civi_event['is_online_registration'] = 1;
 		}
 
-		// Participant_role default.
+		// Participant Role default.
 		$civi_event['default_role_id'] = 0;
 
-		// Get existing role ID.
+		// Get existing Participant Role ID.
 		$existing_id = $this->registration->get_participant_role( $post );
 
-		// Add existing role ID to our params if we get one.
+		// Add existing Participant Role ID to our params if we get one.
 		if ( $existing_id !== false && is_numeric( $existing_id ) && $existing_id != 0 ) {
 			$civi_event['default_role_id'] = $existing_id;
 		}
@@ -841,6 +841,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		// Set confirmation screen value to our params if we get one.
 		if ( $is_confirm_enabled == 0 ) {
 			$civi_event['is_confirm_enabled'] = 0;
+		}
+
+		// CiviCRM Event Confirmation Email off by default.
+		$civi_event['is_email_confirm'] = 0;
+
+		// Get CiviCRM Event Confirmation Email value.
+		$is_email_confirm = $this->registration->get_registration_send_email_enabled( $post->ID );
+
+		// Set Confirmation Email value to our params if we get one.
+		if ( ! empty( $civi_event['is_online_registration'] ) && ! empty( $is_email_confirm ) ) {
+			$civi_event['is_email_confirm'] = 1;
 		}
 
 		/**

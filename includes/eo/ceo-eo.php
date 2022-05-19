@@ -611,6 +611,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$this->set_event_registration_confirm( $event_id, '0' );
 		}
 
+		// Save Event meta if the Event has a Confirmation Email setting specified.
+		if ( ! empty( $civi_event['is_email_confirm'] ) ) {
+			$this->set_event_registration_send_email( $event_id, (int) $civi_event['is_email_confirm'] );
+		} else {
+			$this->set_event_registration_send_email( $event_id, '0' );
+		}
+
 		/*
 		 * Syncing Registration Profiles presents us with some issues: when this
 		 * method is called from an update to a CiviCRM Event via the CiviCRM admin
@@ -876,6 +883,15 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$confirm_checked = '';
 		if ( $confirm_enabled ) {
 			$confirm_checked = ' checked="checked"';
+		}
+
+		// Get the current Confirmation Email setting.
+		$send_email_enabled = $this->plugin->civi->registration->get_registration_send_email_enabled( $event->ID );
+
+		// Set checkbox status.
+		$send_email_checked = '';
+		if ( $send_email_enabled ) {
+			$send_email_checked = ' checked="checked"';
 		}
 
 		// Show Event Sync Metabox.
@@ -1275,6 +1291,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Save Registration Confirmation page setting.
 		$this->update_event_registration_confirm( $event_id );
+
+		// Save Confirmation Email setting.
+		$this->update_event_registration_send_email( $event_id );
 
 		/**
 		 * Broadcast end of componenents update.
@@ -1684,6 +1703,95 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Delete the meta value.
 		delete_post_meta( $post_id, '_civi_registration_confirm' );
+
+	}
+
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Update Event Confirmation Email value from Event Organiser meta box.
+	 *
+	 * @since 0.7.2
+	 *
+	 * @param int $event_id The numeric ID of the Event.
+	 * @param str $value Whether the Confirmation Email is enabled or not.
+	 */
+	public function update_event_registration_send_email( $event_id, $value = '0' ) {
+
+		// Retrieve meta value.
+		if ( isset( $_POST['civi_eo_event_send_email'] ) && wp_unslash( $_POST['civi_eo_event_send_email'] ) == '1' ) {
+			$value = '1';
+		} else {
+			$value = '0';
+		}
+
+		// Go ahead and set the value.
+		$this->set_event_registration_send_email( $event_id, $value );
+
+	}
+
+	/**
+	 * Get Event Confirmation Email value.
+	 *
+	 * @since 0.7.2
+	 *
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @return int $setting The Event Confirmation Email setting for the CiviCRM Event.
+	 */
+	public function get_event_registration_send_email( $post_id ) {
+
+		// Get the meta value.
+		$setting = get_post_meta( $post_id, '_civi_registration_send_email', true );
+
+		// If it's not yet set it will be an empty string, so cast as boolean.
+		if ( $setting === '' ) {
+			$setting = 1; // The default in CiviCRM is to show a send_emailation screen.
+		}
+
+		// --<
+		return absint( $setting );
+
+	}
+
+	/**
+	 * Update Event Registration Confirmation screen value.
+	 *
+	 * @since 0.7.2
+	 *
+	 * @param int $event_id The numeric ID of the Event.
+	 * @param int $setting The Event Registration Confirmation screen setting for the CiviCRM Event.
+	 */
+	public function set_event_registration_send_email( $event_id, $setting = null ) {
+
+		// If not set.
+		if ( is_null( $setting ) ) {
+
+			// Do we have a default set?
+			$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email' );
+
+			// Override with default value if we get one.
+			if ( $default !== '' && is_numeric( $default ) ) {
+				$setting = absint( $default );
+			}
+
+		}
+
+		// Update Event meta.
+		update_post_meta( $event_id, '_civi_registration_send_email', $setting );
+
+	}
+
+	/**
+	 * Delete Event Registration Confirmation screen setting for a CiviCRM Event.
+	 *
+	 * @since 0.7.2
+	 *
+	 * @param int $post_id The numeric ID of the WP Post.
+	 */
+	public function clear_event_registration_send_email( $post_id ) {
+
+		// Delete the meta value.
+		delete_post_meta( $post_id, '_civi_registration_send_email' );
 
 	}
 

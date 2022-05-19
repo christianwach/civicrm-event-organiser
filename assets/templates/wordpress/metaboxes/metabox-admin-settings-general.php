@@ -84,6 +84,17 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 		</td>
 	</tr>
 
+	<tr valign="top">
+		<th scope="row"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email Setting', 'civicrm-event-organiser' ); ?></th>
+		<td>
+			<input type="checkbox" id="civi_eo_event_default_send_email" name="civi_eo_event_default_send_email" value="1"<?php echo $send_email_checked; ?>>
+			<label for="civi_eo_event_default_send_email"><?php esc_html_e( 'Send a Confirmation Email which includes event date(s), location and contact information. For paid Events, this Email is also a receipt for payment.', 'civicrm-event-organiser' ); ?></label>
+			<?php if ( $send_email_required ) : ?>
+				<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please choose the default setting for sending a Confirmation Email.', 'civicrm-event-organiser' ); ?></p></div>
+			<?php endif; ?>
+		</td>
+	</tr>
+
 	<?php
 
 	/**
