@@ -74,6 +74,8 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 
 </table>
 
+<hr>
+
 <table class="form-table">
 
 	<tr valign="top">
@@ -88,37 +90,29 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 		</td>
 	</tr>
 
+	<tr valign="top">
+		<th scope="row"><label for="civi_eo_event_default_send_email_from_name"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "From Name"', 'civicrm-event-organiser' ); ?></label></th>
+		<td>
+			<input type="text" class="widefat" id="civi_eo_event_default_send_email_from_name" name="civi_eo_event_default_send_email_from_name" value="<?php echo esc_attr( $send_email_from_name ); ?>">
+			<p class="description"><?php esc_html_e( 'The name to send the Confirmation Email from.', 'civicrm-event-organiser' ); ?></p>
+			<?php if ( $send_email_from_name_required ) : ?>
+				<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please add a default "From Name" for the Confirmation Email.', 'civicrm-event-organiser' ); ?></p></div>
+			<?php endif; ?>
+		</td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="civi_eo_event_default_send_email_from"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "From Email"', 'civicrm-event-organiser' ); ?></label></th>
+		<td>
+			<input type="text" class="widefat" id="civi_eo_event_default_send_email_from" name="civi_eo_event_default_send_email_from" value="<?php echo esc_attr( $send_email_from ); ?>">
+			<p class="description"><?php esc_html_e( 'The Email Address to send the Confirmation Email from.', 'civicrm-event-organiser' ); ?></p>
+			<?php if ( $send_email_from_required ) : ?>
+				<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please add a default Email Address for sending a Confirmation Email from.', 'civicrm-event-organiser' ); ?></p></div>
+			<?php endif; ?>
+		</td>
+	</tr>
+
 </table>
-
-<div class="send-email-toggle">
-
-	<table class="form-table">
-
-		<tr valign="top">
-			<th scope="row"><label for="civi_eo_event_default_send_email_from_name"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "From Name"', 'civicrm-event-organiser' ); ?></label></th>
-			<td>
-				<input type="text" class="widefat" id="civi_eo_event_default_send_email_from_name" name="civi_eo_event_default_send_email_from_name" value="<?php echo esc_attr( $send_email_from_name ); ?>">
-				<p class="description"><?php esc_html_e( 'The name to send the Confirmation Email from.', 'civicrm-event-organiser' ); ?></p>
-				<?php if ( $send_email_from_name_required ) : ?>
-					<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please add a default "From Name" for the Confirmation Email.', 'civicrm-event-organiser' ); ?></p></div>
-				<?php endif; ?>
-			</td>
-		</tr>
-
-		<tr valign="top">
-			<th scope="row"><label for="civi_eo_event_default_send_email_from"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "From Email"', 'civicrm-event-organiser' ); ?></label></th>
-			<td>
-				<input type="text" class="widefat" id="civi_eo_event_default_send_email_from" name="civi_eo_event_default_send_email_from" value="<?php echo esc_attr( $send_email_from ); ?>">
-				<p class="description"><?php esc_html_e( 'The Email Address to send the Confirmation Email from.', 'civicrm-event-organiser' ); ?></p>
-				<?php if ( $send_email_from_required ) : ?>
-					<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please add a default Email Address for sending a Confirmation Email from.', 'civicrm-event-organiser' ); ?></p></div>
-				<?php endif; ?>
-			</td>
-		</tr>
-
-	</table>
-
-</div>
 
 <?php
 

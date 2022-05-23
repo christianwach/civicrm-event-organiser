@@ -385,6 +385,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 */
 	public function page_settings_css() {
 
+		/*
 		// Add admin css.
 		wp_enqueue_style(
 			'civi_eo_settings_css',
@@ -393,6 +394,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 			CIVICRM_WP_EVENT_ORGANISER_VERSION,
 			'all' // Media.
 		);
+		*/
 
 	}
 
@@ -403,6 +405,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 */
 	public function page_settings_js() {
 
+		/*
 		// Enqueue javascript.
 		wp_enqueue_script(
 			'civi_eo_settings_js',
@@ -411,6 +414,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 			CIVICRM_WP_EVENT_ORGANISER_VERSION, // Version.
 			true // In footer.
 		);
+		*/
 
 	}
 
