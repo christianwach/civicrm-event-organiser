@@ -58,6 +58,21 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 		</tr>
 	<?php endif; ?>
 
+	<?php if ( $status_sync != '' ) : ?>
+		<tr valign="top">
+			<th scope="row"><label for="civi_eo_event_default_status_sync"><?php esc_html_e( 'Sync between CiviCRM Event Status and EO Event Status', 'civicrm-event-organiser' ); ?></label></th>
+			<td>
+				<select id="civi_eo_event_default_status_sync" name="civi_eo_event_default_status_sync">
+					<?php echo $status_sync; ?>
+				</select>
+				<p class="description"><?php esc_html_e( 'Choose how the CiviCRM Event "Is Public" and "Is Active" settings sync with the Event Organiser "Status" and "Visibility" settings.', 'civicrm-event-organiser' ); ?></p>
+				<?php if ( $status_sync_required ) : ?>
+					<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please select a default for Event Status sync.', 'civicrm-event-organiser' ); ?></p></div>
+				<?php endif; ?>
+			</td>
+		</tr>
+	<?php endif; ?>
+
 	<?php
 
 	/**

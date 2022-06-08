@@ -560,6 +560,15 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Get all Event Types.
 		$types = $this->plugin->taxonomy->get_event_types_select();
 
+		// Get status sync.
+		$status_sync = $this->plugin->mapping->get_status_sync_select();
+
+		// Check for possibly missing default Status Sync setting.
+		$status_sync_required = false;
+		if ( 'fgffgs' == $this->admin->option_get( 'civi_eo_event_default_status_sync', 'fgffgs' ) ) {
+			$status_sync_required = true;
+		}
+
 		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php';
 
@@ -673,6 +682,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$civi_eo_event_default_send_email = '';
 		$civi_eo_event_default_send_email_from_name = '';
 		$civi_eo_event_default_send_email_from = '';
+		$civi_eo_event_default_status_sync = '';
 
 		// Get variables.
 		extract( $_POST );
@@ -710,6 +720,10 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Save Confirmation Email "From Email" option.
 		$civi_eo_event_default_send_email_from = sanitize_email( wp_unslash( $civi_eo_event_default_send_email_from ) );
 		$this->admin->option_save( 'civi_eo_event_default_send_email_from', $civi_eo_event_default_send_email_from );
+
+		// Sanitise and save option.
+		$civi_eo_event_default_status_sync = (int) $civi_eo_event_default_status_sync;
+		$this->admin->option_save( 'civi_eo_event_default_status_sync', $civi_eo_event_default_status_sync );
 
 		/**
 		 * Broadcast end of settings update.

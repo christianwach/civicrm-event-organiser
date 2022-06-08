@@ -551,15 +551,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$post_data['post_status'] = 'private';
 		}
 
+		// Get Status Sync setting.
+		$status_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_status_sync', 3 );
+
 		// Do we have a Post ID for this Event?
 		$eo_post_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $civi_event['id'] );
 
-		// Regardless of CiviCRM Event status: if the Event Organiser Event is private, keep it that way.
-		if ( $eo_post_id !== false ) {
-			$eo_event = get_post( $eo_post_id );
-			if ( ! empty( $eo_event->post_status ) && $eo_event->post_status == 'private' ) {
-				$post_data['post_status'] = $eo_event->post_status;
+		// "Do not sync" or "sync EO -> CiviCRM".
+		if ( $status_sync === 3 || $status_sync === 1 ) {
+
+			// Regardless of CiviCRM Event status, retain the Event Organiser Event status.
+			if ( $eo_post_id !== false ) {
+				$eo_event = get_post( $eo_post_id );
+				if ( ! empty( $eo_event->post_status ) ) {
+					$post_data['post_status'] = $eo_event->post_status;
+				}
 			}
+
 		}
 
 		// Remove hooks.

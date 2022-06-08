@@ -772,14 +772,41 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$civi_event['description'] = $post->post_content;
 		$civi_event['summary'] = wp_strip_all_tags( $post->post_excerpt );
 		$civi_event['created_date'] = $post->post_date;
-		$civi_event['is_public'] = 1;
 		$civi_event['participant_listing_id'] = null;
 
-		// If the Event is in draft mode, set as 'inactive'.
-		if ( $post->post_status == 'draft' ) {
+		// Get Status Sync setting.
+		$status_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_status_sync', 3 );
+
+		/*
+		 * For "Do not sync" (3) and "Sync CiviCRM -> EO" (2), we can leave out
+		 * the params and they will remain unchanged when updating a CiviCRM Event.
+		 *
+		 * When creating an Event, let's see...
+		 */
+		if ( $status_sync === 0 || $status_sync === 1 ) {
+
+			// Default both "status" settings to "false".
+			$civi_event['is_public'] = 0;
 			$civi_event['is_active'] = 0;
-		} else {
-			$civi_event['is_active'] = 1;
+
+			// If the Event is in "draft" or "pending" mode, set as 'not active' and 'not public'.
+			if ( $post->post_status === 'draft' || $post->post_status === 'pending' ) {
+				$civi_event['is_active'] = 0;
+				$civi_event['is_public'] = 0;
+			}
+
+			// If the Event is in "publish" or "future" mode, set as 'active' and 'public'.
+			if ( $post->post_status === 'publish' || $post->post_status === 'future' ) {
+				$civi_event['is_active'] = 1;
+				$civi_event['is_public'] = 1;
+			}
+
+			// If the Event is in "private" mode, set as 'active' and 'not public'.
+			if ( $post->post_status === 'private' ) {
+				$civi_event['is_active'] = 1;
+				$civi_event['is_public'] = 0;
+			}
+
 		}
 
 		// Get Venue for this Event.

@@ -750,4 +750,52 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 
 	}
 
+	/**
+	 * Get Status Sync settings formatted as a dropdown list.
+	 *
+	 * @since 0.7.2
+	 *
+	 * @return str $html Markup containing select options.
+	 */
+	public function get_status_sync_select() {
+
+		// Init return.
+		$html = '';
+
+		// Init build array.
+		$options = [];
+
+		// Init settings.
+		$settings = [
+			0 => __( 'Sync in both directions', 'civicrm-event-organiser' ),
+			1 => __( 'One-way sync: EO &rarr; CiviCRM', 'civicrm-event-organiser' ),
+			2 => __( 'One-way sync: CiviCRM &rarr; EO', 'civicrm-event-organiser' ),
+			3 => __( 'Do not sync', 'civicrm-event-organiser' ),
+		];
+
+		// Get existing setting.
+		$status_sync = $this->plugin->db->option_get( 'civi_eo_event_default_status_sync', 3 );
+
+		// Loop.
+		foreach ( $settings as $key => $setting ) {
+
+			// Set selected if this value is the same as the setting.
+			$selected = '';
+			if ( $key === (int) $status_sync ) {
+				$selected = ' selected="selected"';
+			}
+
+			// Construct option.
+			$options[] = '<option value="' . $key . '"' . $selected . '>' . $setting . '</option>';
+
+		}
+
+		// Create html.
+		$html = implode( "\n", $options );
+
+		// --<
+		return $html;
+
+	}
+
 } // Class ends.
