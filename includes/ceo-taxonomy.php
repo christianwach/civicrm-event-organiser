@@ -373,6 +373,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Rehook CiviCRM.
 		$this->hooks_civicrm_add();
 
+		// Add the Event Type ID to the Term's meta.
+		$this->add_term_meta( $term_id, intval( $event_type_id ) );
+
 	}
 
 	/**
