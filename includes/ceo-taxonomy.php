@@ -496,14 +496,19 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $event_type The CiviCRM Event Type.
+	 * @param array|object $event_type The CiviCRM Event Type.
 	 * @return array $result Array containing Event Organiser Event Category Term data.
 	 */
 	public function create_term( $event_type ) {
 
 		// Sanity check.
-		if ( ! is_array( $event_type ) ) {
+		if ( empty( $event_type ) ) {
 			return false;
+		}
+
+		// Cast as array.
+		if ( ! is_array( $event_type ) ) {
+			$event_type = (array) $event_type;
 		}
 
 		// Define description if present.
@@ -677,14 +682,19 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $event_type The CiviCRM Event Type.
+	 * @param array|object $event_type The CiviCRM Event Type.
 	 * @return int|bool $term_id The ID of the updated Event Organiser Event Category Term.
 	 */
 	public function get_term_id( $event_type ) {
 
 		// Sanity check.
-		if ( ! is_array( $event_type ) ) {
+		if ( empty( $event_type ) ) {
 			return false;
+		}
+
+		// Cast as array.
+		if ( ! is_array( $event_type ) ) {
+			$event_type = (array) $event_type;
 		}
 
 		// Init return.
@@ -918,7 +928,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.5
 	 *
-	 * @param array $event_type The array of CiviCRM Event Type data.
+	 * @param array|object $event_type The array of CiviCRM Event Type data.
 	 * @return WP_Term|bool $term The Term object, or false on failure.
 	 */
 	public function get_term_by_meta( $event_type ) {
@@ -928,13 +938,22 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return false;
 		}
 
+		// Extract value.
+		if ( is_array( $event_type ) ) {
+			$value = $event_type['id'];
+		} elseif ( is_object( $event_type ) ) {
+			$value = $event_type->id;
+		} else {
+			return false;
+		}
+
 		// Query Terms for the Term with the ID of the Event Type in meta data.
 		$args = [
 			'hide_empty' => false,
 			'meta_query' => [
 				[
 					'key' => $this->term_meta_key,
-					'value' => $event_type['id'],
+					'value' => $value,
 					'compare' => '=',
 				],
 			],
@@ -1656,13 +1675,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			foreach ( $event_types as $key => $event_type ) {
 
 				// Get type value.
-				$event_type_value = absint( $event_type['value'] );
+				$event_type_value = (int) $event_type['value'];
 
 				// Init selected.
 				$selected = '';
 
 				// Override selected if this value is the same as in the Post.
-				if ( $existing_value === $event_type_value ) {
+				if ( (int) $existing_value === $event_type_value ) {
 					$selected = ' selected="selected"';
 				}
 
