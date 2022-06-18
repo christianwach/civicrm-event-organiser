@@ -969,8 +969,6 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Log a message and bail if there's an error.
 		if ( is_wp_error( $terms ) ) {
-
-			// Write error message.
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -981,7 +979,6 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 				'backtrace' => $trace,
 			], true ) );
 			return false;
-
 		}
 
 		// If we get more than one, WTF?
@@ -1255,19 +1252,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Get the actual Event Type being deleted.
-		$event_type = $this->get_event_type_by_id( $event_type->id );
-		if ( $event_type === false ) {
-			return;
-		}
-
-		// Bail if it's not an Event Type.
-		$opt_group_id = $this->get_event_types_optgroup_id();
-		if ( $opt_group_id === false || $opt_group_id != $event_type['option_group_id'] ) {
+		$event_type_full = $this->get_event_type_by_id( $event_type->id );
+		if ( $event_type_full === false ) {
 			return;
 		}
 
 		// Bail if there's no Term ID.
-		$term_id = $this->get_term_id( $event_type );
+		$term_id = $this->get_term_id( $event_type_full );
 		if ( $term_id === false ) {
 			return;
 		}
@@ -1435,7 +1426,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	}
 
 	/**
-	 * Get a CiviCRM Event Type by Term.
+	 * Get a CiviCRM Event Type ID for a given Term.
 	 *
 	 * @since 0.4.2
 	 *
@@ -1444,10 +1435,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 */
 	public function get_event_type_id( $term ) {
 
-		// First check if the Term has the ID in its "term meta".
+		// Return early if the Term has the ID in its Term meta.
 		$event_type_id = $this->get_term_meta( $term->term_id );
-
-		// Short-circuit if we found it.
 		if ( $event_type_id !== false ) {
 			return $event_type_id;
 		}
@@ -1457,10 +1446,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return false;
 		}
 
-		// Get option group ID.
+		// Get Option Group ID.
 		$opt_group_id = $this->get_event_types_optgroup_id();
-
-		// Error check.
 		if ( $opt_group_id === false ) {
 			return false;
 		}
@@ -1472,41 +1459,37 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			'label' => $term->name,
 			'options' => [
 				'sort' => 'weight ASC',
+				'limit' => 1,
 			],
 		];
 
 		// Get the item.
-		$result = civicrm_api( 'OptionValue', 'getsingle', $params );
+		$result = civicrm_api( 'OptionValue', 'get', $params );
 
-		// Bail if we get an error.
+		// Log and bail if we get an error.
 		if ( ! empty( $result['is_error'] ) && $result['is_error'] == '1' ) {
-
-			/*
-			 * Sometimes we want to log failures, but not usually. When no type
-			 * is found, it's not an error as such; it can just mean there's no
-			 * existing Event Type. Uncomment the error logging code to see
-			 * what's going on.
-			 */
-
-			/*
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
 				'method' => __METHOD__,
-				'message' => $result['error_message'],
 				'params' => $params,
+				'result' => $result,
 				'backtrace' => $trace,
 			], true ) );
-			*/
-
-			// --<
 			return false;
-
 		}
 
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return false;
+		}
+
+		// The result set should contain only one item.
+		$event_type = array_pop( $result['values'] );
+
 		// Sanity check ID and return if valid.
-		if ( isset( $result['id'] ) && is_numeric( $result['id'] ) && $result['id'] > 0 ) {
-			return intval( $result['id'] );
+		if ( ! empty( $event_type['id'] ) && is_numeric( $event_type['id'] ) ) {
+			return (int) $event_type['id'];
 		}
 
 		// If all the above fails.
@@ -1520,70 +1503,26 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * @since 0.4.2
 	 *
 	 * @param int $event_type_id The numeric ID of the CiviCRM Event Type.
-	 * @return int|bool $value The value of the CiviCRM Event Type (or false on failure)
+	 * @return int|bool $value The value of the CiviCRM Event Type, or false on failure.
 	 */
 	public function get_event_type_value( $event_type_id ) {
 
-		// Bail if we fail to init CiviCRM.
-		if ( ! $this->plugin->civi->is_active() ) {
-			return false;
+		// Init return.
+		$value = false;
+
+		// Get the full Event Type.
+		$event_type = $this->get_event_type_by_id( $event_type_id );
+		if ( $event_type === false ) {
+			return $value;
 		}
 
-		// Get option group ID.
-		$opt_group_id = $this->get_event_types_optgroup_id();
-
-		// Error check.
-		if ( $opt_group_id === false ) {
-			return false;
+		// Overwrite return if we get a value.
+		if ( ! empty( $event_type['value'] ) && is_numeric( $event_type['value'] ) ) {
+			$value = (int) $event_type['value'];
 		}
 
-		// Define params to get item.
-		$params = [
-			'version' => 3,
-			'option_group_id' => $opt_group_id,
-			'id' => $event_type_id,
-		];
-
-		// Get the item.
-		$result = civicrm_api( 'OptionValue', 'getsingle', $params );
-
-		/*
-		[result] => Array
-			(
-				[id] => 115
-				[option_group_id] => 15
-				[label] => Meeting
-				[value] => 4
-				[name] => Meeting
-				[filter] => 0
-				[weight] => 4
-				[is_optgroup] => 0
-				[is_reserved] => 0
-				[is_active] => 1
-			)
-		*/
-
-		// Log and bail if there's an error.
-		if ( ! empty( $result['is_error'] ) ) {
-			$e = new Exception();
-			$trace = $e->getTraceAsString();
-			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => $result['error_message'],
-				'result' => $result,
-				'params' => $params,
-				'backtrace' => $trace,
-			], true ) );
-			return false;
-		}
-
-		// Sanity check.
-		if ( isset( $result['value'] ) && is_numeric( $result['value'] ) && $result['value'] > 0 ) {
-			return $result['value'];
-		}
-
-		// If all the above fails.
-		return false;
+		// --<
+		return $value;
 
 	}
 
@@ -1766,7 +1705,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * @since 0.4.2
 	 *
 	 * @param int $event_type_id The numeric ID of a CiviCRM Event Type.
-	 * @return array $event_type The CiviCRM Event Type data.
+	 * @return array|bool $event_type CiviCRM Event Type data, or false on failure.
 	 */
 	public function get_event_type_by_id( $event_type_id ) {
 
@@ -1777,8 +1716,6 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Get option group ID.
 		$opt_group_id = $this->get_event_types_optgroup_id();
-
-		// Error check.
 		if ( $opt_group_id === false ) {
 			return false;
 		}
@@ -1790,8 +1727,21 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			'id' => $event_type_id,
 		];
 
-		// Get them (descriptions will be present if not null).
-		$event_type = civicrm_api( 'OptionValue', 'getsingle', $params );
+		// Call the CiviCRM API.
+		$result = civicrm_api( 'OptionValue', 'get', $params );
+
+		// Bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+			return false;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return false;
+		}
+
+		// The result set should contain only one item.
+		$event_type = array_pop( $result['values'] );
 
 		// --<
 		return $event_type;
@@ -1804,7 +1754,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * @since 0.4.2
 	 *
 	 * @param int $event_type_value The numeric value of a CiviCRM Event Type.
-	 * @return array $event_type CiviCRM Event Type data.
+	 * @return array|bool $event_type CiviCRM Event Type data, or false on failure.
 	 */
 	public function get_event_type_by_value( $event_type_value ) {
 
@@ -1828,8 +1778,21 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			'value' => $event_type_value,
 		];
 
-		// Get them (descriptions will be present if not null).
-		$event_type = civicrm_api( 'OptionValue', 'getsingle', $params );
+		// Call the CiviCRM API.
+		$result = civicrm_api( 'OptionValue', 'get', $params );
+
+		// Bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+			return false;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return false;
+		}
+
+		// The result set should contain only one item.
+		$event_type = array_pop( $result['values'] );
 
 		// --<
 		return $event_type;
