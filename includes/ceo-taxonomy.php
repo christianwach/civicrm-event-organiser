@@ -1260,6 +1260,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			return;
 		}
 
+		// Bail if it's not an Event Type.
+		$opt_group_id = $this->get_event_types_optgroup_id();
+		if ( $opt_group_id === false || $opt_group_id != $event_type->option_group_id ) {
+			return;
+		}
+
 		// Bail if there's no Term ID.
 		$term_id = $this->get_term_id( $event_type );
 		if ( $term_id === false ) {
