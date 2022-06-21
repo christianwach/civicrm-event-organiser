@@ -194,12 +194,32 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		 */
 		$fields = get_fields( $args['post_id'] );
 
+		// Add our data to the params.
+		$args['fields'] = $fields;
+
 		// We only ever update a CiviCRM Event via ACF.
 		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10 );
 
-		// Loop through the CiviCRM Events and update.
+		// Loop through the CiviCRM Events.
 		foreach ( $correspondences as $event_id ) {
-			$this->update_from_fields( $event_id, $fields );
+
+			// Update each CiviCRM Event.
+			$event = $this->update_from_fields( $event_id, $fields );
+
+			// Add our data to the params.
+			$args['event_id'] = $event_id;
+			$args['event'] = $event;
+			$args['post'] = $post;
+
+			/**
+			 * Broadcast that an Event has been updated when ACF Fields were saved.
+			 *
+			 * @since 0.7.2
+			 *
+			 * @param array $args The updated array of WordPress params.
+			 */
+			do_action( 'ceo/acf/event/acf_fields_saved', $args );
+
 		}
 
 		// Restore hook.
