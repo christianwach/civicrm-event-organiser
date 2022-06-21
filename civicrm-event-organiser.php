@@ -2,7 +2,7 @@
 /**
  * Plugin Name: CiviCRM Event Organiser
  * Description: Sync Event Organiser Events with CiviCRM Events.
- * Version: 0.7.2a
+ * Version: 0.7.2
  * Author: Christian Wach
  * Author URI: https://haystack.co.uk
  * Plugin URI: https://github.com/christianwach/civicrm-event-organiser
@@ -16,7 +16,7 @@
 
 
 // Set our version here.
-define( 'CIVICRM_WP_EVENT_ORGANISER_VERSION', '0.7.2a' );
+define( 'CIVICRM_WP_EVENT_ORGANISER_VERSION', '0.7.2' );
 
 // Store reference to this file.
 if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_FILE' ) ) {
