@@ -320,7 +320,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
 				'method' => __METHOD__,
-				'message' => __( 'A numerical ID must be present to update an Event.', 'civicrm-event-organiser' ),
+				'message' => __( 'A numeric ID must be present to update an Event.', 'civicrm-event-organiser' ),
 				'event' => $event,
 				'backtrace' => $trace,
 			], true ) );
