@@ -1377,13 +1377,15 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				$dates = $this->plugin->eo->get_all_dates( $event->ID );
 
 				// Update CiviCRM Event - or create if it doesn't exist.
-				$this->plugin->civi->event->update_civi_events( $event, $dates );
+				$correspondences = $this->plugin->civi->event->update_civi_events( $event, $dates );
 
 				// Make an array of params.
 				$args = [
+					'post_id' => $event->ID,
 					'event_id' => $event->ID,
 					'event' => $event,
 					'dates' => $dates,
+					'correspondences' => $correspondences,
 				];
 
 				/**
@@ -1391,7 +1393,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				 *
 				 * Used internally to:
 				 *
-				 * - Update the Custom Fields synced via CiviCRM ACF Integration
+				 * * Update the Custom Fields synced via CiviCRM ACF Integration (obsolete)
+				 * * Update the Custom Fields synced via CiviCRM Profile Sync
 				 *
 				 * @since 0.5.2
 				 *
