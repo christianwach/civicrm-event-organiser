@@ -1515,6 +1515,38 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			// Loop.
 			foreach ( $events['values'] as $civi_event ) {
 
+				// Do we have an existing Post ID for this Event?
+				$existing_event_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $civi_event['id'] );
+
+				// If there's an existing Event, get Occurrence ID.
+				$existing_occurrence_id = false;
+				if ( ! empty( $existing_event_id ) ) {
+					/*
+					 * In this context, a CiviCRM Event can only have an Event Organiser Event
+					 * with a single Occurrence associated with it, so use first item.
+					 */
+					$occurrences = eo_get_the_occurrences_of( $existing_event_id );
+					$keys = array_keys( $occurrences );
+					$existing_occurrence_id = array_pop( $keys );
+				}
+
+				// Make an array of params for the pre.
+				$args_pre = [
+					'event_id' => $existing_event_id,
+					'occurrence_id' => $existing_occurrence_id,
+					'civi_event_id' => $civi_event['id'],
+					'civi_event' => $civi_event,
+				];
+
+				/**
+				 * Broadcast that the CiviCRM Event is about to be synced.
+				 *
+				 * @since 0.7.3
+				 *
+				 * @param array $args_pre The array of params before the CiviCRM Event is synced.
+				 */
+				do_action( 'civicrm_event_organiser_admin_civi_to_eo_sync_pre', $args_pre );
+
 				// Update a single Event Organiser Event - or create if it doesn't exist.
 				$event_id = $this->plugin->eo->update_event( $civi_event );
 
@@ -1549,7 +1581,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				 *
 				 * Used internally to:
 				 *
-				 * - Update the ACF Fields synced via CiviCRM ACF Integration
+				 * * Update the ACF Fields synced via CiviCRM ACF Integration (obsolete)
+				 * * Update the ACF Fields synced via CiviCRM Profile Sync
 				 *
 				 * @since 0.5.2
 				 *
