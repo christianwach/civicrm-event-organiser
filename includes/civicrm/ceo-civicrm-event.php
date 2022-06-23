@@ -909,7 +909,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @param object $post The WP Post object.
 	 * @param array $dates Array of properly formatted dates.
-	 * @return array|bool $correspondences Array of correspondences, keyed by Occurrence ID.
+	 * @return array|bool $correspondences Array of correspondences keyed by Occurrence ID, or false on failure.
 	 */
 	public function create_civi_events( $post, $dates ) {
 
@@ -979,7 +979,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @param object $post The WP Post object.
 	 * @param array $dates Array of properly formatted dates.
-	 * @return array $correspondences Array of correspondences, keyed by Occurrence ID.
+	 * @return array|bool $correspondences Array of correspondences keyed by Occurrence ID, or false on failure.
 	 */
 	public function update_civi_events( $post, $dates ) {
 
@@ -1290,6 +1290,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Store new correspondences and orphans.
 		$this->plugin->mapping->store_event_correspondences( $post->ID, $new_correspondences, $orphans );
+
+		// --<
+		return $new_correspondences;
 
 	}
 
