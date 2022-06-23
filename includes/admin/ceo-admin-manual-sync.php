@@ -1532,6 +1532,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 				// Make an array of params for the pre.
 				$args_pre = [
+					'post_id' => $existing_event_id,
 					'event_id' => $existing_event_id,
 					'occurrence_id' => $existing_occurrence_id,
 					'civi_event_id' => $civi_event['id'],
@@ -1570,6 +1571,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 				// Make an array of params.
 				$args = [
+					'post_id' => $event_id,
 					'event_id' => $event_id,
 					'occurrence_id' => $occurrence_id,
 					'civi_event_id' => $civi_event['id'],
