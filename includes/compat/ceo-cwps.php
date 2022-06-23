@@ -209,6 +209,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			// Add our data to the params.
 			$args['event_id'] = $event_id;
 			$args['event'] = $event;
+			$args['post_id'] = $event_id;
 			$args['post'] = $post;
 
 			/**
