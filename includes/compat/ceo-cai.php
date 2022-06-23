@@ -160,8 +160,8 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10 );
 
 		// Loop through the CiviCRM Events and update.
-		foreach ( $correspondences as $event_id ) {
-			$this->update_from_fields( $event_id, $fields );
+		foreach ( $correspondences as $occurrence_id => $civi_event_id ) {
+			$this->update_from_fields( $civi_event_id, $fields );
 		}
 
 		// Restore hook.
@@ -591,9 +591,6 @@ class CiviCRM_WP_Event_Organiser_CAI {
 	 * @param array $args The array of CiviCRM Event and Event Organiser Event params.
 	 */
 	public function sync_to_civi( $args ) {
-
-		// Set Post ID to be compatible with CAI.
-		$args['post_id'] = $args['event_id'];
 
 		// Pass on.
 		$this->acf_fields_saved( $args );
