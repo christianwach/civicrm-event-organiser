@@ -125,6 +125,9 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 */
 	public function register_hooks() {
 
+		// Include any Field Types that we have defined after ACFE does.
+		add_action( 'acf/include_field_types', [ $this, 'register_field_types' ], 100 );
+
 		// Listen for events from the Mapper that require Event updates.
 		add_action( 'cwps/acf/mapper/acf_fields/saved', [ $this, 'acf_fields_saved' ], 10, 1 );
 
@@ -151,6 +154,25 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 		// Listen for an Event Organiser Event being synced to a CiviCRM Event.
 		add_action( 'civicrm_event_organiser_admin_eo_to_civi_sync', [ $this, 'sync_to_civi' ], 10, 1 );
+
+	}
+
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Registers our Field Types for ACF.
+	 *
+	 * @since 0.7.3
+	 *
+	 * @param string $version The installed version of ACF.
+	 */
+	public function register_field_types( $version ) {
+
+		// Include Field Types.
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/acf/fields/ceo-acf-field-civicrm-event-id.php';
+
+		// Init Field Types.
+		new CEO_ACF_Custom_CiviCRM_Event_ID_Field( $this );
 
 	}
 
