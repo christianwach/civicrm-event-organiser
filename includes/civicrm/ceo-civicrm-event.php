@@ -199,7 +199,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		);
 
 		// Add hidden field to hold the Attachment ID.
-		$hidden_field = $form->add( 'hidden', 'ceo_attachment_id', '0' );
+		$form->add( 'hidden', 'ceo_attachment_id', '0' );
 
 		// Build the placeholder image markup.
 		$placeholder_url = CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/placeholder.gif';
@@ -368,7 +368,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Add hidden field to hold the Attachment ID.
-		$hidden_field = $form->add( 'hidden', 'ceo_attachment_id', $attachment_id );
+		$form->add( 'hidden', 'ceo_attachment_id', $attachment_id );
 
 		// Get the image markup.
 		$placeholder_url = CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/placeholder.gif';

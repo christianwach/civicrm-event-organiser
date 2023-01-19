@@ -6,7 +6,6 @@
       <div class="ceo_attachment" style="position: relative;">
         {$ceo_attachment_markup}
       </div>
-      {$form.ceo_attachment_id}
       <button id="{$ceo_attachment_id_button_id}" class="button ceo_attachment_id">{$ceo_attachment_id_button}</button><br>
       <span class="description">{$ceo_attachment_id_help}</span>
     </td>
