@@ -60,7 +60,7 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 
 	<?php if ( $status_sync != '' ) : ?>
 		<tr valign="top">
-			<th scope="row"><label for="civi_eo_event_default_status_sync"><?php esc_html_e( 'Sync between CiviCRM Event Status and EO Event Status', 'civicrm-event-organiser' ); ?></label></th>
+			<th scope="row"><label for="civi_eo_event_default_status_sync"><?php esc_html_e( 'Map CiviCRM Event Status and EO Event Status', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_status_sync" name="civi_eo_event_default_status_sync">
 					<?php echo $status_sync; ?>
