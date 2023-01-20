@@ -101,7 +101,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 */
 	public function register_hooks() {
 
-		// Add actions to intercept Event form.
+		// Add actions to inject "Feature Image" elements into the Event form.
 		add_action( 'civicrm_buildForm', [ $this, 'form_event_new' ], 10, 2 );
 		add_action( 'civicrm_buildForm', [ $this, 'form_event_edit' ], 10, 2 );
 		add_action( 'civicrm_buildForm', [ $this, 'form_event_snippet' ], 10, 2 );
@@ -110,8 +110,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		// Filter Attachments to show only those for a User.
 		add_filter( 'ajax_query_attachments_args', [ $this, 'form_event_image_filter_media' ] );
 
-		// Intercept CiviCRM Event form submission process.
+		// Apply "Feature Image" after CiviCRM Event form submission process.
 		add_action( 'civicrm_postProcess', [ $this, 'form_event_process' ], 10, 2 );
+
+		// Add action to inject "Sync to WordPress" elements into the Event form.
+		add_action( 'civicrm_buildForm', [ $this, 'form_event_sync_page' ], 10, 2 );
+		add_action( 'civicrm_buildForm', [ $this, 'form_event_sync_snippet' ], 10, 2 );
 
 		// Intercept CiviCRM Event create/update/delete actions.
 		add_action( 'civicrm_post', [ $this, 'event_created' ], 10, 4 );
@@ -578,6 +582,97 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	// -------------------------------------------------------------------------
 
 	/**
+	 * Add sync template into Form for Events.
+	 *
+	 * @since 0.7.3
+	 *
+	 * @param string $formName The CiviCRM form name.
+	 * @param object $form The CiviCRM form object.
+	 */
+	public function form_event_sync_page( $formName, &$form ) {
+
+		// Is this the Event Info form?
+		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+			return;
+		}
+
+		// We want the page, so grab "Print" var from form controller.
+		$controller = $form->getVar( 'controller' );
+		if ( ! empty( $controller->_print ) ) {
+			return;
+		}
+
+		// We *must not* have a CiviCRM Event ID.
+		$event_id = $form->getVar( '_id' );
+		if ( ! empty( $event_id ) ) {
+			return;
+		}
+
+		// Disallow users without permission to create events.
+		if ( ! current_user_can( 'edit_events' ) ) {
+			return;
+		}
+
+		// Inject template.
+		$this->form_event_sync_template( $formName, $form );
+
+	}
+
+	/**
+	 * Add sync template into Form for Events.
+	 *
+	 * @since 0.7.3
+	 *
+	 * @param string $formName The CiviCRM form name.
+	 * @param object $form The CiviCRM form object.
+	 */
+	public function form_event_sync_snippet( $formName, &$form ) {
+
+		// Is this the Event Info form?
+		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+			return;
+		}
+
+		// We want the snippet, so grab "Print" var from form controller.
+		$controller = $form->getVar( 'controller' );
+		if ( empty( $controller->_print ) || $controller->_print !== 'json' ) {
+			return;
+		}
+
+		// Disallow users without permission to create events.
+		if ( ! current_user_can( 'edit_events' ) ) {
+			return;
+		}
+
+		// Inject template.
+		$this->form_event_sync_template( $formName, $form );
+
+	}
+
+	/**
+	 * Insert template block into the page.
+	 *
+	 * @since 0.7.3
+	 *
+	 * @param string $formName The CiviCRM form name.
+	 * @param object $form The CiviCRM form object.
+	 */
+	private function form_event_sync_template( $formName, &$form ) {
+
+		// Add our checkbox.
+		$label = '<strong>' . __( 'Sync this Event to WordPress now', 'civicrm-event-organiser' ) . '</strong>';
+		$form->add( 'checkbox', 'ceo_event_sync_checkbox', $label );
+
+		// Insert template block into the page.
+		CRM_Core_Region::instance( 'page-body' )->add( [
+			'template' => 'ceo-event-sync.tpl',
+		] );
+
+	}
+
+	// -------------------------------------------------------------------------
+
+	/**
 	 * Create an Event Organiser Event when a CiviCRM Event is created.
 	 *
 	 * @since 0.1
@@ -607,6 +702,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Kick out if the Event is a template.
 		if ( ! empty( $objectRef->is_template ) ) {
+			return;
+		}
+
+		// Bail if our sync checkbox is not checked.
+		if ( ! isset( $_POST['ceo_event_sync_checkbox'] ) || 1 != $_POST['ceo_event_sync_checkbox'] ) {
 			return;
 		}
 
@@ -672,6 +772,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Kick out if the Event is a template.
 		if ( ! empty( $objectRef->is_template ) ) {
+			return;
+		}
+
+		// Bail if our sync checkbox is not checked.
+		if ( ! isset( $_POST['ceo_event_sync_checkbox'] ) || 1 != $_POST['ceo_event_sync_checkbox'] ) {
 			return;
 		}
 
