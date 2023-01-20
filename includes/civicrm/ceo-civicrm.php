@@ -222,4 +222,24 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 	}
 
+	/**
+	 * Utility for de-nullifying CiviCRM data.
+	 *
+	 * @since 0.7.3
+	 *
+	 * @param mixed $value The existing value.
+	 * @return mixed $value The cleaned value.
+	 */
+	public function denullify( $value ) {
+
+		// Catch inconsistent CiviCRM "empty-ish" values.
+		if ( ! empty( $value ) && ( $value === 'null' || $value === 'NULL' ) ) {
+			$value = '';
+		}
+
+		// --<
+		return $value;
+
+	}
+
 } // Class ends.

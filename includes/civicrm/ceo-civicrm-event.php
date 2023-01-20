@@ -700,8 +700,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			return;
 		}
 
-		// Kick out if the Event is a template.
-		if ( ! empty( $objectRef->is_template ) ) {
+		// Bail if the Event is a template.
+		if ( isset( $objectRef->is_template ) && ! empty( $this->civicrm->denullify( $objectRef->is_template ) ) ) {
 			return;
 		}
 
@@ -770,8 +770,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			return;
 		}
 
-		// Kick out if the Event is a template.
-		if ( ! empty( $objectRef->is_template ) ) {
+		// Bail if the Event is a template.
+		if ( isset( $objectRef->is_template ) && ! empty( $this->civicrm->denullify( $objectRef->is_template ) ) ) {
 			return;
 		}
 
