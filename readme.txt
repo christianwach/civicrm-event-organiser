@@ -22,7 +22,11 @@ A WordPress plugin for syncing Event Organiser Events, Venues and Event Categori
 
 This plugin is compatible with [CiviCRM Profile Sync](https://wordpress.org/plugins/civicrm-wp-profile-sync/) which enables integration of Custom Fields on CiviCRM Events with ACF Fields attached to the Event Organiser "Event" Post Type.
 
-*Important note:* Please make sure you have *CiviCRM Profile Sync* version 0.4 or greater.
+*Important note:* Please make sure you have *CiviCRM Profile Sync* version 0.5 or greater.
+
+*CiviCRM Event Organiser* supplies a custom ACF Field called "CiviCRM Event ID" which can be used for Event Organiser Events that have a one-to-one correspondence with CiviCRM Events. The field *will not work* as expected for synced recurring Events.
+
+This ACF Field is useful if, for example, you want to embed an ACF Extended form in an Event Organiser Event template - because the form can access the ID of the synced CiviCRM Event and target it for various operations. Use the syntax `{get_field:your_civicrm_event_id_field}` to access the CiviCRM Event ID.
 
 ### Known Issues
 

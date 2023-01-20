@@ -13,25 +13,31 @@ Keep Event Organiser plugin Events in sync with CiviCRM Events.
 
 ---
 
-### Description
+## Description
 
 A *WordPress* plugin for syncing *Event Organiser* plugin Events with *CiviCRM* Events. The plugin syncs *Event Organiser* Events, Venues and Event Categories to their corresponding entities in CiviCRM.
 
 *Important note:* Please do not use with *CiviCRM 5.47*. Your Events in CiviCRM will not respect Daylight Savings offsets.
 
-#### ACF Integration
+### ACF Integration
 
 This plugin is compatible with [CiviCRM Profile Sync](https://wordpress.org/plugins/civicrm-wp-profile-sync/) which enables integration of Custom Fields on CiviCRM Events with ACF Fields attached to the Event Organiser "Event" Post Type.
 
-*Important note:* Please make sure you have *CiviCRM Profile Sync* version 0.4 or greater.
+*Important note:* Please make sure you have *CiviCRM Profile Sync* version 0.5 or greater.
 
-#### Apple Calendar compatibility
+#### CiviCRM Event ID Field
+
+*CiviCRM Event Organiser* supplies a custom ACF Field called "CiviCRM Event ID" which can be used for Event Organiser Events that have a one-to-one correspondence with CiviCRM Events. The field *will not work* as expected for synced recurring Events.
+
+This ACF Field is useful if, for example, you want to embed an ACF Extended form in an Event Organiser Event template - because the form can access the ID of the synced CiviCRM Event and target it for various operations. Use the syntax `{get_field:your_civicrm_event_id_field}` to access the CiviCRM Event ID.
+
+### Apple Calendar compatibility
 
 There is an issue with [Apple Calendar's display of Event Organiser iCal feeds](https://github.com/stephenharris/Event-Organiser/issues/356) which means that Apple Calendar requires special handling. To solve this, you can install the [Event Organiser ICS Feed for Apple Calendar](https://github.com/christianwach/event-organiser-apple-cal) plugin and use its shortcode instead of the one supplied by Event Organiser.
 
 ---
 
-### Requirements
+## Requirements
 
 This plugin recommends a minimum of *WordPress 4.9* and *CiviCRM 5.13*.
 
@@ -42,19 +48,19 @@ It also requires:
 
 Be aware that this plugin is in active development. Test often, test thoroughly and open an issue if you find a problem.
 
-#### Locations fixes
+### Locations fixes
 
 If you are using a version of CiviCRM lower than *CiviCRM 5.49.0* then you should apply [this patch](https://github.com/civicrm/civicrm-core/pull/23041) to get Event Locations to work as expected.
 
 ---
 
-### Installation
+## Installation
 
 Note: If installing on WordPress multisite, do not network-activate *CiviCRM Event Organiser*. Only activate it on the sites that *Event Organiser* is activated - even if *Event Organiser* is network-activated.
 
 There are two ways to install from GitHub:
 
-##### ZIP Download
+#### ZIP Download
 
 If you have downloaded *CiviCRM Event Organiser* as a ZIP file from the GitHub repository, do the following to install and activate the plugin:
 
@@ -63,20 +69,20 @@ If you have downloaded *CiviCRM Event Organiser* as a ZIP file from the GitHub r
 3. Go to the plugin's admin page and follow the instructions
 4. You are done!
 
-##### git clone
+#### git clone
 
 If you have cloned the code from GitHub, it is assumed that you know what you're doing.
 
 ---
 
-### Using CiviCRM Event Organiser
+## Using CiviCRM Event Organiser
 
 Now that you've installed the plugin, you'll want to find out:
 
 * How to [configure the CiviCRM Event Organiser settings](/docs/settings.md).
 * How to [add synced Events to your website](/docs/events.md).
 
-#### Known Issues
+### Known Issues
 
 There is currently no proper integration with *CiviCRM's* implementation of repeating events in version 4.7.n because, at present, *CiviCRM* does not save (or expose) the schedule that generates the sequence. To get around this limitation, this plugin prioritises a workflow based on creating events in *Event Organiser* and then (optionally, via the "CiviCRM Settings" metabox on the event's edit page) passing the data over to *CiviCRM* when requested.
 
