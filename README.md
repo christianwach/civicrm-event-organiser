@@ -5,7 +5,7 @@
 **Tags:** civicrm, event organiser, events, sync<br/>
 **Requires at least:** 4.9<br/>
 **Tested up to:** 6.1<br/>
-**Stable tag:** 0.7.3<br/>
+**Stable tag:** 0.7.4a<br/>
 **License:** GPLv2 or later<br/>
 **License URI:** https://www.gnu.org/licenses/gpl-2.0.html
 
