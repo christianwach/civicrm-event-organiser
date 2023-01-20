@@ -144,7 +144,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_new( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName != 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
 			return;
 		}
 
@@ -259,7 +259,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_edit( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName != 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
 			return;
 		}
 
@@ -338,7 +338,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_snippet( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName != 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
 			return;
 		}
 
@@ -540,7 +540,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_process( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName != 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
 			return;
 		}
 
