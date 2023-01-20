@@ -22,8 +22,8 @@ defined( 'ABSPATH' ) || exit;
 </style>
 
 <ul class="civi_eo_event_list">
-	<?php foreach ( $links as $link ) : ?>
-		<li><?php echo $link; ?></li>
+	<?php foreach ( $links as $item ) : ?>
+		<li><?php echo $item; ?></li>
 	<?php endforeach; ?>
 </ul>
 

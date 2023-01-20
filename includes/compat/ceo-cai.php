@@ -535,7 +535,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 			}
 		}
 
-		// CiviCRM Event data contains the associated Custom Field data! *smile*
+		// CiviCRM Event data contains the associated Custom Field data.
 		$custom_field_data = [];
 		foreach ( $args['civi_event'] as $key => $value ) {
 			// CiviCRM only appends populated Custom Fields.

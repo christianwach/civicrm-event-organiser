@@ -58,8 +58,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 */
 	public function register_hooks() {
 
+		/*
 		// Add callbacks for LocBlock updates.
-		//add_action( 'civicrm_post', [ $this, 'locblock_edited' ], 10, 4 );
+		add_action( 'civicrm_post', [ $this, 'locblock_edited' ], 10, 4 );
+		*/
 
 	}
 
@@ -484,7 +486,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			// Get Country and State name.
 			'api.Address.getsingle' => [
 				'sequential' => 1,
-				'id' => "\$value.address_id",
+				'id' => '$value.address_id',
 				'return' => [
 					'country_id.name',
 					'state_province_id.name',

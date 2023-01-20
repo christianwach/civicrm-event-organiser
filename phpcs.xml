@@ -24,30 +24,31 @@
 		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing.BlankLineAfterEnd" />
 
 		<!-- Not a fan of arrow or equals alignment -->
-		<exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned" />
 		<exclude name="Generic.Formatting.MultipleStatementAlignment.NotSameWarning" />
+		<exclude name="WordPress.Arrays.MultipleStatementAlignment.DoubleArrowNotAligned" />
 
 		<!-- PSR4 -->
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 
 		<!-- Remove some checks to allow phpcbf to run in bulk mode -->
-		<exclude name="WordPress.PHP.StrictComparisons.LooseComparison" />
-		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
+		<exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
+		<exclude name="PSR2.ControlStructures.SwitchDeclaration.BodyOnNextLineCASE" />
 		<exclude name="Squiz.Commenting.InlineComment.NoSpaceBefore" />
 		<exclude name="Squiz.PHP.CommentedOutCode.Found" />
-		<exclude name="PSR2.ControlStructures.SwitchDeclaration.BodyOnNextLineCASE" />
-		<exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
+		<exclude name="Squiz.Commenting.BlockComment.HasEmptyLineBefore" />
 		<exclude name="Squiz.Commenting.InlineComment.SpacingAfterAtFunctionEnd" />
-		<exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
+		<exclude name="WordPress.PHP.StrictComparisons.LooseComparison" />
+		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
+		<exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
 		<exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped" />
 
 		<!-- Remove when error logging has been moved to a function -->
-		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
-		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
-		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
 		<exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />
+		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
+		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
+		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
 
 	</rule>
 
@@ -66,7 +67,7 @@
 	<!-- Nesting levels -->
 	<rule ref="Generic.Metrics.NestingLevel">
 		<properties>
-			<property name="absoluteNestingLevel" value="3" />
+			<property name="absoluteNestingLevel" value="5" />
 		</properties>
 	</rule>
 

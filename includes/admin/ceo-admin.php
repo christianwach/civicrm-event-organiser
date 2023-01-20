@@ -298,8 +298,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// Construct message.
 		$message = sprintf(
-			__( 'CiviCRM Event Organiser needs your attention. Please visit the <a href="%s">Settings Page</a>.', 'civicrm-event-organiser' ),
-			$urls['settings']
+			/* translators: 1: The opening anchor tag, 2: The closing anchor tag. */
+			__( 'CiviCRM Event Organiser needs your attention. Please visit the %1$sSettings Page%2$s.', 'civicrm-event-organiser' ),
+			'<a href="' . $urls['settings'] . '">',
+			'</a>'
 		);
 
 		// Show it.

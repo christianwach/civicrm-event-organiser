@@ -77,8 +77,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Intercept "Save Event".
 		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10, 1 );
 
+		/*
 		// Intercept "Update Event" - though by misuse of a filter.
-		//add_filter( 'eventorganiser_update_event_event_data', [ $this, 'intercept_update_event' ], 10, 3 );
+		add_filter( 'eventorganiser_update_event_event_data', [ $this, 'intercept_update_event' ], 10, 3 );
+		*/
 
 		// Intercept before "Delete Post".
 		add_action( 'before_delete_post', [ $this, 'intercept_before_delete_post' ], 10, 1 );
@@ -98,8 +100,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Intercept "Delete Occurrence" in admin calendar.
 		add_action( 'eventorganiser_admin_calendar_occurrence_deleted', [ $this, 'occurrence_deleted' ], 10, 2 );
 
+		/*
 		// Debug.
-		//add_filter( 'eventorganiser_pre_event_content', [ $this, 'pre_event_content' ], 10, 2 );
+		add_filter( 'eventorganiser_pre_event_content', [ $this, 'pre_event_content' ], 10, 2 );
+		*/
 
 		// Add our Event meta box.
 		add_action( 'add_meta_boxes_event', [ $this, 'event_meta_boxes' ], 11 );
@@ -187,7 +191,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function intercept_save_event( $post_id ) {
 
 		// Save custom Event Organiser Event components.
-		$this->_save_event_components( $post_id );
+		$this->save_event_components( $post_id );
 
 		// Sync checkbox is only shown to people who can publish Posts.
 		if ( ! current_user_can( 'publish_posts' ) ) {
@@ -195,10 +199,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Is our checkbox checked?
-		if ( ! isset( $_POST['civi_eo_event_sync'] ) ) {
-			return;
-		}
-		if ( $_POST['civi_eo_event_sync'] != 1 ) {
+		$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
+		if ( '1' !== (string) $sync ) {
 			return;
 		}
 
@@ -208,8 +210,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Get all dates.
 		$dates = $this->get_all_dates( $post_id );
 
+		/*
 		// Get Event data.
-		//$schedule = eo_get_event_schedule( $post_id );
+		$schedule = eo_get_event_schedule( $post_id );
+		*/
 
 		// Prevent recursion.
 		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_created' ], 10 );
@@ -296,10 +300,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( ! doing_action( 'delete_post' ) ) {
 
 			// Bail if our sync checkbox is not checked.
-			if ( ! isset( $_POST['civi_eo_event_sync'] ) ) {
-				return;
-			}
-			if ( $_POST['civi_eo_event_sync'] != 1 ) {
+			$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
+			if ( '1' !== (string) $sync ) {
 				return;
 			}
 
@@ -360,13 +362,15 @@ class CiviCRM_WP_Event_Organiser_EO {
 			return;
 		}
 
+		/*
 		// Delete all the stored CiviCRM Event correspondences for this Event Organiser Event.
-		//$this->plugin->mapping->clear_event_correspondences( $post_id, $correspondences );
+		$this->plugin->mapping->clear_event_correspondences( $post_id, $correspondences );
 
 		// TODO: Decide if we delete CiviCRM Events.
 
 		// Delete those CiviCRM Events - not used at present.
-		//$this->plugin->civi->event->delete_civi_events( $correspondences );
+		$this->plugin->civi->event->delete_civi_events( $correspondences );
+		*/
 
 	}
 
@@ -818,8 +822,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 			return $event_content;
 		}
 
+		/*
 		// Let's see.
-		//$this->get_participant_roles();
+		$this->get_participant_roles();
+		*/
 
 		// --<
 		return $event_content;
@@ -1001,7 +1007,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$link = '<a href="' . esc_url( $link ) . '">' . esc_html( $datetime_string ) . '</a>';
 
 			// Construct list item content.
-			$content = sprintf( __( 'Info and Settings for: %s', 'civicrm-event-organiser' ), $link );
+			$content = sprintf(
+				/* translators: %s: The formatted link to the Event. */
+				__( 'Info and Settings for: %s', 'civicrm-event-organiser' ),
+				$link
+			);
 
 			// Add to array.
 			$links[] = $content;
@@ -1043,6 +1053,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 */
 
 		// Get the ID of the displayed Event.
+		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		if ( ! isset( $object->_defaultValues['id'] ) ) {
 			return;
 		}
@@ -1050,6 +1061,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 			return;
 		}
 		$event_id = (int) $object->_defaultValues['id'];
+		// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
 		// Get the Post ID that this Event is mapped to.
 		$post_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $event_id );
@@ -1304,7 +1316,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 *
 	 * @param int $event_id The numeric ID of the Event.
 	 */
-	private function _save_event_components( $event_id ) {
+	private function save_event_components( $event_id ) {
 
 		// Save Online Registration.
 		$this->update_event_registration( $event_id );
@@ -1343,7 +1355,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 *
 	 * @param int $event_id The numeric ID of the Event.
 	 */
-	private function _delete_event_components( $event_id ) {
+	private function delete_event_components( $event_id ) {
 
 		// Event Organiser garbage-collects when it deletes a Event, so no need.
 
@@ -1532,10 +1544,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Retrieve meta value.
-		$profile_id = (int) wp_unslash( $_POST['civi_eo_event_profile'] );
+		$profile_id = isset( $_POST['civi_eo_event_profile'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_profile'] ) ) : 0;
 
 		// Update Event meta.
-		update_post_meta( $event_id, '_civi_registration_profile', $profile_id );
+		update_post_meta( $event_id, '_civi_registration_profile', (int) $profile_id );
 
 	}
 
@@ -1660,7 +1672,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_event_registration_confirm( $event_id, $value = '0' ) {
 
 		// Retrieve meta value.
-		if ( isset( $_POST['civi_eo_event_confirm'] ) && wp_unslash( $_POST['civi_eo_event_confirm'] ) == '1' ) {
+		$event_confirm = isset( $_POST['civi_eo_event_confirm'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_confirm'] ) ) : 0;
+		if ( '1' === (string) $event_confirm ) {
 			$value = '1';
 		} else {
 			$value = '0';
@@ -1749,7 +1762,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	public function update_event_registration_send_email( $event_id, $value = '0' ) {
 
 		// Retrieve meta value.
-		if ( isset( $_POST['civi_eo_event_send_email'] ) && wp_unslash( $_POST['civi_eo_event_send_email'] ) == '1' ) {
+		$send_email = isset( $_POST['civi_eo_event_send_email'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email'] ) ) : 0;
+		if ( '1' === (string) $send_email ) {
 			$value = '1';
 		} else {
 			$value = '0';

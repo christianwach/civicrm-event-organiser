@@ -645,22 +645,22 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function get_venue_id( $location ) {
 
 		// ---------------------------------------------------------------------
-		// First, see if we have a matching ID in the Venue's meta table
+		// First, see if we have a matching ID in the Venue's meta table.
 		// ---------------------------------------------------------------------
 
-		// Access db.
+		// Access wpdb.
 		global $wpdb;
 
-		// To avoid the pro plugin, hit the db directly.
-		$sql = $wpdb->prepare(
-			"SELECT eo_venue_id FROM $wpdb->eo_venuemeta WHERE
-			meta_key = '_civi_loc_id' AND
-			meta_value = %d",
-			$location['id']
+		// To avoid the pro plugin, hit the database directly.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+		$venue_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT eo_venue_id FROM $wpdb->eo_venuemeta WHERE
+				meta_key = '_civi_loc_id' AND
+				meta_value = %d",
+				$location['id']
+			)
 		);
-
-		// This should return a value.
-		$venue_id = $wpdb->get_var( $sql );
 
 		// If we get one, return it.
 		if ( isset( $venue_id ) && ! is_null( $venue_id ) && $venue_id > 0 ) {
@@ -668,33 +668,31 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		// ---------------------------------------------------------------------
-		// Next, see if we have an identical Location
+		// Next, see if we have an identical Location.
 		// ---------------------------------------------------------------------
 
 		// Do we have geo data?
-		if (
-			isset( $location['address']['geo_code_1'] )
-			&&
-			isset( $location['address']['geo_code_2'] )
-		) {
+		if ( isset( $location['address']['geo_code_1'] ) && isset( $location['address']['geo_code_2'] ) ) {
 
-			// To avoid the pro plugin, hit the db directly...
-			// This could use some refinement from someone better at SQL than me.
-			$sql = $wpdb->prepare(
-				"SELECT eo_venue_id FROM $wpdb->eo_venuemeta
-				WHERE
-					( meta_key = '_lat' AND meta_value = %f )
-				AND
-				eo_venue_id = (
-					SELECT eo_venue_id FROM $wpdb->eo_venuemeta WHERE
-					( meta_key = '_lng' AND meta_value = %f )
-				)",
-				floatval( $location['address']['geo_code_1'] ),
-				floatval( $location['address']['geo_code_2'] )
+			/*
+			 * To avoid the pro plugin, hit the db directly.
+			 * This could use some refinement from someone better at SQL than me.
+			 */
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$venue_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT eo_venue_id FROM $wpdb->eo_venuemeta
+					WHERE
+						( meta_key = '_lat' AND meta_value = %f )
+					AND
+					eo_venue_id = (
+						SELECT eo_venue_id FROM $wpdb->eo_venuemeta WHERE
+						( meta_key = '_lng' AND meta_value = %f )
+					)",
+					floatval( $location['address']['geo_code_1'] ),
+					floatval( $location['address']['geo_code_2'] )
+				)
 			);
-
-			// This should return a value.
-			$venue_id = $wpdb->get_var( $sql );
 
 			// If we get one, return it.
 			if ( isset( $venue_id ) && ! is_null( $venue_id ) && $venue_id > 0 ) {
@@ -704,21 +702,22 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		// ---------------------------------------------------------------------
-		// Lastly, see if we have an identical Street Address
+		// Lastly, see if we have an identical Street Address.
 		// ---------------------------------------------------------------------
 
 		// Do we have Street Address data?
 		if ( isset( $location['address']['street_address'] ) ) {
 
-			$sql = $wpdb->prepare(
-				"SELECT eo_venue_id FROM $wpdb->eo_venuemeta WHERE
-				meta_key = '_address' AND
-				meta_value = %s",
-				$location['address']['street_address']
-			);
-
 			// Get value.
-			$venue_id = $wpdb->get_var( $sql );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+			$venue_id = $wpdb->get_var(
+				$wpdb->prepare(
+					"SELECT eo_venue_id FROM $wpdb->eo_venuemeta WHERE
+					meta_key = '_address' AND
+					meta_value = %s",
+					$location['address']['street_address']
+				)
+			);
 
 			// If we get one, return it.
 			if ( isset( $venue_id ) && ! is_null( $venue_id ) && $venue_id > 0 ) {
@@ -975,13 +974,15 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		check_admin_referer( 'civi_eo_venue_meta_save', 'civi_eo_nonce_field' );
 
 		// Save Email if set.
-		if ( isset( $_POST['civi_eo_venue_email'] ) ) {
-			$this->update_venue_email( $venue_id, $_POST['civi_eo_venue_email'] );
+		$email = isset( $_POST['civi_eo_venue_email'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_email'] ) ) : '';
+		if ( ! empty( $email ) ) {
+			$this->update_venue_email( $venue_id, $email );
 		}
 
 		// Save phone if set.
-		if ( isset( $_POST['civi_eo_venue_phone'] ) ) {
-			$this->update_venue_phone( $venue_id, $_POST['civi_eo_venue_phone'] );
+		$phone = isset( $_POST['civi_eo_venue_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_phone'] ) ) : '';
+		if ( ! empty( $phone ) ) {
+			$this->update_venue_phone( $venue_id, $phone );
 		}
 
 	}

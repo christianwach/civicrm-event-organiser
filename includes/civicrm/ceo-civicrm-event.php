@@ -187,6 +187,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$settings = [
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'loading' => CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/loading.gif',
+			'ajax_nonce' => wp_create_nonce( 'ceo_nonce_action_feature_image' ),
 		];
 
 		// Localisation array.
@@ -308,6 +309,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$settings = [
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'loading' => CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/loading.gif',
+			'ajax_nonce' => wp_create_nonce( 'ceo_nonce_action_feature_image' ),
 		];
 
 		// Localisation array.
@@ -425,19 +427,25 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			'success' => 'false',
 		];
 
+		// Since this is an AJAX request, check security.
+		$result = check_ajax_referer( 'ceo_nonce_action_feature_image', false, false );
+		if ( $result === false ) {
+			wp_send_json( $data );
+		}
+
 		// Disallow users without upload permissions.
 		if ( ! current_user_can( 'upload_files' ) ) {
-			return $data;
+			wp_send_json( $data );
 		}
 
 		// Get Attachment ID.
-		$attachment_id = isset( $_POST['attachment_id'] ) ? (int) trim( $_POST['attachment_id'] ) : 0;
+		$attachment_id = isset( $_POST['attachment_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['attachment_id'] ) ) : 0;
 		if ( ! is_numeric( $attachment_id ) || $attachment_id === 0 ) {
-			return $data;
+			wp_send_json( $data );
 		}
 
 		// Handle Feature Image if there is a Post ID.
-		$post_id = isset( $_POST['post_id'] ) ? (int) trim( $_POST['post_id'] ) : 0;
+		$post_id = isset( $_POST['post_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : 0;
 		if ( is_numeric( $post_id ) && $post_id !== 0 ) {
 
 			// Set Feature Image.
@@ -706,7 +714,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Bail if our sync checkbox is not checked.
-		if ( ! isset( $_POST['ceo_event_sync_checkbox'] ) || 1 != $_POST['ceo_event_sync_checkbox'] ) {
+		$sync = isset( $_POST['ceo_event_sync_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_event_sync_checkbox'] ) ) : 0;
+		if ( '1' !== (string) $sync ) {
 			return;
 		}
 
@@ -776,7 +785,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Bail if our sync checkbox is not checked.
-		if ( ! isset( $_POST['ceo_event_sync_checkbox'] ) || 1 != $_POST['ceo_event_sync_checkbox'] ) {
+		$sync = isset( $_POST['ceo_event_sync_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_event_sync_checkbox'] ) ) : 0;
+		if ( '1' !== (string) $sync ) {
 			return;
 		}
 
@@ -1357,10 +1367,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			$unmatched_delete = false;
 
 			// Get "delete unused" checkbox value.
-			if (
-				isset( $_POST['civi_eo_event_delete_unused'] ) &&
-				absint( $_POST['civi_eo_event_delete_unused'] ) === 1
-			) {
+			$unused = isset( $_POST['civi_eo_event_delete_unused'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_delete_unused'] ) ) : 0;
+			if ( '1' === (string) $unused ) {
 
 				// Override - we ARE deleting.
 				$unmatched_delete = true;
@@ -1376,8 +1384,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 					// Delete CiviCRM Event.
 					$result = $this->delete_civi_events( [ $civi_id ] );
 
+					/*
 					// Delete this ID from the orphans array?
-					//$orphans = array_diff( $orphans, [ $civi_id ] );
+					$orphans = array_diff( $orphans, [ $civi_id ] );
+					*/
 
 				} else {
 
@@ -1791,9 +1801,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 */
 	public function validate_civi_options( $post_id, $post ) {
 
-		// Disabled.
-		return true;
-
+		/*
 		// Check default Event Type.
 		$result = $this->_validate_event_type();
 		if ( is_wp_error( $result ) ) {
@@ -1817,6 +1825,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
+		*/
 
 	}
 

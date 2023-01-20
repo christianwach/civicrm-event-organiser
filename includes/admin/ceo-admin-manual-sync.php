@@ -250,10 +250,13 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	public function admin_form_url_get() {
 
 		// Sanitise admin page url.
-		$target_url = $_SERVER['REQUEST_URI'];
-		$url_array = explode( '&', $target_url );
-		if ( $url_array ) {
-			$target_url = htmlentities( $url_array[0] . '&updated=true' );
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$target_url = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		if ( ! empty( $target_url ) ) {
+			$url_array = explode( '&', $target_url );
+			if ( $url_array ) {
+				$target_url = htmlentities( $url_array[0] . '&updated=true' );
+			}
 		}
 
 		// --<
@@ -338,7 +341,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			'civi_eo_manual_sync_js',
 			plugins_url( 'assets/js/wordpress/page-admin-manual-sync.js', CIVICRM_WP_EVENT_ORGANISER_FILE ),
 			[ 'jquery', 'jquery-ui-core', 'jquery-ui-progressbar' ],
-			CIVICRM_WP_EVENT_ORGANISER_VERSION // Version.
+			CIVICRM_WP_EVENT_ORGANISER_VERSION, // Version.
+			true
 		);
 
 		// Get all CiviCRM Event Types and error check.
@@ -496,7 +500,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @since 0.7
 	 *
 	 * @param array $urls The array of subpage URLs.
-	 * @param string The key of the active tab in the subpage URLs array.
+	 * @param string $active_tab The key of the active tab in the subpage URLs array.
 	 */
 	public function page_add_tab( $urls, $active_tab ) {
 
@@ -734,59 +738,75 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 */
 	public function form_submitted() {
 
+		// phpcs:disable WordPress.Security.NonceVerification.Missing
+
 		// Was an Event Type "Stop Sync" button pressed?
-		if ( isset( $_POST['civi_eo_tax_eo_to_civi_stop'] ) ) {
+		$tax_eo_to_civi_stop = isset( $_POST['civi_eo_tax_eo_to_civi_stop'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_tax_eo_to_civi_stop'] ) ) : false;
+		if ( ! empty( $tax_eo_to_civi_stop ) ) {
 			delete_option( '_civi_eo_tax_eo_to_civi_offset' );
 			return;
 		}
-		if ( isset( $_POST['civi_eo_tax_civi_to_eo_stop'] ) ) {
+		$tax_civi_to_eo_stop = isset( $_POST['civi_eo_tax_civi_to_eo_stop'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_tax_civi_to_eo_stop'] ) ) : false;
+		if ( ! empty( $tax_civi_to_eo_stop ) ) {
 			delete_option( '_civi_eo_tax_civi_to_eo_offset' );
 			return;
 		}
 
 		// Was a Venue "Stop Sync" button pressed?
-		if ( isset( $_POST['civi_eo_venue_eo_to_civi_stop'] ) ) {
+		$venue_eo_to_civi_stop = isset( $_POST['civi_eo_venue_eo_to_civi_stop'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_eo_to_civi_stop'] ) ) : false;
+		if ( ! empty( $venue_eo_to_civi_stop ) ) {
 			delete_option( '_civi_eo_venue_eo_to_civi_offset' );
 			return;
 		}
-		if ( isset( $_POST['civi_eo_venue_civi_to_eo_stop'] ) ) {
+		$venue_civi_to_eo_stop = isset( $_POST['civi_eo_venue_civi_to_eo_stop'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_civi_to_eo_stop'] ) ) : false;
+		if ( ! empty( $venue_civi_to_eo_stop ) ) {
 			delete_option( '_civi_eo_venue_civi_to_eo_offset' );
 			return;
 		}
 
 		// Was an Event "Stop Sync" button pressed?
-		if ( isset( $_POST['civi_eo_event_eo_to_civi_stop'] ) ) {
+		$event_eo_to_civi_stop = isset( $_POST['civi_eo_event_eo_to_civi_stop'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_eo_to_civi_stop'] ) ) : false;
+		if ( ! empty( $event_eo_to_civi_stop ) ) {
 			delete_option( '_civi_eo_event_eo_to_civi_offset' );
 			return;
 		}
-		if ( isset( $_POST['civi_eo_event_civi_to_eo_stop'] ) ) {
+		$event_civi_to_eo_stop = isset( $_POST['civi_eo_event_civi_to_eo_stop'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_civi_to_eo_stop'] ) ) : false;
+		if ( ! empty( $event_civi_to_eo_stop ) ) {
 			delete_option( '_civi_eo_event_civi_to_eo_offset' );
 			return;
 		}
 
 		// Was an Event Type "Sync Now" button pressed?
-		if ( isset( $_POST['civi_eo_tax_eo_to_civi'] ) ) {
+		$venue_eo_to_civi = isset( $_POST['civi_eo_venue_eo_to_civi'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_eo_to_civi'] ) ) : false;
+		if ( ! empty( $venue_eo_to_civi ) ) {
 			$this->stepped_sync_categories_to_types();
 		}
-		if ( isset( $_POST['civi_eo_tax_civi_to_eo'] ) ) {
+		$venue_eo_to_civi = isset( $_POST['civi_eo_venue_eo_to_civi'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_eo_to_civi'] ) ) : false;
+		if ( ! empty( $venue_eo_to_civi ) ) {
 			$this->stepped_sync_types_to_categories();
 		}
 
 		// Was a Venue "Sync Now" button pressed?
-		if ( isset( $_POST['civi_eo_venue_eo_to_civi'] ) ) {
+		$venue_eo_to_civi = isset( $_POST['civi_eo_venue_eo_to_civi'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_eo_to_civi'] ) ) : false;
+		if ( ! empty( $venue_eo_to_civi ) ) {
 			$this->stepped_sync_venues_to_locations();
 		}
-		if ( isset( $_POST['civi_eo_venue_civi_to_eo'] ) ) {
+		$venue_civi_to_eo = isset( $_POST['civi_eo_venue_civi_to_eo'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_civi_to_eo'] ) ) : false;
+		if ( ! empty( $venue_civi_to_eo ) ) {
 			$this->stepped_sync_locations_to_venues();
 		}
 
 		// Was an Event "Sync Now" button pressed?
-		if ( isset( $_POST['civi_eo_event_eo_to_civi'] ) ) {
+		$event_civi_to_eo = isset( $_POST['civi_eo_event_civi_to_eo'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_civi_to_eo'] ) ) : false;
+		if ( ! empty( $event_civi_to_eo ) ) {
 			$this->stepped_sync_events_eo_to_civi();
 		}
-		if ( isset( $_POST['civi_eo_event_civi_to_eo'] ) ) {
+		$event_civi_to_eo = isset( $_POST['civi_eo_event_civi_to_eo'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_civi_to_eo'] ) ) : false;
+		if ( ! empty( $event_civi_to_eo ) ) {
 			$this->stepped_sync_events_civi_to_eo();
 		}
+
+		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 	}
 

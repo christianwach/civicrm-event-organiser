@@ -13,7 +13,8 @@
  * @package CiviCRM_WP_Event_Organiser
  */
 
-
+// Exit if accessed directly.
+defined( 'ABSPATH' ) || exit;
 
 // Set our version here.
 define( 'CIVICRM_WP_EVENT_ORGANISER_VERSION', '0.7.3a' );
@@ -294,6 +295,7 @@ class CiviCRM_WP_Event_Organiser {
 	public function enable_translation() {
 
 		// Load plugin translations.
+		// phpcs:ignore WordPress.WP.DeprecatedParameters.Load_plugin_textdomainParam2Found
 		load_plugin_textdomain(
 			'civicrm-event-organiser', // Unique name.
 			false, // Deprecated argument.

@@ -182,6 +182,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 
 		// Register template directory.
 		$template_include_path = $custom_path . PATH_SEPARATOR . get_include_path();
+		// phpcs:ignore WordPress.PHP.DiscouragedPHPFunctions.runtime_configuration_set_include_path
 		set_include_path( $template_include_path );
 
 	}

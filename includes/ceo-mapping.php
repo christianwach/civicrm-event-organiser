@@ -773,7 +773,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 			3 => __( 'Do not sync', 'civicrm-event-organiser' ),
 		];
 
-		// Get existing setting.
+		// Get existing setting. Defaults to "Do not sync".
 		$status_sync = $this->plugin->db->option_get( 'civi_eo_event_default_status_sync', 3 );
 
 		// Loop.

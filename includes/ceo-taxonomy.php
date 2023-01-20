@@ -766,6 +766,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		}
 
 		// Get directly from DB.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$tax = $wpdb->get_row(
 			$wpdb->prepare(
 				"SELECT t.* FROM $wpdb->term_taxonomy AS t WHERE t.term_id = %s LIMIT 1",
@@ -950,6 +951,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Query Terms for the Term with the ID of the Event Type in meta data.
 		$args = [
 			'hide_empty' => false,
+			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query' => [
 				[
 					'key' => $this->term_meta_key,
@@ -1042,6 +1044,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$meta_id = add_term_meta( $term_id, $this->term_meta_key, intval( $event_type_id ), true );
 
 		// Log something if there's an error.
+		// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
 		if ( $meta_id === false ) {
 
 			/*
@@ -1468,7 +1471,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Log and bail if we get an error.
 		if ( ! empty( $result['is_error'] ) && $result['is_error'] == '1' ) {
-			$e = new Exception;
+			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
 				'method' => __METHOD__,
@@ -1616,7 +1619,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			// Get existing type value.
 			$existing_value = $this->get_default_event_type_value();
 
-			// Loop,
+			// Loop.
 			foreach ( $event_types as $key => $event_type ) {
 
 				// Get type value.
@@ -1640,7 +1643,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		}
 
-		// Return,
+		// --<
 		return $html;
 
 	}

@@ -105,7 +105,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 
 		?>
 		<tr>
-			<th scope="row" valign="top"><label for="description"><?php _ex( 'Description', 'Taxonomy Description', 'civicrm-event-organiser' ); ?></label></th>
+			<th scope="row" valign="top"><label for="description"><?php echo esc_html_x( 'Description', 'Taxonomy Description', 'civicrm-event-organiser' ); ?></label></th>
 			<td><?php wp_editor( htmlspecialchars_decode( $tag->description ), 'html-description', $settings ); ?>
 			<span class="description"><?php esc_html_e( 'The description is not prominent by default, however some themes may show it.', 'civicrm-event-organiser' ); ?></span></td>
 			<script type="text/javascript">
@@ -135,7 +135,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 
 		?>
 		<div class="form-field term-description-wrap">
-			<label for="tag-description"><?php _ex( 'Description', 'Taxonomy Description', 'civicrm-event-organiser' ); ?></label>
+			<label for="tag-description"><?php echo esc_html_x( 'Description', 'Taxonomy Description', 'civicrm-event-organiser' ); ?></label>
 			<?php wp_editor( '', 'html-tag-description', $settings ); ?>
 			<p class="description"><?php esc_html_e( 'The description is not prominent by default, however some themes may show it.', 'civicrm-event-organiser' ); ?></p>
 			<script type="text/javascript">

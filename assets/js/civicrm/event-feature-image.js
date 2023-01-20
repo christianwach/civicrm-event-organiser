@@ -279,7 +279,8 @@ var CEO_Feature_Image = CEO_Feature_Image || {};
 			data = {
 				action: 'ceo_feature_image',
 				post_id: post_id,
-				attachment_id: attachment_id
+				attachment_id: attachment_id,
+				_ajax_nonce: CEO_Feature_Image.settings.get_setting( 'ajax_nonce' )
 			};
 
 			// Use jQuery post.

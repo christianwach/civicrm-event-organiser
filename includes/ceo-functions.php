@@ -160,6 +160,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 
 			// Define text.
 			$text = sprintf(
+				/* translators: %s: The formatted Event Occurrence. */
 				__( 'Register for %s', 'civicrm-event-organiser' ),
 				eo_format_event_occurrence( $post_id, $occurrence_id )
 			);

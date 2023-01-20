@@ -24,11 +24,15 @@ defined( 'ABSPATH' ) || exit;
 }
 
 body.js .civi_eo_event_reg_toggle {
-	<?php if ( ! $reg_checked ) : ?>display: none;<?php endif; ?>
+	<?php if ( ! $reg_checked ) : ?>
+		display: none;
+	<?php endif; ?>
 }
 
 body.js .civi_eo_event_send_email_toggle {
-	<?php if ( ! $send_email_checked ) : ?>display: none;<?php endif; ?>
+	<?php if ( ! $send_email_checked ) : ?>
+		display: none;
+	<?php endif; ?>
 }
 
 .civi_eo_event_send_email_toggle {
@@ -75,7 +79,24 @@ body.js .civi_eo_event_send_email_toggle {
 	<h4><?php esc_html_e( 'CiviCRM Event Options', 'civicrm-event-organiser' ); ?></h4>
 
 	<p>
-		<?php echo sprintf( __( '%1$sNOTE%2$s: Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ), '<strong>', '</strong>' ); ?> <?php if ( $multiple ) : ?><?php echo sprintf( __( 'These options will be set for %1$sall corresponding CiviCRM Events%2$s when you sync this Event to CiviCRM.', 'civicrm-event-organiser' ), '<em>', '</em>' ); ?><?php endif; ?>
+		<?php
+		echo sprintf(
+				/* translators: 1: The opening strong tag, 2: The closing strong tag. */
+			__( '%1$sNOTE%2$s: Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ),
+			'<strong>',
+			'</strong>'
+		);
+		?>
+		<?php if ( $multiple ) : ?>
+			<?php
+			echo sprintf(
+				/* translators: 1: The opening emphasis tag, 2: The closing emphasis tag. */
+				__( 'These options will be set for %1$sall corresponding CiviCRM Events%2$s when you sync this Event to CiviCRM.', 'civicrm-event-organiser' ),
+				'<em>',
+				'</em>'
+			);
+			?>
+		<?php endif; ?>
 	</p>
 
 	<div class="civi_eo_event_reg_wrapper">

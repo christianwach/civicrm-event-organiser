@@ -23,9 +23,13 @@
 			<?php submit_button( esc_html__( 'Stop', 'civicrm-event-organiser' ), 'secondary', $metabox['args']['stop_button_class'], false ); ?>
 		<?php endif; ?>
 
-		<?php submit_button( $metabox['args']['button_title'], 'primary', $metabox['args']['button_class'], false, [
-			'data-security' => esc_attr( wp_create_nonce( $metabox['args']['nonce_name'] ) ),
-		] ); ?>
+		<?php
+		submit_button( $metabox['args']['button_title'], 'primary', $metabox['args']['button_class'], false,
+			[
+				'data-security' => esc_attr( wp_create_nonce( $metabox['args']['nonce_name'] ) ),
+			]
+		);
+		?>
 
 		<div id="product-progress-bar"><div class="progress-label"></div></div>
 
