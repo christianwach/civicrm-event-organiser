@@ -135,7 +135,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * the version of CiviCRM. More recent versions trigger a pop-up "New Event" form on
 	 * the "Manage Events" page, so we need to handle both situations.
 	 *
-	 * @see self::form_event_edit()
+	 * @see self::form_event_new_manage()
+	 * @see self::form_event_new_snippet()
 	 *
 	 * @since 0.6.3
 	 * @since 0.7 Moved to this class.
