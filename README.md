@@ -17,7 +17,7 @@ Keep Event Organiser plugin Events in sync with CiviCRM Events.
 
 A *WordPress* plugin for syncing *Event Organiser* plugin Events with *CiviCRM* Events. The plugin syncs *Event Organiser* Events, Venues and Event Categories to their corresponding entities in CiviCRM.
 
-*Important note:* Please do not use with (or upgrade to) *CiviCRM 5.47*. Your Events in CiviCRM will not respect Daylight Savings offsets.
+*Important note:* Please do not use with *CiviCRM 5.47*. Your Events in CiviCRM will not respect Daylight Savings offsets.
 
 #### ACF Integration
 
