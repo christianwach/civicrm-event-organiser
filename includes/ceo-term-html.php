@@ -158,4 +158,4 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 
 	}
 
-} // Class ends.
+}

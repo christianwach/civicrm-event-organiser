@@ -2189,4 +2189,4 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	}
 
-} // Class ends.
+}

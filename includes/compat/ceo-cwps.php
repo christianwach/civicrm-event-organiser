@@ -782,4 +782,4 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 	}
 
-} // Class ends.
+}

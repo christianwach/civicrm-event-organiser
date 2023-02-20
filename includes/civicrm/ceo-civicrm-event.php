@@ -1910,4 +1910,4 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 	}
 
-} // Class ends.
+}

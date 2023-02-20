@@ -442,7 +442,7 @@ class CiviCRM_WP_Event_Organiser {
 
 	}
 
-} // Class ends.
+}
 
 
 

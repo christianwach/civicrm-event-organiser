@@ -1055,4 +1055,4 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 	}
 
-} // Class ends.
+}

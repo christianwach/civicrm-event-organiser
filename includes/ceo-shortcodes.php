@@ -165,4 +165,4 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 
 	}
 
-} // Class ends.
+}
