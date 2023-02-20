@@ -2081,7 +2081,19 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Maybe apply meta value.
 		if ( ! empty( $cc ) ) {
-			$value = $cc;
+
+			// Only save valid emails.
+			$valid = [];
+			$emails = explode( ',', $cc );
+			foreach ( $emails as $email ) {
+				if ( is_email( sanitize_email( trim( $email ) ) ) ) {
+					$valid[] = trim( $email );
+				}
+			}
+
+			// Save valid emails.
+			$value = implode( ', ', array_unique( $valid ) );
+
 		} else {
 			$value = null;
 		}
@@ -2167,7 +2179,19 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Maybe apply meta value.
 		if ( ! empty( $bcc ) ) {
-			$value = $bcc;
+
+			// Only save valid emails.
+			$valid = [];
+			$emails = explode( ',', $bcc );
+			foreach ( $emails as $email ) {
+				if ( is_email( sanitize_email( trim( $email ) ) ) ) {
+					$valid[] = trim( $email );
+				}
+			}
+
+			// Save valid emails.
+			$value = implode( ', ', array_unique( $valid ) );
+
 		} else {
 			$value = null;
 		}
