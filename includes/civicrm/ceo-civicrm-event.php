@@ -1079,6 +1079,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		if ( ! empty( $civi_event['is_email_confirm'] ) ) {
 			$civi_event['confirm_from_name'] = $this->registration->get_registration_send_email_from_name( $post->ID );
 			$civi_event['confirm_from_email'] = $this->registration->get_registration_send_email_from( $post->ID );
+			$civi_event['cc_confirm'] = $this->registration->get_registration_send_email_cc( $post->ID );
+			$civi_event['bcc_confirm'] = $this->registration->get_registration_send_email_bcc( $post->ID );
 		}
 
 		/**

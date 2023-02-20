@@ -166,6 +166,16 @@ body.js .civi_eo_event_send_email_toggle {
 						<label for="civi_eo_event_send_email_from"><?php esc_html_e( 'From Email:', 'civicrm-event-organiser' ); ?></label>
 						<input type="text" class="widefat" id="civi_eo_event_send_email_from" name="civi_eo_event_send_email_from" value="<?php echo esc_attr( $send_email_from ); ?>" />
 					</p>
+					<p>
+						<label for="civi_eo_event_send_email_cc"><?php esc_html_e( 'CC Confirmation To:', 'civicrm-event-organiser' ); ?></label>
+						<input type="text" class="widefat" id="civi_eo_event_send_email_cc" name="civi_eo_event_send_email_cc" value="<?php echo esc_attr( $send_email_cc ); ?>" /><br>
+						<span class="description"><?php esc_html_e( 'Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).', 'civicrm-event-organiser' ); ?></span>
+					</p>
+					<p>
+						<label for="civi_eo_event_send_email_bcc"><?php esc_html_e( 'BCC Confirmation To:', 'civicrm-event-organiser' ); ?></label>
+						<input type="text" class="widefat" id="civi_eo_event_send_email_bcc" name="civi_eo_event_send_email_bcc" value="<?php echo esc_attr( $send_email_bcc ); ?>" />
+						<span class="description"><?php esc_html_e( 'Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).', 'civicrm-event-organiser' ); ?></span>
+					</p>
 				</div>
 			</div>
 

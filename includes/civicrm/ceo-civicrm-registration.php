@@ -837,4 +837,50 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 	}
 
+	/**
+	 * Get the Confirmation Email "CC" setting for an Event Organiser Event.
+	 *
+	 * @since 0.7.4
+	 *
+	 * @param int $post_id The numeric ID of an Event Organiser Event.
+	 * @return string $setting The Confirmation Email "CC" setting.
+	 */
+	public function get_registration_send_email_cc( $post_id = null ) {
+
+		// Init as empty.
+		$setting = '';
+
+		// Override if we get a value from the Post.
+		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
+			$setting = $this->plugin->eo->get_event_registration_send_email_cc( $post_id );
+		}
+
+		// --<
+		return $setting;
+
+	}
+
+	/**
+	 * Get the Confirmation Email "BCC" setting for an Event Organiser Event.
+	 *
+	 * @since 0.7.4
+	 *
+	 * @param int $post_id The numeric ID of an Event Organiser Event.
+	 * @return string $setting The Confirmation Email "BCC" setting.
+	 */
+	public function get_registration_send_email_bcc( $post_id = null ) {
+
+		// Init as empty.
+		$setting = '';
+
+		// Override if we get a value from the Post.
+		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
+			$setting = $this->plugin->eo->get_event_registration_send_email_bcc( $post_id );
+		}
+
+		// --<
+		return $setting;
+
+	}
+
 } // Class ends.
