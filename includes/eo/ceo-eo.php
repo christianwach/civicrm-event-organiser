@@ -2030,7 +2030,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Update Event Confirmation Email "CC" value from Event Organiser meta box.
 	 *
-	 * @since 0.7.2
+	 * @since 0.7.4
 	 *
 	 * @param int $event_id The numeric ID of the Event.
 	 * @param str $value The Confirmation Email "CC" value.
@@ -2052,7 +2052,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Get Event Confirmation Email "CC" value.
 	 *
-	 * @since 0.7.2
+	 * @since 0.7.4
 	 *
 	 * @param int $post_id The numeric ID of the WP Post.
 	 * @return int $setting The Event Confirmation Email "CC" setting for the CiviCRM Event.
@@ -2075,7 +2075,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Update Event Confirmation Email "CC" value.
 	 *
-	 * @since 0.7.2
+	 * @since 0.7.4
 	 *
 	 * @param int $event_id The numeric ID of the Event.
 	 * @param int $setting The Event Confirmation Email "CC" setting for the CiviCRM Event.
@@ -2096,7 +2096,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Delete Event Confirmation Email "CC" setting for a CiviCRM Event.
 	 *
-	 * @since 0.7.2
+	 * @since 0.7.4
 	 *
 	 * @param int $post_id The numeric ID of the WP Post.
 	 */
@@ -2112,7 +2112,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Update Event Confirmation Email "BCC" value from Event Organiser meta box.
 	 *
-	 * @since 0.7.2
+	 * @since 0.7.4
 	 *
 	 * @param int $event_id The numeric ID of the Event.
 	 * @param str $value The Confirmation Email "BCC" value.
@@ -2134,7 +2134,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Get Event Confirmation Email "BCC" value.
 	 *
-	 * @since 0.7.2
+	 * @since 0.7.4
 	 *
 	 * @param int $post_id The numeric ID of the WP Post.
 	 * @return int $setting The Event Confirmation Email "BCC" setting for the CiviCRM Event.
@@ -2157,7 +2157,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Update Event Confirmation Email "BCC" value.
 	 *
-	 * @since 0.7.2
+	 * @since 0.7.4
 	 *
 	 * @param int $event_id The numeric ID of the Event.
 	 * @param int $setting The Event Confirmation Email "BCC" setting for the CiviCRM Event.
@@ -2178,7 +2178,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	/**
 	 * Delete Event Confirmation Email "BCC" setting for a CiviCRM Event.
 	 *
-	 * @since 0.7.2
+	 * @since 0.7.4
 	 *
 	 * @param int $post_id The numeric ID of the WP Post.
 	 */
