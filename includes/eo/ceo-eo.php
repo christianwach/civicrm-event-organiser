@@ -1986,10 +1986,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Retrieve meta value. Nonce is checked in "intercept_save_event".
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$from = isset( $_POST['civi_eo_event_send_email_from'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_from'] ) ) : 0;
+		$from = isset( $_POST['civi_eo_event_send_email_from'] ) ? sanitize_email( wp_unslash( $_POST['civi_eo_event_send_email_from'] ) ) : 0;
 
 		// Maybe apply meta value.
-		if ( ! empty( $from ) ) {
+		if ( ! empty( $from ) && is_email( $from ) ) {
 			$value = $from;
 		} else {
 			$value = null;
