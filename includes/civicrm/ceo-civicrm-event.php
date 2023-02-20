@@ -221,6 +221,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Bail if this is not the url path we're after.
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 		if ( 'civicrm/event/manage' !== implode( '/', $page->urlPath ) ) {
 			return;
 		}
@@ -792,8 +793,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			return;
 		}
 
-		// Bail if our sync checkbox is not checked.
+		// CiviCRM handles verification.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$sync = isset( $_POST['ceo_event_sync_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_event_sync_checkbox'] ) ) : 0;
+
+		// Bail if our sync checkbox is not checked.
 		if ( '1' !== (string) $sync ) {
 			return;
 		}
@@ -863,8 +867,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			return;
 		}
 
-		// Bail if our sync checkbox is not checked.
+		// CiviCRM handles verification.
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$sync = isset( $_POST['ceo_event_sync_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_event_sync_checkbox'] ) ) : 0;
+
+		// Bail if our sync checkbox is not checked.
 		if ( '1' !== (string) $sync ) {
 			return;
 		}
