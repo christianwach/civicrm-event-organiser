@@ -1454,7 +1454,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			// Assume we're not deleting extra CiviCRM Events.
 			$unmatched_delete = false;
 
-			// Get "delete unused" checkbox value.
+			// Get "delete unused" checkbox value. Nonce is checked in "intercept_save_event".
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
 			$unused = isset( $_POST['civi_eo_event_delete_unused'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_delete_unused'] ) ) : 0;
 			if ( '1' === (string) $unused ) {
 

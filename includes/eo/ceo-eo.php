@@ -40,7 +40,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public $insert_event = false;
 
+	/**
+	 * Metabox nonce name.
+	 *
+	 * @since 0.7.4
+	 * @access private
+	 * @var string $nonce_field The name of the metabox nonce element.
+	 */
+	private $nonce_field = 'ceo_event_nonce';
 
+	/**
+	 * Metabox nonce action.
+	 *
+	 * @since 0.7.4
+	 * @access private
+	 * @var string $nonce_action The name of the metabox nonce action.
+	 */
+	private $nonce_action = 'ceo_event_action';
 
 	/**
 	 * Constructor.
@@ -190,6 +206,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function intercept_save_event( $post_id ) {
 
+		// Authenticate.
+		$nonce = isset( $_POST[ $this->nonce_field ] ) ? sanitize_text_field( wp_unslash( $_POST[ $this->nonce_field ] ) ) : '';
+		if ( ! wp_verify_nonce( $nonce, $this->nonce_action ) ) {
+			return;
+		}
+
 		// Save custom Event Organiser Event components.
 		$this->save_event_components( $post_id );
 
@@ -298,6 +320,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// If an Event is not being deleted.
 		if ( ! doing_action( 'delete_post' ) ) {
+
+			// Authenticate.
+			$nonce = isset( $_POST[ $this->nonce_field ] ) ? sanitize_text_field( wp_unslash( $_POST[ $this->nonce_field ] ) ) : '';
+			if ( ! wp_verify_nonce( $nonce, $this->nonce_action ) ) {
+				return;
+			}
 
 			// Bail if our sync checkbox is not checked.
 			$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
@@ -896,9 +924,6 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$multiple = true;
 		}
 
-		// Add nonce.
-		wp_nonce_field( 'civi_eo_event_meta_save', 'civi_eo_event_nonce_field' );
-
 		// Get Online Registration.
 		$is_reg_checked = $this->get_event_registration( $event->ID );
 
@@ -1385,12 +1410,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration( $event_id, $value = 0 ) {
 
-		// If the checkbox is ticked.
-		if ( isset( $_POST['civi_eo_event_reg'] ) ) {
+		// Get the checkbox state. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$reg = isset( $_POST['civi_eo_event_reg'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['civi_eo_event_reg'] ) ) : 0;
 
-			// Override the meta value with the checkbox state.
-			$value = absint( $_POST['civi_eo_event_reg'] );
-
+		// Maybe override the meta value with the checkbox state.
+		if ( ! empty( $reg ) ) {
+			$value = $reg;
 		}
 
 		// Go ahead and set the value.
@@ -1461,16 +1487,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_role( $event_id ) {
 
-		// Kick out if not set.
-		if ( ! isset( $_POST['civi_eo_event_role'] ) ) {
+		// Get the Participant Role. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$role = isset( $_POST['civi_eo_event_role'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['civi_eo_event_role'] ) ) : 0;
+
+		// Bail if not set.
+		if ( empty( $role ) ) {
 			return;
 		}
 
-		// Retrieve meta value.
-		$value = absint( $_POST['civi_eo_event_role'] );
-
 		// Update Event meta.
-		update_post_meta( $event_id, '_civi_role', $value );
+		update_post_meta( $event_id, '_civi_role', $role );
 
 	}
 
@@ -1550,16 +1577,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration_profile( $event_id ) {
 
-		// Kick out if not set.
-		if ( ! isset( $_POST['civi_eo_event_profile'] ) ) {
+		// Retrieve meta value. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$profile_id = isset( $_POST['civi_eo_event_profile'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['civi_eo_event_profile'] ) ) : 0;
+
+		// Bail if not set.
+		if ( empty( $profile_id ) ) {
 			return;
 		}
 
-		// Retrieve meta value.
-		$profile_id = isset( $_POST['civi_eo_event_profile'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_profile'] ) ) : 0;
-
 		// Update Event meta.
-		update_post_meta( $event_id, '_civi_registration_profile', (int) $profile_id );
+		update_post_meta( $event_id, '_civi_registration_profile', $profile_id );
 
 	}
 
@@ -1683,7 +1711,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration_confirm( $event_id, $value = '0' ) {
 
-		// Retrieve meta value.
+		// Retrieve meta value. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$event_confirm = isset( $_POST['civi_eo_event_confirm'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_confirm'] ) ) : 0;
 		if ( '1' === (string) $event_confirm ) {
 			$value = '1';
@@ -1773,7 +1802,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration_send_email( $event_id, $value = '0' ) {
 
-		// Retrieve meta value.
+		// Retrieve meta value. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$send_email = isset( $_POST['civi_eo_event_send_email'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email'] ) ) : 0;
 		if ( '1' === (string) $send_email ) {
 			$value = '1';
@@ -1863,9 +1893,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration_send_email_from_name( $event_id, $value = '' ) {
 
-		// Retrieve meta value.
-		if ( isset( $_POST['civi_eo_event_send_email_from_name'] ) ) {
-			$value = sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_from_name'] ) );
+		// Retrieve meta value. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$from_name = isset( $_POST['civi_eo_event_send_email_from_name'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_from_name'] ) ) : 0;
+
+		// Maybe apply meta value.
+		if ( ! empty( $from_name ) ) {
+			$value = $from_name;
 		} else {
 			$value = null;
 		}
@@ -1950,9 +1984,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration_send_email_from( $event_id, $value = '' ) {
 
-		// Retrieve meta value.
-		if ( isset( $_POST['civi_eo_event_send_email_from'] ) ) {
-			$value = sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_from'] ) );
+		// Retrieve meta value. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$from = isset( $_POST['civi_eo_event_send_email_from'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_from'] ) ) : 0;
+
+		// Maybe apply meta value.
+		if ( ! empty( $from ) ) {
+			$value = $from;
 		} else {
 			$value = null;
 		}
@@ -2037,9 +2075,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration_send_email_cc( $event_id, $value = '' ) {
 
-		// Retrieve meta value.
-		if ( isset( $_POST['civi_eo_event_send_email_cc'] ) ) {
-			$value = sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_cc'] ) );
+		// Retrieve meta value. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$cc = isset( $_POST['civi_eo_event_send_email_cc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_cc'] ) ) : 0;
+
+		// Maybe apply meta value.
+		if ( ! empty( $cc ) ) {
+			$value = $cc;
 		} else {
 			$value = null;
 		}
@@ -2119,9 +2161,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function update_event_registration_send_email_bcc( $event_id, $value = '' ) {
 
-		// Retrieve meta value.
-		if ( isset( $_POST['civi_eo_event_send_email_bcc'] ) ) {
-			$value = sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_bcc'] ) );
+		// Retrieve meta value. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$bcc = isset( $_POST['civi_eo_event_send_email_bcc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_bcc'] ) ) : 0;
+
+		// Maybe apply meta value.
+		if ( ! empty( $bcc ) ) {
+			$value = $bcc;
 		} else {
 			$value = null;
 		}

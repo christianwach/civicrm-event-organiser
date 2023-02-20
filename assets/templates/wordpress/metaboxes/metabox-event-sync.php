@@ -11,7 +11,10 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-?><!-- assets/templates/wordpress/metaboxes/metabox-event-sync.php -->
+?>
+<!-- assets/templates/wordpress/metaboxes/metabox-event-sync.php -->
+<?php wp_nonce_field( $this->nonce_action, $this->nonce_field ); ?>
+
 <style>
 .civi_eo_event_sync_wrapper {
 	border-bottom: 2px solid #ddd;
