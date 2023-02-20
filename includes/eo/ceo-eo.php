@@ -2138,7 +2138,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Delete if not set.
 		if ( empty( $setting ) ) {
-			$this->clear_event_registration_send_email_cc( $post_id );
+			$this->clear_event_registration_send_email_cc( $event_id );
 			return;
 		}
 
@@ -2236,7 +2236,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Delete if not set.
 		if ( empty( $setting ) ) {
-			$this->clear_event_registration_send_email_bcc( $post_id );
+			$this->clear_event_registration_send_email_bcc( $event_id );
 			return;
 		}
 
