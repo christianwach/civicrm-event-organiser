@@ -34,8 +34,6 @@ if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_PATH', plugin_dir_path( CIVICRM_WP_EVENT_ORGANISER_FILE ) );
 }
 
-
-
 /**
  * CiviCRM Event Organiser Class.
  *
@@ -457,8 +455,6 @@ class CiviCRM_WP_Event_Organiser {
 
 }
 
-
-
 /**
  * Utility to get a reference to this plugin.
  *
@@ -482,8 +478,6 @@ function civicrm_eo() {
 
 // Bootstrap plugin.
 civicrm_eo();
-
-
 
 /**
  * Utility to add link to settings page.

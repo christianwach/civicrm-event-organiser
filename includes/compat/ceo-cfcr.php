@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser "Caldera Forms CiviCRM Redirect" Compatibility Class.
  *
@@ -39,8 +37,6 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	 * @var object $cfcr The "Caldera Forms CiviCRM Redirect" plugin reference.
 	 */
 	public $cfcr = false;
-
-
 
 	/**
 	 * Initialises this object.

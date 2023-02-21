@@ -13,8 +13,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * Add a list of Registration links for an Event to the Event Organiser Event meta list.
  *
@@ -71,8 +69,6 @@ function civicrm_event_organiser_register_links( $post_id = null ) {
 
 // Add action for the above.
 add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_register_links' );
-
-
 
 /**
  * Get the Registration links for an Event Organiser Event.

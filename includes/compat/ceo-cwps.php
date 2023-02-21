@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser CiviCRM Profile Sync compatibility Class.
  *
@@ -39,8 +37,6 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 * @var object $cwps The CiviCRM Profile Sync plugin reference.
 	 */
 	public $cwps = false;
-
-
 
 	/**
 	 * Constructor.

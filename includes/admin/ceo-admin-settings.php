@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser Admin Settings Page Class.
  *
@@ -86,8 +84,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 * @var string $settings_page_slug The slug of the Settings Page.
 	 */
 	public $settings_page_slug = 'civi_eo_settings';
-
-
 
 	/**
 	 * Constructor.

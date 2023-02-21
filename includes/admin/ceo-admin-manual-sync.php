@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser Manual Sync Admin Class.
  *
@@ -79,8 +77,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		'venue' => 5, // Event Organiser Venues & CiviCRM Locations.
 		'event' => 10, // Event Organiser Events & CiviCRM Events.
 	];
-
-
 
 	/**
 	 * Constructor.

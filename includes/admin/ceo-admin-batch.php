@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser Batch Processing Class.
  *
@@ -48,8 +46,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Batch {
 	 * @var string $settings The Settings Page object.
 	 */
 	public $settings;
-
-
 
 	/**
 	 * Constructor.

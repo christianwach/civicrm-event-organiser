@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser Admin Class.
  *
@@ -66,8 +64,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @var str $plugin_version The plugin version. (numeric string)
 	 */
 	public $plugin_version;
-
-
 
 	/**
 	 * Constructor.

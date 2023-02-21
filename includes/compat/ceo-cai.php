@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser CiviCRM ACF Integration compatibility Class.
  *
@@ -39,8 +37,6 @@ class CiviCRM_WP_Event_Organiser_CAI {
 	 * @var object $acf The CiviCRM ACF Integration plugin reference.
 	 */
 	public $cacf = false;
-
-
 
 	/**
 	 * Constructor.

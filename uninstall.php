@@ -14,8 +14,6 @@ defined( 'ABSPATH' ) || exit;
 // Exit if uninstall not called from WordPress.
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-
-
 // Access plugin.
 $civicrm_wp_event_organiser = civicrm_eo();
 

@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser Taxonomy Class.
  *
@@ -40,8 +38,6 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 * @var object $term_meta_key The Term Meta key.
 	 */
 	public $term_meta_key = '_ceo_civi_event_type_id';
-
-
 
 	/**
 	 * Constructor.

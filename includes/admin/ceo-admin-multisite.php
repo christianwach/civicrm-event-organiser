@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser Multisite Admin Class.
  *
@@ -39,8 +37,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Multisite {
 	 * @var string $admin The single site admin object.
 	 */
 	public $admin;
-
-
 
 	/**
 	 * Constructor.

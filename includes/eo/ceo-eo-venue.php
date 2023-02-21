@@ -35,8 +35,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser Venues Class.
  *
@@ -54,8 +52,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 * @var object $plugin The plugin object.
 	 */
 	public $plugin;
-
-
 
 	/**
 	 * Constructor.

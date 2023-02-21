@@ -11,8 +11,6 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-
-
 /**
  * CiviCRM Event Organiser CiviCRM Class.
  *
@@ -57,8 +55,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 * @var object $registration The Registration object.
 	 */
 	public $registration;
-
-
 
 	/**
 	 * Constructor.
