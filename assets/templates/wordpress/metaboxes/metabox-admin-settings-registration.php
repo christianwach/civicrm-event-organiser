@@ -112,6 +112,22 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 		</td>
 	</tr>
 
+	<tr valign="top">
+		<th scope="row"><label for="civi_eo_event_default_send_email_cc"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "CC Recipients"', 'civicrm-event-organiser' ); ?></label></th>
+		<td>
+			<input type="text" class="widefat" id="civi_eo_event_default_send_email_cc" name="civi_eo_event_default_send_email_cc" value="<?php echo esc_attr( $send_email_cc ); ?>">
+			<p class="description"><?php esc_html_e( 'Carbon Copied recipients of each Confirmation Email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).', 'civicrm-event-organiser' ); ?></p>
+		</td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row"><label for="civi_eo_event_default_send_email_bcc"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "BCC Recipients"', 'civicrm-event-organiser' ); ?></label></th>
+		<td>
+			<input type="text" class="widefat" id="civi_eo_event_default_send_email_bcc" name="civi_eo_event_default_send_email_bcc" value="<?php echo esc_attr( $send_email_bcc ); ?>">
+			<p class="description"><?php esc_html_e( 'Blind Carbon Copied recipients of each Confirmation Email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org).', 'civicrm-event-organiser' ); ?></p>
+		</td>
+	</tr>
+
 </table>
 
 <?php

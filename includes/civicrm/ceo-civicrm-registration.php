@@ -846,9 +846,26 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		// Init as empty.
 		$setting = '';
 
-		// Override if we get a value from the Post.
+		// Use default value if we have one.
+		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_cc' );
+		if ( ! empty( $default ) ) {
+			$setting = $default;
+		}
+
+		// If we have a Post.
 		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
-			$setting = $this->plugin->eo->get_event_registration_send_email_cc( $post_id );
+
+			// Override with stored value if we get a value.
+			$stored_setting = $this->plugin->eo->get_event_registration_send_email_cc( $post_id );
+			if ( ! empty( $stored_setting ) && 'none' !== $stored_setting ) {
+				$setting = $stored_setting;
+			}
+
+			// Override with empty value if we get the "blanked out" token.
+			if ( 'none' === $stored_setting ) {
+				$setting = '';
+			}
+
 		}
 
 		// --<
@@ -869,9 +886,26 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		// Init as empty.
 		$setting = '';
 
-		// Override if we get a value from the Post.
+		// Use default value if we have one.
+		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_bcc' );
+		if ( ! empty( $default ) ) {
+			$setting = $default;
+		}
+
+		// If we have a Post.
 		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
-			$setting = $this->plugin->eo->get_event_registration_send_email_bcc( $post_id );
+
+			// Override with stored value if we get a value.
+			$stored_setting = $this->plugin->eo->get_event_registration_send_email_bcc( $post_id );
+			if ( ! empty( $stored_setting ) && 'none' !== $stored_setting ) {
+				$setting = $stored_setting;
+			}
+
+			// Override with empty value if we get the "blanked out" token.
+			if ( 'none' === $stored_setting ) {
+				$setting = '';
+			}
+
 		}
 
 		// --<

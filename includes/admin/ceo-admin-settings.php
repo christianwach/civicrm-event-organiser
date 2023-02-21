@@ -639,6 +639,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Set default values for Confirmation Email sub-fields.
 		$send_email_from_name = $this->plugin->civi->registration->get_registration_send_email_from_name();
 		$send_email_from = $this->plugin->civi->registration->get_registration_send_email_from();
+		$send_email_cc = $this->plugin->civi->registration->get_registration_send_email_cc();
+		$send_email_bcc = $this->plugin->civi->registration->get_registration_send_email_bcc();
 
 		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php';
@@ -677,7 +679,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Rebuild broken correspondences in 0.1.
 		$this->plugin->mapping->rebuild_event_correspondences();
 
-		// Init vars.
+		// Init vars. Nonce is checked in "form_nonce_check()"
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$role = isset( $_POST['civi_eo_event_default_role'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_role'] ) ) : '0';
 		$type = isset( $_POST['civi_eo_event_default_type'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_type'] ) ) : '0';
@@ -685,7 +687,9 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$confirm = isset( $_POST['civi_eo_event_default_confirm'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_confirm'] ) ) : '';
 		$send_email = isset( $_POST['civi_eo_event_default_send_email'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email'] ) ) : '';
 		$from_name = isset( $_POST['civi_eo_event_default_send_email_from_name'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_from_name'] ) ) : '';
-		$from = isset( $_POST['civi_eo_event_default_send_email_from'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_from'] ) ) : '';
+		$from = isset( $_POST['civi_eo_event_default_send_email_from'] ) ? sanitize_email( wp_unslash( $_POST['civi_eo_event_default_send_email_from'] ) ) : '';
+		$cc = isset( $_POST['civi_eo_event_default_send_email_cc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_cc'] ) ) : '';
+		$bcc = isset( $_POST['civi_eo_event_default_send_email_bcc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_bcc'] ) ) : '';
 		$status_sync = isset( $_POST['civi_eo_event_default_status_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_status_sync'] ) ) : '3';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -718,10 +722,41 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Save Confirmation Email "From Name" option.
 		$this->admin->option_save( 'civi_eo_event_default_send_email_from_name', $from_name );
 
-		// Save Confirmation Email "From Email" option.
+		// Sanitise and save Confirmation Email "From Email" option.
+		if ( ! is_email( $from ) ) {
+			$from = '';
+		}
 		$this->admin->option_save( 'civi_eo_event_default_send_email_from', $from );
 
-		// Sanitise and save option.
+		// Sanitise and save Confirmation Email "CC" option.
+		$cc_value = '';
+		if ( ! empty( $cc ) ) {
+			$valid = [];
+			$emails = explode( ',', $cc );
+			foreach ( $emails as $email ) {
+				if ( is_email( sanitize_email( trim( $email ) ) ) ) {
+					$valid[] = trim( $email );
+				}
+			}
+			$cc_value = implode( ', ', array_unique( $valid ) );
+		}
+		$this->admin->option_save( 'civi_eo_event_default_send_email_cc', $cc_value );
+
+		// Sanitise and save Confirmation Email "BCC" option.
+		$bcc_value = '';
+		if ( ! empty( $bcc ) ) {
+			$valid = [];
+			$emails = explode( ',', $bcc );
+			foreach ( $emails as $email ) {
+				if ( is_email( sanitize_email( trim( $email ) ) ) ) {
+					$valid[] = trim( $email );
+				}
+			}
+			$bcc_value = implode( ', ', array_unique( $valid ) );
+		}
+		$this->admin->option_save( 'civi_eo_event_default_send_email_bcc', $bcc_value );
+
+		// Sanitise and save Status Sync option.
 		$default_status_sync = (int) $status_sync;
 		$this->admin->option_save( 'civi_eo_event_default_status_sync', $default_status_sync );
 

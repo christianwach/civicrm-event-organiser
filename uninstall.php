@@ -24,6 +24,8 @@ $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_version' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email_from_name' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email_from' );
+$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email_cc' );
+$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email_bcc' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_confirm' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_profile' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_role' );

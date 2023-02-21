@@ -2077,6 +2077,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$cc = isset( $_POST['civi_eo_event_send_email_cc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_cc'] ) ) : 0;
 
+		// Default to empty.
+		$value = '';
+
 		// Maybe apply meta value.
 		if ( ! empty( $cc ) ) {
 
@@ -2092,8 +2095,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// Save valid emails.
 			$value = implode( ', ', array_unique( $valid ) );
 
-		} else {
-			$value = null;
+		}
+
+		// In order to "blank out" this field, we need to store a token.
+		if ( empty( $value ) ) {
+			$value = 'none';
 		}
 
 		// Go ahead and set the value.
@@ -2103,6 +2109,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Get Event Confirmation Email "CC" value.
+	 *
+	 * Do not use this method directly. Use "get_registration_send_email_cc()" instead so
+	 * that default values are populated when necessary and the "blanked out" token is
+	 * substituted when necessary.
+	 *
+	 * @see CiviCRM_WP_Event_Organiser_CiviCRM_Registration::get_registration_send_email_cc()
 	 *
 	 * @since 0.7.4
 	 *
@@ -2175,6 +2187,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$bcc = isset( $_POST['civi_eo_event_send_email_bcc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_send_email_bcc'] ) ) : 0;
 
+		// Default to empty.
+		$value = '';
+
 		// Maybe apply meta value.
 		if ( ! empty( $bcc ) ) {
 
@@ -2190,8 +2205,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// Save valid emails.
 			$value = implode( ', ', array_unique( $valid ) );
 
-		} else {
-			$value = null;
+		}
+
+		// In order to "blank out" this field, we need to store a token.
+		if ( empty( $value ) ) {
+			$value = 'none';
 		}
 
 		// Go ahead and set the value.
@@ -2201,6 +2219,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 	/**
 	 * Get Event Confirmation Email "BCC" value.
+	 *
+	 * Do not use this method directly. Use "get_registration_send_email_bcc()" instead so
+	 * that default values are populated when necessary and the "blanked out" token is
+	 * substituted when necessary.
+	 *
+	 * @see CiviCRM_WP_Event_Organiser_CiviCRM_Registration::get_registration_send_email_bcc()
 	 *
 	 * @since 0.7.4
 	 *
