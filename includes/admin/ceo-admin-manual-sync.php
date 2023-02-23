@@ -129,7 +129,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		add_action( 'admin_menu', [ $this, 'admin_menu' ], 30 );
 
 		// Add our meta boxes.
-		add_action( 'add_meta_boxes', [ $this, 'meta_boxes_add' ], 11, 1 );
+		add_action( 'civi_eo/admin/sync/add_meta_boxes', [ $this, 'meta_boxes_add' ], 11, 1 );
 
 		// Add AJAX handlers.
 		add_action( 'wp_ajax_sync_categories_to_types', [ $this, 'stepped_sync_categories_to_types' ] );
@@ -288,7 +288,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		 *
 		 * @param string $screen_id The ID of the current screen.
 		 */
-		do_action( 'add_meta_boxes', $screen->id, null );
+		do_action( 'civi_eo/admin/sync/add_meta_boxes', $screen->id );
 
 		// Get the column CSS class.
 		$columns = absint( $screen->get_columns() );

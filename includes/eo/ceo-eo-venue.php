@@ -738,8 +738,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		add_meta_box(
 			'civi_eo_venue_metabox',
 			__( 'CiviCRM Settings', 'civicrm-event-organiser' ),
-			[ $this, 'venue_meta_box_render' ],
-			'event_page_venues',
+			[ $this, 'venue_meta_box_render' ], // Callback.
+			'event_page_venues', // Screen ID.
 			'side',
 			'high'
 		);
