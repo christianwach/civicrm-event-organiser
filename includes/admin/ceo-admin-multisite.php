@@ -110,7 +110,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Multisite {
 		}
 
 		// Show Admin Notice.
-		echo '<div class="notice notice-error is-dismissible"><p>' . __( 'CiviCRM Event Organiser should not be network-activated. Please activate it on individual sites instead.', 'civicrm-event-organiser' ) . '</p></div>';
+		echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'CiviCRM Event Organiser should not be network-activated. Please activate it on individual sites instead.', 'civicrm-event-organiser' ) . '</p></div>';
 
 	}
 

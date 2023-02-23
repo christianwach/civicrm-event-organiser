@@ -84,7 +84,7 @@ body.js .civi_eo_event_send_email_toggle {
 	<p>
 		<?php
 		echo sprintf(
-				/* translators: 1: The opening strong tag, 2: The closing strong tag. */
+			/* translators: 1: The opening strong tag, 2: The closing strong tag. */
 			__( '%1$sNOTE%2$s: Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ),
 			'<strong>',
 			'</strong>'

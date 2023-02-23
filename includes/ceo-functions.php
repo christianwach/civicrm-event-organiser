@@ -48,7 +48,7 @@ function civicrm_event_organiser_register_links( $post_id = null ) {
 			echo '<li class="civicrm-event-register-links">';
 
 			// Show a title.
-			echo '<strong>' . __( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
+			echo '<strong>' . esc_html__( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
 
 			// Show links.
 			echo $list;

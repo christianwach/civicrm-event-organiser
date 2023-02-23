@@ -770,12 +770,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		echo '
 		<p>
-		<label for="civi_eo_venue_email">' . __( 'Email contact:', 'civicrm-event-organiser' ) . '</label>
+		<label for="civi_eo_venue_email">' . esc_html__( 'Email contact:', 'civicrm-event-organiser' ) . '</label>
 		<input type="text" id="civi_eo_venue_email" name="civi_eo_venue_email" value="' . esc_attr( $email ) . '" />
 		</p>
 
 		<p>
-		<label for="civi_eo_venue_phone">' . __( 'Phone contact:', 'civicrm-event-organiser' ) . '</label>
+		<label for="civi_eo_venue_phone">' . esc_html__( 'Phone contact:', 'civicrm-event-organiser' ) . '</label>
 		<input type="text" id="civi_eo_venue_phone" name="civi_eo_venue_phone" value="' . esc_attr( $phone ) . '" />
 		</p>
 		';
