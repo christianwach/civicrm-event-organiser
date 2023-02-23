@@ -679,7 +679,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Rebuild broken correspondences in 0.1.
 		$this->plugin->mapping->rebuild_event_correspondences();
 
-		// Init vars. Nonce is checked in "form_nonce_check()"
+		// Init vars. Nonce is checked in "form_nonce_check()".
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$role = isset( $_POST['civi_eo_event_default_role'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_role'] ) ) : '0';
 		$type = isset( $_POST['civi_eo_event_default_type'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_type'] ) ) : '0';

@@ -200,7 +200,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	public function query_post_type( $query ) {
 
 		// Is this our metabox calling?
-		$cfcr = isset( $_POST['cfcr'] ) ? wp_unslash( $_POST['cfcr'] ) : '';
+		$cfcr = isset( $_POST['cfcr'] ) ? sanitize_text_field( wp_unslash( $_POST['cfcr'] ) ) : '';
 		$is_cfcr = false;
 		if ( ! empty( $cfcr ) && $cfcr === 'true' ) {
 			$is_cfcr = true;
@@ -238,6 +238,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Get Post URL.
+		// TODO: Sanitise the incoming URL.
 		$post_url = isset( $_POST['post_url'] ) ? trim( wp_unslash( $_POST['post_url'] ) ) : '';
 
 		// Sanity checks.
@@ -279,7 +280,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 		// Override if set in POST.
 		if ( isset( $_POST['civi_eo_event_redirect_post_id'] ) ) {
-			$redirect_post_id = absint( $_POST['civi_eo_event_redirect_post_id'] );
+			$redirect_post_id = (int) sanitize_text_field( wp_unslash( $_POST['civi_eo_event_redirect_post_id'] ) );
 		}
 
 		// Trigger delete if Redirect Post ID is 0.
@@ -289,10 +290,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Set default but override if the checkbox is ticked.
-		$is_active = 0;
-		if ( isset( $_POST['civi_eo_event_redirect_active'] ) ) {
-			$is_active = absint( $_POST['civi_eo_event_redirect_active'] );
-		}
+		$is_active = isset( $_POST['civi_eo_event_redirect_active'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_redirect_active'] ) ) : 0;
 
 		// Get linked CiviCRM Event IDs.
 		$civi_event_ids = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event_id );
