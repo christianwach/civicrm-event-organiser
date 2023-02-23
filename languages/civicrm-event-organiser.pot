@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the CiviCRM Event Organiser plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.7.4a\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.7.5\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-02-21T09:51:51+00:00\n"
+"POT-Creation-Date: 2023-02-23T13:51:31+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: civicrm-event-organiser\n"
@@ -134,6 +134,22 @@ msgstr ""
 
 #: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:110
 msgid "Please add a default Email Address for sending a Confirmation Email from."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:116
+msgid "Default CiviCRM Event Confirmation Email \"CC Recipients\""
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:119
+msgid "Carbon Copied recipients of each Confirmation Email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:124
+msgid "Default CiviCRM Event Confirmation Email \"BCC Recipients\""
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:127
+msgid "Blind Carbon Copied recipients of each Confirmation Email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
 msgstr ""
 
 #: assets/templates/wordpress/metaboxes/metabox-admin-settings-submit.php:16
@@ -280,9 +296,9 @@ msgstr ""
 
 #: assets/templates/wordpress/pages/page-admin-manual-sync.php:17
 #: assets/templates/wordpress/pages/page-admin-settings.php:18
-#: civicrm-event-organiser.php:515
-#: includes/admin/ceo-admin-settings.php:224
-#: includes/admin/ceo-admin-settings.php:513
+#: civicrm-event-organiser.php:522
+#: includes/admin/ceo-admin-settings.php:220
+#: includes/admin/ceo-admin-settings.php:509
 msgid "Settings"
 msgstr ""
 
@@ -311,251 +327,251 @@ msgstr ""
 msgid "Please note: Manual Sync is intended for use on initial setup and may produce inconsistent results once you have linked Events. Always back up before using this feature."
 msgstr ""
 
-#: civicrm-event-organiser.php:519
+#: civicrm-event-organiser.php:526
 msgid "Donate!"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:174
+#: includes/admin/ceo-admin-manual-sync.php:170
 msgid "Manual Sync: CiviCRM Event Organiser"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:175
-#: includes/admin/ceo-admin-manual-sync.php:508
+#: includes/admin/ceo-admin-manual-sync.php:171
+#: includes/admin/ceo-admin-manual-sync.php:504
 msgid "Manual Sync"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:279
-#: includes/admin/ceo-admin-settings.php:344
+#: includes/admin/ceo-admin-manual-sync.php:275
+#: includes/admin/ceo-admin-settings.php:340
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:383
+#: includes/admin/ceo-admin-manual-sync.php:379
 msgid "{{total}} event types to sync..."
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:384
+#: includes/admin/ceo-admin-manual-sync.php:380
 msgid "Processing event types {{from}} to {{to}}"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:385
+#: includes/admin/ceo-admin-manual-sync.php:381
 msgid "Processing event types {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:391
+#: includes/admin/ceo-admin-manual-sync.php:387
 msgid "{{total}} categories to sync..."
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:392
+#: includes/admin/ceo-admin-manual-sync.php:388
 msgid "Processing categories {{from}} to {{to}}"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:393
+#: includes/admin/ceo-admin-manual-sync.php:389
 msgid "Processing categories {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:399
+#: includes/admin/ceo-admin-manual-sync.php:395
 msgid "{{total}} locations to sync..."
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:400
+#: includes/admin/ceo-admin-manual-sync.php:396
 msgid "Processing locations {{from}} to {{to}}"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:401
+#: includes/admin/ceo-admin-manual-sync.php:397
 msgid "Processing locations {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:407
+#: includes/admin/ceo-admin-manual-sync.php:403
 msgid "{{total}} venues to sync..."
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:408
+#: includes/admin/ceo-admin-manual-sync.php:404
 msgid "Processing venues {{from}} to {{to}}"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:409
+#: includes/admin/ceo-admin-manual-sync.php:405
 msgid "Processing venues {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:415
-#: includes/admin/ceo-admin-manual-sync.php:423
+#: includes/admin/ceo-admin-manual-sync.php:411
+#: includes/admin/ceo-admin-manual-sync.php:419
 msgid "{{total}} events to sync..."
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:416
-#: includes/admin/ceo-admin-manual-sync.php:424
+#: includes/admin/ceo-admin-manual-sync.php:412
+#: includes/admin/ceo-admin-manual-sync.php:420
 msgid "Processing events {{from}} to {{to}}"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:417
-#: includes/admin/ceo-admin-manual-sync.php:425
+#: includes/admin/ceo-admin-manual-sync.php:413
+#: includes/admin/ceo-admin-manual-sync.php:421
 msgid "Processing events {{from}} to {{to}} complete"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:431
+#: includes/admin/ceo-admin-manual-sync.php:427
 msgid "All done!"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:561
+#: includes/admin/ceo-admin-manual-sync.php:557
 msgid "Event Organiser Categories &rarr; CiviCRM Event Types"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:574
+#: includes/admin/ceo-admin-manual-sync.php:570
 msgid "CiviCRM Event Types &rarr; Event Organiser Categories"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:587
+#: includes/admin/ceo-admin-manual-sync.php:583
 msgid "Event Organiser Venues &rarr; CiviCRM Event Locations"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:600
+#: includes/admin/ceo-admin-manual-sync.php:596
 msgid "CiviCRM Event Locations &rarr; Event Organiser Venues"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:613
+#: includes/admin/ceo-admin-manual-sync.php:609
 msgid "Event Organiser Events &rarr; CiviCRM Events"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:626
+#: includes/admin/ceo-admin-manual-sync.php:622
 msgid "CiviCRM Events &rarr; Event Organiser Events"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:923
+#: includes/admin/ceo-admin-manual-sync.php:919
 msgid "Could not sync Event Term"
 msgstr ""
 
-#: includes/admin/ceo-admin-manual-sync.php:1056
+#: includes/admin/ceo-admin-manual-sync.php:1052
 msgid "Could not sync Event Type"
 msgstr ""
 
-#: includes/admin/ceo-admin-multisite.php:117
+#: includes/admin/ceo-admin-multisite.php:113
 msgid "CiviCRM Event Organiser should not be network-activated. Please activate it on individual sites instead."
 msgstr ""
 
-#: includes/admin/ceo-admin-settings.php:202
-#: includes/admin/ceo-admin-settings.php:223
+#: includes/admin/ceo-admin-settings.php:198
+#: includes/admin/ceo-admin-settings.php:219
 msgid "Settings: CiviCRM Event Organiser"
 msgstr ""
 
-#: includes/admin/ceo-admin-settings.php:203
+#: includes/admin/ceo-admin-settings.php:199
 msgid "Event Organiser"
 msgstr ""
 
-#: includes/admin/ceo-admin-settings.php:523
+#: includes/admin/ceo-admin-settings.php:519
 msgid "General Event Settings"
 msgstr ""
 
-#: includes/admin/ceo-admin-settings.php:533
+#: includes/admin/ceo-admin-settings.php:529
 msgid "Online Registration Settings"
 msgstr ""
 
 #. translators: 1: The opening anchor tag, 2: The closing anchor tag.
-#: includes/admin/ceo-admin.php:302
+#: includes/admin/ceo-admin.php:298
 msgid "CiviCRM Event Organiser needs your attention. Please visit the %1$sSettings Page%2$s."
 msgstr ""
 
-#: includes/admin/ceo-admin.php:325
+#: includes/admin/ceo-admin.php:321
 msgid "CiviCRM Event Organiser requires Event Organiser version 3 or higher."
 msgstr ""
 
-#: includes/ceo-functions.php:53
-#: includes/ceo-shortcodes.php:148
+#: includes/ceo-functions.php:51
+#: includes/ceo-shortcodes.php:144
 msgid "Registration Links"
 msgstr ""
 
 #. translators: %s: The formatted Event Occurrence.
-#: includes/ceo-functions.php:164
+#: includes/ceo-functions.php:160
 msgid "Register for %s"
 msgstr ""
 
-#: includes/ceo-functions.php:169
+#: includes/ceo-functions.php:165
 msgid "Register"
 msgstr ""
 
-#: includes/ceo-mapping.php:770
+#: includes/ceo-mapping.php:766
 msgid "Sync in both directions"
 msgstr ""
 
-#: includes/ceo-mapping.php:771
+#: includes/ceo-mapping.php:767
 msgid "One-way sync: EO &rarr; CiviCRM"
 msgstr ""
 
-#: includes/ceo-mapping.php:772
+#: includes/ceo-mapping.php:768
 msgid "One-way sync: CiviCRM &rarr; EO"
 msgstr ""
 
-#: includes/ceo-mapping.php:773
+#: includes/ceo-mapping.php:769
 msgid "Do not sync"
 msgstr ""
 
-#: includes/ceo-taxonomy.php:764
+#: includes/ceo-taxonomy.php:760
 msgid "Empty Term"
 msgstr ""
 
-#: includes/ceo-term-html.php:108
-#: includes/ceo-term-html.php:138
+#: includes/ceo-term-html.php:104
+#: includes/ceo-term-html.php:134
 msgctxt "Taxonomy Description"
 msgid "Description"
 msgstr ""
 
-#: includes/ceo-term-html.php:110
-#: includes/ceo-term-html.php:140
+#: includes/ceo-term-html.php:106
+#: includes/ceo-term-html.php:136
 msgid "The description is not prominent by default, however some themes may show it."
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-event.php:193
-#: includes/civicrm/ceo-civicrm-event.php:297
-#: includes/civicrm/ceo-civicrm-event.php:433
-#: includes/civicrm/ceo-civicrm-event.php:470
+#: includes/civicrm/ceo-civicrm-event.php:189
+#: includes/civicrm/ceo-civicrm-event.php:293
+#: includes/civicrm/ceo-civicrm-event.php:429
+#: includes/civicrm/ceo-civicrm-event.php:466
 msgid "Choose Feature Image"
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-event.php:199
-#: includes/civicrm/ceo-civicrm-event.php:303
+#: includes/civicrm/ceo-civicrm-event.php:195
+#: includes/civicrm/ceo-civicrm-event.php:299
 msgid "If you would like to add a Feature Image to the Event, do so here."
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-event.php:439
+#: includes/civicrm/ceo-civicrm-event.php:435
 msgid "If you would like to add a Feature Image to the Event Organiser Event, choose one here."
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-event.php:471
+#: includes/civicrm/ceo-civicrm-event.php:467
 msgid "Set Feature Image"
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-event.php:751
+#: includes/civicrm/ceo-civicrm-event.php:747
 msgid "Sync this Event to WordPress now"
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-event.php:1057
+#: includes/civicrm/ceo-civicrm-event.php:1053
 msgid "You must have some CiviCRM Event Types defined"
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-location.php:307
+#: includes/civicrm/ceo-civicrm-location.php:303
 msgid "Could not get CiviCRM Location by ID"
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-location.php:734
+#: includes/civicrm/ceo-civicrm-location.php:730
 msgid "Could not fetch CiviCRM Email."
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-location.php:769
+#: includes/civicrm/ceo-civicrm-location.php:765
 msgid "Could not update CiviCRM Email."
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-location.php:851
+#: includes/civicrm/ceo-civicrm-location.php:847
 msgid "Could not fetch CiviCRM Phone."
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-location.php:887
+#: includes/civicrm/ceo-civicrm-location.php:883
 msgid "Could not update CiviCRM Phone."
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-location.php:989
+#: includes/civicrm/ceo-civicrm-location.php:985
 msgid "Could not fetch CiviCRM Address."
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-location.php:1078
+#: includes/civicrm/ceo-civicrm-location.php:1074
 msgid "Could not update CiviCRM Address."
 msgstr ""
 
@@ -571,74 +587,74 @@ msgstr ""
 msgid "CiviCRM Post Type Sync"
 msgstr ""
 
-#: includes/compat/ceo-cai.php:275
-#: includes/compat/ceo-cwps.php:366
+#: includes/compat/ceo-cai.php:271
+#: includes/compat/ceo-cwps.php:362
 msgid "A numeric ID must be present to update an Event."
 msgstr ""
 
-#: includes/compat/ceo-cfcr.php:146
-#: includes/compat/ceo-cfcr.php:172
+#: includes/compat/ceo-cfcr.php:142
+#: includes/compat/ceo-cfcr.php:168
 msgid "None selected"
 msgstr ""
 
-#: includes/compat/ceo-cfcr.php:170
+#: includes/compat/ceo-cfcr.php:166
 msgid "Choose Redirect Location"
 msgstr ""
 
-#: includes/compat/ceo-cfcr.php:171
+#: includes/compat/ceo-cfcr.php:167
 msgid "Set Redirect Location"
 msgstr ""
 
-#: includes/compat/ceo-cwps.php:601
+#: includes/compat/ceo-cwps.php:597
 msgid "Event"
 msgstr ""
 
-#: includes/eo/ceo-eo-venue.php:353
+#: includes/eo/ceo-eo-venue.php:349
 msgid "Untitled venue"
 msgstr ""
 
-#: includes/eo/ceo-eo-venue.php:447
+#: includes/eo/ceo-eo-venue.php:443
 msgid "Venue not created."
 msgstr ""
 
-#: includes/eo/ceo-eo-venue.php:744
-#: includes/eo/ceo-eo.php:890
+#: includes/eo/ceo-eo-venue.php:740
+#: includes/eo/ceo-eo.php:888
 msgid "CiviCRM Settings"
 msgstr ""
 
-#: includes/eo/ceo-eo-venue.php:777
+#: includes/eo/ceo-eo-venue.php:773
 msgid "Email contact:"
 msgstr ""
 
-#: includes/eo/ceo-eo-venue.php:782
+#: includes/eo/ceo-eo-venue.php:778
 msgid "Phone contact:"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:485
+#: includes/eo/ceo-eo.php:483
 msgid "Untitled CiviCRM Event"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:900
+#: includes/eo/ceo-eo.php:898
 msgid "Edit Events in CiviCRM"
 msgstr ""
 
 #. translators: %s: The formatted link to the Event.
-#: includes/eo/ceo-eo.php:1049
+#: includes/eo/ceo-eo.php:1047
 msgid "Info and Settings for: %s"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1111
+#: includes/eo/ceo-eo.php:1109
 msgid "View Event in WordPress"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1118
+#: includes/eo/ceo-eo.php:1116
 msgid "Edit Event in WordPress"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1219
+#: includes/eo/ceo-eo.php:1217
 msgid "Edit in CiviCRM"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1273
+#: includes/eo/ceo-eo.php:1271
 msgid "CiviCRM"
 msgstr ""
