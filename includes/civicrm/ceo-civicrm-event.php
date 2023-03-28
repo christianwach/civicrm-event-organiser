@@ -1034,6 +1034,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			$civi_event['is_online_registration'] = 1;
 		}
 
+		// Dedupe Rule default.
+		$civi_event['dedupe_rule_group_id'] = '';
+
+		// Add existing Dedupe Rule ID to our params if we have one.
+		$existing_rule_id = $this->registration->get_registration_dedupe_rule( $post );
+		if ( ! empty( $existing_rule_id ) && is_numeric( $existing_rule_id ) && $existing_rule_id > 0 ) {
+			$civi_event['dedupe_rule_group_id'] = (int) $existing_rule_id;
+		}
+
 		// Participant Role default.
 		$civi_event['default_role_id'] = 0;
 

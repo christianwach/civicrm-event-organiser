@@ -128,6 +128,19 @@ body.js .civi_eo_event_send_email_toggle {
 
 			<div class="civi_eo_event_option_block">
 				<p>
+					<label for="civi_eo_event_dedupe_rule"><?php esc_html_e( 'Online Registration Dedupe Rule:', 'civicrm-event-organiser' ); ?></label>
+					<select id="civi_eo_event_dedupe_rule" name="civi_eo_event_dedupe_rule">
+						<?php echo $dedupe_rules; ?>
+					</select>
+				</p>
+
+				<p class="description">
+					<?php esc_html_e( 'The Dedupe Rule assigned to the Online Registration form.', 'civicrm-event-organiser' ); ?>
+				</p>
+			</div>
+
+			<div class="civi_eo_event_option_block">
+				<p>
 					<label for="civi_eo_event_role"><?php esc_html_e( 'Participant Role:', 'civicrm-event-organiser' ); ?></label>
 					<select id="civi_eo_event_role" name="civi_eo_event_role">
 						<?php echo $roles; ?>

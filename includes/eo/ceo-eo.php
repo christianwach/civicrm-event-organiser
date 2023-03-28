@@ -635,6 +635,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$this->set_event_registration( $event_id );
 		}
 
+		// Save Event meta if the Event has a Dedupe Rule specified.
+		if ( ! empty( $civi_event['dedupe_rule_group_id'] ) ) {
+			$this->set_event_registration_dedupe_rule( $event_id, (int) $civi_event['dedupe_rule_group_id'] );
+		} else {
+			$this->set_event_registration_dedupe_rule( $event_id, '0' );
+		}
+
 		// Save Event meta if the Event has a Participant Role specified.
 		if ( ! empty( $civi_event['default_role_id'] ) ) {
 			$this->set_event_role( $event_id, $civi_event['default_role_id'] );
@@ -936,6 +943,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Get Registration Profiles.
 		$profiles = $this->plugin->civi->registration->get_registration_profiles_select( $event );
+
+		// Get Registration Dedupe Rules.
+		$dedupe_rules = $this->plugin->civi->registration->get_registration_dedupe_rules_select( $event );
 
 		// Get the current confirmation page setting.
 		$confirm_enabled = $this->plugin->civi->registration->get_registration_confirm_enabled( $event->ID );
@@ -1362,6 +1372,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Save Registration Profile.
 		$this->update_event_registration_profile( $event_id );
 
+		// Save Registration Dedupe Rule.
+		$this->update_event_registration_dedupe_rule( $event_id );
+
 		// Save Registration Confirmation page setting.
 		$this->update_event_registration_confirm( $event_id );
 
@@ -1694,6 +1707,91 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Clear saved data.
 		unset( $this->sync_data );
+
+	}
+
+	// -------------------------------------------------------------------------
+
+	/**
+	 * Update Event Registration Dedupe Rule value.
+	 *
+	 * @since 0.7.6
+	 *
+	 * @param int $event_id The numeric ID of the Event.
+	 */
+	public function update_event_registration_dedupe_rule( $event_id ) {
+
+		// Retrieve meta value. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$dedupe_rule_id = isset( $_POST['civi_eo_event_dedupe_rule'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['civi_eo_event_dedupe_rule'] ) ) : 0;
+
+		// Update Event meta.
+		update_post_meta( $event_id, '_civi_registration_dedupe_rule', $dedupe_rule_id );
+
+	}
+
+	/**
+	 * Update Event Registration Dedupe Rule value.
+	 *
+	 * @since 0.7.6
+	 *
+	 * @param int $event_id The numeric ID of the Event.
+	 * @param int $dedupe_rule_id The Event Registration Dedupe Rule ID for the CiviCRM Event.
+	 */
+	public function set_event_registration_dedupe_rule( $event_id, $dedupe_rule_id = null ) {
+
+		// If not set.
+		if ( is_null( $dedupe_rule_id ) ) {
+
+			// Do we have a default set?
+			$default = $this->plugin->db->option_get( 'civi_eo_event_default_dedupe' );
+
+			// Override with default value if we get one.
+			if ( $default !== '' && is_numeric( $default ) ) {
+				$dedupe_rule_id = absint( $default );
+			}
+
+		}
+
+		// Update Event meta.
+		update_post_meta( $event_id, '_civi_registration_dedupe_rule', $dedupe_rule_id );
+
+	}
+
+	/**
+	 * Get Event Registration Dedupe Rule value.
+	 *
+	 * @since 0.7.6
+	 *
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @return int|str $dedupe_rule_id The Dedupe Rule ID, or empty string if not set.
+	 */
+	public function get_event_registration_dedupe_rule( $post_id ) {
+
+		// Get the meta value.
+		$dedupe_rule_id = get_post_meta( $post_id, '_civi_registration_dedupe_rule', true );
+
+		// Cast as integer if set.
+		if ( '' !== $dedupe_rule_id ) {
+			$dedupe_rule_id =  (int) $dedupe_rule_id;
+		}
+
+		// --<
+		return $dedupe_rule_id;
+
+	}
+
+	/**
+	 * Delete Event Registration Dedupe Rule value for a CiviCRM Event.
+	 *
+	 * @since 0.7.6
+	 *
+	 * @param int $post_id The numeric ID of the WP Post.
+	 */
+	public function clear_event_registration_dedupe_rule( $post_id ) {
+
+		// Delete the meta value.
+		delete_post_meta( $post_id, '_civi_registration_dedupe_rule' );
 
 	}
 

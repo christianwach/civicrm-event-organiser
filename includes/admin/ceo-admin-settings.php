@@ -603,6 +603,9 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Get all Event Registration Profiles.
 		$profiles = $this->plugin->civi->registration->get_registration_profiles_select();
 
+		// Get all Event Registration Dedupe Rules.
+		$dedupe_rules = $this->plugin->civi->registration->get_registration_dedupe_rules_select();
+
 		// Get the current confirmation page setting.
 		$confirm_checked = '';
 		$confirm_enabled = $this->plugin->civi->registration->get_registration_confirm_enabled();
@@ -684,6 +687,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$role = isset( $_POST['civi_eo_event_default_role'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_role'] ) ) : '0';
 		$type = isset( $_POST['civi_eo_event_default_type'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_type'] ) ) : '0';
 		$profile = isset( $_POST['civi_eo_event_default_profile'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_profile'] ) ) : '0';
+		$dedupe = isset( $_POST['civi_eo_event_default_dedupe'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_dedupe'] ) ) : '0';
 		$confirm = isset( $_POST['civi_eo_event_default_confirm'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_confirm'] ) ) : '';
 		$send_email = isset( $_POST['civi_eo_event_default_send_email'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email'] ) ) : '';
 		$from_name = isset( $_POST['civi_eo_event_default_send_email_from_name'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_from_name'] ) ) : '';
@@ -704,6 +708,10 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Sanitise and save option.
 		$default_profile = (int) $profile;
 		$this->admin->option_save( 'civi_eo_event_default_profile', $default_profile );
+
+		// Save option.
+		$default_dedupe = (int) $dedupe;
+		$this->admin->option_save( 'civi_eo_event_default_dedupe', $dedupe );
 
 		// Save Confirmation Page option.
 		if ( $confirm == '1' ) {

@@ -50,6 +50,18 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 		</tr>
 	<?php endif; ?>
 
+	<?php if ( $dedupe_rules != '' ) : ?>
+		<tr valign="top">
+			<th scope="row"><label for="civi_eo_event_default_dedupe"><?php esc_html_e( 'Default CiviCRM Event Registration Dedupe Rule', 'civicrm-event-organiser' ); ?></label></th>
+			<td>
+				<select id="civi_eo_event_default_dedupe" name="civi_eo_event_default_dedupe">
+					<?php echo $dedupe_rules; ?>
+				</select>
+				<p class="description"><?php esc_html_e( 'By default, CiviCRM will use the "Unsupervised" Dedupe Rule to match Participants in anonymous registrations with existing Contacts.', 'civicrm-event-organiser' ); ?></p>
+			</td>
+		</tr>
+	<?php endif; ?>
+
 	<tr valign="top">
 		<th scope="row"><?php esc_html_e( 'Default CiviCRM Event Registration Confirmation Screen Setting', 'civicrm-event-organiser' ); ?></th>
 		<td>

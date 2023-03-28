@@ -671,6 +671,133 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 	// -------------------------------------------------------------------------
 
 	/**
+	 * Get the default Registration Dedupe Rule for an Event Organiser Event.
+	 *
+	 * Falls back to the default as set on the plugin settings screen.
+	 * Falls back to false otherwise.
+	 *
+	 * @since 0.7.6
+	 *
+	 * @param object $post An Event Organiser Event object.
+	 * @return int|bool $dedupe_rule_id The default Registration Dedupe Rule ID, or false on failure.
+	 */
+	public function get_registration_dedupe_rule( $post = null ) {
+
+		// Init with impossible ID.
+		$dedupe_rule_id = false;
+
+		// Do we have a default set?
+		$default = $this->plugin->db->option_get( 'civi_eo_event_default_dedupe', 'xxxxx' );
+
+		// Override with default value if we have one.
+		if ( 'xxxxx' !== $default ) {
+			$dedupe_rule_id = $default;
+		}
+
+		// If we have a Post.
+		if ( ! is_null( $post ) && is_object( $post ) ) {
+
+			// Get stored value.
+			$stored_id = $this->plugin->eo->get_event_registration_dedupe_rule( $post->ID );
+
+			// Override with stored value if we have one.
+			if ( $stored_id !== '' ) {
+				$dedupe_rule_id = (int) $stored_id;
+			}
+
+		}
+
+		// --<
+		return $dedupe_rule_id;
+
+	}
+
+	/**
+	 * Gets the CiviCRM Event Registration Dedupe Rules.
+	 *
+	 * @since 0.7.6
+	 *
+	 * @return array $dedupe_rules The array of Dedupe Rules, or empty on failure.
+	 */
+	public function get_registration_dedupe_rules() {
+
+		// Bail if we fail to init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return [];
+		}
+
+		// Get the Dedupe Rules for the "Individual" Contact Type.
+		$dedupe_rules = CRM_Dedupe_BAO_RuleGroup::getByType( 'Individual' );
+
+		// --<
+		return $dedupe_rules;
+
+	}
+
+	/**
+	 * Gets the CiviCRM Event Registration Dedupe Rules formatted as a dropdown list.
+	 *
+	 * @since 0.7.6
+	 *
+	 * @param object $post An Event Organiser Event object.
+	 * @return str $html Markup containing select options.
+	 */
+	public function get_registration_dedupe_rules_select( $post = null ) {
+
+		// Init return.
+		$html = '';
+
+		// Bail if we fail to init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $html;
+		}
+
+		// Get the Dedupe Rules.
+		$dedupe_rules = $this->get_registration_dedupe_rules();
+		if ( empty( $dedupe_rules ) ) {
+			return $html;
+		}
+
+		// Init options.
+		$options = [];
+
+		// Get existing Dedupe Rule ID.
+		$existing_id = $this->get_registration_dedupe_rule( $post );
+
+		// Set selected if this value is the same as the default.
+		$selected = '';
+		if ( '' === $existing_id || 0 === (int) $existing_id ) {
+			$selected = ' selected="selected"';
+		}
+
+		// Add default option.
+		$options[] = '<option value="0"' . $selected . '>' . esc_html__( 'CiviCRM Default', 'civicrm-event-organiser' ) . '</option>';
+
+		// Loop.
+		foreach ( $dedupe_rules as $key => $rule ) {
+
+			// Set selected if this value is the same as the default.
+			$selected = '';
+			if ( (int) $existing_id === (int) $key ) {
+				$selected = ' selected="selected"';
+			}
+
+			// Construct option.
+			$options[] = '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $rule ) . '</option>';
+
+		}
+
+		// Create html.
+		$html = implode( "\n", $options );
+
+		// --<
+		return $html;
+
+	}
+
+	// -------------------------------------------------------------------------
+
+	/**
 	 * Get the default Registration form confirmation page setting for an Event Organiser Event.
 	 *
 	 * Falls back to the default as set on the plugin settings screen.
