@@ -743,6 +743,18 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 */
 	private function form_event_sync_template( $formName, &$form ) {
 
+		// Only check for skip when we have an Event ID.
+		$event_id = $form->getVar( '_id' );
+		if ( ! empty( $event_id ) && is_numeric( $event_id ) ) {
+
+			// No need for checkbox when there is already an Event Organiser Event.
+			$eo_event_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $event_id );
+			if ( ! empty( $eo_event_id ) ) {
+				return;
+			}
+
+		}
+
 		// Add our checkbox.
 		$label = '<strong>' . __( 'Sync this Event to WordPress now', 'civicrm-event-organiser' ) . '</strong>';
 		$form->add( 'checkbox', 'ceo_event_sync_checkbox', $label );
@@ -867,9 +879,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$sync = isset( $_POST['ceo_event_sync_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_event_sync_checkbox'] ) ) : 0;
 
-		// Bail if our sync checkbox is not checked.
+		// If our sync checkbox is not checked or not present.
 		if ( '1' !== (string) $sync ) {
-			return;
+
+			// Bail if there is no Event Organiser Event.
+			$eo_event_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $objectId );
+			if ( empty( $eo_event_id ) ) {
+				return;
+			}
+
 		}
 
 		// Bail if this CiviCRM Event is part of an Event Organiser sequence.
