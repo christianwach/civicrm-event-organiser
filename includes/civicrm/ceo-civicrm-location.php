@@ -1036,14 +1036,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 
 					// Replace Country.
 					$country = $this->country_get_by_name( $venue->venue_country );
-					if ( $country !== false ) {
+					if ( ! empty( $country ) ) {
 						$existing_address['country_id'] = $country['id'];
 					}
 
 					// Replace State/Province.
 					if ( ! empty( $venue->venue_state ) && ! empty( $country ) ) {
 						$state_province = $this->state_province_get_by_name( $venue->venue_state, $country['id'] );
-						if ( $state_province !== false ) {
+						if ( ! empty( $state_province ) ) {
 							$existing_address['state_province_id'] = $state_province['id'];
 						}
 					}
@@ -1122,14 +1122,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 
 			// Maybe add Country.
 			$country = $this->country_get_by_name( $venue->venue_country );
-			if ( $country !== false ) {
+			if ( ! empty( $country ) ) {
 				$address_data['country_id'] = $country['id'];
 			}
 
 			// Maybe add State/Province.
 			if ( ! empty( $venue->venue_state ) && ! empty( $country ) ) {
 				$state_province = $this->state_province_get_by_name( $venue->venue_state, $country['id'] );
-				if ( $state_province !== false ) {
+				if ( ! empty( $state_province ) ) {
 					$address_data['state_province_id'] = $state_province['id'];
 				}
 			}
@@ -1201,7 +1201,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		// Check Country.
 		if ( ! empty( $address['country_id'] ) ) {
 			$country = $this->country_get_by_id( $address['country_id'] );
-			if ( $country !== false ) {
+			if ( ! empty( $country ) ) {
 				if ( ! empty( $venue->venue_country ) ) {
 					if ( $country['name'] != $venue->venue_country ) {
 						return true;
@@ -1218,7 +1218,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		// Check State/Province.
 		if ( ! empty( $address['state_province_id'] ) ) {
 			$state_province = $this->state_province_get_by_id( $address['state_province_id'] );
-			if ( $state_province !== false ) {
+			if ( ! empty( $state_province ) ) {
 				if ( ! empty( $venue->venue_state ) ) {
 					if ( $state_province['name'] != $venue->venue_state ) {
 						return true;
