@@ -1773,7 +1773,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Cast as integer if set.
 		if ( '' !== $dedupe_rule_id ) {
-			$dedupe_rule_id =  (int) $dedupe_rule_id;
+			$dedupe_rule_id = (int) $dedupe_rule_id;
 		}
 
 		// --<
