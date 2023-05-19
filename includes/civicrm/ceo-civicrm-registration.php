@@ -726,8 +726,46 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			return [];
 		}
 
-		// Get the Dedupe Rules for the "Individual" Contact Type.
-		$dedupe_rules = CRM_Dedupe_BAO_RuleGroup::getByType( 'Individual' );
+		// Init return.
+		$dedupe_rules = [];
+
+		/*
+		 * If the API4 Entity is available, use it.
+		 *
+		 * @see https://github.com/civicrm/civicrm-core/blob/master/Civi/Api4/DedupeRuleGroup.php#L20
+		 */
+		$version = CRM_Utils_System::version();
+		if ( version_compare( $version, '5.39', '>=' ) ) {
+
+			// Build params to get Dedupe Rule Groups.
+			$params = [
+				'limit' => 0,
+				'checkPermissions' => false,
+				'where' => [
+					[ 'contact_type', '=', 'Individual' ],
+				],
+			];
+
+			// Call CiviCRM API4.
+			$result = civicrm_api4( 'DedupeRuleGroup', 'get', $params );
+
+			// Bail if there are no results.
+			if ( empty( $result->count() ) ) {
+				return $dedupe_rules;
+			}
+
+			// Add the results to the return array.
+			foreach ( $result as $item ) {
+				$title = ! empty( $item['title'] ) ? $item['title'] : ( ! empty( $item['name'] ) ? $item['name'] : $item['contact_type'] );
+				$dedupe_rules[ $item['id'] ] = $title . ' - ' . $item['used'];
+			}
+
+		} else {
+
+			// Get the Dedupe Rules for the "Individual" Contact Type.
+			$dedupe_rules = CRM_Dedupe_BAO_RuleGroup::getByType( 'Individual' );
+
+		}
 
 		// --<
 		return $dedupe_rules;
