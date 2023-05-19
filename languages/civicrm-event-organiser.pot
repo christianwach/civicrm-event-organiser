@@ -2,14 +2,14 @@
 # This file is distributed under the same license as the CiviCRM Event Organiser plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.7.5\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.7.6a\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-02-23T13:51:31+00:00\n"
+"POT-Creation-Date: 2023-05-19T09:33:26+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.7.1\n"
 "X-Domain: civicrm-event-organiser\n"
@@ -84,71 +84,79 @@ msgstr ""
 msgid "Please select a default Profile for Event Registration Pages."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:54
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:55
+msgid "Default CiviCRM Event Registration Dedupe Rule"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:60
+msgid "By default, CiviCRM will use the \"Unsupervised\" Dedupe Rule to match Participants in anonymous registrations with existing Contacts."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:66
 msgid "Default CiviCRM Event Registration Confirmation Screen Setting"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:57
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:69
 msgid "Use a Registration Confirmation Screen for free Events."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:59
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:71
 msgid "Please choose the default setting for Registration Confirmation Screens."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:82
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:94
 msgid "Default CiviCRM Event Confirmation Email Setting"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:85
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:97
 msgid "Send a Confirmation Email."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:86
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:98
 msgid "The Confirmation Email includes event date(s), location and contact information. For Paid Events, the Confirmation Email is also a receipt for payment."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:88
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:100
 msgid "Please choose the default setting for sending a Confirmation Email."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:94
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:106
 msgid "Default CiviCRM Event Confirmation Email \"From Name\""
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:97
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:109
 msgid "The name to send the Confirmation Email from."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:99
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:111
 msgid "Please add a default \"From Name\" for the Confirmation Email."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:105
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:117
 msgid "Default CiviCRM Event Confirmation Email \"From Email\""
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:108
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:120
 msgid "The Email Address to send the Confirmation Email from."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:110
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:122
 msgid "Please add a default Email Address for sending a Confirmation Email from."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:116
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:128
 msgid "Default CiviCRM Event Confirmation Email \"CC Recipients\""
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:119
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:131
 msgid "Carbon Copied recipients of each Confirmation Email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:124
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:136
 msgid "Default CiviCRM Event Confirmation Email \"BCC Recipients\""
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:127
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:139
 msgid "Blind Carbon Copied recipients of each Confirmation Email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
 msgstr ""
 
@@ -250,47 +258,55 @@ msgid "The profile assigned to the Online Registration form."
 msgstr ""
 
 #: assets/templates/wordpress/metaboxes/metabox-event-sync.php:131
-msgid "Participant Role:"
+msgid "Online Registration Dedupe Rule:"
 msgstr ""
 
 #: assets/templates/wordpress/metaboxes/metabox-event-sync.php:138
-msgid "This role is automatically assigned to people when they register online for this Event and where the Registration Profile does not allow a role to be selected."
+msgid "The Dedupe Rule assigned to the Online Registration form."
 msgstr ""
 
 #: assets/templates/wordpress/metaboxes/metabox-event-sync.php:144
+msgid "Participant Role:"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:151
+msgid "This role is automatically assigned to people when they register online for this Event and where the Registration Profile does not allow a role to be selected."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:157
 msgid "Use a Confirmation Screen:"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:149
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:162
 msgid "If this is a free Event, use a Registration Confirmation Screen."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:155
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:168
 msgid "Send Confirmation Email:"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:160
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:173
 msgid "Email includes date(s), location and contact information. If this is a paid Event, the Email is also the receipt."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:165
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:178
 msgid "From Name:"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:169
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:182
 msgid "From Email:"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:173
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:186
 msgid "CC Confirmation To:"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:175
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:180
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:188
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:193
 msgid "Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:178
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:191
 msgid "BCC Confirmation To:"
 msgstr ""
 
@@ -539,11 +555,11 @@ msgstr ""
 msgid "Set Feature Image"
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-event.php:747
+#: includes/civicrm/ceo-civicrm-event.php:759
 msgid "Sync this Event to WordPress now"
 msgstr ""
 
-#: includes/civicrm/ceo-civicrm-event.php:1053
+#: includes/civicrm/ceo-civicrm-event.php:1080
 msgid "You must have some CiviCRM Event Types defined"
 msgstr ""
 
@@ -573,6 +589,10 @@ msgstr ""
 
 #: includes/civicrm/ceo-civicrm-location.php:1074
 msgid "Could not update CiviCRM Address."
+msgstr ""
+
+#: includes/civicrm/ceo-civicrm-registration.php:812
+msgid "CiviCRM Default"
 msgstr ""
 
 #: includes/compat/acf/fields/ceo-acf-field-civicrm-event-id.php:142
@@ -618,7 +638,7 @@ msgid "Venue not created."
 msgstr ""
 
 #: includes/eo/ceo-eo-venue.php:740
-#: includes/eo/ceo-eo.php:888
+#: includes/eo/ceo-eo.php:895
 msgid "CiviCRM Settings"
 msgstr ""
 
@@ -634,27 +654,27 @@ msgstr ""
 msgid "Untitled CiviCRM Event"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:898
+#: includes/eo/ceo-eo.php:905
 msgid "Edit Events in CiviCRM"
 msgstr ""
 
 #. translators: %s: The formatted link to the Event.
-#: includes/eo/ceo-eo.php:1047
+#: includes/eo/ceo-eo.php:1057
 msgid "Info and Settings for: %s"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1109
+#: includes/eo/ceo-eo.php:1119
 msgid "View Event in WordPress"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1116
+#: includes/eo/ceo-eo.php:1126
 msgid "Edit Event in WordPress"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1217
+#: includes/eo/ceo-eo.php:1227
 msgid "Edit in CiviCRM"
 msgstr ""
 
-#: includes/eo/ceo-eo.php:1271
+#: includes/eo/ceo-eo.php:1281
 msgid "CiviCRM"
 msgstr ""
