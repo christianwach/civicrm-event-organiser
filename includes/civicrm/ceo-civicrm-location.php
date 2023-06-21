@@ -30,6 +30,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	public $plugin;
 
 	/**
+	 * CiviCRM object.
+	 *
+	 * @since 0.7
+	 * @access public
+	 * @var object $civicrm The CiviCRM object.
+	 */
+	public $civicrm;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.7
