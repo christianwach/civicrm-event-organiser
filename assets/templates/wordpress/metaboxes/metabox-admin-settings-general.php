@@ -58,6 +58,21 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 		</tr>
 	<?php endif; ?>
 
+	<?php if ( $civicrm_event_sync != '' ) : ?>
+		<tr valign="top">
+			<th scope="row"><label for="civi_eo_event_default_civievent_sync"><?php esc_html_e( 'Syncing CiviCRM Events to Event Organiser', 'civicrm-event-organiser' ); ?></label></th>
+			<td>
+				<select id="civi_eo_event_default_civievent_sync" name="civi_eo_event_default_civievent_sync">
+					<?php echo $civicrm_event_sync; ?>
+				</select>
+				<p class="description"><?php esc_html_e( 'By default, all Events in CiviCRM will sync to Event Organiser. If you do not want all CiviCRM Events to sync, then you can enable a checkbox on each CiviCRM Event that must be cheecked in order to sync data to Event Organiser.', 'civicrm-event-organiser' ); ?></p>
+				<?php if ( $civicrm_event_sync_required ) : ?>
+					<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please select a default for syncing CiviCRM Events to Event Organiser.', 'civicrm-event-organiser' ); ?></p></div>
+				<?php endif; ?>
+			</td>
+		</tr>
+	<?php endif; ?>
+
 	<?php if ( $status_sync != '' ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_status_sync"><?php esc_html_e( 'Map CiviCRM Event Status and EO Event Status', 'civicrm-event-organiser' ); ?></label></th>

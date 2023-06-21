@@ -680,6 +680,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			return;
 		}
 
+		// Add checkbox depending on CiviCRM Event sync setting.
+		$civicrm_event_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+		if ( 0 === $civicrm_event_sync ) {
+			return;
+		}
+
 		// We want the page, so grab "Print" var from form controller.
 		$controller = $form->getVar( 'controller' );
 		if ( ! empty( $controller->_print ) ) {
@@ -714,6 +720,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Is this the Event Info form?
 		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+			return;
+		}
+
+		// Add checkbox depending on CiviCRM Event sync setting.
+		$civicrm_event_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+		if ( 0 === $civicrm_event_sync ) {
 			return;
 		}
 
@@ -801,13 +813,19 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			return;
 		}
 
-		// CiviCRM handles verification.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$sync = isset( $_POST['ceo_event_sync_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_event_sync_checkbox'] ) ) : 0;
+		// Query checkbox depending on CiviCRM Event sync setting.
+		$civicrm_event_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+		if ( 1 === $civicrm_event_sync ) {
 
-		// Bail if our sync checkbox is not checked.
-		if ( '1' !== (string) $sync ) {
-			return;
+			// CiviCRM handles verification.
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$sync = isset( $_POST['ceo_event_sync_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_event_sync_checkbox'] ) ) : 0;
+
+			// Bail if our sync checkbox is not checked.
+			if ( '1' !== (string) $sync ) {
+				return;
+			}
+
 		}
 
 		// Update a single Event Organiser Event - or create if it doesn't exist.
@@ -875,17 +893,23 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			return;
 		}
 
-		// CiviCRM handles verification.
-		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$sync = isset( $_POST['ceo_event_sync_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_event_sync_checkbox'] ) ) : 0;
+		// Query checkbox depending on CiviCRM Event sync setting.
+		$civicrm_event_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+		if ( 1 === $civicrm_event_sync ) {
 
-		// If our sync checkbox is not checked or not present.
-		if ( '1' !== (string) $sync ) {
+			// CiviCRM handles verification.
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$sync = isset( $_POST['ceo_event_sync_checkbox'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_event_sync_checkbox'] ) ) : 0;
 
-			// Bail if there is no Event Organiser Event.
-			$eo_event_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $objectId );
-			if ( empty( $eo_event_id ) ) {
-				return;
+			// If our sync checkbox is not checked or not present.
+			if ( '1' !== (string) $sync ) {
+
+				// Bail if there is no Event Organiser Event.
+				$eo_event_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $objectId );
+				if ( empty( $eo_event_id ) ) {
+					return;
+				}
+
 			}
 
 		}

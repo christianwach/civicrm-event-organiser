@@ -747,6 +747,52 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 	}
 
 	/**
+	 * Get CiviCRM Event sync settings formatted as a dropdown list.
+	 *
+	 * @since 0.7.7
+	 *
+	 * @return str $html Markup containing select options.
+	 */
+	public function get_civicrm_event_sync_select() {
+
+		// Init return.
+		$html = '';
+
+		// Init build array.
+		$options = [];
+
+		// Init settings.
+		$settings = [
+			0 => __( 'Sync all CiviEvents to WordPress', 'civicrm-event-organiser' ),
+			1 => __( 'Show checkbox on each CiviEvent', 'civicrm-event-organiser' ),
+		];
+
+		// Get existing setting. Defaults to "Do not sync".
+		$civicrm_event_sync = $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+
+		// Loop.
+		foreach ( $settings as $key => $setting ) {
+
+			// Set selected if this value is the same as the setting.
+			$selected = '';
+			if ( $key === (int) $civicrm_event_sync ) {
+				$selected = ' selected="selected"';
+			}
+
+			// Construct option.
+			$options[] = '<option value="' . $key . '"' . $selected . '>' . $setting . '</option>';
+
+		}
+
+		// Create html.
+		$html = implode( "\n", $options );
+
+		// --<
+		return $html;
+
+	}
+
+	/**
 	 * Get Status Sync settings formatted as a dropdown list.
 	 *
 	 * @since 0.7.2

@@ -30,6 +30,7 @@ $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_confirm' 
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_profile' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_role' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_type' );
+$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_civicrm_event_sync' );
 $civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_status_sync' );
 
 // Delete data arrays.

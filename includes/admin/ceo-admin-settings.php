@@ -561,6 +561,15 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Get all Event Types.
 		$types = $this->plugin->taxonomy->get_event_types_select();
 
+		// Get CiviCRM Event sync.
+		$civicrm_event_sync = $this->plugin->mapping->get_civicrm_event_sync_select();
+
+		// Check for possibly missing default CiviCRM Event sync setting.
+		$civicrm_event_sync_required = false;
+		if ( 'fgffgs' == $this->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 'fgffgs' ) ) {
+			$civicrm_event_sync_required = true;
+		}
+
 		// Get status sync.
 		$status_sync = $this->plugin->mapping->get_status_sync_select();
 
@@ -694,6 +703,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$from = isset( $_POST['civi_eo_event_default_send_email_from'] ) ? sanitize_email( wp_unslash( $_POST['civi_eo_event_default_send_email_from'] ) ) : '';
 		$cc = isset( $_POST['civi_eo_event_default_send_email_cc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_cc'] ) ) : '';
 		$bcc = isset( $_POST['civi_eo_event_default_send_email_bcc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_bcc'] ) ) : '';
+		$civicrm_event_sync = isset( $_POST['civi_eo_event_default_civievent_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_civievent_sync'] ) ) : '0';
 		$status_sync = isset( $_POST['civi_eo_event_default_status_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_status_sync'] ) ) : '3';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
@@ -763,6 +773,10 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 			$bcc_value = implode( ', ', array_unique( $valid ) );
 		}
 		$this->admin->option_save( 'civi_eo_event_default_send_email_bcc', $bcc_value );
+
+		// Sanitise and save CiviCRM Event sync option.
+		$default_civicrm_event_sync = (int) $civicrm_event_sync;
+		$this->admin->option_save( 'civi_eo_event_default_civicrm_event_sync', $default_civicrm_event_sync );
 
 		// Sanitise and save Status Sync option.
 		$default_status_sync = (int) $status_sync;

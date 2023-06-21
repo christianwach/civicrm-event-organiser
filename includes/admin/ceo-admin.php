@@ -233,6 +233,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			}
 		}
 
+		// Show an admin notice for possibly missing default CiviCRM Event Sync setting.
+		if ( $shown === false && 'fgffgs' === $this->option_get( 'civi_eo_event_default_civicrm_event_sync', 'fgffgs' ) ) {
+			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
+			$shown = true;
+		}
+
 		// Show an admin notice for possibly missing default Status Sync setting.
 		if ( $shown === false && 'fgffgs' === $this->option_get( 'civi_eo_event_default_status_sync', 'fgffgs' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
