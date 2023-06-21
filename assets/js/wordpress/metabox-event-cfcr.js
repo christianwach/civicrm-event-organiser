@@ -221,8 +221,6 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 				// Open the link modal.
 				window.wpLink.open( me.active_editor );
 
-				console.log( 'OPENED BY ME' );
-
 				// Override title and button in modal.
 				me.original_title = $('#link-modal-title').html();
 				$('#link-modal-title').html( CiviCRM_Event_Organiser_Switcher.settings.get_localisation( 'title' ) );
@@ -254,12 +252,8 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 			 */
 			$(document).on( 'wplink-close', function( event, wrap ) {
 
-				//console.log( 'wpActiveEditor', window.wpActiveEditor );
-
 				// Check the active editor.
 				if ( window.wpActiveEditor == me.active_editor ) {
-
-					console.log( 'CLOSED BY ME' );
 
 					// Restore link elements and set some styles.
 					$('#wp-link #link-options, #wp-link p.howto').show();
@@ -280,8 +274,6 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 						data: { cfcr: 'false' },
 					});
 
-				} else {
-					console.log( 'NOT CLOSED BY ME' );
 				}
 
 			});
@@ -297,20 +289,14 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 
 				// Bail if not our active editor.
 				if ( window.wpActiveEditor != me.active_editor ) {
-					console.log( 'NOT ME' );
 					return;
-				} else {
-					console.log( 'IT IS ME' );
 				}
 
 				// Grab result.
 				atts = window.wpLink.getAttrs();
-				console.log( 'atts', atts );
 
 				// Check that we have URL data.
 				if ( atts.href ) {
-
-					console.log( 'atts.href', atts.href );
 
 					// Hide current Redirect.
 					$('.civi_eo_event_redirect_post_link').hide();
@@ -337,8 +323,6 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 		this.update = function( data ) {
 
 			var markup, teaser;
-
-			console.log( 'data in update', data );
 
 			// Bail on failure.
 			if ( data.success != 'true' ) {

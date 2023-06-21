@@ -24,7 +24,6 @@
 
 		// Set initial visibility.
 		var current_on = $('#civi_eo_event_default_send_email').prop( 'checked' );
-		console.log( 'current_on', current_on );
 		if ( current_on ) {
 			$('.send-email-toggle').show();
 		} else {
@@ -41,12 +40,8 @@
 		 */
 		$('#civi_eo_event_default_send_email').click( function(e) {
 
-			var current_on;
-
-			// Detect checked.
-			current_on = $(this).prop( 'checked' );
-
-			// Toggle.
+			// Toggle depending on checked status.
+			var current_on = $(this).prop( 'checked' );
 			if ( current_on ) {
 				$('.send-email-toggle').slideDown( 'slow' );
 			} else {
