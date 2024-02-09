@@ -366,10 +366,13 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// Get all Event Organiser Events.
-		$all_eo_events = get_posts( [
+		$query = [
 			'post_type'   => 'event',
 			'numberposts' => -1,
-		] );
+		];
+
+		// Get them.
+		$all_eo_events = get_posts( $query );
 
 		// Init localisation.
 		$localisation = [
@@ -894,12 +897,13 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 					// Log failed Event Term first.
 					$e     = new Exception();
 					$trace = $e->getTraceAsString();
-					error_log( print_r( [
+					$log   = [
 						'method'    => __METHOD__,
 						'message'   => __( 'Could not sync Event Term', 'civicrm-event-organiser' ),
 						'term'      => $term,
 						'backtrace' => $trace,
-					], true ) );
+					];
+					$this->plugin->log_error( $log );
 
 					continue;
 
@@ -977,7 +981,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		if ( false !== $opt_group_id ) {
 
 			// Get Event Types (descriptions will be present if not null).
-			$types = civicrm_api( 'OptionValue', 'get', [
+			$params = [
 				'version'         => 3,
 				'option_group_id' => $opt_group_id,
 				'options'         => [
@@ -985,7 +989,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 					'offset' => $offset,
 					'sort'   => 'weight ASC',
 				],
-			] );
+			];
+			$types  = civicrm_api( 'OptionValue', 'get', $params );
 
 		} else {
 
@@ -1023,12 +1028,13 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 					// Log failed Event Type first.
 					$e     = new Exception();
 					$trace = $e->getTraceAsString();
-					error_log( print_r( [
+					$log   = [
 						'method'    => __METHOD__,
 						'message'   => __( 'Could not sync Event Type', 'civicrm-event-organiser' ),
 						'type'      => $type,
 						'backtrace' => $trace,
-					], true ) );
+					];
+					$this->plugin->log_error( $log );
 
 					continue;
 
@@ -1101,11 +1107,14 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		}
 
-		// Get Venues.
-		$venues = eo_get_venues( [
+		// Build Venue query.
+		$query = [
 			'number' => $this->step_counts['venue'],
 			'offset' => $offset,
-		] );
+		];
+
+		// Get Venues.
+		$venues = eo_get_venues( $query );
 
 		// If we get results.
 		if ( count( $venues ) > 0 ) {
@@ -1223,14 +1232,15 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		if ( $this->plugin->civi->is_active() ) {
 
 			// Get CiviCRM Locations.
-			$locations = civicrm_api( 'LocBlock', 'get', [
+			$params    = [
 				'version' => 3,
 				'return'  => 'all',
 				'options' => [
 					'limit'  => $this->step_counts['tax'],
 					'offset' => $offset,
 				],
-			] );
+			];
+			$locations = civicrm_api( 'LocBlock', 'get', $params );
 
 		} else {
 
@@ -1327,11 +1337,14 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// Get "primary" Events (i.e. not ordered by Occurrence).
-		$events = eo_get_events( [
+		$query = [
 			'numberposts'     => $this->step_counts['event'],
 			'offset'          => $offset,
 			'group_events_by' => 'series',
-		] );
+		];
+
+		// Get them.
+		$events = eo_get_events( $query );
 
 		// If we get results.
 		if ( count( $events ) > 0 ) {
@@ -1463,14 +1476,15 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		if ( $this->plugin->civi->is_active() ) {
 
 			// Get CiviCRM Events.
-			$events = civicrm_api( 'Event', 'get', [
+			$params = [
 				'version'     => 3,
 				'is_template' => 0,
 				'options'     => [
 					'limit'  => $this->step_counts['event'],
 					'offset' => $offset,
 				],
-			] );
+			];
+			$events = civicrm_api( 'Event', 'get', $params );
 
 		} else {
 

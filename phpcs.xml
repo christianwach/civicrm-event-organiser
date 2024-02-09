@@ -11,26 +11,21 @@
 
 	<rule ref="WordPress">
 
-		<!-- I prefer slash-delimited Hooks -->
+		<!-- Allow slash-delimited Hooks -->
 		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores" />
 
-		<!-- I prefer my control structures -->
+		<!-- Allow my control structures -->
 		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing.BlankLineAfterEnd" />
 
 		<!-- PSR4 -->
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
 
-		<!-- Remove some checks to allow phpcbf to run in bulk mode -->
+		<!-- Allow comment blocks for now -->
 		<exclude name="Squiz.PHP.CommentedOutCode.Found" />
 		<exclude name="Squiz.Commenting.BlockComment.HasEmptyLineBefore" />
-		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
 
-		<!-- Remove when error logging has been moved to a function -->
-		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />
-		<exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />
-		<exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
-		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
-		<exclude name="WordPress.PHP.DevelopmentFunctions.error_log_print_r" />
+		<!-- Allow non-strict array checks -->
+		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
 
 	</rule>
 

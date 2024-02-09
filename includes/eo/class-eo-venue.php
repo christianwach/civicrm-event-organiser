@@ -436,13 +436,14 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		if ( is_wp_error( $result ) || ! isset( $result['term_id'] ) ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => __( 'Venue not created.', 'civicrm-event-organiser' ),
 				'result'    => $result,
 				'location'  => $location,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return;
 		}
 

@@ -624,12 +624,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( is_wp_error( $event_id ) ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'     => __METHOD__,
 				'error'      => $event_id->get_error_message(),
 				'civi_event' => $civi_event,
 				'backtrace'  => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return $event_id;
 		}
 
@@ -1228,14 +1229,17 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$links[] = $content;
 			*/
 
-			// Add item to menu.
-			$wp_admin_bar->add_node( [
+			// Define item.
+			$node = [
 				'id'     => 'cau-0',
 				'parent' => $id,
 				// 'parent' => 'edit',
 				'title'  => __( 'Edit in CiviCRM', 'civicrm-event-organiser' ),
 				'href'   => $settings_link,
-			] );
+			];
+
+			// Add item to menu.
+			$wp_admin_bar->add_node( $node );
 
 		}
 

@@ -196,9 +196,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		);
 
 		// Insert template block into the page.
-		CRM_Core_Region::instance( 'page-body' )->add( [
-			'template' => 'ceo-featured-image.tpl',
-		] );
+		CRM_Core_Region::instance( 'page-body' )->add( [ 'template' => 'ceo-featured-image.tpl' ] );
 
 	}
 
@@ -300,9 +298,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		);
 
 		// Insert template block into the page.
-		CRM_Core_Region::instance( 'page-body' )->add( [
-			'template' => 'ceo-featured-image.tpl',
-		] );
+		CRM_Core_Region::instance( 'page-body' )->add( [ 'template' => 'ceo-featured-image.tpl' ] );
 
 	}
 
@@ -436,9 +432,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		);
 
 		// Insert template block into the page.
-		CRM_Core_Region::instance( 'page-body' )->add( [
-			'template' => 'ceo-featured-image.tpl',
-		] );
+		CRM_Core_Region::instance( 'page-body' )->add( [ 'template' => 'ceo-featured-image.tpl' ] );
 
 	}
 
@@ -772,9 +766,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$form->add( 'checkbox', 'ceo_event_sync_checkbox', $label );
 
 		// Insert template block into the page.
-		CRM_Core_Region::instance( 'page-body' )->add( [
-			'template' => 'ceo-event-sync.tpl',
-		] );
+		CRM_Core_Region::instance( 'page-body' )->add( [ 'template' => 'ceo-event-sync.tpl' ] );
 
 	}
 
@@ -1196,12 +1188,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 				$e     = new Exception();
 				$trace = $e->getTraceAsString();
-				error_log( print_r( [
+				$log   = [
 					'method'     => __METHOD__,
 					'message'    => $result['error_message'],
 					'civi_event' => $civi_event,
 					'backtrace'  => $trace,
-				], true ) );
+				];
+				$this->plugin->log_error( $log );
 				continue;
 			}
 
@@ -1335,12 +1328,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e     = new Exception();
 					$trace = $e->getTraceAsString();
-					error_log( print_r( [
+					$log   = [
 						'method'     => __METHOD__,
 						'message'    => $result['error_message'],
 						'civi_event' => $civi_event,
 						'backtrace'  => $trace,
-					], true ) );
+					];
+					$this->plugin->log_error( $log );
 					continue;
 				}
 
@@ -1431,12 +1425,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e     = new Exception();
 					$trace = $e->getTraceAsString();
-					error_log( print_r( [
+					$log   = [
 						'method'     => __METHOD__,
 						'message'    => $result['error_message'],
 						'civi_event' => $civi_event,
 						'backtrace'  => $trace,
-					], true ) );
+					];
+					$this->plugin->log_error( $log );
 					continue;
 				}
 
@@ -1473,12 +1468,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e     = new Exception();
 					$trace = $e->getTraceAsString();
-					error_log( print_r( [
+					$log   = [
 						'method'     => __METHOD__,
 						'message'    => $result['error_message'],
 						'civi_event' => $civi_event,
 						'backtrace'  => $trace,
-					], true ) );
+					];
+					$this->plugin->log_error( $log );
 					continue;
 				}
 
@@ -1701,12 +1697,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		if ( ! empty( $events['is_error'] ) && 1 === (int) $events['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => $events['error_message'],
 				'params'    => $params,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -1757,12 +1754,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 				$e     = new Exception();
 				$trace = $e->getTraceAsString();
-				error_log( print_r( [
+				$log   = [
 					'method'    => __METHOD__,
 					'message'   => $result['error_message'],
 					'params'    => $params,
 					'backtrace' => $trace,
-				], true ) );
+				];
+				$this->plugin->log_error( $log );
 				continue;
 			}
 
@@ -1820,12 +1818,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => $result['error_message'],
 				'params'    => $params,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -1866,12 +1865,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'params'    => $params,
 				'result'    => $result,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return $event;
 		}
 

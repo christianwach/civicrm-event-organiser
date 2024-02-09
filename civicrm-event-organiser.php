@@ -40,6 +40,11 @@ if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_PATH', plugin_dir_path( CIVICRM_WP_EVENT_ORGANISER_FILE ) );
 }
 
+// Set debug constant.
+if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_DEBUG' ) ) {
+	define( 'CIVICRM_WP_EVENT_ORGANISER_DEBUG', false );
+}
+
 /**
  * CiviCRM Event Organiser Class.
  *
@@ -456,6 +461,35 @@ class CiviCRM_WP_Event_Organiser {
 		// CAU is hiding CiviCRM.
 		$civicrm_hidden = true;
 		return $civicrm_hidden;
+
+	}
+
+	/**
+	 * Write to the error log.
+	 *
+	 * @since 0.8.0
+	 *
+	 * @param array $data The data to write to the log file.
+	 */
+	public function log_error( $data = [] ) {
+
+		// Skip if not debugging.
+		if ( CIVICRM_WP_EVENT_ORGANISER_DEBUG === false ) {
+			return;
+		}
+
+		// Skip if empty.
+		if ( empty( $data ) ) {
+			return;
+		}
+
+		// Format data.
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_print_r
+		$error = print_r( $data, true );
+
+		// Write to log file.
+		// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log
+		error_log( $error );
 
 	}
 

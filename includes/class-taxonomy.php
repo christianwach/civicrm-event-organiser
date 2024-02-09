@@ -954,13 +954,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		if ( is_wp_error( $terms ) ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'     => __METHOD__,
 				'message'    => $terms->get_error_message(),
 				'term'       => $term,
 				'event_type' => $event_type,
 				'backtrace'  => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -1036,13 +1037,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			/*
 			$e = new Exception;
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method' => __METHOD__,
 				'message' => __( 'Could not add term_meta', 'civicrm-event-organiser' ),
 				'term_id' => $term_id,
 				'event_type_id' => $event_type_id,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			*/
 
 		}
@@ -1053,13 +1055,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			// Log error message.
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'        => __METHOD__,
 				'message'       => $meta_id->get_error_message(),
 				'term_id'       => $term_id,
 				'event_type_id' => $event_type_id,
 				'backtrace'     => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 
 			// Also overwrite return.
 			$meta_id = false;
@@ -1150,14 +1153,15 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		/*
 		$e = new Exception;
 		$trace = $e->getTraceAsString();
-		error_log( print_r( [
+		$log   = [
 			'method' => __METHOD__,
 			'hook' => $hook,
 			//'event' => $event,
 			'event_type' => $event_type,
 			'event_type_pre' => $this->event_type_pre,
 			//'backtrace' => $trace,
-		], true ) );
+		];
+		$this->plugin->log_error( $log );
 		*/
 
 	}
@@ -1335,12 +1339,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => $result['error_message'],
 				'params'    => $params,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -1395,12 +1400,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => $result['error_message'],
 				'params'    => $params,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -1454,12 +1460,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'params'    => $params,
 				'result'    => $result,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -1548,13 +1555,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => $result['error_message'],
 				'result'    => $result,
 				'params'    => $params,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 

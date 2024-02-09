@@ -266,12 +266,13 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		if ( empty( $event['id'] ) ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => __( 'A numeric ID must be present to update an Event.', 'civicrm-event-organiser' ),
 				'event'     => $event,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return $event_data;
 		}
 

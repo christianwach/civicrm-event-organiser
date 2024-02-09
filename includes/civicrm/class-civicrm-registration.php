@@ -284,7 +284,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 			// Use CiviCRM to construct link.
 			$link = CRM_Utils_System::url(
-				'civicrm/event/register', 'reset=1&id=' . $civi_event['id'],
+				'civicrm/event/register',
+				'reset=1&id=' . $civi_event['id'],
 				true,
 				null,
 				false,
@@ -453,13 +454,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 				$e     = new Exception();
 				$trace = $e->getTraceAsString();
-				error_log( print_r( [
+				$log   = [
 					'method'     => __METHOD__,
 					'message'    => $result['error_message'],
 					'civi_event' => $civi_event,
 					'params'     => $params,
 					'backtrace'  => $trace,
-				], true ) );
+				];
+				$this->plugin->log_error( $log );
 			}
 
 		}
@@ -584,13 +586,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => $result['error_message'],
 				'result'    => $result,
 				'params'    => $params,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 

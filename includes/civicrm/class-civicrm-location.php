@@ -252,12 +252,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => $result['error_message'],
 				'params'    => $params,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -307,13 +308,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => __( 'Could not get CiviCRM Location by ID', 'civicrm-event-organiser' ),
 				'params'    => $params,
 				'result'    => $result,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return $location;
 		}
 
@@ -348,13 +350,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			if ( ! empty( $location['is_error'] ) && 1 === (int) $location['is_error'] ) {
 				$e = new Exception;
 				$trace = $e->getTraceAsString();
-				error_log( print_r( [
+				$log   = [
 					'method' => __METHOD__,
 					'message' => __( 'Could not get CiviCRM Location by Lat/Long', 'civicrm-event-organiser' ),
 					'civicrm' => $location['error_message'],
 					'params' => $params,
 					'backtrace' => $trace,
-				], true ) );
+				];
+				$this->plugin->log_error( $log );
 				return false;
 			}
 
@@ -363,14 +366,15 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 
 				$e = new Exception;
 				$trace = $e->getTraceAsString();
-				error_log( print_r( [
+				$log   = [
 					'method' => __METHOD__,
 					'procedure' => 'found by location',
 					'venue' => $venue,
 					'params' => $params,
 					'location' => $location,
 					'backtrace' => $trace,
-				], true ) );
+				];
+				$this->plugin->log_error( $log );
 
 				// Found by Location.
 				return array_shift( $location['values'] );
@@ -416,12 +420,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! empty( $locations['is_error'] ) && 1 === (int) $locations['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => $locations['error_message'],
 				'params'    => $params,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -461,12 +466,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 				$e     = new Exception();
 				$trace = $e->getTraceAsString();
-				error_log( print_r( [
+				$log   = [
 					'method'    => __METHOD__,
 					'message'   => $result['error_message'],
 					'params'    => $params,
 					'backtrace' => $trace,
-				], true ) );
+				];
+				$this->plugin->log_error( $log );
 			}
 
 		}
@@ -512,12 +518,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => $result['error_message'],
 				'params'    => $params,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -660,12 +667,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'params'    => $params,
 				'result'    => $result,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
@@ -740,13 +748,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! empty( $existing_email_data['is_error'] ) && 1 === (int) $existing_email_data['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => __( 'Could not fetch CiviCRM Email.', 'civicrm-event-organiser' ),
 				'params'    => $email_params,
 				'result'    => $existing_email_data,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return $email_data;
 		}
 
@@ -775,13 +784,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e     = new Exception();
 					$trace = $e->getTraceAsString();
-					error_log( print_r( [
+					$log   = [
 						'method'    => __METHOD__,
 						'message'   => __( 'Could not update CiviCRM Email.', 'civicrm-event-organiser' ),
 						'params'    => $existing_email,
 						'result'    => $result,
 						'backtrace' => $trace,
-					], true ) );
+					];
+					$this->plugin->log_error( $log );
 				}
 
 			}
@@ -857,13 +867,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! empty( $existing_phone_data['is_error'] ) && 1 === (int) $existing_phone_data['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => __( 'Could not fetch CiviCRM Phone.', 'civicrm-event-organiser' ),
 				'params'    => $phone_params,
 				'result'    => $existing_phone_data,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return $phone_data;
 		}
 
@@ -893,13 +904,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e     = new Exception();
 					$trace = $e->getTraceAsString();
-					error_log( print_r( [
+					$log   = [
 						'method'    => __METHOD__,
 						'message'   => __( 'Could not update CiviCRM Phone.', 'civicrm-event-organiser' ),
 						'params'    => $existing_phone,
 						'result'    => $result,
 						'backtrace' => $trace,
-					], true ) );
+					];
+					$this->plugin->log_error( $log );
 				}
 
 			}
@@ -995,13 +1007,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! empty( $existing_address_data['is_error'] ) && 1 === (int) $existing_address_data['is_error'] ) {
 			$e     = new Exception();
 			$trace = $e->getTraceAsString();
-			error_log( print_r( [
+			$log   = [
 				'method'    => __METHOD__,
 				'message'   => __( 'Could not fetch CiviCRM Address.', 'civicrm-event-organiser' ),
 				'params'    => $address_params,
 				'result'    => $existing_address_data,
 				'backtrace' => $trace,
-			], true ) );
+			];
+			$this->plugin->log_error( $log );
 			return $address_data;
 		}
 
@@ -1084,13 +1097,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e     = new Exception();
 					$trace = $e->getTraceAsString();
-					error_log( print_r( [
+					$log   = [
 						'method'    => __METHOD__,
 						'message'   => __( 'Could not update CiviCRM Address.', 'civicrm-event-organiser' ),
 						'params'    => $existing_address,
 						'result'    => $result,
 						'backtrace' => $trace,
-					], true ) );
+					];
+					$this->plugin->log_error( $log );
 				}
 
 			}

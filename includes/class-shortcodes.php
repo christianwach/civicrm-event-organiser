@@ -120,9 +120,12 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 
 		// Wrap links if required.
 		if ( ! empty( $element ) ) {
-			array_walk( $links, function( &$item ) use ( $element ) {
-				$item = '<' . $element . ' type="' . $element . '">' . $item . '</' . $element . '>';
-			} );
+			array_walk(
+				$links,
+				function( &$item ) use ( $element ) {
+					$item = '<' . $element . ' type="' . $element . '">' . $item . '</' . $element . '>';
+				}
+			);
 		}
 
 		// Is it recurring?
