@@ -24,7 +24,6 @@
 		<exclude name="Squiz.PHP.CommentedOutCode.Found" />
 		<exclude name="Squiz.Commenting.BlockComment.HasEmptyLineBefore" />
 		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
-		<exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped" />
 
 		<!-- Remove when error logging has been moved to a function -->
 		<exclude name="PEAR.Functions.FunctionCallSignature.MultipleArguments" />

@@ -85,7 +85,7 @@ body.js .civi_eo_event_send_email_toggle {
 		<?php
 		echo sprintf(
 			/* translators: 1: The opening strong tag, 2: The closing strong tag. */
-			__( '%1$sNOTE%2$s: Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ),
+			esc_html__( '%1$sNOTE%2$s: Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ),
 			'<strong>',
 			'</strong>'
 		);
@@ -94,7 +94,7 @@ body.js .civi_eo_event_send_email_toggle {
 			<?php
 			echo sprintf(
 				/* translators: 1: The opening emphasis tag, 2: The closing emphasis tag. */
-				__( 'These options will be set for %1$sall corresponding CiviCRM Events%2$s when you sync this Event to CiviCRM.', 'civicrm-event-organiser' ),
+				esc_html__( 'These options will be set for %1$sall corresponding CiviCRM Events%2$s when you sync this Event to CiviCRM.', 'civicrm-event-organiser' ),
 				'<em>',
 				'</em>'
 			);
@@ -117,7 +117,7 @@ body.js .civi_eo_event_send_email_toggle {
 				<p>
 					<label for="civi_eo_event_profile"><?php esc_html_e( 'Online Registration Profile:', 'civicrm-event-organiser' ); ?></label>
 					<select id="civi_eo_event_profile" name="civi_eo_event_profile">
-						<?php echo $profiles; ?>
+						<?php echo $profiles; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 					</select>
 				</p>
 
@@ -130,7 +130,7 @@ body.js .civi_eo_event_send_email_toggle {
 				<p>
 					<label for="civi_eo_event_dedupe_rule"><?php esc_html_e( 'Online Registration Dedupe Rule:', 'civicrm-event-organiser' ); ?></label>
 					<select id="civi_eo_event_dedupe_rule" name="civi_eo_event_dedupe_rule">
-						<?php echo $dedupe_rules; ?>
+						<?php echo $dedupe_rules; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 					</select>
 				</p>
 
@@ -143,7 +143,7 @@ body.js .civi_eo_event_send_email_toggle {
 				<p>
 					<label for="civi_eo_event_role"><?php esc_html_e( 'Participant Role:', 'civicrm-event-organiser' ); ?></label>
 					<select id="civi_eo_event_role" name="civi_eo_event_role">
-						<?php echo $roles; ?>
+						<?php echo $roles; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 					</select>
 				</p>
 

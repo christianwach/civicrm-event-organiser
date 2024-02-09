@@ -31,7 +31,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<div class="civi_eo_event_cfcr_post_link">
 		<p class="civi_eo_event_redirect_post_link">
-			<?php echo $page; ?>
+			<?php echo $page; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 		</p>
 	</div>
 
@@ -44,7 +44,7 @@ defined( 'ABSPATH' ) || exit;
 		<input type="checkbox" id="civi_eo_event_redirect_active" name="civi_eo_event_redirect_active" value="1"<?php echo $is_active; ?> />
 	</p>
 
-	<input type="hidden" id="civi_eo_event_redirect_post_id" name="civi_eo_event_redirect_post_id" value="<?php echo $post_id; ?>" />
+	<input type="hidden" id="civi_eo_event_redirect_post_id" name="civi_eo_event_redirect_post_id" value="<?php echo esc_attr( $post_id ); ?>" />
 	<input type="text" style="display: none !important;" id="cfcr-redirect-switcher-field">
 
 	<p class="description">

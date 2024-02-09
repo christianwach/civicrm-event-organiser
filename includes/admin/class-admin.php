@@ -301,12 +301,13 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Construct message.
 		$message = sprintf(
 			/* translators: 1: The opening anchor tag, 2: The closing anchor tag. */
-			__( 'CiviCRM Event Organiser needs your attention. Please visit the %1$sSettings Page%2$s.', 'civicrm-event-organiser' ),
+			esc_html__( 'CiviCRM Event Organiser needs your attention. Please visit the %1$sSettings Page%2$s.', 'civicrm-event-organiser' ),
 			'<a href="' . $urls['settings'] . '">',
 			'</a>'
 		);
 
 		// Show it.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p></div>';
 
 	}
@@ -324,9 +325,10 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Construct message.
-		$message = __( 'CiviCRM Event Organiser requires Event Organiser version 3 or higher.', 'civicrm-event-organiser' );
+		$message = esc_html__( 'CiviCRM Event Organiser requires Event Organiser version 3 or higher.', 'civicrm-event-organiser' );
 
 		// Show it.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 		echo '<div class="notice notice-error is-dismissible"><p>' . $message . '</p></div>';
 
 	}

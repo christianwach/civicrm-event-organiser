@@ -272,7 +272,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		// Only allow network admins when network activated.
 		if ( $this->admin->is_network_activated() ) {
 			if ( ! is_super_admin() ) {
-				wp_die( __( 'You do not have permission to access this page.', 'civicrm-event-organiser' ) );
+				wp_die( esc_html__( 'You do not have permission to access this page.', 'civicrm-event-organiser' ) );
 			}
 		}
 
@@ -503,16 +503,14 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		// Define title.
 		$title = __( 'Manual Sync', 'civicrm-event-organiser' );
 
-		// Default to inactive.
-		$active = '';
-
 		// Make active if it's our subpage.
+		$active = '';
 		if ( 'manual-sync' === $active_tab ) {
 			$active = ' nav-tab-active';
 		}
 
 		// Render tab.
-		echo '<a href="' . $urls['manual-sync'] . '" class="nav-tab' . $active . '">' . $title . '</a>' . "\n";
+		echo '<a href="' . esc_url( $urls['manual-sync'] ) . '" class="nav-tab' . esc_attr( $active ) . '">' . esc_html( $title ) . '</a>' . "\n";
 
 	}
 

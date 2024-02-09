@@ -51,6 +51,7 @@ function civicrm_event_organiser_register_links( $post_id = null ) {
 			echo '<strong>' . esc_html__( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
 
 			// Show links.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $list;
 
 			// Finish up.
@@ -59,6 +60,7 @@ function civicrm_event_organiser_register_links( $post_id = null ) {
 		} else {
 
 			// Show link.
+			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 			echo $list . "\n";
 
 		}
@@ -157,12 +159,12 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 			// Define text.
 			$text = sprintf(
 				/* translators: %s: The formatted Event Occurrence. */
-				__( 'Register for %s', 'civicrm-event-organiser' ),
+				esc_html__( 'Register for %s', 'civicrm-event-organiser' ),
 				eo_format_event_occurrence( $post_id, $occurrence_id )
 			);
 
 		} else {
-			$text = __( 'Register', 'civicrm-event-organiser' );
+			$text = esc_html__( 'Register', 'civicrm-event-organiser' );
 		}
 
 		// Construct link if we get one.

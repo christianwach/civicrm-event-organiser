@@ -318,7 +318,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Only allow network admins when network activated.
 		if ( $this->admin->is_network_activated() ) {
 			if ( ! is_super_admin() ) {
-				wp_die( __( 'You do not have permission to access this page.', 'civicrm-event-organiser' ) );
+				wp_die( esc_html__( 'You do not have permission to access this page.', 'civicrm-event-organiser' ) );
 			}
 		}
 

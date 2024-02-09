@@ -1101,7 +1101,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Die if there are no Event Types defined in CiviCRM.
 		if ( false === $type_value ) {
-			wp_die( __( 'You must have some CiviCRM Event Types defined', 'civicrm-event-organiser' ) );
+			wp_die( esc_html__( 'You must have some CiviCRM Event Types defined', 'civicrm-event-organiser' ) );
 		}
 
 		// Assign Event Type value.

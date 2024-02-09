@@ -40,7 +40,7 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 			<th scope="row"><label for="civi_eo_event_default_profile"><?php esc_html_e( 'Default CiviCRM Event Registration Profile', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_profile" name="civi_eo_event_default_profile">
-					<?php echo $profiles; ?>
+					<?php echo $profiles; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 				</select>
 				<p class="description"><?php esc_html_e( 'Event Registration Pages require a Profile in order to display correctly.', 'civicrm-event-organiser' ); ?></p>
 				<?php if ( $profile_required ) : ?>
@@ -55,7 +55,7 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 			<th scope="row"><label for="civi_eo_event_default_dedupe"><?php esc_html_e( 'Default CiviCRM Event Registration Dedupe Rule', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_dedupe" name="civi_eo_event_default_dedupe">
-					<?php echo $dedupe_rules; ?>
+					<?php echo $dedupe_rules; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 				</select>
 				<p class="description"><?php esc_html_e( 'By default, CiviCRM will use the "Unsupervised" Dedupe Rule to match Participants in anonymous registrations with existing Contacts.', 'civicrm-event-organiser' ); ?></p>
 			</td>

@@ -14,6 +14,7 @@
 	<h1><?php esc_html_e( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ); ?></h1>
 
 	<h2 class="nav-tab-wrapper">
+			<?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 		<a href="<?php echo $urls['settings']; ?>" class="nav-tab"><?php esc_html_e( 'Settings', 'civicrm-event-organiser' ); ?></a>
 		<?php
 
@@ -31,6 +32,7 @@
 	</h2>
 
 	<?php if ( ! empty( $messages ) ) : ?>
+		<?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 		<?php echo $messages; ?>
 	<?php endif; ?>
 
@@ -44,6 +46,7 @@
 
 				<p class="description"><?php esc_html_e( 'Please note: Manual Sync is intended for use on initial setup and may produce inconsistent results once you have linked Events. Always back up before using this feature.', 'civicrm-event-organiser' ); ?></p>
 
+	<?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 	<form method="post" id="ceo_acf_sync_form" action="<?php echo $this->settings->page_settings_submit_url_get(); ?>">
 
 		<?php wp_nonce_field( 'civi_eo_manual_sync_action', 'civi_eo_manual_sync_nonce' ); ?>
@@ -70,7 +73,7 @@
 
 		<div id="dashboard-widgets-wrap">
 
-			<div id="dashboard-widgets" class="metabox-holder<?php echo $columns_css; ?>">
+			<div id="dashboard-widgets" class="metabox-holder<?php echo esc_attr( $columns_css ); ?>">
 
 				<div id="postbox-container-1" class="postbox-container">
 					<?php do_meta_boxes( $screen->id, 'normal', '' ); ?>
