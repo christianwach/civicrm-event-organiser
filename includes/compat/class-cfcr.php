@@ -200,6 +200,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	public function query_post_type( $query ) {
 
 		// Is this our metabox calling?
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$cfcr = isset( $_POST['cfcr'] ) ? sanitize_text_field( wp_unslash( $_POST['cfcr'] ) ) : '';
 		$is_cfcr = false;
 		if ( ! empty( $cfcr ) && $cfcr === 'true' ) {
@@ -238,8 +239,8 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Get Post URL.
-		// TODO: Sanitise the incoming URL.
-		$post_url = isset( $_POST['post_url'] ) ? trim( wp_unslash( $_POST['post_url'] ) ) : '';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$post_url = isset( $_POST['post_url'] ) ? esc_url_raw( wp_unslash( $_POST['post_url'] ), [ 'http', 'https' ] ) : '';
 
 		// Sanity checks.
 		if ( empty( $post_url ) ) {
@@ -260,7 +261,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		// Send a link back.
 		$data['markup'] = '<a href="' . get_permalink( $post_id ) . '">' . get_the_title( $post_id ) . '</a>' . "\n";
 
-		// init data
+		// We're good now.
 		$data['success'] = 'true';
 
 		// Send data to browser.
@@ -279,8 +280,11 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	public function redirect_update( $event_id, $redirect_post_id = 0 ) {
 
 		// Override if set in POST.
-		if ( isset( $_POST['civi_eo_event_redirect_post_id'] ) ) {
-			$redirect_post_id = (int) sanitize_text_field( wp_unslash( $_POST['civi_eo_event_redirect_post_id'] ) );
+		$key = 'civi_eo_event_redirect_post_id';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$post_redirect_post_id = isset( $_POST[ $key ] ) ? (int) sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : 0;
+		if ( 0 !== $post_redirect_post_id ) {
+			$redirect_post_id = $post_redirect_post_id;
 		}
 
 		// Trigger delete if Redirect Post ID is 0.
@@ -290,7 +294,9 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Set default but override if the checkbox is ticked.
-		$is_active = isset( $_POST['civi_eo_event_redirect_active'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_redirect_active'] ) ) : 0;
+		$key = 'civi_eo_event_redirect_active';
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$is_active = isset( $_POST[ $key ] ) ? sanitize_text_field( wp_unslash( $_POST[ $key ] ) ) : 0;
 
 		// Get linked CiviCRM Event IDs.
 		$civi_event_ids = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event_id );
