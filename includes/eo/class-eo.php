@@ -461,20 +461,20 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$event_data = [
 
 			// Start date.
-			'start' => new DateTime( $civi_event['start_date'], eo_get_blog_timezone() ),
+			'start'         => new DateTime( $civi_event['start_date'], eo_get_blog_timezone() ),
 
 			// End date and end of schedule are the same.
-			'end' => $end_date,
+			'end'           => $end_date,
 			'schedule_last' => $end_date,
 
 			// We can't tell if a CiviCRM Event is repeating, so only once.
-			'frequency' => 1,
+			'frequency'     => 1,
 
 			// CiviCRM does not have "all day".
-			'all_day' => 0,
+			'all_day'       => 0,
 
 			// We can't tell if a CiviCRM Event is repeating.
-			'schedule' => 'once',
+			'schedule'      => 'once',
 
 		];
 
@@ -483,8 +483,8 @@ class CiviCRM_WP_Event_Organiser_EO {
 		 * Note: These may no longer be needed.
 		 */
 		$post_data = [
-			'to_ping' => '',
-			'pinged' => '',
+			'to_ping'               => '',
+			'pinged'                => '',
 			'post_content_filtered' => '',
 		];
 
@@ -622,13 +622,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Log and bail if there's an error.
 		if ( is_wp_error( $event_id ) ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'error' => $event_id->get_error_message(),
+				'method'     => __METHOD__,
+				'error'      => $event_id->get_error_message(),
 				'civi_event' => $civi_event,
-				'backtrace' => $trace,
+				'backtrace'  => $trace,
 			], true ) );
 			return $event_id;
 		}
@@ -722,7 +722,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Save some data.
 		$this->sync_data = [
-			'event_id' => $event_id,
+			'event_id'   => $event_id,
 			'civi_event' => $civi_event,
 		];
 
@@ -761,7 +761,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Set the Event Organiser Event to the status.
 		$post_data = [
-			'ID' => $post_id,
+			'ID'          => $post_id,
 			'post_status' => $status,
 		];
 
@@ -976,9 +976,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 		// Get the current Confirmation Email sub-field settings.
 		$send_email_from_name = $this->plugin->civi->registration->get_registration_send_email_from_name( $event->ID );
-		$send_email_from = $this->plugin->civi->registration->get_registration_send_email_from( $event->ID );
-		$send_email_cc = $this->plugin->civi->registration->get_registration_send_email_cc( $event->ID );
-		$send_email_bcc = $this->plugin->civi->registration->get_registration_send_email_bcc( $event->ID );
+		$send_email_from      = $this->plugin->civi->registration->get_registration_send_email_from( $event->ID );
+		$send_email_cc        = $this->plugin->civi->registration->get_registration_send_email_cc( $event->ID );
+		$send_email_bcc       = $this->plugin->civi->registration->get_registration_send_email_bcc( $event->ID );
 
 		// Show Event Sync Metabox.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-event-sync.php';
@@ -1001,7 +1001,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		// Localisation array.
 		$vars = [
 			'localisation' => $localisation,
-			'settings' => $settings,
+			'settings'     => $settings,
 		];
 
 		// Localise.
@@ -1230,11 +1230,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 
 			// Add item to menu.
 			$wp_admin_bar->add_node( [
-				'id' => 'cau-0',
+				'id'     => 'cau-0',
 				'parent' => $id,
 				// 'parent' => 'edit',
-				'title' => __( 'Edit in CiviCRM', 'civicrm-event-organiser' ),
-				'href' => $settings_link,
+				'title'  => __( 'Edit in CiviCRM', 'civicrm-event-organiser' ),
+				'href'   => $settings_link,
 			] );
 
 		}
@@ -1322,11 +1322,11 @@ class CiviCRM_WP_Event_Organiser_EO {
 		foreach ( $occurrences as $occurrence_id => $occurrence ) {
 
 			// Build an array, formatted for CiviCRM.
-			$date = [];
+			$date                  = [];
 			$date['occurrence_id'] = $occurrence_id;
-			$date['start'] = eo_get_the_start( 'Y-m-d H:i:s', $post_id, $occurrence_id );
-			$date['end'] = eo_get_the_end( 'Y-m-d H:i:s', $post_id, $occurrence_id );
-			$date['human'] = eo_get_the_start( 'g:ia, M jS, Y', $post_id, $occurrence_id );
+			$date['start']         = eo_get_the_start( 'Y-m-d H:i:s', $post_id, $occurrence_id );
+			$date['end']           = eo_get_the_end( 'Y-m-d H:i:s', $post_id, $occurrence_id );
+			$date['human']         = eo_get_the_start( 'g:ia, M jS, Y', $post_id, $occurrence_id );
 
 			// Add to our return array.
 			$all_dates[] = $date;
@@ -2191,7 +2191,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( ! empty( $cc ) ) {
 
 			// Only save valid emails.
-			$valid = [];
+			$valid  = [];
 			$emails = explode( ',', $cc );
 			foreach ( $emails as $email ) {
 				if ( is_email( sanitize_email( trim( $email ) ) ) ) {
@@ -2301,7 +2301,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( ! empty( $bcc ) ) {
 
 			// Only save valid emails.
-			$valid = [];
+			$valid  = [];
 			$emails = explode( ',', $bcc );
 			foreach ( $emails as $email ) {
 				if ( is_email( sanitize_email( trim( $email ) ) ) ) {

@@ -122,7 +122,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 
 		// Construct args for all Event Posts.
 		$args = [
-			'post_type' => 'event',
+			'post_type'   => 'event',
 			'numberposts' => -1,
 		];
 
@@ -192,7 +192,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 
 				// Add Event Organiser Event ID to CiviCRM correspondences.
 				$civi_correspondences[ $civi_event_ids[ $n ] ] = [
-					'post_id' => $event_id,
+					'post_id'       => $event_id,
 					'occurrence_id' => $occurrence_id,
 				];
 
@@ -243,7 +243,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 
 				// Add Post ID and Occurrence ID, keyed by CiviCRM Event ID.
 				$civi_event_data[ $civi_event_id ] = [
-					'post_id' => $post_id,
+					'post_id'       => $post_id,
 					'occurrence_id' => $occurrence_id,
 				];
 
@@ -316,7 +316,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 
 		// Construct args for all Event Posts.
 		$args = [
-			'post_type' => 'event',
+			'post_type'   => 'event',
 			'numberposts' => -1,
 		];
 

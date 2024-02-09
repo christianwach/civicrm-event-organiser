@@ -261,19 +261,19 @@ class CiviCRM_WP_Event_Organiser {
 		}
 
 		// Initialise core objects.
-		$this->term_html = new CiviCRM_WP_Event_Organiser_Term_Description( $this );
-		$this->db = new CiviCRM_WP_Event_Organiser_Admin( $this );
-		$this->mapping = new CiviCRM_WP_Event_Organiser_Mapping( $this );
-		$this->civi = new CiviCRM_WP_Event_Organiser_CiviCRM( $this );
-		$this->eo = new CiviCRM_WP_Event_Organiser_EO( $this );
-		$this->eo_venue = new CiviCRM_WP_Event_Organiser_EO_Venue( $this );
-		$this->taxonomy = new CiviCRM_WP_Event_Organiser_Taxonomy( $this );
+		$this->term_html  = new CiviCRM_WP_Event_Organiser_Term_Description( $this );
+		$this->db         = new CiviCRM_WP_Event_Organiser_Admin( $this );
+		$this->mapping    = new CiviCRM_WP_Event_Organiser_Mapping( $this );
+		$this->civi       = new CiviCRM_WP_Event_Organiser_CiviCRM( $this );
+		$this->eo         = new CiviCRM_WP_Event_Organiser_EO( $this );
+		$this->eo_venue   = new CiviCRM_WP_Event_Organiser_EO_Venue( $this );
+		$this->taxonomy   = new CiviCRM_WP_Event_Organiser_Taxonomy( $this );
 		$this->shortcodes = new CiviCRM_WP_Event_Organiser_Shortcodes( $this );
 
 		// Initialise compatibility objects.
-		$this->cwps = new CiviCRM_WP_Event_Organiser_CWPS( $this );
-		$this->cai = new CiviCRM_WP_Event_Organiser_CAI( $this );
-		$this->cfcr = new CiviCRM_WP_Event_Organiser_CFCR( $this );
+		$this->cwps      = new CiviCRM_WP_Event_Organiser_CWPS( $this );
+		$this->cai       = new CiviCRM_WP_Event_Organiser_CAI( $this );
+		$this->cfcr      = new CiviCRM_WP_Event_Organiser_CFCR( $this );
 		$this->post_dupe = new CiviCRM_WP_Event_Organiser_Post_Duplicator( $this );
 
 		// We're done.
@@ -528,7 +528,7 @@ function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 		$links[] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'Settings', 'civicrm-event-organiser' ) . '</a>';
 
 		// Add Paypal link.
-		$paypal = 'https://www.paypal.me/interactivist';
+		$paypal  = 'https://www.paypal.me/interactivist';
 		$links[] = '<a href="' . $paypal . '" target="_blank">' . __( 'Donate!', 'civicrm-event-organiser' ) . '</a>';
 
 	}

@@ -264,12 +264,12 @@ class CiviCRM_WP_Event_Organiser_CAI {
 
 		// Log and bail if there's no Event ID.
 		if ( empty( $event['id'] ) ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => __( 'A numeric ID must be present to update an Event.', 'civicrm-event-organiser' ),
-				'event' => $event,
+				'method'    => __METHOD__,
+				'message'   => __( 'A numeric ID must be present to update an Event.', 'civicrm-event-organiser' ),
+				'event'     => $event,
 				'backtrace' => $trace,
 			], true ) );
 			return $event_data;
@@ -527,7 +527,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		foreach ( $civicrm_custom_fields as $key => $field_group ) {
 			foreach ( $field_group as $custom_field ) {
 				$custom_field['type'] = $custom_field['data_type'];
-				$custom_fields[] = $custom_field;
+				$custom_fields[]      = $custom_field;
 			}
 		}
 
@@ -536,7 +536,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 		foreach ( $args['civi_event'] as $key => $value ) {
 			// CiviCRM only appends populated Custom Fields.
 			if ( substr( $key, 0, 7 ) === 'custom_' ) {
-				$index = str_replace( 'custom_', '', $key );
+				$index                       = str_replace( 'custom_', '', $key );
 				$custom_field_data[ $index ] = $value;
 			}
 		}
@@ -554,7 +554,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 
 			// Grab the CiviCRM field definition.
 			$filtered = wp_list_filter( $custom_fields, [ 'id' => $custom_field_ref ] );
-			$field = array_pop( $filtered );
+			$field    = array_pop( $filtered );
 
 			// Contact Reference fields return the Contact's "sort_name".
 			if ( 'ContactReference' === $field['type'] ) {

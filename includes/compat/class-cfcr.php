@@ -64,7 +64,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 		// Maybe store reference to CFC Forms CiviCRM Redirect.
 		if ( defined( 'CFC_REDIRECT_VERSION' ) ) {
-			$this->cfcr = new stdClass();
+			$this->cfcr               = new stdClass();
 			$this->cfcr->redirect_api = new \CFCR\Api\DB();
 		}
 
@@ -139,13 +139,13 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Build markup for Post.
-		$page = __( 'None selected', 'civicrm-event-organiser' );
-		$post_id = 0;
+		$page      = __( 'None selected', 'civicrm-event-organiser' );
+		$post_id   = 0;
 		$is_active = '';
 		if ( ! empty( $redirects ) ) {
-			$redirect = array_pop( $redirects );
-			$page = '<a href="' . get_permalink( $redirect->post_id ) . '">' . esc_html( $redirect->post_title ) . '</a>' . "\n";
-			$post_id = $redirect->post_id;
+			$redirect  = array_pop( $redirects );
+			$page      = '<a href="' . get_permalink( $redirect->post_id ) . '">' . esc_html( $redirect->post_title ) . '</a>' . "\n";
+			$post_id   = $redirect->post_id;
 			$is_active = ( 1 === (int) $redirect->is_active ) ? ' checked="checked"' : '';
 		}
 
@@ -163,21 +163,21 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 		// Init localisation.
 		$localisation = [
-			'title' => __( 'Choose Redirect Location', 'civicrm-event-organiser' ),
-			'button' => __( 'Set Redirect Location', 'civicrm-event-organiser' ),
+			'title'        => __( 'Choose Redirect Location', 'civicrm-event-organiser' ),
+			'button'       => __( 'Set Redirect Location', 'civicrm-event-organiser' ),
 			'no-selection' => __( 'None selected', 'civicrm-event-organiser' ),
 		];
 
 		// Init settings.
 		$settings = [
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'loading' => CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/loading.gif',
+			'loading'  => CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/loading.gif',
 		];
 
 		// Localisation array.
 		$vars = [
 			'localisation' => $localisation,
-			'settings' => $settings,
+			'settings'     => $settings,
 		];
 
 		// Localise.
@@ -201,7 +201,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 		// Is this our metabox calling?
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$cfcr = isset( $_POST['cfcr'] ) ? sanitize_text_field( wp_unslash( $_POST['cfcr'] ) ) : '';
+		$cfcr    = isset( $_POST['cfcr'] ) ? sanitize_text_field( wp_unslash( $_POST['cfcr'] ) ) : '';
 		$is_cfcr = false;
 		if ( ! empty( $cfcr ) && 'true' === $cfcr ) {
 			$is_cfcr = true;
@@ -323,11 +323,11 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 
 		// Build redirect params.
 		$redirect = [
-			'entity_id' => $civi_event_id,
-			'page_type' => 'event',
-			'is_active' => $is_active,
-			'post_type' => get_post_type( $redirect_post_id ),
-			'post_id' => $redirect_post_id,
+			'entity_id'  => $civi_event_id,
+			'page_type'  => 'event',
+			'is_active'  => $is_active,
+			'post_type'  => get_post_type( $redirect_post_id ),
+			'post_id'    => $redirect_post_id,
 			'page_title' => get_the_title( $event_id ),
 			'post_title' => get_the_title( $redirect_post_id ),
 		];

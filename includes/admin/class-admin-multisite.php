@@ -49,7 +49,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Multisite {
 
 		// Store references.
 		$this->plugin = $parent->plugin;
-		$this->admin = $parent;
+		$this->admin  = $parent;
 
 		// Boot when parent is loaded.
 		add_action( 'ceo/admin/loaded', [ $this, 'initialise' ] );

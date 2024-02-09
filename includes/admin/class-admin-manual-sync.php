@@ -73,7 +73,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @var object $step_counts The array of item counts to process per AJAX request.
 	 */
 	public $step_counts = [
-		'tax' => 5, // Event Organiser Category Terms & CiviCRM Event Types.
+		'tax'   => 5, // Event Organiser Category Terms & CiviCRM Event Types.
 		'venue' => 5, // Event Organiser Venues & CiviCRM Locations.
 		'event' => 10, // Event Organiser Events & CiviCRM Events.
 	];
@@ -89,7 +89,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		// Store references to objects.
 		$this->plugin = $parent->plugin;
-		$this->admin = $parent;
+		$this->admin  = $parent;
 
 		// Boot when parent is loaded.
 		add_action( 'ceo/admin/loaded', [ $this, 'initialise' ] );
@@ -291,7 +291,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		do_action( 'civi_eo/admin/sync/add_meta_boxes', $screen->id );
 
 		// Get the column CSS class.
-		$columns = (int) $screen->get_columns();
+		$columns     = (int) $screen->get_columns();
 		$columns_css = '';
 		if ( $columns ) {
 			$columns_css = " columns-$columns";
@@ -367,7 +367,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		// Get all Event Organiser Events.
 		$all_eo_events = get_posts( [
-			'post_type' => 'event',
+			'post_type'   => 'event',
 			'numberposts' => -1,
 		] );
 
@@ -376,54 +376,54 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// CiviCRM Event Types.
 			'event_types' => [
-				'total' => __( '{{total}} event types to sync...', 'civicrm-event-organiser' ),
-				'current' => __( 'Processing event types {{from}} to {{to}}', 'civicrm-event-organiser' ),
+				'total'    => __( '{{total}} event types to sync...', 'civicrm-event-organiser' ),
+				'current'  => __( 'Processing event types {{from}} to {{to}}', 'civicrm-event-organiser' ),
 				'complete' => __( 'Processing event types {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
-				'count' => count( $all_types['values'] ),
+				'count'    => count( $all_types['values'] ),
 			],
 
 			// Event Organiser categories.
-			'categories' => [
-				'total' => __( '{{total}} categories to sync...', 'civicrm-event-organiser' ),
-				'current' => __( 'Processing categories {{from}} to {{to}}', 'civicrm-event-organiser' ),
+			'categories'  => [
+				'total'    => __( '{{total}} categories to sync...', 'civicrm-event-organiser' ),
+				'current'  => __( 'Processing categories {{from}} to {{to}}', 'civicrm-event-organiser' ),
 				'complete' => __( 'Processing categories {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
-				'count' => count( $all_terms ),
+				'count'    => count( $all_terms ),
 			],
 
 			// CiviCRM Locations.
-			'locations' => [
-				'total' => __( '{{total}} locations to sync...', 'civicrm-event-organiser' ),
-				'current' => __( 'Processing locations {{from}} to {{to}}', 'civicrm-event-organiser' ),
+			'locations'   => [
+				'total'    => __( '{{total}} locations to sync...', 'civicrm-event-organiser' ),
+				'current'  => __( 'Processing locations {{from}} to {{to}}', 'civicrm-event-organiser' ),
 				'complete' => __( 'Processing locations {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
-				'count' => count( $all_locations['values'] ),
+				'count'    => count( $all_locations['values'] ),
 			],
 
 			// Event Organiser Venues.
-			'venues' => [
-				'total' => __( '{{total}} venues to sync...', 'civicrm-event-organiser' ),
-				'current' => __( 'Processing venues {{from}} to {{to}}', 'civicrm-event-organiser' ),
+			'venues'      => [
+				'total'    => __( '{{total}} venues to sync...', 'civicrm-event-organiser' ),
+				'current'  => __( 'Processing venues {{from}} to {{to}}', 'civicrm-event-organiser' ),
 				'complete' => __( 'Processing venues {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
-				'count' => count( $all_venues ),
+				'count'    => count( $all_venues ),
 			],
 
 			// CiviCRM Events.
 			'civi_events' => [
-				'total' => __( '{{total}} events to sync...', 'civicrm-event-organiser' ),
-				'current' => __( 'Processing events {{from}} to {{to}}', 'civicrm-event-organiser' ),
+				'total'    => __( '{{total}} events to sync...', 'civicrm-event-organiser' ),
+				'current'  => __( 'Processing events {{from}} to {{to}}', 'civicrm-event-organiser' ),
 				'complete' => __( 'Processing events {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
-				'count' => count( $all_civi_events['values'] ),
+				'count'    => count( $all_civi_events['values'] ),
 			],
 
 			// Event Organiser Events.
-			'eo_events' => [
-				'total' => __( '{{total}} events to sync...', 'civicrm-event-organiser' ),
-				'current' => __( 'Processing events {{from}} to {{to}}', 'civicrm-event-organiser' ),
+			'eo_events'   => [
+				'total'    => __( '{{total}} events to sync...', 'civicrm-event-organiser' ),
+				'current'  => __( 'Processing events {{from}} to {{to}}', 'civicrm-event-organiser' ),
 				'complete' => __( 'Processing events {{from}} to {{to}} complete', 'civicrm-event-organiser' ),
-				'count' => count( $all_eo_events ),
+				'count'    => count( $all_eo_events ),
 			],
 
 			// Strings common to all.
-			'common' => [
+			'common'      => [
 				'done' => __( 'All done!', 'civicrm-event-organiser' ),
 			],
 
@@ -431,8 +431,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		// Init settings.
 		$settings = [
-			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'step_tax' => $this->step_counts['tax'],
+			'ajax_url'   => admin_url( 'admin-ajax.php' ),
+			'step_tax'   => $this->step_counts['tax'],
 			'step_venue' => $this->step_counts['venue'],
 			'step_event' => $this->step_counts['event'],
 		];
@@ -440,7 +440,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		// Localisation array.
 		$vars = [
 			'localisation' => $localisation,
-			'settings' => $settings,
+			'settings'     => $settings,
 		];
 
 		// Localise the WordPress way.
@@ -857,11 +857,11 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		// Construct args.
 		$args = [
-			'taxonomy' => 'event-category',
-			'orderby' => 'count',
+			'taxonomy'   => 'event-category',
+			'orderby'    => 'count',
 			'hide_empty' => 0,
-			'number' => $this->step_counts['tax'],
-			'offset' => $offset,
+			'number'     => $this->step_counts['tax'],
+			'offset'     => $offset,
 		];
 
 		// Get all Terms.
@@ -882,7 +882,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// Set from and to flags.
 			$data['from'] = (int) $offset;
-			$data['to'] = $data['from'] + $diff;
+			$data['to']   = $data['from'] + $diff;
 
 			// Sync each Event Term in turn.
 			foreach ( $terms as $term ) {
@@ -894,12 +894,12 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				if ( false === $civi_event_type_id ) {
 
 					// Log failed Event Term first.
-					$e = new Exception();
+					$e     = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
-						'method' => __METHOD__,
-						'message' => __( 'Could not sync Event Term', 'civicrm-event-organiser' ),
-						'term' => $term,
+						'method'    => __METHOD__,
+						'message'   => __( 'Could not sync Event Term', 'civicrm-event-organiser' ),
+						'term'      => $term,
 						'backtrace' => $trace,
 					], true ) );
 
@@ -980,12 +980,12 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// Get Event Types (descriptions will be present if not null).
 			$types = civicrm_api( 'OptionValue', 'get', [
-				'version' => 3,
+				'version'         => 3,
 				'option_group_id' => $opt_group_id,
-				'options' => [
-					'limit' => $this->step_counts['tax'],
+				'options'         => [
+					'limit'  => $this->step_counts['tax'],
 					'offset' => $offset,
-					'sort' => 'weight ASC',
+					'sort'   => 'weight ASC',
 				],
 			] );
 
@@ -1011,7 +1011,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// Set from and to flags.
 			$data['from'] = (int) $offset;
-			$data['to'] = $data['from'] + $diff;
+			$data['to']   = $data['from'] + $diff;
 
 			// Sync each Event Type in turn.
 			foreach ( $types['values'] as $type ) {
@@ -1023,12 +1023,12 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				if ( false === $eo_term_id ) {
 
 					// Log failed Event Type first.
-					$e = new Exception();
+					$e     = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
-						'method' => __METHOD__,
-						'message' => __( 'Could not sync Event Type', 'civicrm-event-organiser' ),
-						'type' => $type,
+						'method'    => __METHOD__,
+						'message'   => __( 'Could not sync Event Type', 'civicrm-event-organiser' ),
+						'type'      => $type,
 						'backtrace' => $trace,
 					], true ) );
 
@@ -1124,7 +1124,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// Set from and to flags.
 			$data['from'] = (int) $offset;
-			$data['to'] = $data['from'] + $diff;
+			$data['to']   = $data['from'] + $diff;
 
 			// Loop.
 			foreach ( $venues as $venue ) {
@@ -1136,7 +1136,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				 * @see https://github.com/stephenharris/Event-Organiser/commit/646220b336ba9c49d12bd17f5992e1391d0b411f
 				 */
 				$venue_id = (int) $venue->term_id;
-				$address = eo_get_venue_address( $venue_id );
+				$address  = eo_get_venue_address( $venue_id );
 
 				$venue->venue_address  = isset( $address['address'] ) ? $address['address'] : '';
 				$venue->venue_postal   = isset( $address['postcode'] ) ? $address['postcode'] : '';
@@ -1227,9 +1227,9 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			// Get CiviCRM Locations.
 			$locations = civicrm_api( 'LocBlock', 'get', [
 				'version' => 3,
-				'return' => 'all',
+				'return'  => 'all',
 				'options' => [
-					'limit' => $this->step_counts['tax'],
+					'limit'  => $this->step_counts['tax'],
 					'offset' => $offset,
 				],
 			] );
@@ -1256,7 +1256,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// Set from and to flags.
 			$data['from'] = (int) $offset;
-			$data['to'] = $data['from'] + $diff;
+			$data['to']   = $data['from'] + $diff;
 
 			// Update Event Organiser Venue - or create if it doesn't exist.
 			foreach ( $locations['values'] as $location ) {
@@ -1330,8 +1330,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		// Get "primary" Events (i.e. not ordered by Occurrence).
 		$events = eo_get_events( [
-			'numberposts' => $this->step_counts['event'],
-			'offset' => $offset,
+			'numberposts'     => $this->step_counts['event'],
+			'offset'          => $offset,
 			'group_events_by' => 'series',
 		] );
 
@@ -1350,7 +1350,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// Set from and to flags.
 			$data['from'] = (int) $offset;
-			$data['to'] = $data['from'] + $diff;
+			$data['to']   = $data['from'] + $diff;
 
 			// Prevent recursion.
 			remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_created' ], 10 );
@@ -1368,10 +1368,10 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 				// Make an array of params.
 				$args = [
-					'post_id' => $event->ID,
-					'event_id' => $event->ID,
-					'event' => $event,
-					'dates' => $dates,
+					'post_id'         => $event->ID,
+					'event_id'        => $event->ID,
+					'event'           => $event,
+					'dates'           => $dates,
 					'correspondences' => $correspondences,
 				];
 
@@ -1466,10 +1466,10 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// Get CiviCRM Events.
 			$events = civicrm_api( 'Event', 'get', [
-				'version' => 3,
+				'version'     => 3,
 				'is_template' => 0,
-				'options' => [
-					'limit' => $this->step_counts['event'],
+				'options'     => [
+					'limit'  => $this->step_counts['event'],
 					'offset' => $offset,
 				],
 			] );
@@ -1496,7 +1496,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// Set from and to flags.
 			$data['from'] = (int) $offset;
-			$data['to'] = $data['from'] + $diff;
+			$data['to']   = $data['from'] + $diff;
 
 			// Loop.
 			foreach ( $events['values'] as $civi_event ) {
@@ -1511,18 +1511,18 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 					 * In this context, a CiviCRM Event can only have an Event Organiser Event
 					 * with a single Occurrence associated with it, so use first item.
 					 */
-					$occurrences = eo_get_the_occurrences_of( $existing_event_id );
-					$keys = array_keys( $occurrences );
+					$occurrences            = eo_get_the_occurrences_of( $existing_event_id );
+					$keys                   = array_keys( $occurrences );
 					$existing_occurrence_id = array_pop( $keys );
 				}
 
 				// Make an array of params for the pre.
 				$args_pre = [
-					'post_id' => $existing_event_id,
-					'event_id' => $existing_event_id,
+					'post_id'       => $existing_event_id,
+					'event_id'      => $existing_event_id,
 					'occurrence_id' => $existing_occurrence_id,
 					'civi_event_id' => $civi_event['id'],
-					'civi_event' => $civi_event,
+					'civi_event'    => $civi_event,
 				];
 
 				/**
@@ -1549,7 +1549,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				 * In this context, a CiviCRM Event can only have an Event Organiser Event
 				 * with a single Occurrence associated with it, so use first item.
 				 */
-				$keys = array_keys( $occurrences );
+				$keys          = array_keys( $occurrences );
 				$occurrence_id = array_pop( $keys );
 
 				// Store correspondences.
@@ -1557,11 +1557,11 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 				// Make an array of params.
 				$args = [
-					'post_id' => $event_id,
-					'event_id' => $event_id,
+					'post_id'       => $event_id,
+					'event_id'      => $event_id,
 					'occurrence_id' => $occurrence_id,
 					'civi_event_id' => $civi_event['id'],
-					'civi_event' => $civi_event,
+					'civi_event'    => $civi_event,
 				];
 
 				/**

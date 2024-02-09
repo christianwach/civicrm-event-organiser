@@ -66,7 +66,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function __construct( $parent ) {
 
 		// Store references.
-		$this->plugin = $parent->plugin;
+		$this->plugin  = $parent->plugin;
 		$this->civicrm = $parent;
 
 		// Add CiviCRM hooks when parent is loaded.
@@ -82,7 +82,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function initialise() {
 
 		// Store references.
-		$this->location = $this->civicrm->location;
+		$this->location     = $this->civicrm->location;
 		$this->registration = $this->civicrm->registration;
 
 		// Register hooks.
@@ -167,9 +167,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Build the placeholder image markup.
 		$placeholder_url = CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/placeholder.gif';
-		$img_width = get_option( 'medium_size_w', 300 );
-		$img_style = 'display: none; width: ' . $img_width . 'px; height: 100px;';
-		$markup = '<img src="' . $placeholder_url . '" class="wp-post-image" style="' . $img_style . '">';
+		$img_width       = get_option( 'medium_size_w', 300 );
+		$img_style       = 'display: none; width: ' . $img_width . 'px; height: 100px;';
+		$markup          = '<img src="' . $placeholder_url . '" class="wp-post-image" style="' . $img_style . '">';
 
 		// Add image markup.
 		$form->assign(
@@ -271,9 +271,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Build the placeholder image markup.
 		$placeholder_url = CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/placeholder.gif';
-		$img_width = get_option( 'medium_size_w', 300 );
-		$img_style = 'display: none; width: ' . $img_width . 'px; height: 100px;';
-		$markup = '<img src="' . $placeholder_url . '" class="wp-post-image" style="' . $img_style . '">';
+		$img_width       = get_option( 'medium_size_w', 300 );
+		$img_style       = 'display: none; width: ' . $img_width . 'px; height: 100px;';
+		$markup          = '<img src="' . $placeholder_url . '" class="wp-post-image" style="' . $img_style . '">';
 
 		// Add image markup.
 		$form->assign(
@@ -406,7 +406,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Get the image markup.
 		$placeholder_url = CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/placeholder.gif';
-		$markup = '<img src="' . $placeholder_url . '" class="wp-post-image" style="display: none;">';
+		$markup          = '<img src="' . $placeholder_url . '" class="wp-post-image" style="display: none;">';
 		if ( ! empty( $attachment_id ) ) {
 			$markup = get_the_post_thumbnail( $post_id, 'medium' );
 		}
@@ -463,21 +463,21 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Init localisation.
 		$localisation = [
-			'title' => __( 'Choose Feature Image', 'civicrm-event-organiser' ),
+			'title'  => __( 'Choose Feature Image', 'civicrm-event-organiser' ),
 			'button' => __( 'Set Feature Image', 'civicrm-event-organiser' ),
 		];
 
 		// Init settings.
 		$settings = [
-			'ajax_url' => admin_url( 'admin-ajax.php' ),
-			'loading' => CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/loading.gif',
+			'ajax_url'   => admin_url( 'admin-ajax.php' ),
+			'loading'    => CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/loading.gif',
 			'ajax_nonce' => wp_create_nonce( 'ceo_nonce_action_feature_image' ),
 		];
 
 		// Localisation array.
 		$vars = [
 			'localisation' => $localisation,
-			'settings' => $settings,
+			'settings'     => $settings,
 		];
 
 		// Localise the WordPress way.
@@ -843,7 +843,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		 * In this context, a CiviCRM Event can only have an Event Organiser Event
 		 * with a single Occurrence associated with it, so use first item.
 		 */
-		$keys = array_keys( $occurrences );
+		$keys          = array_keys( $occurrences );
 		$occurrence_id = array_shift( $keys );
 
 		// Store correspondences.
@@ -851,7 +851,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Store Event IDs for possible use in the "form_event_image_process" method.
 		$this->civicrm_event_created_id = $objectRef->id;
-		$this->eo_event_created_id = $event_id;
+		$this->eo_event_created_id      = $event_id;
 
 	}
 
@@ -940,7 +940,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		 * In this context, a CiviCRM Event can only have an Event Organiser Event
 		 * with a single Occurrence associated with it, so use first item.
 		 */
-		$keys = array_keys( $occurrences );
+		$keys          = array_keys( $occurrences );
 		$occurrence_id = array_shift( $keys );
 
 		// Store correspondences.
@@ -977,7 +977,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Clear the correspondence between the Occurrence and the CiviCRM Event.
-		$post_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $objectId );
+		$post_id       = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $objectId );
 		$occurrence_id = $this->plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $objectId );
 		$this->plugin->mapping->clear_event_correspondence( $post_id, $occurrence_id, $objectId );
 
@@ -1007,10 +1007,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		];
 
 		// Add items that are common to all CiviCRM Events.
-		$civi_event['title'] = $post->post_title;
-		$civi_event['description'] = $post->post_content;
-		$civi_event['summary'] = wp_strip_all_tags( $post->post_excerpt );
-		$civi_event['created_date'] = $post->post_date;
+		$civi_event['title']                  = $post->post_title;
+		$civi_event['description']            = $post->post_content;
+		$civi_event['summary']                = wp_strip_all_tags( $post->post_excerpt );
+		$civi_event['created_date']           = $post->post_date;
 		$civi_event['participant_listing_id'] = null;
 
 		// Get Status Sync setting.
@@ -1131,10 +1131,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Set Confirmation Email sub-fields to our params if enabled.
 		if ( ! empty( $civi_event['is_email_confirm'] ) ) {
-			$civi_event['confirm_from_name'] = $this->registration->get_registration_send_email_from_name( $post->ID );
+			$civi_event['confirm_from_name']  = $this->registration->get_registration_send_email_from_name( $post->ID );
 			$civi_event['confirm_from_email'] = $this->registration->get_registration_send_email_from( $post->ID );
-			$civi_event['cc_confirm'] = $this->registration->get_registration_send_email_cc( $post->ID );
-			$civi_event['bcc_confirm'] = $this->registration->get_registration_send_email_bcc( $post->ID );
+			$civi_event['cc_confirm']         = $this->registration->get_registration_send_email_cc( $post->ID );
+			$civi_event['bcc_confirm']        = $this->registration->get_registration_send_email_bcc( $post->ID );
 		}
 
 		/**
@@ -1187,20 +1187,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 			// Overwrite dates.
 			$civi_event['start_date'] = $date['start'];
-			$civi_event['end_date'] = $date['end'];
+			$civi_event['end_date']   = $date['end'];
 
 			// Use API to create Event.
 			$result = civicrm_api( 'Event', 'create', $civi_event );
 
 			// Log failures and skip to next.
 			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-				$e = new Exception();
+				$e     = new Exception();
 				$trace = $e->getTraceAsString();
 				error_log( print_r( [
-					'method' => __METHOD__,
-					'message' => $result['error_message'],
+					'method'     => __METHOD__,
+					'message'    => $result['error_message'],
 					'civi_event' => $civi_event,
-					'backtrace' => $trace,
+					'backtrace'  => $trace,
 				], true ) );
 				continue;
 			}
@@ -1326,20 +1326,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 				// Overwrite dates.
 				$civi_event['start_date'] = $date['start'];
-				$civi_event['end_date'] = $date['end'];
+				$civi_event['end_date']   = $date['end'];
 
 				// Use API to create Event.
 				$result = civicrm_api( 'Event', 'create', $civi_event );
 
 				// Log failures and skip to next.
 				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-					$e = new Exception();
+					$e     = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
-						'method' => __METHOD__,
-						'message' => $result['error_message'],
+						'method'     => __METHOD__,
+						'message'    => $result['error_message'],
 						'civi_event' => $civi_event,
-						'backtrace' => $trace,
+						'backtrace'  => $trace,
 					], true ) );
 					continue;
 				}
@@ -1429,13 +1429,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 				// Log failures and skip to next.
 				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-					$e = new Exception();
+					$e     = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
-						'method' => __METHOD__,
-						'message' => $result['error_message'],
+						'method'     => __METHOD__,
+						'message'    => $result['error_message'],
 						'civi_event' => $civi_event,
-						'backtrace' => $trace,
+						'backtrace'  => $trace,
 					], true ) );
 					continue;
 				}
@@ -1464,20 +1464,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 				// Overwrite dates.
 				$civi_event['start_date'] = $eo_date['start'];
-				$civi_event['end_date'] = $eo_date['end'];
+				$civi_event['end_date']   = $eo_date['end'];
 
 				// Use API to create Event.
 				$result = civicrm_api( 'Event', 'create', $civi_event );
 
 				// Log failures and skip to next.
 				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-					$e = new Exception();
+					$e     = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
-						'method' => __METHOD__,
-						'message' => $result['error_message'],
+						'method'     => __METHOD__,
+						'message'    => $result['error_message'],
 						'civi_event' => $civi_event,
-						'backtrace' => $trace,
+						'backtrace'  => $trace,
 					], true ) );
 					continue;
 				}
@@ -1562,10 +1562,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Init return array.
 		$event_data = [
-			'matched' => [],
-			'unmatched_eo' => [],
+			'matched'        => [],
+			'unmatched_eo'   => [],
 			'unmatched_civi' => [],
-			'unorphaned' => [],
+			'unorphaned'     => [],
 		];
 
 		// Init matched.
@@ -1660,10 +1660,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		ksort( $matched );
 
 		// Construct return array.
-		$event_data['matched'] = $matched;
-		$event_data['unmatched_eo'] = $unmatched_eo;
+		$event_data['matched']        = $matched;
+		$event_data['unmatched_eo']   = $unmatched_eo;
 		$event_data['unmatched_civi'] = $unmatched_civi;
-		$event_data['unorphaned'] = $unorphaned;
+		$event_data['unorphaned']     = $unorphaned;
 
 		// --<
 		return $event_data;
@@ -1687,9 +1687,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Construct Events array.
 		$params = [
-			'version' => 3,
+			'version'     => 3,
 			'is_template' => 0,
-			'options' => [
+			'options'     => [
 				'limit' => 0, // Get all Events.
 			],
 		];
@@ -1699,12 +1699,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Log failures and return boolean false.
 		if ( ! empty( $events['is_error'] ) && 1 === (int) $events['is_error'] ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => $events['error_message'],
-				'params' => $params,
+				'method'    => __METHOD__,
+				'message'   => $events['error_message'],
+				'params'    => $params,
 				'backtrace' => $trace,
 			], true ) );
 			return false;
@@ -1747,7 +1747,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			// Construct "query".
 			$params = [
 				'version' => 3,
-				'id' => $civi_event_id,
+				'id'      => $civi_event_id,
 			];
 
 			// Okay, let's do it.
@@ -1755,12 +1755,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 			// Log failures and skip to next.
 			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-				$e = new Exception();
+				$e     = new Exception();
 				$trace = $e->getTraceAsString();
 				error_log( print_r( [
-					'method' => __METHOD__,
-					'message' => $result['error_message'],
-					'params' => $params,
+					'method'    => __METHOD__,
+					'message'   => $result['error_message'],
+					'params'    => $params,
 					'backtrace' => $trace,
 				], true ) );
 				continue;
@@ -1808,8 +1808,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Build params.
 		$params = [
-			'version' => 3,
-			'id' => $civi_event_id,
+			'version'   => 3,
+			'id'        => $civi_event_id,
 			'is_active' => 0,
 		];
 
@@ -1818,12 +1818,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Log failures and return boolean false.
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => $result['error_message'],
-				'params' => $params,
+				'method'    => __METHOD__,
+				'message'   => $result['error_message'],
+				'params'    => $params,
 				'backtrace' => $trace,
 			], true ) );
 			return false;
@@ -1856,7 +1856,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		// Construct params.
 		$params = [
 			'version' => 3,
-			'id' => $event_id,
+			'id'      => $event_id,
 		];
 
 		// Call API.
@@ -1864,12 +1864,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Log failures and bail.
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'params' => $params,
-				'result' => $result,
+				'method'    => __METHOD__,
+				'params'    => $params,
+				'result'    => $result,
 				'backtrace' => $trace,
 			], true ) );
 			return $event;

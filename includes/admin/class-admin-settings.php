@@ -85,7 +85,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 
 		// Store references to objects.
 		$this->plugin = $parent->plugin;
-		$this->admin = $parent;
+		$this->admin  = $parent;
 
 		// Boot when parent is loaded.
 		add_action( 'ceo/admin/loaded', [ $this, 'initialise' ] );
@@ -612,7 +612,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 
 		// Set default checks for Confirmation Email sub-fields.
 		$send_email_from_name_required = false;
-		$send_email_from_required = false;
+		$send_email_from_required      = false;
 
 		// If Confirmation Email is enabled.
 		if ( $send_email_enabled ) {
@@ -631,9 +631,9 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 
 		// Set default values for Confirmation Email sub-fields.
 		$send_email_from_name = $this->plugin->civi->registration->get_registration_send_email_from_name();
-		$send_email_from = $this->plugin->civi->registration->get_registration_send_email_from();
-		$send_email_cc = $this->plugin->civi->registration->get_registration_send_email_cc();
-		$send_email_bcc = $this->plugin->civi->registration->get_registration_send_email_bcc();
+		$send_email_from      = $this->plugin->civi->registration->get_registration_send_email_from();
+		$send_email_cc        = $this->plugin->civi->registration->get_registration_send_email_cc();
+		$send_email_bcc       = $this->plugin->civi->registration->get_registration_send_email_bcc();
 
 		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php';
@@ -674,18 +674,18 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 
 		// Init vars. Nonce is checked in "form_nonce_check()".
 		// phpcs:disable WordPress.Security.NonceVerification.Missing
-		$role = isset( $_POST['civi_eo_event_default_role'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_role'] ) ) : '0';
-		$type = isset( $_POST['civi_eo_event_default_type'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_type'] ) ) : '0';
-		$profile = isset( $_POST['civi_eo_event_default_profile'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_profile'] ) ) : '0';
-		$dedupe = isset( $_POST['civi_eo_event_default_dedupe'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_dedupe'] ) ) : '0';
-		$confirm = isset( $_POST['civi_eo_event_default_confirm'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_confirm'] ) ) : '';
-		$send_email = isset( $_POST['civi_eo_event_default_send_email'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email'] ) ) : '';
-		$from_name = isset( $_POST['civi_eo_event_default_send_email_from_name'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_from_name'] ) ) : '';
-		$from = isset( $_POST['civi_eo_event_default_send_email_from'] ) ? sanitize_email( wp_unslash( $_POST['civi_eo_event_default_send_email_from'] ) ) : '';
-		$cc = isset( $_POST['civi_eo_event_default_send_email_cc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_cc'] ) ) : '';
-		$bcc = isset( $_POST['civi_eo_event_default_send_email_bcc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_bcc'] ) ) : '';
+		$role               = isset( $_POST['civi_eo_event_default_role'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_role'] ) ) : '0';
+		$type               = isset( $_POST['civi_eo_event_default_type'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_type'] ) ) : '0';
+		$profile            = isset( $_POST['civi_eo_event_default_profile'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_profile'] ) ) : '0';
+		$dedupe             = isset( $_POST['civi_eo_event_default_dedupe'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_dedupe'] ) ) : '0';
+		$confirm            = isset( $_POST['civi_eo_event_default_confirm'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_confirm'] ) ) : '';
+		$send_email         = isset( $_POST['civi_eo_event_default_send_email'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email'] ) ) : '';
+		$from_name          = isset( $_POST['civi_eo_event_default_send_email_from_name'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_from_name'] ) ) : '';
+		$from               = isset( $_POST['civi_eo_event_default_send_email_from'] ) ? sanitize_email( wp_unslash( $_POST['civi_eo_event_default_send_email_from'] ) ) : '';
+		$cc                 = isset( $_POST['civi_eo_event_default_send_email_cc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_cc'] ) ) : '';
+		$bcc                = isset( $_POST['civi_eo_event_default_send_email_bcc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_bcc'] ) ) : '';
 		$civicrm_event_sync = isset( $_POST['civi_eo_event_default_civievent_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_civievent_sync'] ) ) : '0';
-		$status_sync = isset( $_POST['civi_eo_event_default_status_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_status_sync'] ) ) : '3';
+		$status_sync        = isset( $_POST['civi_eo_event_default_status_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_status_sync'] ) ) : '3';
 		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		// Sanitise and save option.
@@ -730,7 +730,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Sanitise and save Confirmation Email "CC" option.
 		$cc_value = '';
 		if ( ! empty( $cc ) ) {
-			$valid = [];
+			$valid  = [];
 			$emails = explode( ',', $cc );
 			foreach ( $emails as $email ) {
 				if ( is_email( sanitize_email( trim( $email ) ) ) ) {
@@ -744,7 +744,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// Sanitise and save Confirmation Email "BCC" option.
 		$bcc_value = '';
 		if ( ! empty( $bcc ) ) {
-			$valid = [];
+			$valid  = [];
 			$emails = explode( ',', $bcc );
 			foreach ( $emails as $email ) {
 				if ( is_email( sanitize_email( trim( $email ) ) ) ) {

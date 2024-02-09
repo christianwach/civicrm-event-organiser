@@ -48,7 +48,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 	public function __construct( $parent ) {
 
 		// Store reference.
-		$this->plugin = $parent->plugin;
+		$this->plugin  = $parent->plugin;
 		$this->civicrm = $parent;
 
 		// Add CiviCRM hooks when parent is loaded.
@@ -127,7 +127,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		// First, get participant_role option_group ID.
 		$opt_group = [
 			'version' => 3,
-			'name' => 'participant_role',
+			'name'    => 'participant_role',
 		];
 
 		// Call CiviCRM API.
@@ -135,10 +135,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 		// Next, get option_values for that group.
 		$opt_values = [
-			'version' => 3,
-			'is_active' => 1,
+			'version'         => 3,
+			'is_active'       => 1,
 			'option_group_id' => $participant_role['id'],
-			'options' => [
+			'options'         => [
 				'sort' => 'weight ASC',
 			],
 		];
@@ -430,14 +430,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 			// Construct profile params.
 			$params = [
-				'version' => 3,
-				'module' => 'CiviEvent',
+				'version'      => 3,
+				'module'       => 'CiviEvent',
 				'entity_table' => 'civicrm_event',
-				'entity_id' => $civi_event['id'],
-				'uf_group_id' => $profile_id,
-				'is_active' => 1,
-				'weight' => 1,
-				'sequential' => 1,
+				'entity_id'    => $civi_event['id'],
+				'uf_group_id'  => $profile_id,
+				'is_active'    => 1,
+				'weight'       => 1,
+				'sequential'   => 1,
 			];
 
 			// Trigger update if this Event already has a Registration Profile.
@@ -451,14 +451,14 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 			// Log any errors.
 			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-				$e = new Exception();
+				$e     = new Exception();
 				$trace = $e->getTraceAsString();
 				error_log( print_r( [
-					'method' => __METHOD__,
-					'message' => $result['error_message'],
+					'method'     => __METHOD__,
+					'message'    => $result['error_message'],
 					'civi_event' => $civi_event,
-					'params' => $params,
-					'backtrace' => $trace,
+					'params'     => $params,
+					'backtrace'  => $trace,
 				], true ) );
 			}
 
@@ -488,12 +488,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 		// Define query params.
 		$params = [
-			'version' => 3,
+			'version'      => 3,
 			'entity_table' => 'civicrm_event',
-			'module' => 'CiviEvent',
-			'entity_id' => $civi_event['id'],
-			'weight' => 1,
-			'sequential' => 1,
+			'module'       => 'CiviEvent',
+			'entity_id'    => $civi_event['id'],
+			'weight'       => 1,
+			'sequential'   => 1,
 		];
 
 		// Query via API.
@@ -582,13 +582,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 		// Log and bail if there's an error.
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => $result['error_message'],
-				'result' => $result,
-				'params' => $params,
+				'method'    => __METHOD__,
+				'message'   => $result['error_message'],
+				'result'    => $result,
+				'params'    => $params,
 				'backtrace' => $trace,
 			], true ) );
 			return false;
@@ -733,9 +733,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 			// Build params to get Dedupe Rule Groups.
 			$params = [
-				'limit' => 0,
+				'limit'            => 0,
 				'checkPermissions' => false,
-				'where' => [
+				'where'            => [
 					[ 'contact_type', '=', 'Individual' ],
 				],
 			];
@@ -750,7 +750,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 			// Add the results to the return array.
 			foreach ( $result as $item ) {
-				$title = ! empty( $item['title'] ) ? $item['title'] : ( ! empty( $item['name'] ) ? $item['name'] : $item['contact_type'] );
+				$title                       = ! empty( $item['title'] ) ? $item['title'] : ( ! empty( $item['name'] ) ? $item['name'] : $item['contact_type'] );
 				$dedupe_rules[ $item['id'] ] = $title . ' - ' . $item['used'];
 			}
 

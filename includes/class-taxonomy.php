@@ -305,8 +305,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 			// Construct args.
 			$args = [
-				'taxonomy' => 'event-category',
-				'orderby' => 'count',
+				'taxonomy'   => 'event-category',
+				'orderby'    => 'count',
 				'hide_empty' => 0,
 			];
 
@@ -496,7 +496,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Construct args.
 		$args = [
-			'slug' => sanitize_title( $event_type['name'] ),
+			'slug'        => sanitize_title( $event_type['name'] ),
 			'description' => $description,
 		];
 
@@ -597,8 +597,8 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Construct Term.
 		$args = [
-			'name' => $new_type['label'],
-			'slug' => sanitize_title( $new_type['name'] ),
+			'name'        => $new_type['label'],
+			'slug'        => sanitize_title( $new_type['name'] ),
 			'description' => $description,
 		];
 
@@ -930,13 +930,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Query Terms for the Term with the ID of the Event Type in meta data.
 		$args = [
-			'taxonomy' => 'event-category',
+			'taxonomy'   => 'event-category',
 			'hide_empty' => false,
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query' => [
 				[
-					'key' => $this->term_meta_key,
-					'value' => $value,
+					'key'     => $this->term_meta_key,
+					'value'   => $value,
 					'compare' => '=',
 				],
 			],
@@ -952,14 +952,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Log a message and bail if there's an error.
 		if ( is_wp_error( $terms ) ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => $terms->get_error_message(),
-				'term' => $term,
+				'method'     => __METHOD__,
+				'message'    => $terms->get_error_message(),
+				'term'       => $term,
 				'event_type' => $event_type,
-				'backtrace' => $trace,
+				'backtrace'  => $trace,
 			], true ) );
 			return false;
 		}
@@ -1051,14 +1051,14 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		if ( is_wp_error( $meta_id ) ) {
 
 			// Log error message.
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => $meta_id->get_error_message(),
-				'term_id' => $term_id,
+				'method'        => __METHOD__,
+				'message'       => $meta_id->get_error_message(),
+				'term_id'       => $term_id,
 				'event_type_id' => $event_type_id,
-				'backtrace' => $trace,
+				'backtrace'     => $trace,
 			], true ) );
 
 			// Also overwrite return.
@@ -1105,9 +1105,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Construct Term data.
 		$term_data = [
-			'id' => $event_type->id,
-			'label' => $event_type->label,
-			'name' => $event_type->label,
+			'id'          => $event_type->id,
+			'label'       => $event_type->label,
+			'name'        => $event_type->label,
 			'description' => $description,
 		];
 
@@ -1200,9 +1200,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Construct Event Type data.
 		$event_type = [
-			'id' => $event_type_full['id'],
-			'label' => $event_type_full['label'],
-			'name' => $event_type_full['name'],
+			'id'          => $event_type_full['id'],
+			'label'       => $event_type_full['label'],
+			'name'        => $event_type_full['name'],
 			'description' => $description,
 		];
 
@@ -1291,9 +1291,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Define Event Type.
 		$params = [
-			'version' => 3,
+			'version'         => 3,
 			'option_group_id' => $opt_group_id,
-			'label' => $new_term->name,
+			'label'           => $new_term->name,
 			// 'name' => $new_term->name,
 		];
 
@@ -1333,12 +1333,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Log and bail if there's an error.
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => $result['error_message'],
-				'params' => $params,
+				'method'    => __METHOD__,
+				'message'   => $result['error_message'],
+				'params'    => $params,
 				'backtrace' => $trace,
 			], true ) );
 			return false;
@@ -1385,7 +1385,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// Define Event Type.
 		$params = [
 			'version' => 3,
-			'id' => $event_type_id,
+			'id'      => $event_type_id,
 		];
 
 		// Delete the Event Type.
@@ -1393,12 +1393,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Log and bail if there's an error.
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => $result['error_message'],
-				'params' => $params,
+				'method'    => __METHOD__,
+				'message'   => $result['error_message'],
+				'params'    => $params,
 				'backtrace' => $trace,
 			], true ) );
 			return false;
@@ -1438,11 +1438,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Define params to get item.
 		$params = [
-			'version' => 3,
+			'version'         => 3,
 			'option_group_id' => $opt_group_id,
-			'label' => $term->name,
-			'options' => [
-				'sort' => 'weight ASC',
+			'label'           => $term->name,
+			'options'         => [
+				'sort'  => 'weight ASC',
 				'limit' => 1,
 			],
 		];
@@ -1452,12 +1452,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Log and bail if we get an error.
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'params' => $params,
-				'result' => $result,
+				'method'    => __METHOD__,
+				'params'    => $params,
+				'result'    => $result,
 				'backtrace' => $trace,
 			], true ) );
 			return false;
@@ -1534,9 +1534,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Define params to get items sorted by weight.
 		$params = [
-			'version' => 3,
+			'version'         => 3,
 			'option_group_id' => $opt_group_id,
-			'options' => [
+			'options'         => [
 				'sort' => 'weight ASC',
 			],
 		];
@@ -1546,13 +1546,13 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Log and bail if there's an error.
 		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => $result['error_message'],
-				'result' => $result,
-				'params' => $params,
+				'method'    => __METHOD__,
+				'message'   => $result['error_message'],
+				'result'    => $result,
+				'params'    => $params,
 				'backtrace' => $trace,
 			], true ) );
 			return false;
@@ -1702,9 +1702,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Define params to get item.
 		$params = [
-			'version' => 3,
+			'version'         => 3,
 			'option_group_id' => $opt_group_id,
-			'id' => $event_type_id,
+			'id'              => $event_type_id,
 		];
 
 		// Call the CiviCRM API.
@@ -1753,9 +1753,9 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Define params to get item.
 		$params = [
-			'version' => 3,
+			'version'         => 3,
 			'option_group_id' => $opt_group_id,
-			'value' => $event_type_value,
+			'value'           => $event_type_value,
 		];
 
 		// Call the CiviCRM API.
@@ -1810,7 +1810,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 			// Define params to get Event Type option group.
 			$params = [
 				'version' => 3,
-				'name' => 'event_type',
+				'name'    => 'event_type',
 			];
 
 			// Get it.

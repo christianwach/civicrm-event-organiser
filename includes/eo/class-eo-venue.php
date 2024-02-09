@@ -133,7 +133,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		 * Manually add Venue metadata because since Event Organiser 3.0 it is
 		 * no longer added by default to the Venue object.
 		 */
-		$address = eo_get_venue_address( $venue_id );
+		$address               = eo_get_venue_address( $venue_id );
 		$venue->venue_address  = isset( $address['address'] ) ? $address['address'] : '';
 		$venue->venue_postal   = isset( $address['postcode'] ) ? $address['postcode'] : '';
 		$venue->venue_postcode = isset( $address['postcode'] ) ? $address['postcode'] : '';
@@ -176,7 +176,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		 * Manually add Venue metadata because since Event Organiser 3.0 it is
 		 * no longer added by default to the Venue object.
 		 */
-		$address = eo_get_venue_address( $venue_id );
+		$address               = eo_get_venue_address( $venue_id );
 		$venue->venue_address  = isset( $address['address'] ) ? $address['address'] : '';
 		$venue->venue_postal   = isset( $address['postcode'] ) ? $address['postcode'] : '';
 		$venue->venue_postcode = isset( $address['postcode'] ) ? $address['postcode'] : '';
@@ -434,13 +434,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// Log and bail if we get an error.
 		if ( is_wp_error( $result ) || ! isset( $result['term_id'] ) ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => __( 'Venue not created.', 'civicrm-event-organiser' ),
-				'result' => $result,
-				'location' => $location,
+				'method'    => __METHOD__,
+				'message'   => __( 'Venue not created.', 'civicrm-event-organiser' ),
+				'result'    => $result,
+				'location'  => $location,
 				'backtrace' => $trace,
 			], true ) );
 			return;
@@ -828,7 +828,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$single = false;
 		if ( ! is_array( $terms ) ) {
 			$single = true;
-			$terms = [ $terms ];
+			$terms  = [ $terms ];
 		}
 
 		if ( empty( $terms ) ) {

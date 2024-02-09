@@ -106,8 +106,8 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 */
 	public $settings = [
 		'version' => CIVICRM_WP_EVENT_ORGANISER_VERSION,
-		'url' => CIVICRM_WP_EVENT_ORGANISER_URL,
-		'path' => CIVICRM_WP_EVENT_ORGANISER_PATH,
+		'url'     => CIVICRM_WP_EVENT_ORGANISER_URL,
+		'path'    => CIVICRM_WP_EVENT_ORGANISER_PATH,
 	];
 
 	/**
@@ -166,12 +166,12 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	public function render_field( $field ) {
 
 		// Change Field into a simple "number" Field.
-		$field['type'] = 'number';
-		$field['readonly'] = 1;
+		$field['type']       = 'number';
+		$field['readonly']   = 1;
 		$field['allow_null'] = 0;
-		$field['prepend'] = '';
-		$field['append'] = '';
-		$field['step'] = '';
+		$field['prepend']    = '';
+		$field['append']     = '';
+		$field['step']       = '';
 
 		// Populate Field.
 		if ( ! empty( $field['value'] ) ) {

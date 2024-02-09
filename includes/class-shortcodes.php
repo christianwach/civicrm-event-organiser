@@ -86,7 +86,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 		// Init defaults.
 		$defaults = [
 			'event_id' => null, // Default to the current Event.
-			'wrap' => null, // Default to previous markup.
+			'wrap'     => null, // Default to previous markup.
 		];
 
 		// Parse attributes.

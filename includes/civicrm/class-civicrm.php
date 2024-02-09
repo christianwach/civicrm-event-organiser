@@ -120,8 +120,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	public function setup_objects() {
 
 		// Instantiate objects.
-		$this->event = new CiviCRM_WP_Event_Organiser_CiviCRM_Event( $this );
-		$this->location = new CiviCRM_WP_Event_Organiser_CiviCRM_Location( $this );
+		$this->event        = new CiviCRM_WP_Event_Organiser_CiviCRM_Event( $this );
+		$this->location     = new CiviCRM_WP_Event_Organiser_CiviCRM_Location( $this );
 		$this->registration = new CiviCRM_WP_Event_Organiser_CiviCRM_Registration( $this );
 
 	}

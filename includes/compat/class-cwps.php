@@ -226,9 +226,9 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 			// Add our data to the params.
 			$args['civi_event_id'] = $civi_event_id;
-			$args['civi_event'] = $civi_event;
-			$args['post_id'] = $post->ID;
-			$args['post'] = $post;
+			$args['civi_event']    = $civi_event;
+			$args['post_id']       = $post->ID;
+			$args['post']          = $post;
 
 			/**
 			 * Broadcast that an Event has been updated when ACF Fields were saved.
@@ -294,12 +294,12 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 			// Build args for value conversion.
 			$args = [
-				'identifier' => 'event',
-				'entity_id' => $event_id,
+				'identifier'      => 'event',
+				'entity_id'       => $event_id,
 				'custom_field_id' => $custom_field_id,
-				'field_name' => '',
-				'selector' => $selector,
-				'post_id' => $post_id,
+				'field_name'      => '',
+				'selector'        => $selector,
+				'post_id'         => $post_id,
 			];
 
 			$value = $this->cwps->acf->acf->field->value_get_for_civicrm( $value, $settings['type'], $settings, $args );
@@ -355,12 +355,12 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 		// Log and bail if there's no Event ID.
 		if ( empty( $event['id'] ) ) {
-			$e = new Exception();
+			$e     = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
-				'method' => __METHOD__,
-				'message' => __( 'A numeric ID must be present to update an Event.', 'civicrm-event-organiser' ),
-				'event' => $event,
+				'method'    => __METHOD__,
+				'message'   => __( 'A numeric ID must be present to update an Event.', 'civicrm-event-organiser' ),
+				'event'     => $event,
 				'backtrace' => $trace,
 			], true ) );
 			return $event_data;
@@ -712,7 +712,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		foreach ( $civicrm_custom_fields as $key => $field_group ) {
 			foreach ( $field_group as $custom_field ) {
 				$custom_field['type'] = $custom_field['data_type'];
-				$custom_fields[] = $custom_field;
+				$custom_fields[]      = $custom_field;
 			}
 		}
 
@@ -721,7 +721,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		foreach ( $args['civi_event'] as $key => $value ) {
 			// CiviCRM only appends populated Custom Fields.
 			if ( substr( $key, 0, 7 ) === 'custom_' ) {
-				$index = str_replace( 'custom_', '', $key );
+				$index                       = str_replace( 'custom_', '', $key );
 				$custom_field_data[ $index ] = $value;
 			}
 		}
@@ -739,7 +739,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 			// Grab the CiviCRM field definition.
 			$filtered = wp_list_filter( $custom_fields, [ 'id' => $custom_field_ref ] );
-			$field = array_pop( $filtered );
+			$field    = array_pop( $filtered );
 
 			// Contact Reference fields return the Contact's "sort_name".
 			if ( 'ContactReference' === $field['type'] ) {
