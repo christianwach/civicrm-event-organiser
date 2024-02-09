@@ -165,7 +165,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	public function register_field_types( $version ) {
 
 		// Include Field Types.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/acf/fields/ceo-acf-field-civicrm-event-id.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/acf/fields/class-ceo-acf-field-civicrm-event-id.php';
 
 		// Init Field Types.
 		new CEO_ACF_Custom_CiviCRM_Event_ID_Field( $this );

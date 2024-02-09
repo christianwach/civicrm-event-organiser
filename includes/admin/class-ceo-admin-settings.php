@@ -39,17 +39,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	public $admin;
 
 	/**
-	 * Batch Processing object.
-	 *
-	 * Not yet implemented.
-	 *
-	 * @since 0.7
-	 * @access public
-	 * @var string $batch The Batch Processing object.
-	 */
-	public $batch;
-
-	/**
 	 * Parent Page.
 	 *
 	 * @since 0.2.4
@@ -110,13 +99,11 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 */
 	public function initialise() {
 
-		/*
 		// Include files.
 		$this->include_files();
 
 		// Set up objects and references.
 		$this->setup_objects();
-		*/
 
 		// Register hooks.
 		$this->register_hooks();
@@ -137,9 +124,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 */
 	public function include_files() {
 
-		// Include Batch Processing class.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/ceo-admin-batch.php';
-
 	}
 
 	/**
@@ -148,9 +132,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 * @since 0.7
 	 */
 	public function setup_objects() {
-
-		// Instantiate Batch Processing object.
-		$this->batch = new CiviCRM_WP_Event_Organiser_Admin_Batch( $this );
 
 	}
 

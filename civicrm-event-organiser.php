@@ -226,21 +226,21 @@ class CiviCRM_WP_Event_Organiser {
 		}
 
 		// Load our core class files.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-term-html.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/ceo-admin.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-mapping.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/ceo-civicrm.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/eo/ceo-eo.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/eo/ceo-eo-venue.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-taxonomy.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-shortcodes.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/ceo-functions.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-ceo-term-html.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-ceo-admin.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-ceo-mapping.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/class-ceo-civicrm.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/eo/class-ceo-eo.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/eo/class-ceo-eo-venue.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-ceo-taxonomy.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-ceo-shortcodes.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/theme-functions.php';
 
 		// Load our compatibility class files.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/ceo-cwps.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/ceo-cai.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/ceo-cfcr.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/ceo-post-duplicator.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-ceo-cwps.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-ceo-cai.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-ceo-cfcr.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-ceo-post-duplicator.php';
 
 		// We're done.
 		$done = true;
