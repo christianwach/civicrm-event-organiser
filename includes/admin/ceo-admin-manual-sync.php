@@ -855,35 +855,17 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		}
 
-		// Since WordPress 4.5.0, the Category is specified in the arguments.
-		if ( function_exists( 'unregister_taxonomy' ) ) {
+		// Construct args.
+		$args = [
+			'taxonomy' => 'event-category',
+			'orderby' => 'count',
+			'hide_empty' => 0,
+			'number' => $this->step_counts['tax'],
+			'offset' => $offset,
+		];
 
-			// Construct args.
-			$args = [
-				'taxonomy' => 'event-category',
-				'orderby' => 'count',
-				'hide_empty' => 0,
-				'number' => $this->step_counts['tax'],
-				'offset' => $offset,
-			];
-
-			// Get all Terms.
-			$terms = get_terms( $args );
-
-		} else {
-
-			// Construct args.
-			$args = [
-				'orderby' => 'count',
-				'hide_empty' => 0,
-				'number' => $this->step_counts['tax'],
-				'offset' => $offset,
-			];
-
-			// Get all Terms.
-			$terms = get_terms( 'event-category', $args );
-
-		}
+		// Get all Terms.
+		$terms = get_terms( $args );
 
 		// If we get results.
 		if ( count( $terms ) > 0 ) {

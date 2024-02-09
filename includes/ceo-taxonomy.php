@@ -303,31 +303,15 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		// If ID is false, get all Terms.
 		if ( $post_id === false ) {
 
-			// Since WordPress 4.5.0, the Category is specified in the arguments.
-			if ( function_exists( 'unregister_taxonomy' ) ) {
+			// Construct args.
+			$args = [
+				'taxonomy' => 'event-category',
+				'orderby' => 'count',
+				'hide_empty' => 0,
+			];
 
-				// Construct args.
-				$args = [
-					'taxonomy' => 'event-category',
-					'orderby' => 'count',
-					'hide_empty' => 0,
-				];
-
-				// Get all Terms.
-				$terms = get_terms( $args );
-
-			} else {
-
-				// Construct args.
-				$args = [
-					'orderby' => 'count',
-					'hide_empty' => 0,
-				];
-
-				// Get all Terms.
-				$terms = get_terms( 'event-category', $args );
-
-			}
+			// Get all Terms.
+			$terms = get_terms( $args );
 
 		} else {
 
@@ -946,6 +930,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// Query Terms for the Term with the ID of the Event Type in meta data.
 		$args = [
+			'taxonomy' => 'event-category',
 			'hide_empty' => false,
 			// phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
 			'meta_query' => [
@@ -958,7 +943,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		];
 
 		// Get what should only be a single Term.
-		$terms = get_terms( 'event-category', $args );
+		$terms = get_terms( $args );
 
 		// Bail if there are no results.
 		if ( empty( $terms ) ) {
