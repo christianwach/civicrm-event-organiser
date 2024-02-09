@@ -138,14 +138,14 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function include_files() {
 
 		// Include Settings Page class.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-ceo-admin-settings.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin-settings.php';
 
 		// Include Manual Sync Page class.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-ceo-admin-manual-sync.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin-manual-sync.php';
 
 		// Maybe include Multisite Page class.
 		if ( is_multisite() ) {
-			include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-ceo-admin-multisite.php';
+			include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin-multisite.php';
 		}
 
 	}

@@ -106,9 +106,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	public function include_files() {
 
 		// Include classes.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/class-ceo-civicrm-event.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/class-ceo-civicrm-location.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/class-ceo-civicrm-registration.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/class-civicrm-event.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/class-civicrm-location.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/class-civicrm-registration.php';
 
 	}
 
