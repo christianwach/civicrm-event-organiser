@@ -69,7 +69,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Bail if "CFC Forms CiviCRM Redirect" isn't detected.
-		if ( $this->cfcr === false ) {
+		if ( false === $this->cfcr ) {
 			return;
 		}
 
@@ -146,7 +146,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 			$redirect = array_pop( $redirects );
 			$page = '<a href="' . get_permalink( $redirect->post_id ) . '">' . esc_html( $redirect->post_title ) . '</a>' . "\n";
 			$post_id = $redirect->post_id;
-			$is_active = ( $redirect->is_active == 1 ) ? ' checked="checked"' : '';
+			$is_active = ( 1 === (int) $redirect->is_active ) ? ' checked="checked"' : '';
 		}
 
 		// Include template file.
@@ -203,12 +203,12 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$cfcr = isset( $_POST['cfcr'] ) ? sanitize_text_field( wp_unslash( $_POST['cfcr'] ) ) : '';
 		$is_cfcr = false;
-		if ( ! empty( $cfcr ) && $cfcr === 'true' ) {
+		if ( ! empty( $cfcr ) && 'true' === $cfcr ) {
 			$is_cfcr = true;
 		}
 
 		// Bail if not us.
-		if ( $is_cfcr === false ) {
+		if ( false === $is_cfcr ) {
 			return $query;
 		}
 
@@ -251,7 +251,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		$post_id = url_to_postid( $post_url );
 
 		// Bail if we don't get one.
-		if ( $post_id === 0 ) {
+		if ( 0 === $post_id ) {
 			return $data;
 		}
 
@@ -288,7 +288,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		}
 
 		// Trigger delete if Redirect Post ID is 0.
-		if ( $redirect_post_id === 0 ) {
+		if ( 0 === $redirect_post_id ) {
 			$this->redirect_delete( $event_id );
 			return;
 		}

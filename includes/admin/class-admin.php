@@ -124,7 +124,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		$this->upgrade_tasks();
 
 		// Store version if there has been a change.
-		if ( $this->plugin_version != CIVICRM_WP_EVENT_ORGANISER_VERSION ) {
+		if ( CIVICRM_WP_EVENT_ORGANISER_VERSION !== $this->plugin_version ) {
 			$this->store_version();
 		}
 
@@ -173,11 +173,11 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	/**
 	 * Register hooks.
 	 *
+	 * All delegated to child classes.
+	 *
 	 * @since 0.4.1
 	 */
 	public function register_hooks() {
-
-		// All delegated.
 
 	}
 
@@ -189,7 +189,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function upgrade_tasks() {
 
 		// Bail if this is a new install.
-		if ( $this->plugin_version === false ) {
+		if ( false === $this->plugin_version ) {
 			return;
 		}
 
@@ -206,19 +206,19 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Show an admin notice for possibly missing default Confirmation Page setting.
-		if ( $shown === false && 'fgffgs' === $this->option_get( 'civi_eo_event_default_confirm', 'fgffgs' ) ) {
+		if ( false === $shown && 'fgffgs' === $this->option_get( 'civi_eo_event_default_confirm', 'fgffgs' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
 
 		// Show an admin notice for possibly missing default Confirmation Email setting.
-		if ( $shown === false && 'fgffgs' === $this->option_get( 'civi_eo_event_default_send_email', 'fgffgs' ) ) {
+		if ( false === $shown && 'fgffgs' === $this->option_get( 'civi_eo_event_default_send_email', 'fgffgs' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
 
 		// Show an admin notice for possibly missing default Confirmation Email "From Name" setting.
-		if ( $shown === false && ! empty( $this->option_get( 'civi_eo_event_default_send_email' ) ) ) {
+		if ( false === $shown && ! empty( $this->option_get( 'civi_eo_event_default_send_email' ) ) ) {
 			if ( empty( $this->option_get( 'civi_eo_event_default_send_email_from_name' ) ) ) {
 				add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 				$shown = true;
@@ -226,7 +226,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Show an admin notice for possibly missing default Confirmation Email "From Email" setting.
-		if ( $shown === false && ! empty( $this->option_get( 'civi_eo_event_default_send_email' ) ) ) {
+		if ( false === $shown && ! empty( $this->option_get( 'civi_eo_event_default_send_email' ) ) ) {
 			if ( empty( $this->option_get( 'civi_eo_event_default_send_email_from' ) ) ) {
 				add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 				$shown = true;
@@ -234,20 +234,20 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Show an admin notice for possibly missing default CiviCRM Event Sync setting.
-		if ( $shown === false && 'fgffgs' === $this->option_get( 'civi_eo_event_default_civicrm_event_sync', 'fgffgs' ) ) {
+		if ( false === $shown && 'fgffgs' === $this->option_get( 'civi_eo_event_default_civicrm_event_sync', 'fgffgs' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
 
 		// Show an admin notice for possibly missing default Status Sync setting.
-		if ( $shown === false && 'fgffgs' === $this->option_get( 'civi_eo_event_default_status_sync', 'fgffgs' ) ) {
+		if ( false === $shown && 'fgffgs' === $this->option_get( 'civi_eo_event_default_status_sync', 'fgffgs' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
 
 		/*
 		// Show an admin notice when a batch process is required.
-		if ( $shown === false && 'fgffgs' !== $this->option_get( 'civi_eo_batch_process', 'fgffgs' ) ) {
+		if ( false === $shown && 'fgffgs' !== $this->option_get( 'civi_eo_batch_process', 'fgffgs' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 		}
 		*/
@@ -351,7 +351,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @since 0.1
 	 *
 	 * @param string $key The option name.
-	 * @param mixed $default The default option value if none exists.
+	 * @param mixed  $default The default option value if none exists.
 	 * @return mixed $value The value of the requested option.
 	 */
 	public function option_get( $key, $default = null ) {
@@ -370,7 +370,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 * @since 0.1
 	 *
 	 * @param string $key The option name.
-	 * @param mixed $value The value to save.
+	 * @param mixed  $value The value to save.
 	 */
 	public function option_save( $key, $value ) {
 

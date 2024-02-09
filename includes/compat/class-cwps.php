@@ -192,7 +192,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		$post = get_post( $args['post_id'] );
 
 		// Bail if this is not an Event Organiser Event.
-		if ( $post->post_type != 'event' ) {
+		if ( 'event' !== $post->post_type ) {
 			return;
 		}
 
@@ -260,9 +260,9 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 *
 	 * @since 0.2
 	 *
-	 * @param int $event_id The numeric ID of the CiviCRM Event.
+	 * @param int   $event_id The numeric ID of the CiviCRM Event.
 	 * @param array $fields The ACF Field data.
-	 * @param int $post_id The numeric ID of the WordPress Post.
+	 * @param int   $post_id The numeric ID of the WordPress Post.
 	 * @return array|bool $event_data The CiviCRM Event data.
 	 */
 	public function prepare_from_fields( $event_id, $fields, $post_id = null ) {
@@ -319,9 +319,9 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 *
 	 * @since 0.3
 	 *
-	 * @param int $event_id The numeric ID of the CiviCRM Event.
+	 * @param int   $event_id The numeric ID of the CiviCRM Event.
 	 * @param array $fields The ACF Field data.
-	 * @param int $post_id The numeric ID of the WordPress Post.
+	 * @param int   $post_id The numeric ID of the WordPress Post.
 	 * @return array|bool $event The CiviCRM Event data, or false on failure.
 	 */
 	public function update_from_fields( $event_id, $fields, $post_id = null ) {
@@ -375,7 +375,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		$result = civicrm_api( 'Event', 'create', $params );
 
 		// Bail if there's an error.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			return $event_data;
 		}
 
@@ -402,14 +402,14 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 * @param array $choices The existing array of choices for the Setting Field.
 	 * @param array $field The ACF Field data array.
 	 * @param array $field_group The ACF Field Group data array.
-	 * @param bool $skip_check True if the check for Field Group should be skipped. Default false.
+	 * @param bool  $skip_check True if the check for Field Group should be skipped. Default false.
 	 * @return array $choices The modified array of choices for the Setting Field.
 	 */
 	public function query_setting_choices( $choices, $field, $field_group, $skip_check = false ) {
 
 		// Pass if this is not an Event Field Group.
 		$is_event_field_group = $this->is_event_field_group( $field_group );
-		if ( $is_event_field_group === false ) {
+		if ( false === $is_event_field_group ) {
 			return $choices;
 		}
 
@@ -458,20 +458,20 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 *
 	 * @since 0.6.2
 	 *
-	 * @param bool $mapped The existing mapping flag.
+	 * @param bool  $mapped The existing mapping flag.
 	 * @param array $field_group The array of ACF Field Group data.
 	 * @return bool $mapped True if the Field Group is mapped, or pass through if not mapped.
 	 */
 	public function query_field_group_mapped( $mapped, $field_group ) {
 
 		// Bail if a Mapping has already been found.
-		if ( $mapped !== false ) {
+		if ( false !== $mapped ) {
 			return $mapped;
 		}
 
 		// Bail if this is not an Event Field Group.
 		$is_event_field_group = $this->is_event_field_group( $field_group );
-		if ( $is_event_field_group === false ) {
+		if ( false === $is_event_field_group ) {
 			return $mapped;
 		}
 
@@ -493,7 +493,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 		// Bail if this is not an Event Field Group.
 		$is_visible = $this->is_event_field_group( $field_group );
-		if ( $is_visible === false ) {
+		if ( false === $is_visible ) {
 			return $custom_fields;
 		}
 
@@ -523,7 +523,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 * @since 0.6.2
 	 *
 	 * @param array|bool $post_ids The existing "Post IDs".
-	 * @param array $args The array of CiviCRM Custom Fields params.
+	 * @param array      $args The array of CiviCRM Custom Fields params.
 	 * @return array|bool $post_ids The mapped "Post IDs", or false if not mapped.
 	 */
 	public function query_post_id( $post_ids, $args ) {
@@ -535,7 +535,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		foreach ( $args['custom_fields'] as $field ) {
 
 			// Skip if it is not attached to a Event.
-			if ( $field['entity_table'] != 'civicrm_event' ) {
+			if ( 'civicrm_event' !== $field['entity_table'] ) {
 				continue;
 			}
 
@@ -543,7 +543,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			$post_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $field['entity_id'] );
 
 			// Skip to next if not found.
-			if ( $post_id === false ) {
+			if ( false === $post_id ) {
 				continue;
 			}
 
@@ -588,7 +588,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 
 		// Bail if this is not an Event Field Group.
 		$is_visible = $this->is_event_field_group( $field_group );
-		if ( $is_visible === false ) {
+		if ( false === $is_visible ) {
 			return $entity_tables;
 		}
 
@@ -720,7 +720,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		$custom_field_data = [];
 		foreach ( $args['civi_event'] as $key => $value ) {
 			// CiviCRM only appends populated Custom Fields.
-			if ( substr( $key, 0, 7 ) == 'custom_' ) {
+			if ( substr( $key, 0, 7 ) === 'custom_' ) {
 				$index = str_replace( 'custom_', '', $key );
 				$custom_field_data[ $index ] = $value;
 			}
@@ -742,7 +742,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 			$field = array_pop( $filtered );
 
 			// Contact Reference fields return the Contact's "sort_name".
-			if ( $field['type'] == 'ContactReference' ) {
+			if ( 'ContactReference' === $field['type'] ) {
 
 				// Overwrite value if the raw value exists.
 				$key = $field['id'] . '_id';

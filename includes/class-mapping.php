@@ -154,7 +154,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 	public function rebuild_event_correspondences() {
 
 		// Only applies to version 0.1.
-		if ( CIVICRM_WP_EVENT_ORGANISER_VERSION != '0.1' ) {
+		if ( CIVICRM_WP_EVENT_ORGANISER_VERSION !== '0.1' ) {
 			return;
 		}
 
@@ -217,7 +217,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param int $post_id The numeric ID of the WP Post.
+	 * @param int   $post_id The numeric ID of the WP Post.
 	 * @param array $correspondences CiviCRM Event IDs, keyed by Event Organiser Occurrence ID.
 	 * @param array $unlinked CiviCRM Event IDs that have been orphaned from an Event Organiser Event.
 	 */
@@ -341,8 +341,8 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param int $post_id The numeric ID of the WP Post.
-	 * @param int $occurrence_id The numeric ID of the Event Organiser Event Occurrence.
+	 * @param int      $post_id The numeric ID of the WP Post.
+	 * @param int      $occurrence_id The numeric ID of the Event Organiser Event Occurrence.
 	 * @param int|bool $civi_event_id The numeric ID of the CiviCRM Event.
 	 */
 	public function clear_event_correspondence( $post_id, $occurrence_id, $civi_event_id = false ) {
@@ -356,7 +356,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		$civi_event_data = $this->get_all_civi_to_eo_correspondences();
 
 		// If we have a CiviCRM Event ID for this Event Organiser Occurrence.
-		if ( $civi_event_id !== false ) {
+		if ( false === $civi_event_id ) {
 
 			// Unset the item with this key in the option array.
 			if ( isset( $civi_event_data[ $civi_event_id ] ) ) {
@@ -412,7 +412,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param int $post_id The numeric ID of the WP Post.
+	 * @param int   $post_id The numeric ID of the WP Post.
 	 * @param array $civi_event_ids The array of CiviCRM Event IDs.
 	 */
 	public function clear_event_correspondences( $post_id, $civi_event_ids = [] ) {
@@ -523,7 +523,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		$civi_event_ids = get_post_meta( $post_id, '_civi_eo_civicrm_events', true );
 
 		// If it's not yet set it will be an empty string, so cast as array.
-		if ( $civi_event_ids === '' ) {
+		if ( '' === $civi_event_ids ) {
 			$civi_event_ids = [];
 		}
 
@@ -574,7 +574,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		$eo_post_id = $this->get_eo_event_id_by_civi_event_id( $civi_event_id );
 
 		// If there is one.
-		if ( $eo_post_id !== false ) {
+		if ( false !== $eo_post_id ) {
 
 			// Get the corresponding CiviCRM Events.
 			$civi_event_ids = $this->get_civi_event_ids_by_eo_event_id( $eo_post_id );
@@ -602,7 +602,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param int $post_id The numeric ID of the WP Post.
+	 * @param int   $post_id The numeric ID of the WP Post.
 	 * @param array $orphans The CiviCRM Event IDs that have been orphaned from an Event Organiser Event.
 	 */
 	public function store_orphaned_events( $post_id, $orphans ) {
@@ -693,7 +693,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		$civi_event_ids = get_post_meta( $post_id, '_civi_eo_civicrm_events_disabled', true );
 
 		// If it's not yet set it will be an empty string, so cast as array.
-		if ( $civi_event_ids === '' ) {
+		if ( '' === $civi_event_ids ) {
 			$civi_event_ids = [];
 		}
 

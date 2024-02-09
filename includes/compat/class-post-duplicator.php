@@ -85,8 +85,8 @@ class CiviCRM_WP_Event_Organiser_Post_Duplicator {
 	 *
 	 * @since 0.7.5
 	 *
-	 * @param int $original_id The numeric ID of the original WordPress Post.
-	 * @param int $duplicate_id The numeric ID of the duplicate WordPress Post.
+	 * @param int   $original_id The numeric ID of the original WordPress Post.
+	 * @param int   $duplicate_id The numeric ID of the duplicate WordPress Post.
 	 * @param array $settings The array of Post Duplicator settings.
 	 */
 	public function meta_amend( $original_id, $duplicate_id, $settings ) {

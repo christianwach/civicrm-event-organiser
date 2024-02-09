@@ -77,20 +77,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 *
 	 * @since 0.7.1
 	 *
-	 * @param string $op The type of database operation.
-	 * @param string $object_name The type of object.
+	 * @param string  $op The type of database operation.
+	 * @param string  $object_name The type of object.
 	 * @param integer $object_id The ID of the object.
-	 * @param object $object_ref The object.
+	 * @param object  $object_ref The object.
 	 */
 	public function locblock_edited( $op, $object_name, $object_id, $object_ref ) {
 
 		// Target our operation.
-		if ( $op != 'edit' ) {
+		if ( 'edit' !== $op ) {
 			return;
 		}
 
 		// Target our object type.
-		if ( $object_name != 'LocBlock' ) {
+		if ( 'LocBlock' !== $object_name ) {
 			return;
 		}
 
@@ -121,7 +121,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'Event', 'get', $params );
 
 		// Bail if there's an error.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			return;
 		}
 
@@ -162,7 +162,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$location = $this->get_location( $venue );
 
 		// If this Venue already has a CiviCRM Event Location.
-		if ( $location !== false ) {
+		if ( false !== $location ) {
 
 			// Use it if there's a record on the Event Organiser side.
 			if ( ! isset( $venue->venue_civi_id ) ) {
@@ -207,7 +207,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$location = $this->get_location( $venue );
 
 		// Delete Location if we get one.
-		if ( $location !== false ) {
+		if ( false !== $location ) {
 			$result = $this->delete_location_by_id( $location['id'] );
 		}
 
@@ -249,7 +249,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'LocBlock', 'delete', $params );
 
 		// Log failure and return boolean false.
-		if ( $result['is_error'] == '1' ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -304,7 +304,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'LocBlock', 'get', $params );
 
 		// Log on failure and bail.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == '1' ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -318,7 +318,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		}
 
 		// Return the result if we get one.
-		if ( absint( $result['count'] ) > 0 && is_array( $result['values'] ) ) {
+		if ( (int) $result['count'] > 0 && is_array( $result['values'] ) ) {
 			$location = array_shift( $result['values'] );
 			return $location;
 		}
@@ -345,9 +345,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			$location = civicrm_api( 'LocBlock', 'get', $params );
 
 			// Log error and return boolean false.
-			if ( isset( $location['is_error'] ) && $location['is_error'] == '1' ) {
-
-				// Log error.
+			if ( ! empty( $location['is_error'] ) && 1 === (int) $location['is_error'] ) {
 				$e = new Exception;
 				$trace = $e->getTraceAsString();
 				error_log( print_r( [
@@ -357,14 +355,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 					'params' => $params,
 					'backtrace' => $trace,
 				], true ) );
-
-				// --<
 				return false;
-
 			}
 
 			// Return the result if we get one.
-			if ( absint( $location['count'] ) > 0 && is_array( $location['values'] ) ) {
+			if ( (int) $location['count'] > 0 && is_array( $location['values'] ) ) {
 
 				$e = new Exception;
 				$trace = $e->getTraceAsString();
@@ -418,7 +413,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$locations = civicrm_api( 'LocBlock', 'get', $params );
 
 		// Log failure and return boolean false.
-		if ( $locations['is_error'] == '1' ) {
+		if ( ! empty( $locations['is_error'] ) && 1 === (int) $locations['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -463,6 +458,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			// Delete via API.
 			$result = civicrm_api( 'LocBlock', 'delete', $params );
 
+			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
+				$e = new Exception();
+				$trace = $e->getTraceAsString();
+				error_log( print_r( [
+					'method' => __METHOD__,
+					'message' => $result['error_message'],
+					'params' => $params,
+					'backtrace' => $trace,
+				], true ) );
+			}
+
 		}
 
 	}
@@ -503,7 +509,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'LocBlock', 'get', $params );
 
 		// Log failure and return boolean false.
-		if ( $result['is_error'] == '1' || $result['count'] != 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -535,7 +541,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param object $venue The Event Organiser Venue object.
-	 * @param array $location The existing CiviCRM Location data.
+	 * @param array  $location The existing CiviCRM Location data.
 	 * @return array|bool $location The CiviCRM Location data, or false on failure.
 	 */
 	public function create_civi_loc_block( $venue, $location ) {
@@ -573,7 +579,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			$email = $this->maybe_update_email( $venue, $location, $op );
 
 			// Skip if there's an error.
-			if ( $email !== false ) {
+			if ( false !== $email ) {
 
 				// If we get a new Email.
 				if ( is_array( $email ) ) {
@@ -599,7 +605,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			$phone = $this->maybe_update_phone( $venue, $location, $op );
 
 			// Skip if there's an error.
-			if ( $phone !== false ) {
+			if ( false !== $phone ) {
 
 				// If we get a new Phone record.
 				if ( is_array( $phone ) ) {
@@ -622,7 +628,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$address = $this->maybe_update_address( $venue, $location, $op );
 
 		// Skip if there's an error.
-		if ( $address !== false ) {
+		if ( false !== $address ) {
 
 			// If we get a new Address record.
 			if ( is_array( $address ) ) {
@@ -640,7 +646,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		}
 
 		// If our Venue has a Location, add it.
-		if ( $op == 'update' ) {
+		if ( 'update' === $op ) {
 
 			// Target our known Location - this will trigger an update.
 			$params['id'] = $venue->venue_civi_id;
@@ -651,7 +657,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'LocBlock', 'create', $params );
 
 		// Log and bail if there's an error.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -675,7 +681,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		 * We now need to create a dummy CiviCRM Event, or this Venue will not show
 		 * up in CiviCRM...
 		 */
-		//$this->create_dummy_event( $location );
+		// $this->create_dummy_event( $location );
 
 		// --<
 		return $location;
@@ -691,7 +697,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param object $venue The Event Organiser Venue object.
-	 * @param array $location The CiviCRM Location data.
+	 * @param array  $location The CiviCRM Location data.
 	 * @param string $op The operation - either 'create' or 'update'.
 	 * @return int|array|bool $email_data Integer if found, array if not found, false on failure.
 	 */
@@ -731,7 +737,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$existing_email_data = civicrm_api( 'Email', 'get', $email_params );
 
 		// Bail if there's an error.
-		if ( ! empty( $existing_email_data['is_error'] ) && $existing_email_data['is_error'] == 1 ) {
+		if ( ! empty( $existing_email_data['is_error'] ) && 1 === (int) $existing_email_data['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -751,7 +757,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			$existing_email = array_shift( $existing_email_data['values'] );
 
 			// Has it changed?
-			if ( $op == 'update' && $existing_email['email'] != $venue->venue_civi_email ) {
+			if ( 'update' === $op && $existing_email['email'] !== $venue->venue_civi_email ) {
 
 				// Add API version.
 				$existing_email['version'] = 3;
@@ -766,7 +772,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 				$result = civicrm_api( 'Email', 'create', $existing_email );
 
 				// Log something if there's an error.
-				if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
@@ -806,7 +812,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param object $venue The Event Organiser Venue object.
-	 * @param array $location The CiviCRM Location data.
+	 * @param array  $location The CiviCRM Location data.
 	 * @param string $op The operation - either 'create' or 'update'.
 	 * @return int|array|bool $phone_data Integer if found, array if not found, or false on failure.
 	 */
@@ -848,7 +854,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$existing_phone_data = civicrm_api( 'Phone', 'get', $phone_params );
 
 		// Bail if there's an error.
-		if ( ! empty( $existing_phone_data['is_error'] ) && $existing_phone_data['is_error'] == 1 ) {
+		if ( ! empty( $existing_phone_data['is_error'] ) && 1 === (int) $existing_phone_data['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -868,7 +874,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			$existing_phone = array_shift( $existing_phone_data['values'] );
 
 			// Has it changed?
-			if ( $op == 'update' && $existing_phone['phone'] != $venue->venue_civi_phone ) {
+			if ( 'update' === $op && $existing_phone['phone'] !== $venue->venue_civi_phone ) {
 
 				// Add API version.
 				$existing_phone['version'] = 3;
@@ -884,7 +890,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 				$result = civicrm_api( 'Phone', 'create', $existing_phone );
 
 				// Log something if there's an error.
-				if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
@@ -925,7 +931,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param object $venue The Event Organiser Venue object.
-	 * @param array $location The CiviCRM Location data.
+	 * @param array  $location The CiviCRM Location data.
 	 * @param string $op The operation - either 'create' or 'update'.
 	 * @return int|array $address_data Integer if found, array if not found, or false on failure.
 	 */
@@ -986,7 +992,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$existing_address_data = civicrm_api( 'Address', 'get', $address_params );
 
 		// Bail if there's an error.
-		if ( ! empty( $existing_address_data['is_error'] ) && $existing_address_data['is_error'] == 1 ) {
+		if ( ! empty( $existing_address_data['is_error'] ) && 1 === (int) $existing_address_data['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -1006,7 +1012,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			$existing_address = array_shift( $existing_address_data['values'] );
 
 			// Has it changed?
-			if ( $op == 'update' && $this->is_address_changed( $venue, $existing_address ) ) {
+			if ( 'update' === $op && $this->is_address_changed( $venue, $existing_address ) ) {
 
 				// Add API version.
 				$existing_address['version'] = 3;
@@ -1075,7 +1081,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 				$result = civicrm_api( 'Address', 'create', $existing_address );
 
 				// Log something if there's an error.
-				if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
@@ -1170,7 +1176,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param object $venue The Event Organiser Venue object.
-	 * @param array $address The array of CiviCRM Address data.
+	 * @param array  $address The array of CiviCRM Address data.
 	 * @return bool $is_changed True if changed, false otherwise.
 	 */
 	private function is_address_changed( $venue, $address ) {
@@ -1179,7 +1185,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! isset( $address['name'] ) ) {
 			$address['name'] = '';
 		}
-		if ( $address['name'] != $venue->name ) {
+		if ( $address['name'] !== $venue->name ) {
 			return true;
 		}
 
@@ -1187,7 +1193,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! isset( $address['street_address'] ) ) {
 			$address['street_address'] = '';
 		}
-		if ( $address['street_address'] != $venue->venue_address ) {
+		if ( $address['street_address'] !== $venue->venue_address ) {
 			return true;
 		}
 
@@ -1195,7 +1201,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! isset( $address['city'] ) ) {
 			$address['city'] = '';
 		}
-		if ( $address['city'] != $venue->venue_city ) {
+		if ( $address['city'] !== $venue->venue_city ) {
 			return true;
 		}
 
@@ -1203,7 +1209,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! isset( $address['postal_code'] ) ) {
 			$address['postal_code'] = '';
 		}
-		if ( $address['postal_code'] != $venue->venue_postcode ) {
+		if ( $address['postal_code'] !== $venue->venue_postcode ) {
 			return true;
 		}
 
@@ -1212,7 +1218,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			$country = $this->country_get_by_id( $address['country_id'] );
 			if ( ! empty( $country ) ) {
 				if ( ! empty( $venue->venue_country ) ) {
-					if ( $country['name'] != $venue->venue_country ) {
+					if ( $country['name'] !== $venue->venue_country ) {
 						return true;
 					}
 				}
@@ -1229,7 +1235,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 			$state_province = $this->state_province_get_by_id( $address['state_province_id'] );
 			if ( ! empty( $state_province ) ) {
 				if ( ! empty( $venue->venue_state ) ) {
-					if ( $state_province['name'] != $venue->venue_state ) {
+					if ( $state_province['name'] !== $venue->venue_state ) {
 						return true;
 					}
 				}
@@ -1245,13 +1251,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		if ( ! isset( $address['geo_code_1'] ) ) {
 			$address['geo_code_1'] = '';
 		}
-		if ( $address['geo_code_1'] != $venue->venue_lat ) {
+		if ( $address['geo_code_1'] !== $venue->venue_lat ) {
 			return true;
 		}
 		if ( ! isset( $address['geo_code_2'] ) ) {
 			$address['geo_code_2'] = '';
 		}
-		if ( $address['geo_code_2'] != $venue->venue_lng ) {
+		if ( $address['geo_code_2'] !== $venue->venue_lng ) {
 			return true;
 		}
 
@@ -1291,7 +1297,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'Country', 'get', $params );
 
 		// Bail if there's an error.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			return $country;
 		}
 
@@ -1337,7 +1343,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'Country', 'get', $params );
 
 		// Bail if there's an error.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			return $country;
 		}
 
@@ -1383,7 +1389,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'Country', 'get', $params );
 
 		// Bail if there's an error.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			return $country;
 		}
 
@@ -1431,7 +1437,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'StateProvince', 'get', $params );
 
 		// Bail if there's an error.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			return $state_province;
 		}
 
@@ -1453,7 +1459,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 *
 	 * @since 0.7.1
 	 *
-	 * @param string $abbreviation The short name of the State/Province.
+	 * @param string  $abbreviation The short name of the State/Province.
 	 * @param integer $country_id The numeric ID of the Country.
 	 * @return array $state_province The array of State/Province data.
 	 */
@@ -1475,7 +1481,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		];
 
 		// Add Country ID if present.
-		if ( $country_id !== 0 ) {
+		if ( 0 !== $country_id ) {
 			$params['country_id'] = $country_id;
 		}
 
@@ -1483,7 +1489,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'StateProvince', 'get', $params );
 
 		// Bail if there's an error.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			return $state_province;
 		}
 
@@ -1505,7 +1511,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 *
 	 * @since 0.7.1
 	 *
-	 * @param string $name The name of the State/Province.
+	 * @param string  $name The name of the State/Province.
 	 * @param integer $country_id The numeric ID of the Country.
 	 * @return array $state_province The array of State/Province data.
 	 */
@@ -1527,7 +1533,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		];
 
 		// Add Country ID if present.
-		if ( $country_id !== 0 ) {
+		if ( 0 !== $country_id ) {
 			$params['country_id'] = $country_id;
 		}
 
@@ -1535,7 +1541,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$result = civicrm_api( 'StateProvince', 'get', $params );
 
 		// Bail if there's an error.
-		if ( ! empty( $result['is_error'] ) && $result['is_error'] == 1 ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			return $state_province;
 		}
 

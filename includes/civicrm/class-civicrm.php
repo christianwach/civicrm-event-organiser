@@ -230,7 +230,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	public function denullify( $value ) {
 
 		// Catch inconsistent CiviCRM "empty-ish" values.
-		if ( ! empty( $value ) && ( $value === 'null' || $value === 'NULL' ) ) {
+		if ( ! empty( $value ) && ( 'null' === $value || 'NULL' === $value ) ) {
 			$value = '';
 		}
 

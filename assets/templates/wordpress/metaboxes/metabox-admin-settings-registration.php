@@ -35,7 +35,7 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 
 	?>
 
-	<?php if ( $profiles != '' ) : ?>
+	<?php if ( ! empty( $profiles ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_profile"><?php esc_html_e( 'Default CiviCRM Event Registration Profile', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
@@ -50,7 +50,7 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 		</tr>
 	<?php endif; ?>
 
-	<?php if ( $dedupe_rules != '' ) : ?>
+	<?php if ( ! empty( $dedupe_rules ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_dedupe"><?php esc_html_e( 'Default CiviCRM Event Registration Dedupe Rule', 'civicrm-event-organiser' ); ?></label></th>
 			<td>

@@ -35,7 +35,7 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 
 	?>
 
-	<?php if ( $types != '' ) : ?>
+	<?php if ( ! empty( $types ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_type"><?php esc_html_e( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
@@ -46,7 +46,7 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 		</tr>
 	<?php endif; ?>
 
-	<?php if ( $roles != '' ) : ?>
+	<?php if ( ! empty( $roles ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_role"><?php esc_html_e( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
@@ -58,7 +58,7 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 		</tr>
 	<?php endif; ?>
 
-	<?php if ( $civicrm_event_sync != '' ) : ?>
+	<?php if ( ! empty( $civicrm_event_sync ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_civievent_sync"><?php esc_html_e( 'Syncing CiviCRM Events to Event Organiser', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
@@ -73,7 +73,7 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 		</tr>
 	<?php endif; ?>
 
-	<?php if ( $status_sync != '' ) : ?>
+	<?php if ( ! empty( $status_sync ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_status_sync"><?php esc_html_e( 'Map CiviCRM Event Status and EO Event Status', 'civicrm-event-organiser' ); ?></label></th>
 			<td>

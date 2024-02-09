@@ -78,7 +78,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 	 * @since 0.6.3
 	 *
 	 * @param array $attr The saved Shortcode attributes.
-	 * @param str $content The enclosed content of the Shortcode.
+	 * @param str   $content The enclosed content of the Shortcode.
 	 * @return str $markup The HTML markup for the Shortcode.
 	 */
 	public function register_link_render( $attr, $content = null ) {
@@ -102,7 +102,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 		$element = null;
 		if ( ! empty( $shortcode_atts['wrap'] ) ) {
 			$wrapper = trim( $shortcode_atts['wrap'] );
-			if ( $wrapper === 'button' ) {
+			if ( 'button' === $wrapper ) {
 				$element = $wrapper;
 			}
 		}

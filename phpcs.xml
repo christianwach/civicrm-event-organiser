@@ -14,12 +14,6 @@
 		<!-- I prefer slash-delimited Hooks -->
 		<exclude name="WordPress.NamingConventions.ValidHookName.UseUnderscores" />
 
-		<!-- Ignore docblock formatting -->
-		<exclude name="Squiz.Commenting.FunctionComment.SpacingAfterParamType" />
-
-		<!-- Yoda? Really? -->
-		<exclude name="WordPress.PHP.YodaConditions.NotYoda" />
-
 		<!-- I prefer my control structures -->
 		<exclude name="WordPress.WhiteSpace.ControlStructureSpacing.BlankLineAfterEnd" />
 
@@ -29,16 +23,10 @@
 
 		<!-- PSR4 -->
 		<exclude name="WordPress.Files.FileName.InvalidClassFileName" />
-		<exclude name="WordPress.Files.FileName.NotHyphenatedLowercase" />
 
 		<!-- Remove some checks to allow phpcbf to run in bulk mode -->
-		<exclude name="Generic.WhiteSpace.ScopeIndent.Incorrect" />
-		<exclude name="PSR2.ControlStructures.SwitchDeclaration.BodyOnNextLineCASE" />
-		<exclude name="Squiz.Commenting.InlineComment.NoSpaceBefore" />
 		<exclude name="Squiz.PHP.CommentedOutCode.Found" />
 		<exclude name="Squiz.Commenting.BlockComment.HasEmptyLineBefore" />
-		<exclude name="Squiz.Commenting.InlineComment.SpacingAfterAtFunctionEnd" />
-		<exclude name="WordPress.PHP.StrictComparisons.LooseComparison" />
 		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
 		<exclude name="WordPress.NamingConventions.ValidVariableName.VariableNotSnakeCase" />
 		<exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped" />

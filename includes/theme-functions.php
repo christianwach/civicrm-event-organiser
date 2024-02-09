@@ -94,7 +94,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 	}
 
 	// Need the Post ID.
-	$post_id = absint( empty( $post_id ) ? get_the_ID() : $post_id );
+	$post_id = intval( empty( $post_id ) ? get_the_ID() : $post_id );
 
 	// Bail if not present.
 	if ( empty( $post_id ) ) {
@@ -120,7 +120,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 
 		// Get the full CiviCRM Event.
 		$civi_event = $plugin->civi->event->get_event_by_id( $civi_event_id );
-		if ( $civi_event === false ) {
+		if ( false === $civi_event ) {
 			continue;
 		}
 

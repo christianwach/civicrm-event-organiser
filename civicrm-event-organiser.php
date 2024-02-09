@@ -221,7 +221,7 @@ class CiviCRM_WP_Event_Organiser {
 
 		// Only do this once.
 		static $done;
-		if ( isset( $done ) && $done === true ) {
+		if ( isset( $done ) && true === $done ) {
 			return;
 		}
 
@@ -256,7 +256,7 @@ class CiviCRM_WP_Event_Organiser {
 
 		// Only do this once.
 		static $done;
-		if ( isset( $done ) && $done === true ) {
+		if ( isset( $done ) && true === $done ) {
 			return;
 		}
 
@@ -448,7 +448,7 @@ class CiviCRM_WP_Event_Organiser {
 		}
 
 		// Bail if not hidden.
-		if ( $cau->multisite->setting_get( 'main_site_only', '0' ) == '0' ) {
+		if ( $cau->multisite->setting_get( 'main_site_only', '0' ) === '0' ) {
 			$civicrm_hidden = false;
 			return $civicrm_hidden;
 		}
@@ -491,7 +491,7 @@ civicrm_eo();
  * @since 0.1
  *
  * @param array $links The existing links array.
- * @param str $file The name of the plugin file.
+ * @param str   $file The name of the plugin file.
  * @return array $links The modified links array.
  */
 function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
@@ -515,7 +515,7 @@ function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
 	}
 
 	// Add settings link.
-	if ( $file == plugin_basename( dirname( __FILE__ ) . '/civicrm-event-organiser.php' ) ) {
+	if ( plugin_basename( dirname( __FILE__ ) . '/civicrm-event-organiser.php' ) === $file ) {
 
 		// Is this Network Admin?
 		if ( is_network_admin() ) {

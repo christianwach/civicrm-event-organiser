@@ -291,7 +291,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		do_action( 'civi_eo/admin/sync/add_meta_boxes', $screen->id );
 
 		// Get the column CSS class.
-		$columns = absint( $screen->get_columns() );
+		$columns = (int) $screen->get_columns();
 		$columns_css = '';
 		if ( $columns ) {
 			$columns_css = " columns-$columns";
@@ -343,7 +343,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		// Get all CiviCRM Event Types and error check.
 		$all_types = $this->plugin->taxonomy->get_event_types();
-		if ( $all_types === false ) {
+		if ( false === $all_types ) {
 			$all_types['values'] = [];
 		}
 
@@ -352,7 +352,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		// Get all Civi Event Locations and error check.
 		$all_locations = $this->plugin->civi->location->get_all_locations();
-		if ( $all_locations['is_error'] == '1' ) {
+		if ( 1 === (int) $all_locations['is_error'] ) {
 			$all_locations['values'] = [];
 		}
 
@@ -361,7 +361,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		// Get all Civi Events and error check.
 		$all_civi_events = $this->plugin->civi->event->get_all_civi_events();
-		if ( $all_civi_events['is_error'] == '1' ) {
+		if ( 1 === (int) $all_civi_events['is_error'] ) {
 			$all_civi_events['values'] = [];
 		}
 
@@ -495,7 +495,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 *
 	 * @since 0.7
 	 *
-	 * @param array $urls The array of subpage URLs.
+	 * @param array  $urls The array of subpage URLs.
 	 * @param string $active_tab The key of the active tab in the subpage URLs array.
 	 */
 	public function page_add_tab( $urls, $active_tab ) {
@@ -507,7 +507,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		$active = '';
 
 		// Make active if it's our subpage.
-		if ( $active_tab === 'manual-sync' ) {
+		if ( 'manual-sync' === $active_tab ) {
 			$active = ' nav-tab-active';
 		}
 
@@ -825,7 +825,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			$result = check_ajax_referer( 'civi_eo_tax_eo_to_civi', false, false );
 
 			// Bail if check fails.
-			if ( $result === false ) {
+			if ( false === $result ) {
 
 				// Set finished flag.
 				$data['finished'] = 'true';
@@ -842,7 +842,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// If the offset value doesn't exist.
-		if ( 'fgffgs' == get_option( '_civi_eo_tax_eo_to_civi_offset', 'fgffgs' ) ) {
+		if ( 'fgffgs' === get_option( '_civi_eo_tax_eo_to_civi_offset', 'fgffgs' ) ) {
 
 			// Start at the beginning.
 			$offset = 0;
@@ -851,7 +851,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		} else {
 
 			// Use the existing value.
-			$offset = intval( get_option( '_civi_eo_tax_eo_to_civi_offset', '0' ) );
+			$offset = (int) get_option( '_civi_eo_tax_eo_to_civi_offset', '0' );
 
 		}
 
@@ -881,7 +881,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			}
 
 			// Set from and to flags.
-			$data['from'] = intval( $offset );
+			$data['from'] = (int) $offset;
 			$data['to'] = $data['from'] + $diff;
 
 			// Sync each Event Term in turn.
@@ -891,7 +891,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				$civi_event_type_id = $this->plugin->taxonomy->update_event_type( $term );
 
 				// Next on failure.
-				if ( $civi_event_type_id === false ) {
+				if ( false === $civi_event_type_id ) {
 
 					// Log failed Event Term first.
 					$e = new Exception();
@@ -944,7 +944,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			$result = check_ajax_referer( 'civi_eo_tax_civi_to_eo', false, false );
 
 			// Bail if check fails.
-			if ( $result === false ) {
+			if ( false === $result ) {
 
 				// Set finished flag.
 				$data['finished'] = 'true';
@@ -961,7 +961,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// If the offset value doesn't exist.
-		if ( 'fgffgs' == get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) {
+		if ( 'fgffgs' === get_option( '_civi_eo_tax_civi_to_eo_offset', 'fgffgs' ) ) {
 
 			// Start at the beginning.
 			$offset = 0;
@@ -970,13 +970,13 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		} else {
 
 			// Use the existing value.
-			$offset = intval( get_option( '_civi_eo_tax_civi_to_eo_offset', '0' ) );
+			$offset = (int) get_option( '_civi_eo_tax_civi_to_eo_offset', '0' );
 
 		}
 
 		// Get option group ID and error check.
 		$opt_group_id = $this->plugin->taxonomy->get_event_types_optgroup_id();
-		if ( $opt_group_id !== false ) {
+		if ( false !== $opt_group_id ) {
 
 			// Get Event Types (descriptions will be present if not null).
 			$types = civicrm_api( 'OptionValue', 'get', [
@@ -997,11 +997,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// If we get results.
-		if (
-			$types['is_error'] == 0 &&
-			isset( $types['values'] ) &&
-			count( $types['values'] ) > 0
-		) {
+		if ( 0 === (int) $types['is_error'] && ! empty( $types['values'] ) ) {
 
 			// Set finished flag.
 			$data['finished'] = 'false';
@@ -1014,7 +1010,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			}
 
 			// Set from and to flags.
-			$data['from'] = intval( $offset );
+			$data['from'] = (int) $offset;
 			$data['to'] = $data['from'] + $diff;
 
 			// Sync each Event Type in turn.
@@ -1024,7 +1020,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				$eo_term_id = $this->plugin->taxonomy->update_term( $type );
 
 				// Next on failure.
-				if ( $eo_term_id === false ) {
+				if ( false === $eo_term_id ) {
 
 					// Log failed Event Type first.
 					$e = new Exception();
@@ -1077,7 +1073,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			$result = check_ajax_referer( 'civi_eo_venue_eo_to_civi', false, false );
 
 			// Bail if check fails.
-			if ( $result === false ) {
+			if ( false === $result ) {
 
 				// Set finished flag.
 				$data['finished'] = 'true';
@@ -1094,7 +1090,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// If the offset value doesn't exist.
-		if ( 'fgffgs' == get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) {
+		if ( 'fgffgs' === get_option( '_civi_eo_venue_eo_to_civi_offset', 'fgffgs' ) ) {
 
 			// Start at the beginning.
 			$offset = 0;
@@ -1103,7 +1099,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		} else {
 
 			// Use the existing value.
-			$offset = intval( get_option( '_civi_eo_venue_eo_to_civi_offset', '0' ) );
+			$offset = (int) get_option( '_civi_eo_venue_eo_to_civi_offset', '0' );
 
 		}
 
@@ -1127,7 +1123,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			}
 
 			// Set from and to flags.
-			$data['from'] = intval( $offset );
+			$data['from'] = (int) $offset;
 			$data['to'] = $data['from'] + $diff;
 
 			// Loop.
@@ -1195,7 +1191,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			$result = check_ajax_referer( 'civi_eo_venue_civi_to_eo', false, false );
 
 			// Bail if check fails.
-			if ( $result === false ) {
+			if ( false === $result ) {
 
 				// Set finished flag.
 				$data['finished'] = 'true';
@@ -1212,7 +1208,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// If the offset value doesn't exist.
-		if ( 'fgffgs' == get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) {
+		if ( 'fgffgs' === get_option( '_civi_eo_venue_civi_to_eo_offset', 'fgffgs' ) ) {
 
 			// Start at the beginning.
 			$offset = 0;
@@ -1221,7 +1217,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		} else {
 
 			// Use the existing value.
-			$offset = intval( get_option( '_civi_eo_venue_civi_to_eo_offset', '0' ) );
+			$offset = (int) get_option( '_civi_eo_venue_civi_to_eo_offset', '0' );
 
 		}
 
@@ -1246,11 +1242,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// If we get results.
-		if (
-			$locations['is_error'] == 0 &&
-			isset( $locations['values'] ) &&
-			count( $locations['values'] ) > 0
-		) {
+		if ( 0 === (int) $locations['is_error'] && ! empty( $locations['values'] ) ) {
 
 			// Set finished flag.
 			$data['finished'] = 'false';
@@ -1263,15 +1255,12 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			}
 
 			// Set from and to flags.
-			$data['from'] = intval( $offset );
+			$data['from'] = (int) $offset;
 			$data['to'] = $data['from'] + $diff;
 
-			// Loop.
+			// Update Event Organiser Venue - or create if it doesn't exist.
 			foreach ( $locations['values'] as $location ) {
-
-				// Update Event Organiser Venue - or create if it doesn't exist.
 				$this->plugin->eo_venue->update_venue( $location );
-
 			}
 
 			// Increment offset option.
@@ -1309,7 +1298,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			$result = check_ajax_referer( 'civi_eo_event_eo_to_civi', false, false );
 
 			// Bail if check fails.
-			if ( $result === false ) {
+			if ( false === $result ) {
 
 				// Set finished flag.
 				$data['finished'] = 'true';
@@ -1326,7 +1315,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// If the offset value doesn't exist.
-		if ( 'fgffgs' == get_option( '_civi_eo_event_eo_to_civi_offset', 'fgffgs' ) ) {
+		if ( 'fgffgs' === get_option( '_civi_eo_event_eo_to_civi_offset', 'fgffgs' ) ) {
 
 			// Start at the beginning.
 			$offset = 0;
@@ -1335,7 +1324,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		} else {
 
 			// Use the existing value.
-			$offset = intval( get_option( '_civi_eo_event_eo_to_civi_offset', '0' ) );
+			$offset = (int) get_option( '_civi_eo_event_eo_to_civi_offset', '0' );
 
 		}
 
@@ -1360,7 +1349,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			}
 
 			// Set from and to flags.
-			$data['from'] = intval( $offset );
+			$data['from'] = (int) $offset;
 			$data['to'] = $data['from'] + $diff;
 
 			// Prevent recursion.
@@ -1442,7 +1431,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			$result = check_ajax_referer( 'civi_eo_event_civi_to_eo', false, false );
 
 			// Bail if check fails.
-			if ( $result === false ) {
+			if ( false === $result ) {
 
 				// Set finished flag.
 				$data['finished'] = 'true';
@@ -1459,7 +1448,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// If the offset value doesn't exist.
-		if ( 'fgffgs' == get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) {
+		if ( 'fgffgs' === get_option( '_civi_eo_event_civi_to_eo_offset', 'fgffgs' ) ) {
 
 			// Start at the beginning.
 			$offset = 0;
@@ -1468,7 +1457,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		} else {
 
 			// Use the existing value.
-			$offset = intval( get_option( '_civi_eo_event_civi_to_eo_offset', '0' ) );
+			$offset = (int) get_option( '_civi_eo_event_civi_to_eo_offset', '0' );
 
 		}
 
@@ -1493,11 +1482,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// If we get results.
-		if (
-			$events['is_error'] == 0 &&
-			isset( $events['values'] ) &&
-			count( $events['values'] ) > 0
-		) {
+		if ( 0 === (int) $events['is_error'] && ! empty( $events['values'] ) ) {
 
 			// Set finished flag.
 			$data['finished'] = 'false';
@@ -1510,7 +1495,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			}
 
 			// Set from and to flags.
-			$data['from'] = intval( $offset );
+			$data['from'] = (int) $offset;
 			$data['to'] = $data['from'] + $diff;
 
 			// Loop.

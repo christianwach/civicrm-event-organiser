@@ -86,8 +86,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$default = $this->plugin->db->option_get( 'civi_eo_event_default_role' );
 
 		// Override with default value if we get one.
-		if ( $default !== '' && is_numeric( $default ) ) {
-			$existing_id = absint( $default );
+		if ( '' !== $default && is_numeric( $default ) ) {
+			$existing_id = (int) $default;
 		}
 
 		// If we have a Post.
@@ -97,8 +97,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			$stored_id = $this->plugin->eo->get_event_role( $post->ID );
 
 			// Override with stored value if we get one.
-			if ( $stored_id !== '' && is_numeric( $stored_id ) && $stored_id > 0 ) {
-				$existing_id = absint( $stored_id );
+			if ( '' !== $stored_id && is_numeric( $stored_id ) && $stored_id > 0 ) {
+				$existing_id = (int) $stored_id;
 			}
 
 		}
@@ -147,7 +147,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$participant_roles = civicrm_api( 'OptionValue', 'get', $opt_values );
 
 		// Return the Participant Roles array if we have one.
-		if ( $participant_roles['is_error'] == '0' && count( $participant_roles['values'] ) > 0 ) {
+		if ( 0 === (int) $participant_roles['is_error'] && count( $participant_roles['values'] ) > 0 ) {
 			return $participant_roles;
 		}
 
@@ -179,7 +179,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$all_roles = $this->get_participant_roles();
 
 		// Did we get any?
-		if ( $all_roles['is_error'] == '0' && count( $all_roles['values'] ) > 0 ) {
+		if ( 0 === (int) $all_roles['is_error'] && ! empty( $all_roles['values'] ) ) {
 
 			// Get the values array.
 			$roles = $all_roles['values'];
@@ -194,12 +194,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			foreach ( $roles as $key => $role ) {
 
 				// Get role.
-				$role_id = absint( $role['value'] );
-
-				// Init selected.
-				$selected = '';
+				$role_id = (int) $role['value'];
 
 				// Override if the value is the same as in the Post.
+				$selected = '';
 				if ( $existing_id === $role_id ) {
 					$selected = ' selected="selected"';
 				}
@@ -248,12 +246,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 		// Get the first CiviCRM Event, though any would do as they all have the same value.
 		$civi_event = $this->get_event_by_id( array_shift( $civi_events ) );
-		if ( $civi_event === false ) {
+		if ( false === $civi_event ) {
 			return $default;
 		}
 
 		// Set checkbox to ticked if Online Registration is selected.
-		if ( isset( $civi_event['is_online_registration'] ) && $civi_event['is_online_registration'] == '1' ) {
+		if ( isset( $civi_event['is_online_registration'] ) && 1 === (int) $civi_event['is_online_registration'] ) {
 			$default = ' checked="checked"';
 		}
 
@@ -277,7 +275,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$link = '';
 
 		// If this Event has Registration enabled.
-		if ( isset( $civi_event['is_online_registration'] ) && $civi_event['is_online_registration'] == '1' ) {
+		if ( isset( $civi_event['is_online_registration'] ) && 1 === (int) $civi_event['is_online_registration'] ) {
 
 			// Init CiviCRM or bail.
 			if ( ! $this->civicrm->is_active() ) {
@@ -323,7 +321,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( ! isset( $civi_event['is_online_registration'] ) ) {
 			return true;
 		}
-		if ( $civi_event['is_online_registration'] != 1 ) {
+		if ( 1 !== (int) $civi_event['is_online_registration'] ) {
 			return true;
 		}
 
@@ -385,12 +383,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( $reg_start && $reg_start >= $now ) {
 			$open = false;
 
-		// Check if already ended.
+			// Check if already ended.
 		} elseif ( $reg_end && $reg_end < $now ) {
 			$open = false;
 
-		// If the Event has ended, Registration may still be specifically open.
-		} elseif ( $event_end && $event_end < $now && $reg_end === false ) {
+			// If the Event has ended, Registration may still be specifically open.
+		} elseif ( false === $event_end && $event_end < $now && $reg_end ) {
 			$open = false;
 
 		}
@@ -419,13 +417,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 	 * @since 0.2.4
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param array $civi_event An array of data representing a CiviCRM Event.
+	 * @param array  $civi_event An array of data representing a CiviCRM Event.
 	 * @param object $post The WP Post object.
 	 */
 	public function enable_registration( $civi_event, $post = null ) {
 
 		// Does this Event have Online Registration?
-		if ( $civi_event['is_online_registration'] == 1 ) {
+		if ( 1 === (int) $civi_event['is_online_registration'] ) {
 
 			// Get specified Registration Profile.
 			$profile_id = $this->get_registration_profile( $post );
@@ -444,7 +442,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 
 			// Trigger update if this Event already has a Registration Profile.
 			$existing_profile = $this->has_registration_profile( $civi_event );
-			if ( $existing_profile !== false ) {
+			if ( false !== $existing_profile ) {
 				$params['id'] = $existing_profile['id'];
 			}
 
@@ -452,7 +450,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			$result = civicrm_api( 'UFJoin', 'create', $params );
 
 			// Log any errors.
-			if ( ! empty( $result['is_error'] ) ) {
+			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 				$e = new Exception();
 				$trace = $e->getTraceAsString();
 				error_log( print_r( [
@@ -502,12 +500,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$result = civicrm_api( 'UFJoin', 'getsingle', $params );
 
 		// Return false if we get an error.
-		if ( isset( $result['is_error'] ) && $result['is_error'] == '1' ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			return false;
 		}
 
 		// Return false if the Event has no profile.
-		if ( isset( $result['count'] ) && $result['count'] == '0' ) {
+		if ( isset( $result['count'] ) && 0 === (int) $result['count'] ) {
 			return false;
 		}
 
@@ -537,8 +535,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$default = $this->plugin->db->option_get( 'civi_eo_event_default_profile' );
 
 		// Override with default value if we have one.
-		if ( $default !== '' && is_numeric( $default ) ) {
-			$profile_id = absint( $default );
+		if ( '' !== $default && is_numeric( $default ) ) {
+			$profile_id = (int) $default;
 		}
 
 		// If we have a Post.
@@ -548,8 +546,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			$stored_id = $this->plugin->eo->get_event_registration_profile( $post->ID );
 
 			// Override with stored value if we get a value.
-			if ( $stored_id !== '' && is_numeric( $stored_id ) && $stored_id > 0 ) {
-				$profile_id = absint( $stored_id );
+			if ( '' !== $stored_id && is_numeric( $stored_id ) && $stored_id > 0 ) {
+				$profile_id = (int) $stored_id;
 			}
 
 		}
@@ -583,7 +581,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$result = civicrm_api( 'UFGroup', 'get', $params );
 
 		// Log and bail if there's an error.
-		if ( ! empty( $result['is_error'] ) ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -624,11 +622,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$result = $this->get_registration_profiles();
 
 		// Did we get any?
-		if (
-			$result !== false &&
-			$result['is_error'] == '0' &&
-			count( $result['values'] ) > 0
-		) {
+		if ( false !== $result && 0 === (int) $result['is_error'] && ! empty( $result['values'] ) ) {
 
 			// Get the values array.
 			$profiles = $result['values'];
@@ -643,7 +637,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			foreach ( $profiles as $key => $profile ) {
 
 				// Get profile value.
-				$profile_id = absint( $profile['id'] );
+				$profile_id = (int) $profile['id'];
 
 				// Init selected.
 				$selected = '';
@@ -701,7 +695,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			$stored_id = $this->plugin->eo->get_event_registration_dedupe_rule( $post->ID );
 
 			// Override with stored value if we have one.
-			if ( $stored_id !== '' ) {
+			if ( '' !== $stored_id ) {
 				$dedupe_rule_id = (int) $stored_id;
 			}
 
@@ -856,8 +850,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$default = $this->plugin->db->option_get( 'civi_eo_event_default_confirm' );
 
 		// Override with default value if we have one.
-		if ( $default !== '' && is_numeric( $default ) ) {
-			$setting = absint( $default );
+		if ( '' !== $default && is_numeric( $default ) ) {
+			$setting = (int) $default;
 		}
 
 		// If we have a Post.
@@ -867,8 +861,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			$stored_setting = $this->plugin->eo->get_event_registration_confirm( $post_id );
 
 			// Override with stored value if we get a value.
-			if ( $stored_setting !== '' && is_numeric( $stored_setting ) ) {
-				$setting = absint( $stored_setting );
+			if ( '' !== $stored_setting && is_numeric( $stored_setting ) ) {
+				$setting = (int) $stored_setting;
 			}
 
 		}
@@ -900,8 +894,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email' );
 
 		// Override with default value if we have one.
-		if ( $default !== '' && is_numeric( $default ) ) {
-			$setting = absint( $default );
+		if ( '' !== $default && is_numeric( $default ) ) {
+			$setting = (int) $default;
 		}
 
 		// If we have a Post.
@@ -911,8 +905,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 			$stored_setting = $this->plugin->eo->get_event_registration_send_email( $post_id );
 
 			// Override with stored value if we get a value.
-			if ( $stored_setting !== '' && is_numeric( $stored_setting ) ) {
-				$setting = absint( $stored_setting );
+			if ( '' !== $stored_setting && is_numeric( $stored_setting ) ) {
+				$setting = (int) $stored_setting;
 			}
 
 		}

@@ -201,7 +201,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 * @since 0.1
 	 *
 	 * @param object $term The Term object of the Venue.
-	 * @param int $tt_id The numeric ID of the Venue Term Taxonomy.
+	 * @param int    $tt_id The numeric ID of the Venue Term Taxonomy.
 	 * @param string $taxonomy The deleted Term's Taxonomy name.
 	 * @param object $deleted_term The deleted Term object of the Venue.
 	 */
@@ -214,7 +214,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		if ( is_array( $taxonomy ) && ! in_array( 'event-venue', $taxonomy ) ) {
 			return;
 		}
-		if ( ! is_array( $taxonomy ) && $taxonomy != 'event-venue' ) {
+		if ( ! is_array( $taxonomy ) && 'event-venue' !== $taxonomy ) {
 			return;
 		}
 
@@ -229,7 +229,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 * @since 0.1
 	 *
 	 * @param object $term The Term object of the Venue.
-	 * @param int $tt_id The numeric ID of the Venue Term Taxonomy.
+	 * @param int    $tt_id The numeric ID of the Venue Term Taxonomy.
 	 * @param object $deleted_term The deleted Term object of the Venue.
 	 */
 	public function delete_venue( $term, $tt_id, $deleted_term ) {
@@ -309,8 +309,6 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Delete components.
 		$this->delete_venue_components( $venue_id );
 
-		// $venue_meta = eo_get_venue_meta( $venue_id, '', false );
-
 	}
 
 	/**
@@ -357,7 +355,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 		// Construct args.
 		$args = [
-			//'description' => $location['description'], // CiviCRM has no Location description at present.
+			// 'description' => $location['description'], // CiviCRM has no Location description at present.
 		];
 
 		// Add Address sub-query data if present.
@@ -496,7 +494,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$venue_id = $this->get_venue_id( $location );
 
 		// If we do not get one.
-		if ( $venue_id === false ) {
+		if ( false === $venue_id ) {
 
 			// Create Venue.
 			$term_id = $this->create_venue( $location );
@@ -558,7 +556,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 
 			// CiviCRM has no Location description at present.
 			// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
-			//$args['description'] => $location['description'];
+			// $args['description'] => $location['description'];
 
 			// Add Street Address if present.
 			if ( ! empty( $location['address']['street_address'] ) ) {
@@ -795,8 +793,8 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $terms Array of Terms.
-	 * @param array $post_ids Array of Post IDs.
+	 * @param array  $terms Array of Terms.
+	 * @param array  $post_ids Array of Post IDs.
 	 * @param string $taxonomies Should be (an array containing) 'event-venue'.
 	 * @param string $args Additional parameters.
 	 * @return array $terms Array of Term objects.
@@ -814,7 +812,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $terms Array of Terms.
+	 * @param array  $terms Array of Terms.
 	 * @param string $tax Should be (an array containing) 'event-venue'.
 	 * @return array $terms Array of event-venue Terms.
 	 */
@@ -823,7 +821,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		if ( is_array( $tax ) && ! in_array( 'event-venue', $tax ) ) {
 			return $terms;
 		}
-		if ( ! is_array( $tax ) && $tax != 'event-venue' ) {
+		if ( ! is_array( $tax ) && 'event-venue' !== $tax ) {
 			return $terms;
 		}
 
@@ -886,7 +884,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the Venue.
+	 * @param int   $venue_id The numeric ID of the Venue.
 	 * @param array $civi_loc_block The array of CiviCRM LocBlock data.
 	 */
 	public function store_civi_location( $venue_id, $civi_loc_block ) {
@@ -897,7 +895,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		}
 
 		// Update Venue meta.
-		eo_update_venue_meta( $venue_id, '_civi_loc_id', absint( $civi_loc_block['id'] ) );
+		eo_update_venue_meta( $venue_id, '_civi_loc_id', (int) $civi_loc_block['id'] );
 
 	}
 
@@ -986,13 +984,13 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	/**
 	 * Delete custom components that sync with CiviCRM.
 	 *
+	 * Event Organiser garbage-collects when it deletes a Venue, so no need.
+	 *
 	 * @since 0.1
 	 *
 	 * @param int $venue_id The numeric ID of the Venue.
 	 */
 	private function delete_venue_components( $venue_id ) {
-
-		// Event Organiser garbage-collects when it deletes a Venue, so no need.
 
 	}
 

@@ -259,6 +259,8 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	/**
 	 * Adds WordPress scripts and help text.
 	 *
+	 * TODO: Add help text.
+	 *
 	 * @since 0.7
 	 */
 	public function admin_head() {
@@ -267,8 +269,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		wp_enqueue_script( 'common' );
 		wp_enqueue_script( 'jquery-ui-sortable' );
 		wp_enqueue_script( 'dashboard' );
-
-		// TODO: Add help text here.
 
 	}
 
@@ -352,7 +352,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		do_action( 'civi_eo/admin/settings/add_meta_boxes', $screen->id );
 
 		// Grab columns.
-		$columns = ( 1 == $screen->get_columns() ? '1' : '2' );
+		$columns = ( 1 === (int) $screen->get_columns() ? '1' : '2' );
 
 		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/pages/page-admin-settings.php';
@@ -547,7 +547,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 
 		// Check for possibly missing default CiviCRM Event sync setting.
 		$civicrm_event_sync_required = false;
-		if ( 'fgffgs' == $this->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 'fgffgs' ) ) {
+		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 'fgffgs' ) ) {
 			$civicrm_event_sync_required = true;
 		}
 
@@ -556,7 +556,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 
 		// Check for possibly missing default Status Sync setting.
 		$status_sync_required = false;
-		if ( 'fgffgs' == $this->admin->option_get( 'civi_eo_event_default_status_sync', 'fgffgs' ) ) {
+		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_status_sync', 'fgffgs' ) ) {
 			$status_sync_required = true;
 		}
 
@@ -574,19 +574,19 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 
 		// Check for possibly missing default profile setting.
 		$profile_required = false;
-		if ( 'fgffgs' == $this->admin->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
+		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
 			$profile_required = true;
 		}
 
 		// Check for possibly missing default confirmation page setting.
 		$confirm_required = false;
-		if ( 'fgffgs' == $this->admin->option_get( 'civi_eo_event_default_confirm', 'fgffgs' ) ) {
+		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_confirm', 'fgffgs' ) ) {
 			$confirm_required = true;
 		}
 
 		// Check for possibly missing default Confirmation Email setting.
 		$send_email_required = false;
-		if ( 'fgffgs' == $this->admin->option_get( 'civi_eo_event_default_send_email', 'fgffgs' ) ) {
+		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_send_email', 'fgffgs' ) ) {
 			$send_email_required = true;
 		}
 
@@ -705,14 +705,14 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$this->admin->option_save( 'civi_eo_event_default_dedupe', $dedupe );
 
 		// Save Confirmation Page option.
-		if ( $confirm == '1' ) {
+		if ( '1' === $confirm ) {
 			$this->admin->option_save( 'civi_eo_event_default_confirm', '1' );
 		} else {
 			$this->admin->option_save( 'civi_eo_event_default_confirm', '0' );
 		}
 
 		// Save Confirmation Email option.
-		if ( $send_email == '1' ) {
+		if ( '1' === $send_email ) {
 			$this->admin->option_save( 'civi_eo_event_default_send_email', '1' );
 		} else {
 			$this->admin->option_save( 'civi_eo_event_default_send_email', '0' );

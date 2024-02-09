@@ -143,7 +143,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_new( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
 			return;
 		}
 
@@ -245,7 +245,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_new_snippet( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
 			return;
 		}
 
@@ -262,7 +262,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// We want the snippet, so grab "Print" var from form controller.
 		$controller = $form->getVar( 'controller' );
-		if ( empty( $controller->_print ) || $controller->_print !== 'json' ) {
+		if ( empty( $controller->_print ) || 'json' !== $controller->_print ) {
 			return;
 		}
 
@@ -323,7 +323,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_edit( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
 			return;
 		}
 
@@ -346,7 +346,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Get the Post ID that this Event is mapped to.
 		$post_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $event_id );
-		if ( $post_id === false ) {
+		if ( false === $post_id ) {
 			return;
 		}
 
@@ -368,7 +368,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_edit_snippet( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
 			return;
 		}
 
@@ -385,13 +385,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// We want the snippet, so grab "Print" var from form controller.
 		$controller = $form->getVar( 'controller' );
-		if ( empty( $controller->_print ) || $controller->_print !== 'json' ) {
+		if ( empty( $controller->_print ) || 'json' !== $controller->_print ) {
 			return;
 		}
 
 		// Get the Post ID that this Event is mapped to.
 		$post_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $event_id );
-		if ( $post_id === false ) {
+		if ( false === $post_id ) {
 			return;
 		}
 
@@ -467,7 +467,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			'button' => __( 'Set Feature Image', 'civicrm-event-organiser' ),
 		];
 
-		/// Init settings.
+		// Init settings.
 		$settings = [
 			'ajax_url' => admin_url( 'admin-ajax.php' ),
 			'loading' => CIVICRM_WP_EVENT_ORGANISER_URL . 'assets/images/loading.gif',
@@ -505,7 +505,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Since this is an AJAX request, check security.
 		$result = check_ajax_referer( 'ceo_nonce_action_feature_image', false, false );
-		if ( $result === false ) {
+		if ( false === $result ) {
 			wp_send_json( $data );
 		}
 
@@ -516,13 +516,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Get Attachment ID.
 		$attachment_id = isset( $_POST['attachment_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['attachment_id'] ) ) : 0;
-		if ( ! is_numeric( $attachment_id ) || $attachment_id === 0 ) {
+		if ( ! is_numeric( $attachment_id ) || 0 === $attachment_id ) {
 			wp_send_json( $data );
 		}
 
 		// Handle Feature Image if there is a Post ID.
 		$post_id = isset( $_POST['post_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['post_id'] ) ) : 0;
-		if ( is_numeric( $post_id ) && $post_id !== 0 ) {
+		if ( is_numeric( $post_id ) && 0 !== $post_id ) {
 
 			// Set Feature Image.
 			set_post_thumbnail( $post_id, $attachment_id );
@@ -624,13 +624,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_image_process( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
 			return;
 		}
 
 		// This gets called *three* times!
 		static $done;
-		if ( isset( $done ) && $done === true ) {
+		if ( isset( $done ) && true === $done ) {
 			return;
 		}
 
@@ -676,7 +676,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_sync_page( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
 			return;
 		}
 
@@ -719,7 +719,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	public function form_event_sync_snippet( $formName, &$form ) {
 
 		// Is this the Event Info form?
-		if ( $formName !== 'CRM_Event_Form_ManageEvent_EventInfo' ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
 			return;
 		}
 
@@ -731,7 +731,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// We want the snippet, so grab "Print" var from form controller.
 		$controller = $form->getVar( 'controller' );
-		if ( empty( $controller->_print ) || $controller->_print !== 'json' ) {
+		if ( empty( $controller->_print ) || 'json' !== $controller->_print ) {
 			return;
 		}
 
@@ -786,20 +786,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param string $op The type of database operation.
-	 * @param string $objectName The type of object.
+	 * @param string  $op The type of database operation.
+	 * @param string  $objectName The type of object.
 	 * @param integer $objectId The ID of the object.
-	 * @param object $objectRef The object.
+	 * @param object  $objectRef The object.
 	 */
 	public function event_created( $op, $objectName, $objectId, $objectRef ) {
 
 		// Target our operation.
-		if ( $op != 'create' ) {
+		if ( 'create' !== $op ) {
 			return;
 		}
 
 		// Target our object type.
-		if ( $objectName != 'Event' ) {
+		if ( 'Event' !== $objectName ) {
 			return;
 		}
 
@@ -866,20 +866,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param string $op The type of database operation.
-	 * @param string $objectName The type of object.
+	 * @param string  $op The type of database operation.
+	 * @param string  $objectName The type of object.
 	 * @param integer $objectId The ID of the object.
-	 * @param object $objectRef The object.
+	 * @param object  $objectRef The object.
 	 */
 	public function event_updated( $op, $objectName, $objectId, $objectRef ) {
 
 		// Target our operation.
-		if ( $op != 'edit' ) {
+		if ( 'edit' !== $op ) {
 			return;
 		}
 
 		// Target our object type.
-		if ( $objectName != 'Event' ) {
+		if ( 'Event' !== $objectName ) {
 			return;
 		}
 
@@ -921,7 +921,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Get full Event data.
 		$updated_event = $this->get_event_by_id( $objectId );
-		if ( $updated_event === false ) {
+		if ( false === $updated_event ) {
 			return;
 		}
 
@@ -954,20 +954,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param string $op The type of database operation.
-	 * @param string $objectName The type of object.
+	 * @param string  $op The type of database operation.
+	 * @param string  $objectName The type of object.
 	 * @param integer $objectId The ID of the object.
-	 * @param object $objectRef The object.
+	 * @param object  $objectRef The object.
 	 */
 	public function event_deleted( $op, $objectName, $objectId, $objectRef ) {
 
 		// Target our operation.
-		if ( $op != 'delete' ) {
+		if ( 'delete' !== $op ) {
 			return;
 		}
 
 		// Target our object type.
-		if ( $objectName != 'Event' ) {
+		if ( 'Event' !== $objectName ) {
 			return;
 		}
 
@@ -1022,26 +1022,26 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		 *
 		 * When creating an Event, let's see...
 		 */
-		if ( $status_sync === 0 || $status_sync === 1 ) {
+		if ( 0 === $status_sync || 1 === $status_sync ) {
 
 			// Default both "status" settings to "false".
 			$civi_event['is_public'] = 0;
 			$civi_event['is_active'] = 0;
 
 			// If the Event is in "draft" or "pending" mode, set as 'not active' and 'not public'.
-			if ( $post->post_status === 'draft' || $post->post_status === 'pending' ) {
+			if ( 'draft' === $post->post_status || 'pending' === $post->post_status ) {
 				$civi_event['is_active'] = 0;
 				$civi_event['is_public'] = 0;
 			}
 
 			// If the Event is in "publish" or "future" mode, set as 'active' and 'public'.
-			if ( $post->post_status === 'publish' || $post->post_status === 'future' ) {
+			if ( 'publish' === $post->post_status || 'future' === $post->post_status ) {
 				$civi_event['is_active'] = 1;
 				$civi_event['is_public'] = 1;
 			}
 
 			// If the Event is in "private" mode, set as 'active' and 'not public'.
-			if ( $post->post_status === 'private' ) {
+			if ( 'private' === $post->post_status ) {
 				$civi_event['is_active'] = 1;
 				$civi_event['is_public'] = 0;
 			}
@@ -1072,7 +1072,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$is_reg = $this->plugin->eo->get_event_registration( $post->ID );
 
 		// Add Online Registration value to our params if we get one.
-		if ( is_numeric( $is_reg ) && $is_reg != 0 ) {
+		if ( is_numeric( $is_reg ) && 0 !== (int) $is_reg ) {
 			$civi_event['is_online_registration'] = 1;
 		}
 
@@ -1092,7 +1092,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$existing_id = $this->registration->get_participant_role( $post );
 
 		// Add existing Participant Role ID to our params if we get one.
-		if ( $existing_id !== false && is_numeric( $existing_id ) && $existing_id != 0 ) {
+		if ( false !== $existing_id && is_numeric( $existing_id ) && 0 !== (int) $existing_id ) {
 			$civi_event['default_role_id'] = (int) $existing_id;
 		}
 
@@ -1100,7 +1100,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$type_value = $this->plugin->taxonomy->get_default_event_type_value( $post );
 
 		// Die if there are no Event Types defined in CiviCRM.
-		if ( $type_value === false ) {
+		if ( false === $type_value ) {
 			wp_die( __( 'You must have some CiviCRM Event Types defined', 'civicrm-event-organiser' ) );
 		}
 
@@ -1114,7 +1114,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$is_confirm_enabled = $this->registration->get_registration_confirm_enabled( $post->ID );
 
 		// Set confirmation screen value to our params if we get one.
-		if ( $is_confirm_enabled == 0 ) {
+		if ( 0 === (int) $is_confirm_enabled ) {
 			$civi_event['is_confirm_enabled'] = 0;
 		}
 
@@ -1158,7 +1158,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param object $post The WP Post object.
-	 * @param array $dates Array of properly formatted dates.
+	 * @param array  $dates Array of properly formatted dates.
 	 * @return array|bool $correspondences Array of correspondences keyed by Occurrence ID, or false on failure.
 	 */
 	public function create_civi_events( $post, $dates ) {
@@ -1193,7 +1193,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			$result = civicrm_api( 'Event', 'create', $civi_event );
 
 			// Log failures and skip to next.
-			if ( isset( $result['is_error'] ) && $result['is_error'] == '1' ) {
+			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 				$e = new Exception();
 				$trace = $e->getTraceAsString();
 				error_log( print_r( [
@@ -1228,7 +1228,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param object $post The WP Post object.
-	 * @param array $dates Array of properly formatted dates.
+	 * @param array  $dates Array of properly formatted dates.
 	 * @return array|bool $correspondences Array of correspondences keyed by Occurrence ID, or false on failure.
 	 */
 	public function update_civi_events( $post, $dates ) {
@@ -1332,7 +1332,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 				$result = civicrm_api( 'Event', 'create', $civi_event );
 
 				// Log failures and skip to next.
-				if ( $result['is_error'] == '1' ) {
+				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
@@ -1372,7 +1372,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 			// Get full CiviCRM Event.
 			$full_civi_event = $this->get_event_by_id( $civi_event_id );
-			if ( $full_civi_event === false ) {
+			if ( false === $full_civi_event ) {
 				continue;
 			}
 
@@ -1395,7 +1395,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 				// Get full CiviCRM Event.
 				$orphaned_civi_event = $this->get_event_by_id( $civi_event_id );
-				if ( $orphaned_civi_event === false ) {
+				if ( false === $orphaned_civi_event ) {
 					continue;
 				}
 
@@ -1428,7 +1428,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 				$result = civicrm_api( 'Event', 'create', $civi_event );
 
 				// Log failures and skip to next.
-				if ( $result['is_error'] == '1' ) {
+				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
@@ -1470,7 +1470,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 				$result = civicrm_api( 'Event', 'create', $civi_event );
 
 				// Log failures and skip to next.
-				if ( $result['is_error'] == '1' ) {
+				if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 					$e = new Exception();
 					$trace = $e->getTraceAsString();
 					error_log( print_r( [
@@ -1578,7 +1578,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			foreach ( $civi_events as $civi_event ) {
 
 				// Does the start_date match?
-				if ( $date['start'] == $civi_event['start_date'] ) {
+				if ( $date['start'] === $civi_event['start_date'] ) {
 
 					// Add to matched array.
 					$matched[ $date['occurrence_id'] ] = $civi_event['id'];
@@ -1605,7 +1605,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 				foreach ( $orphaned_civi_events as $orphaned_civi_event ) {
 
 					// Does the start_date match?
-					if ( $date['start'] == $orphaned_civi_event['start_date'] ) {
+					if ( $date['start'] === $orphaned_civi_event['start_date'] ) {
 
 						// Add to matched array.
 						$matched[ $date['occurrence_id'] ] = $orphaned_civi_event['id'];
@@ -1698,7 +1698,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$events = civicrm_api( 'Event', 'get', $params );
 
 		// Log failures and return boolean false.
-		if ( $events['is_error'] == '1' ) {
+		if ( ! empty( $events['is_error'] ) && 1 === (int) $events['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -1734,7 +1734,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Just for safety, check we get some.
-		if ( count( $civi_event_ids ) == 0 ) {
+		if ( count( $civi_event_ids ) === 0 ) {
 			return false;
 		}
 
@@ -1754,7 +1754,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			$result = civicrm_api( 'Event', 'delete', $params );
 
 			// Log failures and skip to next.
-			if ( $result['is_error'] == '1' ) {
+			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 				$e = new Exception();
 				$trace = $e->getTraceAsString();
 				error_log( print_r( [
@@ -1802,7 +1802,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
 		 */
 		$skip = apply_filters( 'ceo_skip_disable_civi_event', false, $civi_event_id );
-		if ( $skip === true ) {
+		if ( true === $skip ) {
 			return false;
 		}
 
@@ -1817,7 +1817,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$result = civicrm_api( 'Event', 'create', $params );
 
 		// Log failures and return boolean false.
-		if ( $result['is_error'] == '1' ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -1863,7 +1863,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$result = civicrm_api( 'Event', 'get', $params );
 
 		// Log failures and bail.
-		if ( isset( $result['is_error'] ) && $result['is_error'] == '1' ) {
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
 			$e = new Exception();
 			$trace = $e->getTraceAsString();
 			error_log( print_r( [
@@ -1931,7 +1931,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param int $post_id The numeric ID of the WP Post.
+	 * @param int    $post_id The numeric ID of the WP Post.
 	 * @param object $post The WP Post object.
 	 * @return mixed True if success, otherwise WP error object.
 	 */

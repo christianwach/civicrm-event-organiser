@@ -88,7 +88,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 * @since 0.2.1
 	 *
 	 * @param object $tag The WordPress tag object.
-	 * @param str $taxonomy The WordPress Taxonomy.
+	 * @param str    $taxonomy The WordPress Taxonomy.
 	 */
 	public function render_field_edit( $tag, $taxonomy ) {
 
