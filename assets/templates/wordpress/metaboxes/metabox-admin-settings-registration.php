@@ -65,7 +65,7 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 	<tr valign="top">
 		<th scope="row"><?php esc_html_e( 'Default CiviCRM Event Registration Confirmation Screen Setting', 'civicrm-event-organiser' ); ?></th>
 		<td>
-			<input type="checkbox" id="civi_eo_event_default_confirm" name="civi_eo_event_default_confirm" value="1"<?php echo $confirm_checked; ?>>
+			<input type="checkbox" id="civi_eo_event_default_confirm" name="civi_eo_event_default_confirm" value="1"<?php checked( $confirm_checked, 1 ); ?>>
 			<label for="civi_eo_event_default_confirm"><?php esc_html_e( 'Use a Registration Confirmation Screen for free Events.', 'civicrm-event-organiser' ); ?></label>
 			<?php if ( $confirm_required ) : ?>
 				<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please choose the default setting for Registration Confirmation Screens.', 'civicrm-event-organiser' ); ?></p></div>
@@ -93,7 +93,7 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 	<tr valign="top">
 		<th scope="row"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email Setting', 'civicrm-event-organiser' ); ?></th>
 		<td>
-			<input type="checkbox" id="civi_eo_event_default_send_email" name="civi_eo_event_default_send_email" value="1"<?php echo $send_email_checked; ?>>
+			<input type="checkbox" id="civi_eo_event_default_send_email" name="civi_eo_event_default_send_email" value="1"<?php checked( $send_email_checked, 1 ); ?>>
 			<label for="civi_eo_event_default_send_email"><?php esc_html_e( 'Send a Confirmation Email.', 'civicrm-event-organiser' ); ?></label>
 			<p class="description"><?php esc_html_e( 'The Confirmation Email includes event date(s), location and contact information. For Paid Events, the Confirmation Email is also a receipt for payment.', 'civicrm-event-organiser' ); ?></p>
 			<?php if ( $send_email_required ) : ?>

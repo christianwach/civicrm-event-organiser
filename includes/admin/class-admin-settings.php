@@ -597,17 +597,17 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$dedupe_rules = $this->plugin->civi->registration->get_registration_dedupe_rules_select();
 
 		// Get the current confirmation page setting.
-		$confirm_checked = '';
+		$confirm_checked = 0;
 		$confirm_enabled = $this->plugin->civi->registration->get_registration_confirm_enabled();
 		if ( $confirm_enabled ) {
-			$confirm_checked = ' checked="checked"';
+			$confirm_checked = 1;
 		}
 
 		// Get the current Confirmation Email setting.
-		$send_email_checked = '';
+		$send_email_checked = 0;
 		$send_email_enabled = $this->plugin->civi->registration->get_registration_send_email_enabled();
 		if ( $send_email_enabled ) {
-			$send_email_checked = ' checked="checked"';
+			$send_email_checked = 1;
 		}
 
 		// Set default checks for Confirmation Email sub-fields.

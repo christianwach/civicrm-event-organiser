@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 
 	<p>
 		<label for="civi_eo_event_redirect_active"><?php esc_html_e( 'Is active?', 'civicrm-event-organiser' ); ?></label>
-		<input type="checkbox" id="civi_eo_event_redirect_active" name="civi_eo_event_redirect_active" value="1"<?php echo $is_active; ?> />
+		<input type="checkbox" id="civi_eo_event_redirect_active" name="civi_eo_event_redirect_active" value="1"<?php checked( $is_active, 1 ); ?> />
 	</p>
 
 	<input type="hidden" id="civi_eo_event_redirect_post_id" name="civi_eo_event_redirect_post_id" value="<?php echo esc_attr( $post_id ); ?>" />

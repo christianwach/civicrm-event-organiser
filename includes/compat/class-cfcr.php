@@ -141,12 +141,12 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		// Build markup for Post.
 		$page      = esc_html__( 'None selected', 'civicrm-event-organiser' );
 		$post_id   = 0;
-		$is_active = '';
+		$is_active = 0;
 		if ( ! empty( $redirects ) ) {
 			$redirect  = array_pop( $redirects );
 			$page      = '<a href="' . esc_url( get_permalink( $redirect->post_id ) ) . '">' . esc_html( $redirect->post_title ) . '</a>' . "\n";
 			$post_id   = $redirect->post_id;
-			$is_active = ( 1 === (int) $redirect->is_active ) ? ' checked="checked"' : '';
+			$is_active = (int) $redirect->is_active;
 		}
 
 		// Include template file.

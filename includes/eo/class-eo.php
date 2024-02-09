@@ -942,9 +942,9 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$is_reg_checked = $this->get_event_registration( $event->ID );
 
 		// Set checkbox status.
-		$reg_checked = '';
+		$reg_checked = 0;
 		if ( 1 === (int) $is_reg_checked ) {
-			$reg_checked = ' checked="checked"';
+			$reg_checked = 1;
 		}
 
 		// Get Participant Roles.
@@ -960,18 +960,18 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$confirm_enabled = $this->plugin->civi->registration->get_registration_confirm_enabled( $event->ID );
 
 		// Set checkbox status.
-		$confirm_checked = '';
+		$confirm_checked = 0;
 		if ( $confirm_enabled ) {
-			$confirm_checked = ' checked="checked"';
+			$confirm_checked = 1;
 		}
 
 		// Get the current Confirmation Email setting.
 		$send_email_enabled = $this->plugin->civi->registration->get_registration_send_email_enabled( $event->ID );
 
 		// Set checkbox status.
-		$send_email_checked = '';
+		$send_email_checked = 0;
 		if ( $send_email_enabled ) {
-			$send_email_checked = ' checked="checked"';
+			$send_email_checked = 1;
 		}
 
 		// Get the current Confirmation Email sub-field settings.

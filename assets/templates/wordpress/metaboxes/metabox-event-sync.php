@@ -107,7 +107,7 @@ body.js .civi_eo_event_send_email_toggle {
 		<div class="civi_eo_event_reg_header">
 			<p>
 				<label for="civi_eo_event_reg"><?php esc_html_e( 'Enable Online Registration:', 'civicrm-event-organiser' ); ?></label>
-				<input type="checkbox" id="civi_eo_event_reg" name="civi_eo_event_reg" value="1"<?php echo $reg_checked; ?> />
+				<input type="checkbox" id="civi_eo_event_reg" name="civi_eo_event_reg" value="1"<?php checked( $reg_checked, 1 ); ?> />
 			</p>
 		</div>
 
@@ -155,7 +155,7 @@ body.js .civi_eo_event_send_email_toggle {
 			<div class="civi_eo_event_option_block">
 				<p>
 					<label for="civi_eo_event_confirm"><?php esc_html_e( 'Use a Confirmation Screen:', 'civicrm-event-organiser' ); ?></label>
-					<input type="checkbox" id="civi_eo_event_confirm" name="civi_eo_event_confirm" value="1"<?php echo $confirm_checked; ?> />
+					<input type="checkbox" id="civi_eo_event_confirm" name="civi_eo_event_confirm" value="1"<?php checked( $confirm_checked, 1 ); ?> />
 				</p>
 
 				<p class="description">
@@ -166,7 +166,7 @@ body.js .civi_eo_event_send_email_toggle {
 			<div class="civi_eo_event_option_block">
 				<p>
 					<label for="civi_eo_event_send_email"><?php esc_html_e( 'Send Confirmation Email:', 'civicrm-event-organiser' ); ?></label>
-					<input type="checkbox" id="civi_eo_event_send_email" name="civi_eo_event_send_email" value="1"<?php echo $send_email_checked; ?> />
+					<input type="checkbox" id="civi_eo_event_send_email" name="civi_eo_event_send_email" value="1"<?php checked( $send_email_checked, 1 ); ?> />
 				</p>
 
 				<p class="description">
