@@ -57,6 +57,15 @@ class CiviCRM_WP_Event_Organiser_EO {
 	private $nonce_action = 'ceo_event_action';
 
 	/**
+	 * Event data to sync to Registration Profile.
+	 *
+	 * @since 0.3.3
+	 * @access public
+	 * @var object
+	 */
+	public $sync_data;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1
