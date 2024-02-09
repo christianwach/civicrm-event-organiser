@@ -1086,10 +1086,10 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 *
 	 * @param str    $content The previously generated content.
 	 * @param string $context The context of the content - 'page' or 'form'.
-	 * @param string $tplName The name of the ".tpl" template file.
+	 * @param string $tpl_name The name of the ".tpl" template file.
 	 * @param object $object A reference to the page or form object.
 	 */
-	public function menu_item_add_to_civi( &$content, $context, $tplName, &$object ) {
+	public function menu_item_add_to_civi( &$content, $context, $tpl_name, &$object ) {
 
 		// Bail if not a form.
 		if ( 'form' !== $context ) {
@@ -1097,7 +1097,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Bail if not our target template.
-		if ( 'CRM/Event/Form/ManageEvent/Tab.tpl' !== $tplName ) {
+		if ( 'CRM/Event/Form/ManageEvent/Tab.tpl' !== $tpl_name ) {
 			return;
 		}
 
@@ -1689,13 +1689,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 *
 	 * @since 0.3.3
 	 *
-	 * @param string $formName The name of the form.
+	 * @param string $form_name The name of the form.
 	 * @param object $form The form object.
 	 */
-	public function maybe_update_event_registration_profile( $formName, &$form ) {
+	public function maybe_update_event_registration_profile( $form_name, &$form ) {
 
 		// Kick out if not a CiviCRM Event Online Registration form.
-		if ( 'CRM_Event_Form_ManageEvent_Registration' !== $formName ) {
+		if ( 'CRM_Event_Form_ManageEvent_Registration' !== $form_name ) {
 			return;
 		}
 

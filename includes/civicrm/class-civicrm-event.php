@@ -137,13 +137,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.6.3
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param string $formName The CiviCRM form name.
+	 * @param string $form_name The CiviCRM form name.
 	 * @param object $form The CiviCRM form object.
 	 */
-	public function form_event_new( $formName, &$form ) {
+	public function form_event_new( $form_name, &$form ) {
 
 		// Is this the Event Info form?
-		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $form_name ) {
 			return;
 		}
 
@@ -239,13 +239,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @since 0.7.3
 	 *
-	 * @param string $formName The CiviCRM form name.
+	 * @param string $form_name The CiviCRM form name.
 	 * @param object $form The CiviCRM form object.
 	 */
-	public function form_event_new_snippet( $formName, &$form ) {
+	public function form_event_new_snippet( $form_name, &$form ) {
 
 		// Is this the Event Info form?
-		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $form_name ) {
 			return;
 		}
 
@@ -317,13 +317,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.6.3
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param string $formName The CiviCRM form name.
+	 * @param string $form_name The CiviCRM form name.
 	 * @param object $form The CiviCRM form object.
 	 */
-	public function form_event_edit( $formName, &$form ) {
+	public function form_event_edit( $form_name, &$form ) {
 
 		// Is this the Event Info form?
-		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $form_name ) {
 			return;
 		}
 
@@ -362,13 +362,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @since 0.6.3
 	 *
-	 * @param string $formName The CiviCRM form name.
+	 * @param string $form_name The CiviCRM form name.
 	 * @param object $form The CiviCRM form object.
 	 */
-	public function form_event_edit_snippet( $formName, &$form ) {
+	public function form_event_edit_snippet( $form_name, &$form ) {
 
 		// Is this the Event Info form?
-		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $form_name ) {
 			return;
 		}
 
@@ -618,13 +618,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.6.3
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param string $formName The CiviCRM form name.
+	 * @param string $form_name The CiviCRM form name.
 	 * @param object $form The CiviCRM form object.
 	 */
-	public function form_event_image_process( $formName, &$form ) {
+	public function form_event_image_process( $form_name, &$form ) {
 
 		// Is this the Event Info form?
-		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $form_name ) {
 			return;
 		}
 
@@ -670,13 +670,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @since 0.7.3
 	 *
-	 * @param string $formName The CiviCRM form name.
+	 * @param string $form_name The CiviCRM form name.
 	 * @param object $form The CiviCRM form object.
 	 */
-	public function form_event_sync_page( $formName, &$form ) {
+	public function form_event_sync_page( $form_name, &$form ) {
 
 		// Is this the Event Info form?
-		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $form_name ) {
 			return;
 		}
 
@@ -704,7 +704,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Inject template.
-		$this->form_event_sync_template( $formName, $form );
+		$this->form_event_sync_template( $form_name, $form );
 
 	}
 
@@ -713,13 +713,13 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @since 0.7.3
 	 *
-	 * @param string $formName The CiviCRM form name.
+	 * @param string $form_name The CiviCRM form name.
 	 * @param object $form The CiviCRM form object.
 	 */
-	public function form_event_sync_snippet( $formName, &$form ) {
+	public function form_event_sync_snippet( $form_name, &$form ) {
 
 		// Is this the Event Info form?
-		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $formName ) {
+		if ( 'CRM_Event_Form_ManageEvent_EventInfo' !== $form_name ) {
 			return;
 		}
 
@@ -741,7 +741,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Inject template.
-		$this->form_event_sync_template( $formName, $form );
+		$this->form_event_sync_template( $form_name, $form );
 
 	}
 
@@ -750,10 +750,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @since 0.7.3
 	 *
-	 * @param string $formName The CiviCRM form name.
+	 * @param string $form_name The CiviCRM form name.
 	 * @param object $form The CiviCRM form object.
 	 */
-	private function form_event_sync_template( $formName, &$form ) {
+	private function form_event_sync_template( $form_name, &$form ) {
 
 		// Only check for skip when we have an Event ID.
 		$event_id = $form->getVar( '_id' );
@@ -787,11 +787,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param string  $op The type of database operation.
-	 * @param string  $objectName The type of object.
-	 * @param integer $objectId The ID of the object.
-	 * @param object  $objectRef The object.
+	 * @param string  $object_name The type of object.
+	 * @param integer $object_id The ID of the object.
+	 * @param object  $object_ref The object.
 	 */
-	public function event_created( $op, $objectName, $objectId, $objectRef ) {
+	public function event_created( $op, $object_name, $object_id, $object_ref ) {
 
 		// Target our operation.
 		if ( 'create' !== $op ) {
@@ -799,17 +799,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Target our object type.
-		if ( 'Event' !== $objectName ) {
+		if ( 'Event' !== $object_name ) {
 			return;
 		}
 
 		// Kick out if not Event object.
-		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) {
+		if ( ! ( $object_ref instanceof CRM_Event_DAO_Event ) ) {
 			return;
 		}
 
 		// Bail if the Event is a template.
-		if ( isset( $objectRef->is_template ) && ! empty( $this->civicrm->denullify( $objectRef->is_template ) ) ) {
+		if ( isset( $object_ref->is_template ) && ! empty( $this->civicrm->denullify( $object_ref->is_template ) ) ) {
 			return;
 		}
 
@@ -829,7 +829,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Update a single Event Organiser Event - or create if it doesn't exist.
-		$event_id = $this->plugin->eo->update_event( (array) $objectRef );
+		$event_id = $this->plugin->eo->update_event( (array) $object_ref );
 
 		// Bail if we don't get an Event ID.
 		if ( is_wp_error( $event_id ) ) {
@@ -847,10 +847,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$occurrence_id = array_shift( $keys );
 
 		// Store correspondences.
-		$this->plugin->mapping->store_event_correspondences( $event_id, [ $occurrence_id => $objectRef->id ] );
+		$this->plugin->mapping->store_event_correspondences( $event_id, [ $occurrence_id => $object_ref->id ] );
 
 		// Store Event IDs for possible use in the "form_event_image_process" method.
-		$this->civicrm_event_created_id = $objectRef->id;
+		$this->civicrm_event_created_id = $object_ref->id;
 		$this->eo_event_created_id      = $event_id;
 
 	}
@@ -867,11 +867,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param string  $op The type of database operation.
-	 * @param string  $objectName The type of object.
-	 * @param integer $objectId The ID of the object.
-	 * @param object  $objectRef The object.
+	 * @param string  $object_name The type of object.
+	 * @param integer $object_id The ID of the object.
+	 * @param object  $object_ref The object.
 	 */
-	public function event_updated( $op, $objectName, $objectId, $objectRef ) {
+	public function event_updated( $op, $object_name, $object_id, $object_ref ) {
 
 		// Target our operation.
 		if ( 'edit' !== $op ) {
@@ -879,17 +879,17 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Target our object type.
-		if ( 'Event' !== $objectName ) {
+		if ( 'Event' !== $object_name ) {
 			return;
 		}
 
 		// Kick out if not Event object.
-		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) {
+		if ( ! ( $object_ref instanceof CRM_Event_DAO_Event ) ) {
 			return;
 		}
 
 		// Bail if the Event is a template.
-		if ( isset( $objectRef->is_template ) && ! empty( $this->civicrm->denullify( $objectRef->is_template ) ) ) {
+		if ( isset( $object_ref->is_template ) && ! empty( $this->civicrm->denullify( $object_ref->is_template ) ) ) {
 			return;
 		}
 
@@ -905,7 +905,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			if ( '1' !== (string) $sync ) {
 
 				// Bail if there is no Event Organiser Event.
-				$eo_event_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $objectId );
+				$eo_event_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $object_id );
 				if ( empty( $eo_event_id ) ) {
 					return;
 				}
@@ -915,12 +915,12 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Bail if this CiviCRM Event is part of an Event Organiser sequence.
-		if ( $this->plugin->mapping->is_civi_event_in_eo_sequence( $objectId ) ) {
+		if ( $this->plugin->mapping->is_civi_event_in_eo_sequence( $object_id ) ) {
 			return;
 		}
 
 		// Get full Event data.
-		$updated_event = $this->get_event_by_id( $objectId );
+		$updated_event = $this->get_event_by_id( $object_id );
 		if ( false === $updated_event ) {
 			return;
 		}
@@ -944,7 +944,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$occurrence_id = array_shift( $keys );
 
 		// Store correspondences.
-		$this->plugin->mapping->store_event_correspondences( $event_id, [ $occurrence_id => $objectId ] );
+		$this->plugin->mapping->store_event_correspondences( $event_id, [ $occurrence_id => $object_id ] );
 
 	}
 
@@ -955,11 +955,11 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param string  $op The type of database operation.
-	 * @param string  $objectName The type of object.
-	 * @param integer $objectId The ID of the object.
-	 * @param object  $objectRef The object.
+	 * @param string  $object_name The type of object.
+	 * @param integer $object_id The ID of the object.
+	 * @param object  $object_ref The object.
 	 */
-	public function event_deleted( $op, $objectName, $objectId, $objectRef ) {
+	public function event_deleted( $op, $object_name, $object_id, $object_ref ) {
 
 		// Target our operation.
 		if ( 'delete' !== $op ) {
@@ -967,19 +967,19 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Target our object type.
-		if ( 'Event' !== $objectName ) {
+		if ( 'Event' !== $object_name ) {
 			return;
 		}
 
 		// Kick out if not Event object.
-		if ( ! ( $objectRef instanceof CRM_Event_DAO_Event ) ) {
+		if ( ! ( $object_ref instanceof CRM_Event_DAO_Event ) ) {
 			return;
 		}
 
 		// Clear the correspondence between the Occurrence and the CiviCRM Event.
-		$post_id       = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $objectId );
-		$occurrence_id = $this->plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $objectId );
-		$this->plugin->mapping->clear_event_correspondence( $post_id, $occurrence_id, $objectId );
+		$post_id       = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $object_id );
+		$occurrence_id = $this->plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $object_id );
+		$this->plugin->mapping->clear_event_correspondence( $post_id, $occurrence_id, $object_id );
 
 		// Set the Event Organiser Event to 'draft' status if it's not a recurring Event.
 		if ( ! eo_recurs( $post_id ) ) {
