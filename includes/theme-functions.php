@@ -143,12 +143,24 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		 * Filter Registration URL.
 		 *
 		 * @since 0.3
+		 * @deprecated 0.8.0 Use the {@see 'ceo/theme/registration/url'} filter instead.
 		 *
 		 * @param string $url The raw URL to the CiviCRM Registration page.
 		 * @param array $civi_event The array of data that represents a CiviCRM Event.
 		 * @param int $post_id The numeric ID of the WP Post.
 		 */
-		$url = apply_filters( 'civicrm_event_organiser_registration_url', $url, $civi_event, $post_id );
+		$url = apply_filters_deprecated( 'civicrm_event_organiser_registration_url', [ $url, $civi_event, $post_id ], '0.8.0', 'ceo/theme/registration/url' );
+
+		/**
+		 * Filter the Registration URL.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param string $url The raw URL to the CiviCRM Registration page.
+		 * @param array $civi_event The array of data that represents a CiviCRM Event.
+		 * @param int $post_id The numeric ID of the WP Post.
+		 */
+		$url = apply_filters( 'ceo/theme/registration/url', $url, $civi_event, $post_id );
 
 		// Set different link text for single and multiple Occurrences.
 		if ( $multiple ) {
@@ -174,13 +186,26 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		 * Filter Registration link.
 		 *
 		 * @since 0.3
+		 * @deprecated 0.8.0 Use the {@see 'ceo/theme/registration/link'} filter instead.
 		 *
 		 * @param string $link The HTML link to the CiviCRM Registration page.
 		 * @param string $url The raw URL to the CiviCRM Registration page.
 		 * @param string $text The text content of the link.
 		 * @param int $post_id The numeric ID of the WP Post.
 		 */
-		$links[] = apply_filters( 'civicrm_event_organiser_registration_link', $link, $url, $text, $post_id );
+		$link = apply_filters_deprecated( 'civicrm_event_organiser_registration_link', [ $link, $url, $text, $post_id ], '0.8.0', 'ceo/theme/registration/link' );
+
+		/**
+		 * Filter Registration link.
+		 *
+		 * @since 0.3
+		 *
+		 * @param string $link The HTML link to the CiviCRM Registration page.
+		 * @param string $url The raw URL to the CiviCRM Registration page.
+		 * @param string $text The text content of the link.
+		 * @param int $post_id The numeric ID of the WP Post.
+		 */
+		$links[] = apply_filters( 'ceo/theme/registration/link', $link, $url, $text, $post_id );
 
 	}
 

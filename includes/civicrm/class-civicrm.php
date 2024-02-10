@@ -201,15 +201,25 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 		}
 
 		/**
-		 * Return permission but allow overrides.
+		 * Filter the CiviCRM permission.
 		 *
 		 * @since 0.3.4
+		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/permitted'} filter instead.
 		 *
 		 * @param bool $permitted True if allowed, false otherwise.
 		 * @param str $permission The CiviCRM permission string.
-		 * @return bool $permitted True if allowed, false otherwise.
 		 */
-		return apply_filters( 'civicrm_event_organiser_permitted', $permitted, $permission );
+		$permitted = apply_filters_deprecated( 'civicrm_event_organiser_permitted', [ $permitted, $permission ], '0.8.0', 'ceo/civicrm/permitted' );
+
+		/**
+		 * Filter the CiviCRM permission.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param bool $permitted True if allowed, false otherwise.
+		 * @param str $permission The CiviCRM permission string.
+		 */
+		return apply_filters( 'ceo/civicrm/permitted', $permitted, $permission );
 
 	}
 

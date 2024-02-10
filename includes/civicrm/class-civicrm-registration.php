@@ -342,12 +342,22 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		 *
 		 * @since 0.4
 		 * @since 0.7 Moved to this class.
+		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/registration/start_date'} filter instead.
 		 *
-		 * @param obj $reg_start The starting DateTime object for Registration.
+		 * @param DateTime|bool $reg_start The starting DateTime object for Registration.
 		 * @param array $civi_event The array of data that represents a CiviCRM Event.
-		 * @return obj $reg_start The modified starting DateTime object for Registration.
 		 */
-		$reg_start = apply_filters( 'civicrm_event_organiser_registration_start_date', $reg_start, $civi_event );
+		$reg_start = apply_filters_deprecated( 'civicrm_event_organiser_registration_start_date', [ $reg_start, $civi_event ], '0.8.0', 'ceo/civicrm/registration/start_date' );
+
+		/**
+		 * Filter the Registration start date.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param DateTime|bool $reg_start The starting DateTime object for Registration.
+		 * @param array $civi_event The array of data that represents a CiviCRM Event.
+		 */
+		$reg_start = apply_filters( 'ceo/civicrm/registration/start_date', $reg_start, $civi_event );
 
 		// Init Registration end.
 		$reg_end = false;
@@ -362,12 +372,22 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		 *
 		 * @since 0.4.2
 		 * @since 0.7 Moved to this class.
+		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/registration/end_date'} filter instead.
 		 *
 		 * @param obj $reg_end The ending DateTime object for Registration.
 		 * @param array $civi_event The array of data that represents a CiviCRM Event.
-		 * @return obj $reg_end The modified ending DateTime object for Registration.
 		 */
-		$reg_end = apply_filters( 'civicrm_event_organiser_registration_end_date', $reg_end, $civi_event );
+		$reg_end = apply_filters_deprecated( 'civicrm_event_organiser_registration_end_date', [ $reg_end, $civi_event ], '0.8.0', 'ceo/civicrm/registration/end_date' );
+
+		/**
+		 * Filter the Registration end date.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param obj $reg_end The ending DateTime object for Registration.
+		 * @param array $civi_event The array of data that represents a CiviCRM Event.
+		 */
+		$reg_end = apply_filters( 'ceo/civicrm/registration/end_date', $reg_end, $civi_event );
 
 		// Init Event end.
 		$event_end = false;

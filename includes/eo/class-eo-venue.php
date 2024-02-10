@@ -406,23 +406,33 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		/**
 		 * Force the creation of a unique slug.
 		 *
+		 * @since 0.3.5
+		 * @deprecated 0.8.0 Use the {@see 'ceo/eo/venue/unique_slug'} filter instead.
+		 *
+		 * @param bool False by default, which does not force unique slugs.
+		 */
+		$unique_slug = apply_filters_deprecated( 'civicrm_event_organiser_force_unique_slug', [ false ], '0.8.0', 'ceo/eo/venue/unique_slug' );
+
+		/**
+		 * Force the creation of a unique slug.
+		 *
 		 * Event Organiser will return a WP_Error object if there is already a
 		 * Venue with the same name as the one being created.
 		 *
 		 * When there isn't an existing Venue, you can force the use of a unique
 		 * slug with the following code:
 		 *
-		 * add_filter( 'civicrm_event_organiser_force_unique_slug', '__return_true' );
+		 * add_filter( 'ceo/eo/venue/unique_slug', '__return_true' );
 		 *
-		 * @since 0.3.5
+		 * @since 0.8.0
 		 *
 		 * @param bool False by default, which does not force unique slugs.
 		 */
-		if ( $existing_venue || apply_filters( 'civicrm_event_organiser_force_unique_slug', false ) ) {
+		$unique_slug = apply_filters( 'ceo/eo/venue/unique_slug', $unique_slug );
 
-			// Create a slug we know will be unique.
+		// Maybe create a slug we know will be unique.
+		if ( $existing_venue || $unique_slug ) {
 			$args['slug'] = sanitize_title( $name . '-' . $location['id'] );
-
 		}
 
 		// Insert Venue.

@@ -569,10 +569,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		 *
 		 * @since 0.6.3
 		 * @since 0.7 Moved to this class.
+		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/event/media/view/cap'} filter instead.
 		 *
 		 * @param str The default capability needed to view all media.
 		 */
-		$capability = apply_filters( 'civicrm_event_organiser_filter_media', 'edit_posts' );
+		$capability = apply_filters_deprecated( 'civicrm_event_organiser_filter_media', [ 'edit_posts' ], '0.8.0', 'ceo/civicrm/event/media/view/cap' );
+
+		/**
+		 * Filter the capability that is needed to view all media.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param str The default capability needed to view all media.
+		 */
+		$capability = apply_filters( 'ceo/civicrm/event/media/view/cap', $capability );
 
 		// Admins and Editors get to see everything.
 		if ( ! current_user_can( $capability ) ) {
@@ -1116,12 +1126,22 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		 *
 		 * @since 0.3.1
 		 * @since 0.7 Moved to this class.
+		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/event/prepared'} filter instead.
 		 *
 		 * @param array $civi_event The array of data for the CiviCRM Event.
 		 * @param object $post The WP Post object.
-		 * @return array $civi_event The modified array of data for the CiviCRM Event.
 		 */
-		return apply_filters( 'civicrm_event_organiser_prepared_civi_event', $civi_event, $post );
+		$civi_event = apply_filters_deprecated( 'civicrm_event_organiser_prepared_civi_event', [ $civi_event, $post ], '0.8.0', 'ceo/civicrm/event/prepared' );
+
+		/**
+		 * Filter the prepared CiviCRM Event.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param array $civi_event The array of data for the CiviCRM Event.
+		 * @param object $post The WP Post object.
+		 */
+		return apply_filters( 'ceo/civicrm/event/prepared', $civi_event, $post );
 
 	}
 
@@ -1756,11 +1776,22 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		 *
 		 * @since 0.6.6
 		 * @since 0.7 Moved to this class.
+		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/event/disable/skip'} filter instead.
 		 *
 		 * @param bool False by default, pass true to skip.
 		 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
 		 */
-		$skip = apply_filters( 'ceo_skip_disable_civi_event', false, $civi_event_id );
+		$skip = apply_filters_deprecated( 'ceo_skip_disable_civi_event', [ false, $civi_event_id ], '0.8.0', 'ceo/civicrm/event/disable/skip' );
+
+		/**
+		 * Allow plugins to skip disabling CiviCRM Events.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param bool $skip False by default, return true to skip.
+		 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
+		 */
+		$skip = apply_filters( 'ceo/civicrm/event/disable/skip', $skip, $civi_event_id );
 		if ( true === $skip ) {
 			return false;
 		}

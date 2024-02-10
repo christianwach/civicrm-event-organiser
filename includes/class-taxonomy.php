@@ -83,11 +83,11 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		add_filter( 'wp_terms_checklist_args', [ $this, 'term_default_checked' ], 10, 2 );
 
 		// Create custom filters that mirror 'the_content'.
-		add_filter( 'civicrm_eo_term_content', 'wptexturize' );
-		add_filter( 'civicrm_eo_term_content', 'convert_smilies' );
-		add_filter( 'civicrm_eo_term_content', 'convert_chars' );
-		add_filter( 'civicrm_eo_term_content', 'wpautop' );
-		add_filter( 'civicrm_eo_term_content', 'shortcode_unautop' );
+		add_filter( 'ceo/taxonomy/term/the_content', 'wptexturize' );
+		add_filter( 'ceo/taxonomy/term/the_content', 'convert_smilies' );
+		add_filter( 'ceo/taxonomy/term/the_content', 'convert_chars' );
+		add_filter( 'ceo/taxonomy/term/the_content', 'wpautop' );
+		add_filter( 'ceo/taxonomy/term/the_content', 'shortcode_unautop' );
 
 	}
 
@@ -1303,7 +1303,20 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 
 		// If there is a description, apply content filters and add to params.
 		if ( ! empty( $new_term->description ) ) {
-			$params['description'] = apply_filters( 'civicrm_eo_term_content', $new_term->description );
+
+			/**
+			 * Apply content filters to the Term description.
+			 *
+			 * For internal use only.
+			 *
+			 * @since 0.4.2
+			 * @since 0.7 Moved to this class.
+			 * @since 0.8.0 Renamed from "civicrm_eo_term_content".
+			 *
+			 * @param string $description The Term description.
+			 */
+			$params['description'] = apply_filters( 'ceo/taxonomy/term/the_content', $new_term->description );
+
 		}
 
 		// First check if the Term has the ID in its "term meta".
