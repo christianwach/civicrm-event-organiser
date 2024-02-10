@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
@@ -34,7 +34,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var string $admin The single site admin object.
+	 * @var CiviCRM_WP_Event_Organiser_Admin
 	 */
 	public $admin;
 
@@ -43,7 +43,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var string $settings The Settings Page object.
+	 * @var CiviCRM_WP_Event_Organiser_Admin_Settings
 	 */
 	public $settings;
 
@@ -52,7 +52,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var str $sync_page The manual sync page.
+	 * @var string
 	 */
 	public $sync_page;
 
@@ -61,7 +61,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var string $settings_page_slug The slug of the Settings Page.
+	 * @var string
 	 */
 	public $sync_page_slug = 'civi_eo_manual_sync';
 
@@ -70,7 +70,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var object $step_counts The array of item counts to process per AJAX request.
+	 * @var array
 	 */
 	public $step_counts = [
 		'tax'   => 5, // Event Organiser Category Terms & CiviCRM Event Types.

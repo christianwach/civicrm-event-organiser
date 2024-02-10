@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
@@ -34,7 +34,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var object $settings The Settings Page object.
+	 * @var CiviCRM_WP_Event_Organiser_Admin_Settings
 	 */
 	public $settings;
 
@@ -43,7 +43,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var object $manual_sync The Manual Sync Page object.
+	 * @var CiviCRM_WP_Event_Organiser_Admin_Manual_Sync
 	 */
 	public $manual_sync;
 
@@ -52,7 +52,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var object $multisite The Multisite Settings Page object.
+	 * @var CiviCRM_WP_Event_Organiser_Admin_Multisite
 	 */
 	public $multisite;
 
@@ -61,7 +61,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var str $plugin_version The plugin version. (numeric string)
+	 * @var string
 	 */
 	public $plugin_version;
 

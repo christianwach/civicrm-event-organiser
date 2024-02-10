@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_Post_Duplicator {
 	 *
 	 * @since 0.7.5
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 

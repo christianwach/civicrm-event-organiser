@@ -25,34 +25,40 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
 	/**
 	 * Insert Event flag.
 	 *
+	 * True if inserting an Event, false otherwise.
+	 *
 	 * @since 0.1
 	 * @access public
-	 * @var bool $insert_event True if inserting an Event, false otherwise.
+	 * @var bool
 	 */
 	public $insert_event = false;
 
 	/**
 	 * Metabox nonce name.
 	 *
+	 * The name of the metabox nonce element.
+	 *
 	 * @since 0.7.4
 	 * @access private
-	 * @var string $nonce_field The name of the metabox nonce element.
+	 * @var string
 	 */
 	private $nonce_field = 'ceo_event_nonce';
 
 	/**
 	 * Metabox nonce action.
 	 *
+	 * The name of the metabox nonce action.
+	 *
 	 * @since 0.7.4
 	 * @access private
-	 * @var string $nonce_action The name of the metabox nonce action.
+	 * @var string
 	 */
 	private $nonce_action = 'ceo_event_action';
 
@@ -61,7 +67,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 *
 	 * @since 0.3.3
 	 * @access public
-	 * @var object
+	 * @var array
 	 */
 	public $sync_data;
 

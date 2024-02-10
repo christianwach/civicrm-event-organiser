@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 	 *
 	 * @since 0.4.4
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
@@ -34,7 +34,7 @@ class CiviCRM_WP_Event_Organiser_CAI {
 	 *
 	 * @since 0.4.4
 	 * @access public
-	 * @var object $acf The CiviCRM ACF Integration plugin reference.
+	 * @var CiviCRM_ACF_Integration
 	 */
 	public $cacf = false;
 

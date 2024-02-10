@@ -26,7 +26,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.2
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
@@ -35,7 +35,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 *
 	 * @since 0.4.5
 	 * @access public
-	 * @var object $term_meta_key The Term Meta key.
+	 * @var string
 	 */
 	public $term_meta_key = '_ceo_civi_event_type_id';
 

@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 *
 	 * @since 0.6.2
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
@@ -34,7 +34,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 	 *
 	 * @since 0.6.2
 	 * @access public
-	 * @var object $cwps The CiviCRM Profile Sync plugin reference.
+	 * @var CiviCRM_WP_Profile_Sync
 	 */
 	public $cwps = false;
 

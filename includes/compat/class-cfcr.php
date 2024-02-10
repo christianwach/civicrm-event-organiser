@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	 *
 	 * @since 0.5.3
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
@@ -34,7 +34,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	 *
 	 * @since 0.5.3
 	 * @access public
-	 * @var object $cfcr The "Caldera Forms CiviCRM Redirect" plugin reference.
+	 * @var CFCR\Api\DB
 	 */
 	public $cfcr = false;
 

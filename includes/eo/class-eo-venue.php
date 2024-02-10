@@ -49,7 +49,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 

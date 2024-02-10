@@ -32,7 +32,7 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 *
 	 * @since 0.2.1
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 

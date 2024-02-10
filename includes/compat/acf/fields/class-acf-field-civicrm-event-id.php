@@ -24,27 +24,9 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
-
-	/**
-	 * ACF Loader object.
-	 *
-	 * @since 0.7.3
-	 * @access public
-	 * @var object $acf_loader The ACF Loader object.
-	 */
-	public $acf_loader;
-
-	/**
-	 * Advanced Custom Fields object.
-	 *
-	 * @since 0.7.3
-	 * @access public
-	 * @var object $cpt The Advanced Custom Fields object.
-	 */
-	public $acf;
 
 	/**
 	 * Field Type name.
@@ -53,7 +35,7 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 * @access public
-	 * @var string $name The Field Type name.
+	 * @var string
 	 */
 	public $name = 'ceo_civicrm_event_id';
 
@@ -66,7 +48,7 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 * @access public
-	 * @var string $label The Field Type label.
+	 * @var string
 	 */
 	public $label = '';
 
@@ -79,7 +61,7 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 * @access public
-	 * @var string $label The Field Type category.
+	 * @var string
 	 */
 	public $category = 'CiviCRM';
 
@@ -91,7 +73,7 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 * @access public
-	 * @var array $defaults The Field Type defaults.
+	 * @var array
 	 */
 	public $defaults = [];
 
@@ -102,7 +84,7 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 * @access public
-	 * @var array $settings The Field Type settings.
+	 * @var array
 	 */
 	public $settings = [
 		'version' => CIVICRM_WP_EVENT_ORGANISER_VERSION,
@@ -122,7 +104,7 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 * @access public
-	 * @var array $l10n The Field Type translations.
+	 * @var array
 	 */
 	public $l10n = [];
 

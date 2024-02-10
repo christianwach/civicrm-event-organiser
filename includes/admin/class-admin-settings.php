@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
@@ -34,7 +34,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var string $admin The single site admin object.
+	 * @var CiviCRM_WP_Event_Organiser_Admin
 	 */
 	public $admin;
 
@@ -43,7 +43,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var str $parent_page The parent page.
+	 * @var string
 	 */
 	public $parent_page;
 
@@ -52,7 +52,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var string $parent_page_slug The slug of the parent page.
+	 * @var string
 	 */
 	public $parent_page_slug = 'civi_eo_parent';
 
@@ -61,7 +61,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 *
 	 * @since 0.2.4
 	 * @access public
-	 * @var str $settings_page The settings page.
+	 * @var string
 	 */
 	public $settings_page;
 
@@ -70,9 +70,18 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var string $settings_page_slug The slug of the Settings Page.
+	 * @var string
 	 */
 	public $settings_page_slug = 'civi_eo_settings';
+
+	/**
+	 * URLs array.
+	 *
+	 * @since 0.7
+	 * @access public
+	 * @var array
+	 */
+	public $urls;
 
 	/**
 	 * Constructor.

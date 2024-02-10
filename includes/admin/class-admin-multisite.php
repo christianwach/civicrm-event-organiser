@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Multisite {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
@@ -34,7 +34,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Multisite {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var string $admin The single site admin object.
+	 * @var CiviCRM_WP_Event_Organiser_Admin
 	 */
 	public $admin;
 

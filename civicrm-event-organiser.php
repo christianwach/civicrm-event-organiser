@@ -59,7 +59,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $db The Admin object.
+	 * @var CiviCRM_WP_Event_Organiser_Admin
 	 */
 	public $db;
 
@@ -68,7 +68,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var object $mapping The Mapping object.
+	 * @var CiviCRM_WP_Event_Organiser_Mapping
 	 */
 	public $mapping;
 
@@ -77,7 +77,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $civi The CiviCRM utilities object.
+	 * @var CiviCRM_WP_Event_Organiser_CiviCRM
 	 */
 	public $civi;
 
@@ -86,7 +86,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $eo The Event Organiser utilities object.
+	 * @var CiviCRM_WP_Event_Organiser_EO
 	 */
 	public $eo;
 
@@ -95,7 +95,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var object $eo_venue The Event Organiser Venue utilities object.
+	 * @var CiviCRM_WP_Event_Organiser_EO_Venue
 	 */
 	public $eo_venue;
 
@@ -104,7 +104,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.4.2
 	 * @access public
-	 * @var object $taxonomy The Taxonomy sync object.
+	 * @var CiviCRM_WP_Event_Organiser_Taxonomy
 	 */
 	public $taxonomy;
 
@@ -113,7 +113,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.6.3
 	 * @access public
-	 * @var object $shortcodes The Shortcodes object.
+	 * @var CiviCRM_WP_Event_Organiser_Shortcodes
 	 */
 	public $shortcodes;
 
@@ -122,7 +122,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.2.1
 	 * @access public
-	 * @var object $term_html The HTML Term Descriptions object.
+	 * @var CiviCRM_WP_Event_Organiser_Term_Description
 	 */
 	public $term_html;
 
@@ -131,7 +131,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.4.4
 	 * @access public
-	 * @var object $cwps The CiviCRM Profile Sync compatibility object.
+	 * @var CiviCRM_WP_Event_Organiser_CWPS
 	 */
 	public $cwps;
 
@@ -140,7 +140,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.4.4
 	 * @access public
-	 * @var object $cai The CiviCRM ACF Integration compatibility object.
+	 * @var CiviCRM_WP_Event_Organiser_CAI
 	 */
 	public $cai;
 
@@ -149,7 +149,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.5.3
 	 * @access public
-	 * @var object $cfcr The Caldera Forms CiviCRM Redirect compatibility object.
+	 * @var CiviCRM_WP_Event_Organiser_CFCR
 	 */
 	public $cfcr;
 
@@ -158,7 +158,7 @@ class CiviCRM_WP_Event_Organiser {
 	 *
 	 * @since 0.7.5
 	 * @access public
-	 * @var object $post_dupe The Post Duplicator compatibility object.
+	 * @var CiviCRM_WP_Event_Organiser_Post_Duplicator
 	 */
 	public $post_dupe;
 

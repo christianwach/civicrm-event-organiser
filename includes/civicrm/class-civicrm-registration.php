@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
@@ -34,7 +34,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var object $civicrm The CiviCRM object.
+	 * @var CiviCRM_WP_Event_Organiser_CiviCRM
 	 */
 	public $civicrm;
 

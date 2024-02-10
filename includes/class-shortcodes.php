@@ -25,7 +25,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 	 *
 	 * @since 0.6.3
 	 * @access public
-	 * @var object $plugin The plugin object.
+	 * @var CiviCRM_WP_Event_Organiser
 	 */
 	public $plugin;
 
