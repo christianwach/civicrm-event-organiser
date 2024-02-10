@@ -97,7 +97,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	}
 
 	/**
-	 * Initialise this object.
+	 * Initialises this object.
 	 *
 	 * @since 0.7
 	 */
@@ -144,7 +144,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Add our admin page(s) to the WordPress admin menu.
+	 * Adds the menu item.
 	 *
 	 * @since 0.7
 	 */
@@ -202,7 +202,9 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	}
 
 	/**
-	 * Initialise plugin help.
+	 * Adds WordPress scripts and help text.
+	 *
+	 * TODO: Add help text.
 	 *
 	 * @since 0.7
 	 */
@@ -233,30 +235,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 		// --<
 		return $subpages;
-
-	}
-
-	/**
-	 * Get the URL for the form action.
-	 *
-	 * @since 0.7
-	 *
-	 * @return string $target_url The URL for the admin form action.
-	 */
-	public function admin_form_url_get() {
-
-		// Sanitise admin page url.
-		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-		$target_url = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
-		if ( ! empty( $target_url ) ) {
-			$url_array = explode( '&', $target_url );
-			if ( $url_array ) {
-				$target_url = htmlentities( $url_array[0] . '&updated=true' );
-			}
-		}
-
-		// --<
-		return $target_url;
 
 	}
 
@@ -659,10 +637,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @since 0.7
 	 */
 	public function meta_box_category_type_render() {
-
-		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-sync-category-type.php';
-
 	}
 
 	/**
@@ -671,10 +646,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @since 0.7
 	 */
 	public function meta_box_type_category_render() {
-
-		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-sync-type-category.php';
-
 	}
 
 	/**
@@ -683,10 +655,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @since 0.7
 	 */
 	public function meta_box_venue_location_render() {
-
-		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-sync-venue-location.php';
-
 	}
 
 	/**
@@ -695,10 +664,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @since 0.7
 	 */
 	public function meta_box_location_venue_render() {
-
-		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-sync-location-venue.php';
-
 	}
 
 	/**
@@ -707,10 +673,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @since 0.7
 	 */
 	public function meta_box_eo_civicrm_render() {
-
-		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-sync-eo-civicrm.php';
-
 	}
 
 	/**
@@ -719,10 +682,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @since 0.7
 	 */
 	public function meta_box_civicrm_eo_render() {
-
-		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-sync-civicrm-eo.php';
-
 	}
 
 	// -------------------------------------------------------------------------
@@ -734,8 +694,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @since 0.7 Renamed.
 	 */
 	public function form_submitted() {
-
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
 
 		// Was an Event Type "Stop Sync" button pressed?
 		$tax_eo_to_civi_stop = isset( $_POST['civi_eo_tax_eo_to_civi_stop'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_tax_eo_to_civi_stop'] ) ) : false;
@@ -802,8 +760,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		if ( ! empty( $event_civi_to_eo ) ) {
 			$this->stepped_sync_events_civi_to_eo();
 		}
-
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 	}
 
@@ -1657,4 +1613,4 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 	}
 
-} // Class ends.
+}

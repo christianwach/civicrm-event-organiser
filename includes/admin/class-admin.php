@@ -98,9 +98,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		// Set up objects and references.
 		$this->setup_objects();
 
-		// Register hooks.
-		$this->register_hooks();
-
 		/**
 		 * Broadcast that this class is now loaded.
 		 *
@@ -137,10 +134,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function include_files() {
 
-		// Include Settings Page class.
+		// Include Settings & Manual Sync Page classes.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin-settings.php';
-
-		// Include Manual Sync Page class.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin-manual-sync.php';
 
 		// Maybe include Multisite Page class.
@@ -157,27 +152,14 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 */
 	public function setup_objects() {
 
-		// Instantiate Settings Page object.
+		// Instantiate Settings & Manual Sync Page objects.
 		$this->settings = new CiviCRM_WP_Event_Organiser_Admin_Settings( $this );
-
-		// Instantiate Manual Sync Page object.
 		$this->manual_sync = new CiviCRM_WP_Event_Organiser_Admin_Manual_Sync( $this );
 
 		// Maybe instantiate Multisite Page object.
 		if ( is_multisite() ) {
 			$this->multisite = new CiviCRM_WP_Event_Organiser_Admin_Multisite( $this );
 		}
-
-	}
-
-	/**
-	 * Register hooks.
-	 *
-	 * All delegated to child classes.
-	 *
-	 * @since 0.4.1
-	 */
-	public function register_hooks() {
 
 	}
 
@@ -244,13 +226,6 @@ class CiviCRM_WP_Event_Organiser_Admin {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
-
-		/*
-		// Show an admin notice when a batch process is required.
-		if ( false === $shown && 'fgffgs' !== $this->option_get( 'civi_eo_batch_process', 'fgffgs' ) ) {
-			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
-		}
-		*/
 
 		// Maybe upgrade Taxonomy to use "term meta".
 		if ( $this->plugin->taxonomy->can_query_by_term_meta() ) {
@@ -416,13 +391,8 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 		// If not multisite, it cannot be.
 		if ( ! is_multisite() ) {
-
-			// Set flag.
 			$is_network_active = false;
-
-			// Kick out.
 			return $is_network_active;
-
 		}
 
 		// Make sure plugin file is included when outside admin.
@@ -441,4 +411,4 @@ class CiviCRM_WP_Event_Organiser_Admin {
 
 	}
 
-} // Class ends.
+}

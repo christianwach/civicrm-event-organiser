@@ -36,15 +36,15 @@
 		<?php echo $messages; ?>
 	<?php endif; ?>
 
-				<p><?php esc_html_e( 'Things can be a little complicated on initial setup because there can be data in WordPress or CiviCRM or both. The recommended procedure is to sync in the following order:', 'civicrm-event-organiser' ); ?></p>
+	<p><?php esc_html_e( 'Things can be a little complicated on initial setup because there can be data in WordPress or CiviCRM or both. The recommended procedure is to sync in the following order:', 'civicrm-event-organiser' ); ?></p>
 
-				<ol>
-					<li><?php esc_html_e( 'Sync Event Organiser Categories with CiviCRM Event Types', 'civicrm-event-organiser' ); ?></li>
-					<li><?php esc_html_e( 'Sync Event Organiser Venues with CiviCRM Locations', 'civicrm-event-organiser' ); ?></li>
-					<li><?php esc_html_e( 'Finally, sync Event Organiser Events with CiviCRM Events.', 'civicrm-event-organiser' ); ?></li>
-				</ol>
+	<ol>
+		<li><?php esc_html_e( 'Sync Event Organiser Categories with CiviCRM Event Types', 'civicrm-event-organiser' ); ?></li>
+		<li><?php esc_html_e( 'Sync Event Organiser Venues with CiviCRM Locations', 'civicrm-event-organiser' ); ?></li>
+		<li><?php esc_html_e( 'Finally, sync Event Organiser Events with CiviCRM Events.', 'civicrm-event-organiser' ); ?></li>
+	</ol>
 
-				<p class="description"><?php esc_html_e( 'Please note: Manual Sync is intended for use on initial setup and may produce inconsistent results once you have linked Events. Always back up before using this feature.', 'civicrm-event-organiser' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Please note: Manual Sync is intended for use on initial setup and may produce inconsistent results once you have linked Events. Always back up before using this feature.', 'civicrm-event-organiser' ); ?></p>
 
 	<?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 	<form method="post" id="ceo_acf_sync_form" action="<?php echo $this->settings->page_settings_submit_url_get(); ?>">

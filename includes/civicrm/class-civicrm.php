@@ -80,13 +80,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 */
 	public function initialise() {
 
-		// Include files.
+		// Bootstrap object.
 		$this->include_files();
-
-		// Set up objects and references.
 		$this->setup_objects();
-
-		// Register hooks.
 		$this->register_hooks();
 
 		/**
@@ -198,10 +194,8 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 			return false;
 		}
 
-		// Deny by default.
+		// Check CiviCRM permissions. Deny by default.
 		$permitted = false;
-
-		// Check CiviCRM permissions.
 		if ( CRM_Core_Permission::check( $permission ) ) {
 			$permitted = true;
 		}

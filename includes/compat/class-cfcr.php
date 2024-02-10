@@ -241,16 +241,12 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		// Get Post URL.
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$post_url = isset( $_POST['post_url'] ) ? esc_url_raw( wp_unslash( $_POST['post_url'] ), [ 'http', 'https' ] ) : '';
-
-		// Sanity checks.
 		if ( empty( $post_url ) ) {
 			return $data;
 		}
 
 		// Try and get the Post ID.
 		$post_id = url_to_postid( $post_url );
-
-		// Bail if we don't get one.
 		if ( 0 === $post_id ) {
 			return $data;
 		}

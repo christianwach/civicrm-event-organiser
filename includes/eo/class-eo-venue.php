@@ -494,135 +494,123 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		// Does this Location have an existing Venue?
 		$venue_id = $this->get_venue_id( $location );
 
-		// If we do not get one.
+		// Create Venue and bail if we do not get one.
 		if ( false === $venue_id ) {
-
-			// Create Venue.
 			$term_id = $this->create_venue( $location );
-
-			// --<
 			return $term_id;
+		}
 
-		} else {
+		// Get full Venue object.
+		$venue = eo_get_venue_by( 'id', $venue_id );
 
-			// Get full Venue object.
-			$venue = eo_get_venue_by( 'id', $venue_id );
+		// Create Venue and bail if for some reason the linkage fails.
+		if ( ! is_object( $venue ) ) {
+			$term_id = $this->create_venue( $location );
+			return $term_id;
+		}
 
-			// If for some reason the linkage fails.
-			if ( ! is_object( $venue ) ) {
+		// Use the Venue Name by default.
+		$name = $venue->name;
 
-				// Create Venue.
-				$term_id = $this->create_venue( $location );
+		/*
+		 * CiviCRM does not show the "Address Name" Field for Locations by
+		 * default but it can be enabled on the CiviCRM "Address Settings"
+		 * screen.
+		 *
+		 * When updating a Venue from a Location, the "Address Name" Field
+		 * is populated when the "Address Settings" have been modified to
+		 * show it or when the Venue has been previously synced to CiviCRM.
+		 *
+		 * We use it if it has a value, but need to fall back to using the
+		 * "Street Address" Field when empty.
+		 *
+		 */
+		if ( ! empty( $location['address']['name'] ) ) {
 
-				// --<
-				return $term_id;
-
-			}
-
-			// Use the Venue Name by default.
-			$name = $venue->name;
-
-			/*
-			 * CiviCRM does not show the "Address Name" Field for Locations by
-			 * default but it can be enabled on the CiviCRM "Address Settings"
-			 * screen.
-			 *
-			 * When updating a Venue from a Location, the "Address Name" Field
-			 * is populated when the "Address Settings" have been modified to
-			 * show it or when the Venue has been previously synced to CiviCRM.
-			 *
-			 * We use it if it has a value, but need to fall back to using the
-			 * "Street Address" Field when empty.
-			 *
-			 */
-			if ( ! empty( $location['address']['name'] ) ) {
-
-				// Get Street Address.
-				$street_address = '';
-				if ( ! empty( $location['address']['street_address'] ) ) {
-					$street_address = $location['address']['street_address'];
-				}
-
-				// Use the Address Name if different to Street Address.
-				if ( $location['address']['name'] !== $street_address ) {
-					$name = $location['address']['name'];
-				}
-
-			}
-
-			// Construct args.
-			$args = [
-				'name' => $name,
-			];
-
-			// CiviCRM has no Location description at present.
-			// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
-			// $args['description'] => $location['description'];
-
-			// Add Street Address if present.
+			// Get Street Address.
+			$street_address = '';
 			if ( ! empty( $location['address']['street_address'] ) ) {
-				$args['address'] = $location['address']['street_address'];
+				$street_address = $location['address']['street_address'];
 			}
 
-			// Add City if present.
-			if ( ! empty( $location['address']['city'] ) ) {
-				$args['city'] = $location['address']['city'];
+			// Use the Address Name if different to Street Address.
+			if ( $location['address']['name'] !== $street_address ) {
+				$name = $location['address']['name'];
 			}
-
-			// Add Postcode if present.
-			if ( ! empty( $location['address']['postal_code'] ) ) {
-				$args['postcode'] = $location['address']['postal_code'];
-			}
-
-			// Add Address sub-query data if present.
-			if ( empty( $location['api.Address.getsingle']['is_error'] ) ) {
-
-				// Maybe add Country.
-				if ( ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
-					$args['country'] = $location['api.Address.getsingle']['country_id.name'];
-				}
-
-				// Maybe add State.
-				if ( ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
-					$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
-				}
-
-			}
-
-			// Add geocodes if present.
-			if ( ! empty( $location['address']['geo_code_1'] ) ) {
-				$args['latitude'] = $location['address']['geo_code_1'];
-			}
-			if ( ! empty( $location['address']['geo_code_2'] ) ) {
-				$args['longtitude'] = $location['address']['geo_code_2'];
-			}
-
-			// Remove callback to prevent recursion.
-			remove_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10 );
-
-			// Insert Venue.
-			$result = eo_update_venue( $venue_id, $args );
-
-			// Restore callback.
-			add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
-
-			// Bail if we get an error.
-			if ( is_wp_error( $result ) || empty( $result['term_id'] ) ) {
-				return false;
-			}
-
-			// Create Venue meta data, if present.
-			if ( ! empty( $location['email']['email'] ) ) {
-				eo_update_venue_meta( $result['term_id'], '_civi_email', esc_sql( $location['email']['email'] ) );
-			}
-			if ( ! empty( $location['phone']['phone'] ) ) {
-				eo_update_venue_meta( $result['term_id'], '_civi_phone', esc_sql( $location['phone']['phone'] ) );
-			}
-
-			// Always store Location ID.
-			eo_update_venue_meta( $result['term_id'], '_civi_loc_id', $location['id'] );
 
 		}
+
+		// Construct args.
+		$args = [
+			'name' => $name,
+		];
+
+		// CiviCRM has no Location description at present.
+		// phpcs:ignore Squiz.Commenting.InlineComment.InvalidEndChar
+		// $args['description'] => $location['description'];
+
+		// Add Street Address if present.
+		if ( ! empty( $location['address']['street_address'] ) ) {
+			$args['address'] = $location['address']['street_address'];
+		}
+
+		// Add City if present.
+		if ( ! empty( $location['address']['city'] ) ) {
+			$args['city'] = $location['address']['city'];
+		}
+
+		// Add Postcode if present.
+		if ( ! empty( $location['address']['postal_code'] ) ) {
+			$args['postcode'] = $location['address']['postal_code'];
+		}
+
+		// Add Address sub-query data if present.
+		if ( empty( $location['api.Address.getsingle']['is_error'] ) ) {
+
+			// Maybe add Country.
+			if ( ! empty( $location['api.Address.getsingle']['country_id.name'] ) ) {
+				$args['country'] = $location['api.Address.getsingle']['country_id.name'];
+			}
+
+			// Maybe add State.
+			if ( ! empty( $location['api.Address.getsingle']['state_province_id.name'] ) ) {
+				$args['state'] = $location['api.Address.getsingle']['state_province_id.name'];
+			}
+
+		}
+
+		// Add geocodes if present.
+		if ( ! empty( $location['address']['geo_code_1'] ) ) {
+			$args['latitude'] = $location['address']['geo_code_1'];
+		}
+		if ( ! empty( $location['address']['geo_code_2'] ) ) {
+			$args['longtitude'] = $location['address']['geo_code_2'];
+		}
+
+		// Remove callback to prevent recursion.
+		remove_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10 );
+
+		// Insert Venue.
+		$result = eo_update_venue( $venue_id, $args );
+
+		// Restore callback.
+		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
+
+		// Bail if we get an error.
+		if ( is_wp_error( $result ) || empty( $result['term_id'] ) ) {
+			return false;
+		}
+
+		// Create Venue meta data, if present.
+		if ( ! empty( $location['email']['email'] ) ) {
+			eo_update_venue_meta( $result['term_id'], '_civi_email', esc_sql( $location['email']['email'] ) );
+		}
+		if ( ! empty( $location['phone']['phone'] ) ) {
+			eo_update_venue_meta( $result['term_id'], '_civi_phone', esc_sql( $location['phone']['phone'] ) );
+		}
+
+		// Always store Location ID.
+		eo_update_venue_meta( $result['term_id'], '_civi_loc_id', $location['id'] );
 
 		// --<
 		return $result['term_id'];

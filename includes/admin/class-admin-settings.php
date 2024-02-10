@@ -102,17 +102,11 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	}
 
 	/**
-	 * Perform initialisation tasks.
+	 * Initialises this object.
 	 *
 	 * @since 0.2.4
 	 */
 	public function initialise() {
-
-		// Include files.
-		$this->include_files();
-
-		// Set up objects and references.
-		$this->setup_objects();
 
 		// Register hooks.
 		$this->register_hooks();
@@ -127,25 +121,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	}
 
 	/**
-	 * Include files.
-	 *
-	 * @since 0.7
-	 */
-	public function include_files() {
-
-	}
-
-	/**
-	 * Set up objects.
-	 *
-	 * @since 0.7
-	 */
-	public function setup_objects() {
-
-	}
-
-	/**
-	 * Register hooks on plugin init.
+	 * Register WordPress hooks.
 	 *
 	 * @since 0.4.1
 	 */
@@ -162,7 +138,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	// -------------------------------------------------------------------------
 
 	/**
-	 * Add admin pages for this plugin.
+	 * Adds the menu items.
 	 *
 	 * @since 0.7
 	 */
@@ -531,10 +507,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 * @since 0.7
 	 */
 	public function meta_box_submit_render() {
-
-		// Include template file.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/metaboxes/metabox-admin-settings-submit.php';
-
 	}
 
 	/**
@@ -663,7 +636,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
 		$save = isset( $_POST['ceo_save'] ) ? sanitize_text_field( wp_unslash( $_POST['ceo_save'] ) ) : false;
 		if ( ! empty( $save ) ) {
-			$this->form_nonce_check();
 			$this->form_settings_update();
 			$this->form_redirect();
 		}
@@ -678,11 +650,10 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 */
 	public function form_settings_update() {
 
-		// Rebuild broken correspondences in 0.1.
-		$this->plugin->mapping->rebuild_event_correspondences();
+		// Check that we trust the source of the data.
+		check_admin_referer( 'ceo_settings_action', 'ceo_settings_nonce' );
 
 		// Init vars. Nonce is checked in "form_nonce_check()".
-		// phpcs:disable WordPress.Security.NonceVerification.Missing
 		$role               = isset( $_POST['civi_eo_event_default_role'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_role'] ) ) : '0';
 		$type               = isset( $_POST['civi_eo_event_default_type'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_type'] ) ) : '0';
 		$profile            = isset( $_POST['civi_eo_event_default_profile'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_profile'] ) ) : '0';
@@ -695,7 +666,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$bcc                = isset( $_POST['civi_eo_event_default_send_email_bcc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_bcc'] ) ) : '';
 		$civicrm_event_sync = isset( $_POST['civi_eo_event_default_civievent_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_civievent_sync'] ) ) : '0';
 		$status_sync        = isset( $_POST['civi_eo_event_default_status_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_status_sync'] ) ) : '3';
-		// phpcs:enable WordPress.Security.NonceVerification.Missing
 
 		// Sanitise and save option.
 		$default_role = (int) $role;
@@ -782,18 +752,6 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	}
 
 	/**
-	 * Checks the nonce.
-	 *
-	 * @since 0.7
-	 */
-	private function form_nonce_check() {
-
-		// Check that we trust the source of the data.
-		check_admin_referer( 'ceo_settings_action', 'ceo_settings_nonce' );
-
-	}
-
-	/**
 	 * Redirect to the Settings page with an extra param.
 	 *
 	 * @since 0.7
@@ -813,4 +771,4 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 
 	}
 
-} // Class ends.
+}

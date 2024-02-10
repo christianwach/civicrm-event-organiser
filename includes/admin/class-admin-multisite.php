@@ -132,4 +132,4 @@ class CiviCRM_WP_Event_Organiser_Admin_Multisite {
 
 	}
 
-} // Class ends.
+}

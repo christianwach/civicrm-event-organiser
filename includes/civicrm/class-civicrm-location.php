@@ -104,8 +104,6 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 
 		// Get corresponding Event Organiser Venue ID.
 		$venue_id = $this->plugin->eo_venue->get_venue_id( $location );
-
-		// Skip if there isn't one.
 		if ( empty( $venue_id ) ) {
 			return;
 		}

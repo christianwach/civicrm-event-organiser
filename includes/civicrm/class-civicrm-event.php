@@ -172,16 +172,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$markup          = '<img src="' . $placeholder_url . '" class="wp-post-image" style="' . $img_style . '">';
 
 		// Add image markup.
-		$form->assign(
-			'ceo_attachment_markup',
-			$markup
-		);
+		$form->assign( 'ceo_attachment_markup', $markup );
 
 		// Add button ID.
-		$form->assign(
-			'ceo_attachment_id_button_id',
-			'ceo-feature-image-switcher'
-		);
+		$form->assign( 'ceo_attachment_id_button_id', 'ceo-feature-image-switcher' );
 
 		// Add button text.
 		$form->assign(
@@ -274,16 +268,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$markup          = '<img src="' . $placeholder_url . '" class="wp-post-image" style="' . $img_style . '">';
 
 		// Add image markup.
-		$form->assign(
-			'ceo_attachment_markup',
-			$markup
-		);
+		$form->assign( 'ceo_attachment_markup', $markup );
 
 		// Add button ID.
-		$form->assign(
-			'ceo_attachment_id_button_id',
-			'ceo-feature-image-switcher'
-		);
+		$form->assign( 'ceo_attachment_id_button_id', 'ceo-feature-image-switcher' );
 
 		// Add button text.
 		$form->assign(
@@ -408,16 +396,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Add image markup.
-		$form->assign(
-			'ceo_attachment_markup',
-			$markup
-		);
+		$form->assign( 'ceo_attachment_markup', $markup );
 
 		// Add button ID.
-		$form->assign(
-			'ceo_attachment_id_button_id',
-			'ceo-feature-image-switcher-' . $post_id
-		);
+		$form->assign( 'ceo_attachment_id_button_id', 'ceo-feature-image-switcher-' . $post_id );
 
 		// Add button text.
 		$form->assign(
@@ -1204,7 +1186,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 			// Add the new CiviCRM Event ID to array, keyed by Occurrence ID.
 			$correspondences[ $date['occurrence_id'] ] = $result['id'];
 
-		} // End dates loop.
+		}
 
 		// Store these in post meta.
 		$this->plugin->mapping->store_event_correspondences( $post->ID, $correspondences );
@@ -1239,15 +1221,10 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		// Get existing CiviCRM Events from post meta.
 		$correspondences = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post->ID );
 
-		// If we have none yet.
+		// Create them and bail if we have none yet.
 		if ( count( $correspondences ) === 0 ) {
-
-			// Create them.
 			$correspondences = $this->create_civi_events( $post, $dates );
-
-			// --<
 			return $correspondences;
-
 		}
 
 		/*
@@ -1620,36 +1597,20 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		}
 
-		// Init Event Organiser unmatched.
-		$unmatched_eo = [];
-
 		// Find unmatched Event Organiser dates.
+		$unmatched_eo = [];
 		foreach ( $dates as $key => $date ) {
-
-			// If the matched array has no entry.
 			if ( ! isset( $matched[ $date['occurrence_id'] ] ) ) {
-
-				// Add to unmatched.
 				$unmatched_eo[] = $date;
-
 			}
-
 		}
 
-		// Init CiviCRM unmatched.
+		// Find unmatched CiviCRM dates.
 		$unmatched_civi = [];
-
-		// Find unmatched Event Organiser dates.
 		foreach ( $civi_events as $civi_event ) {
-
-			// Does the matched array have an entry?
 			if ( ! in_array( $civi_event['id'], $matched ) ) {
-
-				// Add to unmatched.
 				$unmatched_civi[] = $civi_event['id'];
-
 			}
-
 		}
 
 		// Sort matched by key.

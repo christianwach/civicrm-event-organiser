@@ -146,72 +146,6 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 	}
 
 	/**
-	 * Rebuilds all CiviCRM Events <-> Event Organiser Event data.
-	 *
-	 * @since 0.1
-	 * @since 0.7 Moved to this class.
-	 */
-	public function rebuild_event_correspondences() {
-
-		// Only applies to version 0.1.
-		if ( CIVICRM_WP_EVENT_ORGANISER_VERSION !== '0.1' ) {
-			return;
-		}
-
-		/*
-		 * Only rely on the Event Organiser Event correspondences, because of a bug
-		 * in the 0.1 version of the plugin which overwrote the civi_to_eo array.
-		 */
-		$eo_to_civi = $this->get_all_eo_to_civi_correspondences();
-
-		// Kick out if we get none.
-		if ( count( $eo_to_civi ) === 0 ) {
-			return;
-		}
-
-		// Init CiviCRM correspondence array to be stored as option.
-		$civi_correspondences = [];
-
-		// Loop through the data.
-		foreach ( $eo_to_civi as $event_id => $civi_event_ids ) {
-
-			// Get Occurrences.
-			$occurrences = eo_get_the_occurrences_of( $event_id );
-
-			// Init Event Organiser correspondence array.
-			$eo_correspondences = [];
-
-			// Init counter.
-			$n = 0;
-
-			// Loop through them.
-			foreach ( $occurrences as $occurrence_id => $data ) {
-
-				// Add CiviCRM Event ID to Event Organiser correspondences.
-				$eo_correspondences[ $occurrence_id ] = $civi_event_ids[ $n ];
-
-				// Add Event Organiser Event ID to CiviCRM correspondences.
-				$civi_correspondences[ $civi_event_ids[ $n ] ] = [
-					'post_id'       => $event_id,
-					'occurrence_id' => $occurrence_id,
-				];
-
-				// Increment counter.
-				$n++;
-
-			}
-
-			// Replace our post meta.
-			update_post_meta( $event_id, '_civi_eo_civicrm_events', $eo_correspondences );
-
-		}
-
-		// Replace our option.
-		$this->plugin->db->option_save( 'civi_eo_civi_event_data', $civi_correspondences );
-
-	}
-
-	/**
 	 * Store CiviCRM Events <-> Event Organiser Event data.
 	 *
 	 * @since 0.1
@@ -238,15 +172,12 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		 */
 		if ( count( $correspondences ) > 0 ) {
 
-			// Construct array.
+			// Add Post ID and Occurrence ID, keyed by CiviCRM Event ID.
 			foreach ( $correspondences as $occurrence_id => $civi_event_id ) {
-
-				// Add Post ID and Occurrence ID, keyed by CiviCRM Event ID.
 				$civi_event_data[ $civi_event_id ] = [
 					'post_id'       => $post_id,
 					'occurrence_id' => $occurrence_id,
 				];
-
 			}
 
 		}
