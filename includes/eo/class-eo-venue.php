@@ -66,7 +66,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		$this->plugin = $parent;
 
 		// Add hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'register_hooks' ] );
+		add_action( 'ceo/loaded', [ $this, 'register_hooks' ] );
 
 	}
 

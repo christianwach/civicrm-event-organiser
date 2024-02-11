@@ -17,8 +17,16 @@
  * Before Settings table.
  *
  * @since 0.3.1
+ * @deprecated 0.8.0 Use the {@see 'ceo/admin/settings/metabox/general/before'} filter instead.
  */
-do_action( 'civicrm_event_organiser_before_settings_table' );
+do_action_deprecated( 'civicrm_event_organiser_before_settings_table', [], '0.8.0', 'ceo/admin/settings/metabox/general/before' );
+
+/**
+ * Before Settings table.
+ *
+ * @since 0.8.0
+ */
+do_action( 'ceo/admin/settings/metabox/general/before' );
 
 ?>
 
@@ -30,8 +38,16 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 	 * Start of Settings table rows.
 	 *
 	 * @since 0.3.2
+	 * @deprecated 0.8.0 Use the {@see 'ceo/admin/settings/metabox/general/table/first_row'} filter instead.
 	 */
-	do_action( 'civicrm_event_organiser_settings_table_first_row' );
+	do_action_deprecated( 'civicrm_event_organiser_settings_table_first_row', [], '0.8.0', 'ceo/admin/settings/metabox/general/table/first_row' );
+
+	/**
+	 * Start of Settings table rows.
+	 *
+	 * @since 0.8.0
+	 */
+	do_action( 'ceo/admin/settings/metabox/general/table/first_row' );
 
 	?>
 
@@ -94,8 +110,16 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
 	 * End of Settings table rows.
 	 *
 	 * @since 0.3.2
+	 * @deprecated 0.8.0 Use the {@see 'ceo/admin/settings/metabox/general/table/last_row'} filter instead.
 	 */
-	do_action( 'civicrm_event_organiser_settings_table_last_row' );
+	do_action_deprecated( 'civicrm_event_organiser_settings_table_last_row', [], '0.8.0', 'ceo/admin/settings/metabox/general/table/last_row' );
+
+	/**
+	 * End of Settings table rows.
+	 *
+	 * @since 0.8.0
+	 */
+	do_action( 'ceo/admin/settings/metabox/general/table/last_row' );
 
 	?>
 
@@ -107,5 +131,13 @@ do_action( 'civicrm_event_organiser_before_settings_table' );
  * After Settings table.
  *
  * @since 0.3.1
+ * @deprecated 0.8.0 Use the {@see 'ceo/admin/settings/metabox/general/after'} filter instead.
  */
-do_action( 'civicrm_event_organiser_after_settings_table' );
+do_action_deprecated( 'civicrm_event_organiser_after_settings_table', [], '0.8.0', 'ceo/admin/settings/metabox/general/after' );
+
+/**
+ * After Settings table.
+ *
+ * @since 0.8.0
+ */
+do_action( 'ceo/admin/settings/metabox/general/after' );

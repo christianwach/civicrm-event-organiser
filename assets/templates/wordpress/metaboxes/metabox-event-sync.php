@@ -198,13 +198,23 @@ body.js .civi_eo_event_send_email_toggle {
 			<?php
 
 			/**
-			 * Broadcast end of the Online Registration options.
+			 * Fires at the end of the Online Registration options.
 			 *
 			 * @since 0.5.3
+			 * @deprecated 0.8.0 Use the {@see 'ceo/event/metabox/event/sync/online_reg/after'} filter instead.
 			 *
 			 * @param object $event The Event Organiser Event object.
 			 */
-			do_action( 'civicrm_event_organiser_event_meta_box_online_reg_after', $event );
+			do_action_deprecated( 'civicrm_event_organiser_event_meta_box_online_reg_after', [ $event ], '0.8.0', 'ceo/event/metabox/event/sync/online_reg/after' );
+
+			/**
+			 * Fires at the end of the Online Registration options.
+			 *
+			 * @since 0.8.0
+			 *
+			 * @param object $event The Event Organiser Event object.
+			 */
+			do_action( 'ceo/event/metabox/event/sync/online_reg/after', $event );
 
 			?>
 
@@ -215,13 +225,23 @@ body.js .civi_eo_event_send_email_toggle {
 	<?php
 
 	/**
-	 * Broadcast end of Event Options.
+	 * Fires at the end of the Event Options.
 	 *
 	 * @since 0.5.3
+	 * @deprecated 0.8.0 Use the {@see 'ceo/event/metabox/event/sync/options/after'} filter instead.
 	 *
 	 * @param object $event The Event Organiser Event object.
 	 */
-	do_action( 'civicrm_event_organiser_event_meta_box_options_after', $event );
+	do_action_deprecated( 'civicrm_event_organiser_event_meta_box_options_after', [ $event ], '0.8.0', 'ceo/event/metabox/event/sync/options/after' );
+
+	/**
+	 * Fires at the end of the Event Options.
+	 *
+	 * @since 0.8.0
+	 *
+	 * @param object $event The Event Organiser Event object.
+	 */
+	do_action( 'ceo/event/metabox/event/sync/options/after', $event );
 
 	?>
 
@@ -230,10 +250,20 @@ body.js .civi_eo_event_send_email_toggle {
 <?php
 
 /**
- * Broadcast end of metabox.
+ * Fires at end of Event Sync meta box.
  *
  * @since 0.3
+ * @deprecated 0.8.0 Use the {@see 'ceo/event/metabox/event/sync/after'} filter instead.
  *
  * @param object $event The Event Organiser Event object.
  */
-do_action( 'civicrm_event_organiser_event_meta_box_after', $event );
+do_action_deprecated( 'civicrm_event_organiser_event_meta_box_after', [ $event ], '0.8.0', 'ceo/event/metabox/event/sync/after' );
+
+/**
+ * Fires at end of Event Sync meta box.
+ *
+ * @since 0.8.0
+ *
+ * @param object $event The Event Organiser Event object.
+ */
+do_action( 'ceo/event/metabox/event/sync/after', $event );

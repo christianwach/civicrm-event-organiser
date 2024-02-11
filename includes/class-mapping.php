@@ -85,7 +85,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		$this->plugin = $parent;
 
 		// Initialise.
-		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'initialise' ] );
+		add_action( 'ceo/loaded', [ $this, 'initialise' ] );
 
 	}
 

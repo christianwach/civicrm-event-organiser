@@ -30,10 +30,18 @@ defined( 'ABSPATH' ) || exit;
 <?php
 
 /**
- * Broadcast end of metabox.
+ * After Links list.
  *
  * @since 0.3.6
+ * @deprecated 0.8.0 Use the {@see 'ceo/event/metabox/event/links/after'} filter instead.
+ */
+do_action_deprecated( 'civicrm_event_organiser_event_links_meta_box_after', [ $event ], '0.8.0', 'ceo/event/metabox/event/links/after' );
+
+/**
+ * After Links list.
+ *
+ * @since 0.8.0
  *
  * @param object $event The Event Organiser Event object.
  */
-do_action( 'civicrm_event_organiser_event_links_meta_box_after', $event );
+do_action( 'ceo/event/metabox/event/links/after', $event );

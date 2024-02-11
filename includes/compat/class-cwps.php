@@ -51,7 +51,7 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		$this->plugin = $parent;
 
 		// Add CiviCRM hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'initialise' ] );
+		add_action( 'ceo/loaded', [ $this, 'initialise' ] );
 
 	}
 
@@ -146,10 +146,10 @@ class CiviCRM_WP_Event_Organiser_CWPS {
 		add_filter( 'cwps/acf/post_types/get_all', [ $this, 'post_types_filter' ], 10, 1 );
 
 		// Listen for a CiviCRM Event being synced to an Event Organiser Event.
-		add_action( 'civicrm_event_organiser_admin_civi_to_eo_sync', [ $this, 'sync_to_eo' ], 10, 1 );
+		add_action( 'ceo/admin/manual_sync/civi_to_eo/sync/after', [ $this, 'sync_to_eo' ], 10, 1 );
 
 		// Listen for an Event Organiser Event being synced to a CiviCRM Event.
-		add_action( 'civicrm_event_organiser_admin_eo_to_civi_sync', [ $this, 'sync_to_civi' ], 10, 1 );
+		add_action( 'ceo/admin/manual_sync/eo_to_civi/sync', [ $this, 'sync_to_civi' ], 10, 1 );
 
 	}
 

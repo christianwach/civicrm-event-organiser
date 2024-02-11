@@ -84,7 +84,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$this->plugin = $parent;
 
 		// Add Event Organiser hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'register_hooks' ] );
+		add_action( 'ceo/loaded', [ $this, 'register_hooks' ] );
 
 	}
 
@@ -738,14 +738,25 @@ class CiviCRM_WP_Event_Organiser_EO {
 		add_action( 'civicrm_postProcess', [ $this, 'maybe_update_event_registration_profile' ], 10, 2 );
 
 		/**
-		 * Broadcast end of Event Organiser Event update.
+		 * Fires at the end of the Event Organiser Event update.
 		 *
 		 * @since 0.3.2
+		 * @deprecated 0.8.0 Use the {@see 'ceo/eo/event/updated'} filter instead.
 		 *
 		 * @param int $event_id The numeric ID of the Event Organiser Event.
 		 * @param array $civi_event An array of data for the CiviCRM Event.
 		 */
-		do_action( 'civicrm_event_organiser_eo_event_updated', $event_id, $civi_event );
+		do_action_deprecated( 'civicrm_event_organiser_eo_event_updated', [ $event_id, $civi_event ], '0.8.0', 'ceo/eo/event/updated' );
+
+		/**
+		 * Fires at the end of the Event Organiser Event update.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param int $event_id The numeric ID of the Event Organiser Event.
+		 * @param array $civi_event An array of data for the CiviCRM Event.
+		 */
+		do_action( 'ceo/eo/event/updated', $event_id, $civi_event );
 
 		// --<
 		return $event_id;
@@ -1405,13 +1416,23 @@ class CiviCRM_WP_Event_Organiser_EO {
 		$this->update_event_registration_send_email_bcc( $event_id );
 
 		/**
-		 * Broadcast end of componenents update.
+		 * Fires at the end of the Event componenents update.
 		 *
 		 * @since 0.3.2
+		 * @deprecated 0.8.0 Use the {@see 'ceo/eo/event/components/updated'} filter instead.
 		 *
 		 * @param int $event_id The numeric ID of the Event Organiser Event.
 		 */
-		do_action( 'civicrm_event_organiser_event_components_updated', $event_id );
+		do_action_deprecated( 'civicrm_event_organiser_event_components_updated', [ $event_id ], '0.8.0', 'ceo/eo/event/components/updated' );
+
+		/**
+		 * Fires at the end of the componenents update.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param int $event_id The numeric ID of the Event Organiser Event.
+		 */
+		do_action( 'ceo/eo/event/components/updated', $event_id );
 
 	}
 

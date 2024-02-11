@@ -14,11 +14,19 @@
 <?php
 
 /**
- * Before Settings table.
+ * Before Registration table.
  *
  * @since 0.7.2
+ * @deprecated 0.8.0 Use the {@see 'ceo/admin/settings/metabox/registration/before'} filter instead.
  */
-do_action( 'civicrm_event_organiser_before_registration_table' );
+do_action_deprecated( 'civicrm_event_organiser_before_registration_table', [], '0.8.0', 'ceo/admin/settings/metabox/registration/before' );
+
+/**
+ * Before Registration table.
+ *
+ * @since 0.8.0
+ */
+do_action( 'ceo/admin/settings/metabox/registration/before' );
 
 ?>
 
@@ -27,11 +35,19 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 	<?php
 
 	/**
-	 * Start of Settings table rows.
+	 * Start of Registration table rows.
 	 *
 	 * @since 0.7.2
+	 * @deprecated 0.8.0 Use the {@see 'ceo/admin/settings/metabox/registration/table/first_row'} filter instead.
 	 */
-	do_action( 'civicrm_event_organiser_registration_table_first_row' );
+	do_action_deprecated( 'civicrm_event_organiser_registration_table_first_row', [], '0.8.0', 'ceo/admin/settings/metabox/registration/table/first_row' );
+
+	/**
+	 * Start of Registration table rows.
+	 *
+	 * @since 0.8.0
+	 */
+	do_action( 'ceo/admin/settings/metabox/registration/table/first_row' );
 
 	?>
 
@@ -76,11 +92,19 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
 	<?php
 
 	/**
-	 * End of Settings table rows.
+	 * End of Registration table rows.
 	 *
 	 * @since 0.7.2
+	 * @deprecated 0.8.0 Use the {@see 'ceo/admin/settings/metabox/registration/table/last_row'} filter instead.
 	 */
-	do_action( 'civicrm_event_organiser_registration_table_last_row' );
+	do_action_deprecated( 'civicrm_event_organiser_registration_table_last_row', [], '0.8.0', 'ceo/admin/settings/metabox/registration/table/last_row' );
+
+	/**
+	 * End of Settings table rows.
+	 *
+	 * @since 0.8.0
+	 */
+	do_action( 'ceo/admin/settings/metabox/registration/table/last_row' );
 
 	?>
 
@@ -148,5 +172,13 @@ do_action( 'civicrm_event_organiser_before_registration_table' );
  * After Settings table.
  *
  * @since 0.7.2
+ * @deprecated 0.8.0 Use the {@see 'ceo/admin/settings/metabox/registration/after'} filter instead.
  */
-do_action( 'civicrm_event_organiser_after_registration_table' );
+do_action_deprecated( 'civicrm_event_organiser_after_registration_table', [], '0.8.0', 'ceo/admin/settings/metabox/registration/after' );
+
+/**
+ * After Settings table.
+ *
+ * @since 0.8.0
+ */
+do_action( 'ceo/admin/settings/metabox/registration/after' );

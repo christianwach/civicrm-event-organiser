@@ -95,7 +95,7 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 		add_filter( 'wp_link_query_args', [ $this, 'query_post_type' ] );
 
 		// Intercept Event components update.
-		add_action( 'civicrm_event_organiser_event_components_updated', [ $this, 'redirect_update' ] );
+		add_action( 'ceo/eo/event/components/updated', [ $this, 'redirect_update' ] );
 
 	}
 

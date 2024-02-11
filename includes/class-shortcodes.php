@@ -42,7 +42,7 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 		$this->plugin = $parent;
 
 		// Add CiviCRM hooks when plugin is loaded.
-		add_action( 'civicrm_wp_event_organiser_loaded', [ $this, 'initialise' ] );
+		add_action( 'ceo/loaded', [ $this, 'initialise' ] );
 
 	}
 

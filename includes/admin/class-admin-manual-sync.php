@@ -129,7 +129,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		add_action( 'admin_menu', [ $this, 'admin_menu' ], 30 );
 
 		// Add our meta boxes.
-		add_action( 'civi_eo/admin/sync/add_meta_boxes', [ $this, 'meta_boxes_add' ], 11, 1 );
+		add_action( 'ceo/admin/manual_sync/add_meta_boxes', [ $this, 'meta_boxes_add' ], 11, 1 );
 
 		// Add AJAX handlers.
 		add_action( 'wp_ajax_sync_categories_to_types', [ $this, 'stepped_sync_categories_to_types' ] );
@@ -263,10 +263,11 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		 * The Screen ID to use is: "civicrm_page_civi_eo_manual_sync".
 		 *
 		 * @since 0.7
+		 * @since 0.8.0 Renamed.
 		 *
 		 * @param string $screen_id The ID of the current screen.
 		 */
-		do_action( 'civi_eo/admin/sync/add_meta_boxes', $screen->id );
+		do_action( 'ceo/admin/manual_sync/add_meta_boxes', $screen->id );
 
 		// Get the column CSS class.
 		$columns     = (int) $screen->get_columns();
@@ -1343,18 +1344,28 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				];
 
 				/**
-				 * Broadcast that the Event Organiser Event has been synced.
+				 * Fires when the Event Organiser Event has been synced.
+				 *
+				 * @since 0.5.2
+				 * @deprecated 0.8.0 Use the {@see 'ceo/admin/manual_sync/eo_to_civi/sync'} filter instead.
+				 *
+				 * @param array $args The array of params.
+				 */
+				do_action_deprecated( 'civicrm_event_organiser_admin_eo_to_civi_sync', [ $args ], '0.8.0', 'ceo/admin/manual_sync/eo_to_civi/sync' );
+
+				/**
+				 * Fires when the Event Organiser Event has been synced.
 				 *
 				 * Used internally to:
 				 *
 				 * * Update the Custom Fields synced via CiviCRM ACF Integration (obsolete)
 				 * * Update the Custom Fields synced via CiviCRM Profile Sync
 				 *
-				 * @since 0.5.2
+				 * @since 0.8.0
 				 *
 				 * @param array $args The array of params.
 				 */
-				do_action( 'civicrm_event_organiser_admin_eo_to_civi_sync', $args );
+				do_action( 'ceo/admin/manual_sync/eo_to_civi/sync', $args );
 
 			}
 
@@ -1494,13 +1505,23 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				];
 
 				/**
-				 * Broadcast that the CiviCRM Event is about to be synced.
+				 * Fires when the CiviCRM Event is about to be synced.
 				 *
 				 * @since 0.7.3
+				 * @deprecated 0.8.0 Use the {@see 'ceo/admin/manual_sync/civi_to_eo/sync/before'} filter instead.
 				 *
 				 * @param array $args_pre The array of params before the CiviCRM Event is synced.
 				 */
-				do_action( 'civicrm_event_organiser_admin_civi_to_eo_sync_pre', $args_pre );
+				do_action_deprecated( 'civicrm_event_organiser_admin_civi_to_eo_sync_pre', [ $args_pre ], '0.8.0', 'ceo/admin/manual_sync/civi_to_eo/sync/before' );
+
+				/**
+				 * Fires when the CiviCRM Event is about to be synced.
+				 *
+				 * @since 0.8.0
+				 *
+				 * @param array $args_pre The array of params before the CiviCRM Event is synced.
+				 */
+				do_action( 'ceo/admin/manual_sync/civi_to_eo/sync/before', $args_pre );
 
 				// Update a single Event Organiser Event - or create if it doesn't exist.
 				$event_id = $this->plugin->eo->update_event( $civi_event );
@@ -1533,18 +1554,28 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				];
 
 				/**
-				 * Broadcast that the CiviCRM Event has been synced.
+				 * Fires after the CiviCRM Event has been synced.
+				 *
+				 * @since 0.5.2
+				 * @deprecated 0.8.0 Use the {@see 'ceo/admin/manual_sync/civi_to_eo/sync/after'} filter instead.
+				 *
+				 * @param array $args The array of params after the CiviCRM Event has been synced.
+				 */
+				do_action_deprecated( 'civicrm_event_organiser_admin_civi_to_eo_sync', [ $args ], '0.8.0', 'ceo/admin/manual_sync/civi_to_eo/sync/after' );
+
+				/**
+				 * Fires after the CiviCRM Event has been synced.
 				 *
 				 * Used internally to:
 				 *
-				 * * Update the ACF Fields synced via CiviCRM ACF Integration (obsolete)
-				 * * Update the ACF Fields synced via CiviCRM Profile Sync
+				 * * Update the ACF Fields synced via CiviCRM ACF Integration (obsolete).
+				 * * Update the ACF Fields synced via CiviCRM Profile Sync.
 				 *
-				 * @since 0.5.2
+				 * @since 0.8.0
 				 *
-				 * @param array $args The array of params.
+				 * @param array $args The array of params after the CiviCRM Event has been synced.
 				 */
-				do_action( 'civicrm_event_organiser_admin_civi_to_eo_sync', $args );
+				do_action( 'ceo/admin/manual_sync/civi_to_eo/sync/after', $args );
 
 			}
 

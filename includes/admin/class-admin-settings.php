@@ -131,7 +131,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		add_action( 'admin_menu', [ $this, 'admin_menu' ], 30 );
 
 		// Add our meta boxes.
-		add_action( 'civi_eo/admin/settings/add_meta_boxes', [ $this, 'meta_boxes_add' ], 11, 1 );
+		add_action( 'ceo/admin/settings/add_meta_boxes', [ $this, 'meta_boxes_add' ], 11, 1 );
 
 	}
 
@@ -331,10 +331,11 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		 * * "civicrm_page_civi_eo_settings"
 		 *
 		 * @since 0.7
+		 * @since 0.8.0 Renamed.
 		 *
 		 * @param string $screen_id The ID of the current screen.
 		 */
-		do_action( 'civi_eo/admin/settings/add_meta_boxes', $screen->id );
+		do_action( 'ceo/admin/settings/add_meta_boxes', $screen->id );
 
 		// Grab columns.
 		$columns = ( 1 === (int) $screen->get_columns() ? '1' : '2' );
@@ -746,8 +747,16 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		 * Broadcast end of settings update.
 		 *
 		 * @since 0.3.1
+		 * @deprecated 0.8.0 Use the {@see 'ceo/admin/settings/updated'} filter instead.
 		 */
-		do_action( 'civicrm_event_organiser_settings_updated' );
+		do_action_deprecated( 'civicrm_event_organiser_settings_updated', [], '0.8.0', 'ceo/admin/settings/updated' );
+
+		/**
+		 * Fires at the end of the Settings update.
+		 *
+		 * @since 0.8.0
+		 */
+		do_action( 'ceo/admin/settings/updated' );
 
 	}
 

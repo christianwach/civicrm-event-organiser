@@ -206,14 +206,22 @@ class CiviCRM_WP_Event_Organiser {
 		$this->setup_objects();
 
 		/**
-		 * Broadcast that this plugin is now loaded.
+		 * Fires when this plugin has fully loaded.
+		 *
+		 * @since 0.4.1
+		 * @deprecated 0.8.0 Use the {@see 'ceo/loaded'} filter instead.
+		 */
+		do_action_deprecated( 'civicrm_wp_event_organiser_loaded', [], '0.8.0', 'ceo/loaded' );
+
+		/**
+		 * Fires when this plugin has fully loaded.
 		 *
 		 * This action is used internally by this plugin to initialise its objects
 		 * and ensures that all includes and setup has occurred beforehand.
 		 *
-		 * @since 0.4.1
+		 * @since 0.8.0
 		 */
-		do_action( 'civicrm_wp_event_organiser_loaded' );
+		do_action( 'ceo/loaded' );
 
 	}
 
