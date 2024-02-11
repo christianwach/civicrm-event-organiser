@@ -422,7 +422,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 		 * When there isn't an existing Venue, you can force the use of a unique
 		 * slug with the following code:
 		 *
-		 * add_filter( 'ceo/eo/venue/unique_slug', '__return_true' );
+		 * `add_filter( 'ceo/eo/venue/unique_slug', '__return_true' );`
 		 *
 		 * @since 0.8.0
 		 *
