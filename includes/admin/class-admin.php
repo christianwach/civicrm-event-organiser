@@ -152,7 +152,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function setup_objects() {
 
 		// Instantiate Settings & Manual Sync Page objects.
-		$this->settings = new CiviCRM_WP_Event_Organiser_Admin_Settings( $this );
+		$this->settings    = new CiviCRM_WP_Event_Organiser_Admin_Settings( $this );
 		$this->manual_sync = new CiviCRM_WP_Event_Organiser_Admin_Manual_Sync( $this );
 
 		// Maybe instantiate Multisite Page object.

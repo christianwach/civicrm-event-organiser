@@ -74,6 +74,24 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	public $settings_page_slug = 'civi_eo_settings';
 
 	/**
+	 * The name of the form nonce element.
+	 *
+	 * @since 0.8.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $form_nonce_field = 'ceo_settings_nonce';
+
+	/**
+	 * The name of the form nonce value.
+	 *
+	 * @since 0.8.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $form_nonce_action = 'ceo_settings_action';
+
+	/**
 	 * URLs array.
 	 *
 	 * @since 0.7
@@ -651,7 +669,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	public function form_settings_update() {
 
 		// Check that we trust the source of the data.
-		check_admin_referer( 'ceo_settings_action', 'ceo_settings_nonce' );
+		check_admin_referer( $this->form_nonce_action, $this->form_nonce_field );
 
 		// Init vars. Nonce is checked in "form_nonce_check()".
 		$role               = isset( $_POST['civi_eo_event_default_role'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_role'] ) ) : '0';

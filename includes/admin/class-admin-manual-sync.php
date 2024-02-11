@@ -65,6 +65,24 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	public $sync_page_slug = 'civi_eo_manual_sync';
 
 	/**
+	 * The name of the form nonce element.
+	 *
+	 * @since 0.8.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $form_nonce_field = 'ceo_manual_sync_nonce';
+
+	/**
+	 * The name of the form nonce value.
+	 *
+	 * @since 0.8.0
+	 * @access protected
+	 * @var string
+	 */
+	protected $form_nonce_action = 'ceo_manual_sync_action';
+
+	/**
 	 * How many items to process per AJAX request.
 	 *
 	 * @since 0.2.4
@@ -694,6 +712,9 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 * @since 0.7 Renamed.
 	 */
 	public function form_submitted() {
+
+		// Check that we trust the source of the data.
+		check_admin_referer( $this->form_nonce_action, $this->form_nonce_field );
 
 		// Was an Event Type "Stop Sync" button pressed?
 		$tax_eo_to_civi_stop = isset( $_POST['civi_eo_tax_eo_to_civi_stop'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_tax_eo_to_civi_stop'] ) ) : false;

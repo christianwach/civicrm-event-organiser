@@ -39,7 +39,7 @@
 
 		<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
 		<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
-		<?php wp_nonce_field( 'ceo_settings_action', 'ceo_settings_nonce' ); ?>
+		<?php wp_nonce_field( $this->form_nonce_action, $this->form_nonce_field ); ?>
 
 		<div id="poststuff">
 

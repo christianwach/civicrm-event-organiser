@@ -48,7 +48,7 @@
 	<?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 	<form method="post" id="ceo_acf_sync_form" action="<?php echo $this->settings->page_settings_submit_url_get(); ?>">
 
-		<?php wp_nonce_field( 'civi_eo_manual_sync_action', 'civi_eo_manual_sync_nonce' ); ?>
+		<?php wp_nonce_field( $this->form_nonce_action, $this->form_nonce_field ); ?>
 		<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>
 		<?php wp_nonce_field( 'closedpostboxes', 'closedpostboxesnonce', false ); ?>
 
