@@ -5,7 +5,6 @@
  * Handles compatibility with the CiviCRM Profile Sync plugin.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.6.2
  */
 
 // Exit if accessed directly.

@@ -5,7 +5,6 @@
  * Handles compatibility with the "Post Duplicator" plugin.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.7.5
  */
 
 // Exit if accessed directly.

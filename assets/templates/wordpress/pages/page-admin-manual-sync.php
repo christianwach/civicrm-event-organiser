@@ -5,7 +5,6 @@
  * Handles markup for the Manual Sync admin page.
  *
  * @package CiviCRM_WP_Profile_Sync
- * @since 0.7
  */
 
 ?><!-- assets/templates/wordpress/pages/page-admin-manual-sync.php -->

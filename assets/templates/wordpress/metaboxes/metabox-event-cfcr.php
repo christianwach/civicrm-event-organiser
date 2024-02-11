@@ -5,7 +5,6 @@
  * Handles markup for the CFCR Registration Page Redirect metabox.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.5.3
  */
 
 // Exit if accessed directly.

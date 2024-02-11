@@ -5,7 +5,6 @@
  * Handles markup for the Settings Page "General Settings" meta box.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.7
  */
 
 ?><!-- assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php -->

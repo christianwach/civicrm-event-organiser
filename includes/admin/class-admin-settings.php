@@ -5,7 +5,6 @@
  * Handles Admin Settings Page functionality.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.7
  */
 
 // Exit if accessed directly.

@@ -5,7 +5,6 @@
  * Handles markup for the Settings Page "Online Registration Settings" meta box.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.7.2
  */
 
 ?><!-- assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php -->

@@ -5,7 +5,6 @@
  * Handles sync between the Event Organiser custom Taxonomy and CiviCRM Event Types.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.4.2
  */
 
 // Exit if accessed directly.

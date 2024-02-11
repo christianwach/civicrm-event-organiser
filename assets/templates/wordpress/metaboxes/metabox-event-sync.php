@@ -5,7 +5,6 @@
  * Handles markup for the Event Sync metabox.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.3
  */
 
 // Exit if accessed directly.

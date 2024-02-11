@@ -5,7 +5,6 @@
  * Handles plugin Shortcodes.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.6.3
  */
 
 // Exit if accessed directly.

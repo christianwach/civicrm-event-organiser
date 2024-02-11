@@ -5,7 +5,6 @@
  * Handles mapping between Event Organiser Events and CiviCRM Events.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.7
  */
 
 // Exit if accessed directly.

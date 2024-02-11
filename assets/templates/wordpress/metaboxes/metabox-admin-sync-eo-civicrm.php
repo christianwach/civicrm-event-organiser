@@ -5,7 +5,6 @@
  * Handles markup for the Event Organiser Events to CiviCRM Events meta box.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.7
  */
 
 ?><!-- assets/templates/wordpress/metaboxes/metabox-admin-sync-eo-civicrm.php -->

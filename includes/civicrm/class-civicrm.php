@@ -5,7 +5,6 @@
  * Handles interactions with CiviCRM.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.1
  */
 
 // Exit if accessed directly.

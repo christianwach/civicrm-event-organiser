@@ -5,7 +5,6 @@
  * Handles functionality generally related to Event Organiser.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.1
  */
 
 // Exit if accessed directly.

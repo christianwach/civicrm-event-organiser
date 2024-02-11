@@ -5,7 +5,6 @@
  * Replicates the functionality of WooDojo HTML Term Description plugin.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.2.1
  */
 
 // Exit if accessed directly.

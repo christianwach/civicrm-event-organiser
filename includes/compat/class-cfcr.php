@@ -5,7 +5,6 @@
  * Handles compatibility with the "Caldera Forms CiviCRM Redirect" plugin.
  *
  * @package CiviCRM_WP_Event_Organiser
- * @since 0.5.3
  */
 
 // Exit if accessed directly.
