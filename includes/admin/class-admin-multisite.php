@@ -1,30 +1,30 @@
 <?php
 /**
- * Multisite Admin Class.
+ * Admin Multisite Class.
  *
- * Handles Multisite Admin functionality.
+ * Handles Multisite admin functionality.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Multisite Admin Class.
+ * Admin Multisite Class.
  *
- * This class provides Multisite Admin functionality.
+ * This class provides Multisite admin functionality.
  *
  * @since 0.7
  */
-class CiviCRM_WP_Event_Organiser_Admin_Multisite {
+class CEO_Admin_Multisite {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
 
@@ -33,7 +33,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Multisite {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Admin
+	 * @var CEO_Admin
 	 */
 	public $admin;
 

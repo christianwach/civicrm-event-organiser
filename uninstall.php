@@ -2,10 +2,9 @@
 /**
  * Uninstaller.
  *
- * Handles uninstallation of the CiviCRM Event Organiser plugin.
+ * Handles uninstallation of this plugin.
  *
- * @package CiviCRM_WP_Event_Organiser
- * @since 0.1
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
@@ -15,24 +14,24 @@ defined( 'ABSPATH' ) || exit;
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
 // Access plugin.
-$civicrm_wp_event_organiser = civicrm_eo();
+$ceo = civicrm_eo();
 
 // Delete version.
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_version' );
+$ceo->admin->option_delete( 'civi_eo_version' );
 
 // Delete defaults.
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email_from_name' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email_from' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email_cc' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_send_email_bcc' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_confirm' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_profile' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_role' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_type' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_civicrm_event_sync' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_event_default_status_sync' );
+$ceo->admin->option_delete( 'civi_eo_event_default_send_email' );
+$ceo->admin->option_delete( 'civi_eo_event_default_send_email_from_name' );
+$ceo->admin->option_delete( 'civi_eo_event_default_send_email_from' );
+$ceo->admin->option_delete( 'civi_eo_event_default_send_email_cc' );
+$ceo->admin->option_delete( 'civi_eo_event_default_send_email_bcc' );
+$ceo->admin->option_delete( 'civi_eo_event_default_confirm' );
+$ceo->admin->option_delete( 'civi_eo_event_default_profile' );
+$ceo->admin->option_delete( 'civi_eo_event_default_role' );
+$ceo->admin->option_delete( 'civi_eo_event_default_type' );
+$ceo->admin->option_delete( 'civi_eo_event_default_civicrm_event_sync' );
+$ceo->admin->option_delete( 'civi_eo_event_default_status_sync' );
 
 // Delete data arrays.
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_civi_event_disabled' );
-$civicrm_wp_event_organiser->db->option_delete( 'civi_eo_civi_event_data' );
+$ceo->admin->option_delete( 'civi_eo_civi_event_disabled' );
+$ceo->admin->option_delete( 'civi_eo_civi_event_data' );

@@ -1,12 +1,12 @@
 <?php
 /**
- * CiviCRM Event Organiser Template functions.
+ * Template functions.
  *
  * These functions may be used in your theme files. Most rely on being called
  * during The Loop. Please refer to the docblocks of each function to see usage
  * instructions.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.

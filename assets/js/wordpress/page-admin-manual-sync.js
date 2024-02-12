@@ -1,5 +1,5 @@
 /**
- * CiviCRM Event Organiser "Manual Sync" Javascript.
+ * Admin "Manual Sync" Javascript.
  *
  * Implements sync functionality on the plugin's "Manual Sync" admin pages.
  *
@@ -7,14 +7,14 @@
  */
 
 /**
- * Create CiviCRM Event Organiser "Manual Sync" object.
+ * Create "Manual Sync" object.
  *
  * This works as a "namespace" of sorts, allowing us to hang properties, methods
  * and "sub-namespaces" from it.
  *
  * @since 0.2.4
  */
-var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync || {};
+var CEO_Manual_Sync = CEO_Manual_Sync || {};
 
 
 
@@ -32,7 +32,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 	 *
 	 * @since 0.2.4
 	 */
-	CiviCRM_Event_Organiser_Manual_Sync.settings = new function() {
+	CEO_Manual_Sync.settings = new function() {
 
 		// Prevent reference collisions.
 		var me = this;
@@ -74,8 +74,8 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		 * @since 0.2.4
 		 */
 		this.init_localisation = function() {
-			if ( 'undefined' !== typeof CiviCRM_Event_Organiser_Settings ) {
-				me.localisation = CiviCRM_Event_Organiser_Settings.localisation;
+			if ( 'undefined' !== typeof CEO_Settings ) {
+				me.localisation = CEO_Settings.localisation;
 			}
 		};
 
@@ -100,8 +100,8 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		 * @since 0.2.4
 		 */
 		this.init_settings = function() {
-			if ( 'undefined' !== typeof CiviCRM_Event_Organiser_Settings ) {
-				me.settings = CiviCRM_Event_Organiser_Settings.settings;
+			if ( 'undefined' !== typeof CEO_Settings ) {
+				me.settings = CEO_Settings.settings;
 			}
 		};
 
@@ -136,13 +136,13 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 		me.label = $(options.label);
 
 		// Assign labels.
-		me.label_init = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( options.key, 'total' );
-		me.label_current = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( options.key, 'current' );
-		me.label_complete = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( options.key, 'complete' );
-		me.label_done = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( 'common', 'done' );
+		me.label_init = CEO_Manual_Sync.settings.get_localisation( options.key, 'total' );
+		me.label_current = CEO_Manual_Sync.settings.get_localisation( options.key, 'current' );
+		me.label_complete = CEO_Manual_Sync.settings.get_localisation( options.key, 'complete' );
+		me.label_done = CEO_Manual_Sync.settings.get_localisation( 'common', 'done' );
 
 		// Get count.
-		me.count = CiviCRM_Event_Organiser_Manual_Sync.settings.get_localisation( options.key, 'count' );
+		me.count = CEO_Manual_Sync.settings.get_localisation( options.key, 'count' );
 
 		// The triggering button.
 		me.button = $(options.button);
@@ -209,7 +209,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 				);
 
 				// Update progress bar.
-				me.bar.progressbar( 'value', val + CiviCRM_Event_Organiser_Manual_Sync.settings.get_setting( me.step ) );
+				me.bar.progressbar( 'value', val + CEO_Manual_Sync.settings.get_setting( me.step ) );
 
 				// Trigger next batch.
 				me.send();
@@ -239,7 +239,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 			var url, data;
 
 			// URL to post to.
-			url = CiviCRM_Event_Organiser_Manual_Sync.settings.get_setting( 'ajax_url' );
+			url = CEO_Manual_Sync.settings.get_setting( 'ajax_url' );
 
 			// Data received by WordPress.
 			data = {
@@ -284,7 +284,7 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 	 *
 	 * @since 0.2.4
 	 */
-	CiviCRM_Event_Organiser_Manual_Sync.progress_bar = new function() {
+	CEO_Manual_Sync.progress_bar = new function() {
 
 		// Prevent reference collisions.
 		var me = this;
@@ -386,10 +386,10 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 	};
 
 	// Init settings.
-	CiviCRM_Event_Organiser_Manual_Sync.settings.init();
+	CEO_Manual_Sync.settings.init();
 
 	// Init Progress Bar.
-	CiviCRM_Event_Organiser_Manual_Sync.progress_bar.init();
+	CEO_Manual_Sync.progress_bar.init();
 
 } )( jQuery );
 
@@ -403,10 +403,10 @@ var CiviCRM_Event_Organiser_Manual_Sync = CiviCRM_Event_Organiser_Manual_Sync ||
 jQuery(document).ready(function($) {
 
 	// The DOM is loaded now.
-	CiviCRM_Event_Organiser_Manual_Sync.settings.dom_ready();
+	CEO_Manual_Sync.settings.dom_ready();
 
 	// The DOM is loaded now.
-	CiviCRM_Event_Organiser_Manual_Sync.progress_bar.dom_ready();
+	CEO_Manual_Sync.progress_bar.dom_ready();
 
 }); // End document.ready()
 

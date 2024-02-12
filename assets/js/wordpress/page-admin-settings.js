@@ -1,5 +1,5 @@
 /**
- * CiviCRM Event Organiser "Settings" Javascript.
+ * Admin "Settings" Javascript.
  *
  * Implements sync functionality on the plugin's "Settings" admin page.
  *

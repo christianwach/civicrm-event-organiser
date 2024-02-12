@@ -4,14 +4,14 @@
  *
  * Replicates the functionality of WooDojo HTML Term Description plugin.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Term Description Class.
+ * Term Description Class.
  *
  * This class replicates the functionality of WooDojo HTML Term Description
  * plugin since that plugin has now been withdrawn. It was described thus:
@@ -24,16 +24,25 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.2.1
  */
-class CiviCRM_WP_Event_Organiser_Term_Description {
+class CEO_WordPress_Term_Description {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.2.1
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
+
+	/**
+	 * WordPress object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_WordPress
+	 */
+	public $wordpress;
 
 	/**
 	 * Constructor.
@@ -44,8 +53,9 @@ class CiviCRM_WP_Event_Organiser_Term_Description {
 	 */
 	public function __construct( $parent ) {
 
-		// Store reference.
-		$this->plugin = $parent;
+		// Store references.
+		$this->plugin    = $parent->plugin;
+		$this->wordpress = $parent;
 
 		// Register hooks on admin init.
 		add_action( 'admin_init', [ $this, 'register_hooks' ] );

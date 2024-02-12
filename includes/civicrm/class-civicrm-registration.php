@@ -4,27 +4,27 @@
  *
  * Handles interactions with CiviCRM Event Registrations.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser CiviCRM Event Registration Class.
+ * CiviCRM Event Registration Class.
  *
  * A class that encapsulates interactions with CiviCRM Registrations.
  *
  * @since 0.7
  */
-class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
+class CEO_CiviCRM_Registration {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
 
@@ -33,7 +33,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CiviCRM
+	 * @var CEO_CiviCRM
 	 */
 	public $civicrm;
 
@@ -82,7 +82,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$existing_id = false;
 
 		// Do we have a default set?
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_role' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_role' );
 
 		// Override with default value if we get one.
 		if ( '' !== $default && is_numeric( $default ) ) {
@@ -93,7 +93,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( isset( $post ) && is_object( $post ) ) {
 
 			// Get stored value.
-			$stored_id = $this->plugin->eo->get_event_role( $post->ID );
+			$stored_id = $this->plugin->wordpress->eo->get_event_role( $post->ID );
 
 			// Override with stored value if we get one.
 			if ( '' !== $stored_id && is_numeric( $stored_id ) && $stored_id > 0 ) {
@@ -553,7 +553,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$profile_id = false;
 
 		// Do we have a default set?
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_profile' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_profile' );
 
 		// Override with default value if we have one.
 		if ( '' !== $default && is_numeric( $default ) ) {
@@ -564,7 +564,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( isset( $post ) && is_object( $post ) ) {
 
 			// Get stored value.
-			$stored_id = $this->plugin->eo->get_event_registration_profile( $post->ID );
+			$stored_id = $this->plugin->wordpress->eo->get_event_registration_profile( $post->ID );
 
 			// Override with stored value if we get a value.
 			if ( '' !== $stored_id && is_numeric( $stored_id ) && $stored_id > 0 ) {
@@ -703,7 +703,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$dedupe_rule_id = false;
 
 		// Do we have a default set?
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_dedupe', 'xxxxx' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_dedupe', 'xxxxx' );
 
 		// Override with default value if we have one.
 		if ( 'xxxxx' !== $default ) {
@@ -714,7 +714,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( ! is_null( $post ) && is_object( $post ) ) {
 
 			// Get stored value.
-			$stored_id = $this->plugin->eo->get_event_registration_dedupe_rule( $post->ID );
+			$stored_id = $this->plugin->wordpress->eo->get_event_registration_dedupe_rule( $post->ID );
 
 			// Override with stored value if we have one.
 			if ( '' !== $stored_id ) {
@@ -869,7 +869,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$setting = false;
 
 		// Do we have a default set?
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_confirm' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_confirm' );
 
 		// Override with default value if we have one.
 		if ( '' !== $default && is_numeric( $default ) ) {
@@ -880,7 +880,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( isset( $post_id ) && is_numeric( $post_id ) ) {
 
 			// Get stored value.
-			$stored_setting = $this->plugin->eo->get_event_registration_confirm( $post_id );
+			$stored_setting = $this->plugin->wordpress->eo->get_event_registration_confirm( $post_id );
 
 			// Override with stored value if we get a value.
 			if ( '' !== $stored_setting && is_numeric( $stored_setting ) ) {
@@ -913,7 +913,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$setting = false;
 
 		// Do we have a default set?
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_send_email' );
 
 		// Override with default value if we have one.
 		if ( '' !== $default && is_numeric( $default ) ) {
@@ -924,7 +924,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( isset( $post_id ) && is_numeric( $post_id ) ) {
 
 			// Get stored value.
-			$stored_setting = $this->plugin->eo->get_event_registration_send_email( $post_id );
+			$stored_setting = $this->plugin->wordpress->eo->get_event_registration_send_email( $post_id );
 
 			// Override with stored value if we get a value.
 			if ( '' !== $stored_setting && is_numeric( $stored_setting ) ) {
@@ -955,7 +955,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$setting = '';
 
 		// Use default value if we have one.
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_from_name' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_send_email_from_name' );
 		if ( ! empty( $default ) ) {
 			$setting = $default;
 		}
@@ -964,7 +964,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
 
 			// Override with stored value if we get a value.
-			$stored_setting = $this->plugin->eo->get_event_registration_send_email_from_name( $post_id );
+			$stored_setting = $this->plugin->wordpress->eo->get_event_registration_send_email_from_name( $post_id );
 			if ( ! empty( $stored_setting ) ) {
 				$setting = $stored_setting;
 			}
@@ -993,7 +993,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$setting = '';
 
 		// Use default value if we have one.
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_from' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_send_email_from' );
 		if ( ! empty( $default ) ) {
 			$setting = $default;
 		}
@@ -1002,7 +1002,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
 
 			// Override with stored value if we get a value.
-			$stored_setting = $this->plugin->eo->get_event_registration_send_email_from( $post_id );
+			$stored_setting = $this->plugin->wordpress->eo->get_event_registration_send_email_from( $post_id );
 			if ( ! empty( $stored_setting ) ) {
 				$setting = $stored_setting;
 			}
@@ -1028,7 +1028,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$setting = '';
 
 		// Use default value if we have one.
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_cc' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_send_email_cc' );
 		if ( ! empty( $default ) ) {
 			$setting = $default;
 		}
@@ -1037,7 +1037,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
 
 			// Override with stored value if we get a value.
-			$stored_setting = $this->plugin->eo->get_event_registration_send_email_cc( $post_id );
+			$stored_setting = $this->plugin->wordpress->eo->get_event_registration_send_email_cc( $post_id );
 			if ( ! empty( $stored_setting ) && 'none' !== $stored_setting ) {
 				$setting = $stored_setting;
 			}
@@ -1068,7 +1068,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		$setting = '';
 
 		// Use default value if we have one.
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_bcc' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_send_email_bcc' );
 		if ( ! empty( $default ) ) {
 			$setting = $default;
 		}
@@ -1077,7 +1077,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Registration {
 		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
 
 			// Override with stored value if we get a value.
-			$stored_setting = $this->plugin->eo->get_event_registration_send_email_bcc( $post_id );
+			$stored_setting = $this->plugin->wordpress->eo->get_event_registration_send_email_bcc( $post_id );
 			if ( ! empty( $stored_setting ) && 'none' !== $stored_setting ) {
 				$setting = $stored_setting;
 			}

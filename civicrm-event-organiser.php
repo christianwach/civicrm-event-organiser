@@ -16,7 +16,7 @@
  * Text Domain:       civicrm-event-organiser
  * Domain Path:       /languages
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
@@ -46,121 +46,94 @@ if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_DEBUG' ) ) {
 }
 
 /**
- * CiviCRM Event Organiser Class.
+ * Plugin Class.
  *
  * A class that encapsulates this plugin's functionality.
  *
  * @since 0.1
  */
-class CiviCRM_WP_Event_Organiser {
-
-	/**
-	 * Admin object.
-	 *
-	 * @since 0.1
-	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Admin
-	 */
-	public $db;
-
-	/**
-	 * Mapping object.
-	 *
-	 * @since 0.7
-	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Mapping
-	 */
-	public $mapping;
+class CiviCRM_Event_Organiser {
 
 	/**
 	 * CiviCRM object.
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CiviCRM
+	 * @var CEO_CiviCRM
 	 */
 	public $civi;
 
 	/**
-	 * Event Organiser object.
+	 * WordPress object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_WordPress
+	 */
+	public $wordpress;
+
+	/**
+	 * Mapping object.
+	 *
+	 * @since 0.7
+	 * @access public
+	 * @var CEO_Mapping
+	 */
+	public $mapping;
+
+	/**
+	 * Compatibility object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_Compat
+	 */
+	public $compat;
+
+	/**
+	 * Admin object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_Admin
+	 */
+	public $admin;
+
+	/**
+	 * Admin DB object.
+	 *
+	 * This is an "alias" of the Admin object for backpat purposes.
+	 * Use `civicrm_eo()->admin->foo()` in future.
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_EO
+	 * @var CEO_Admin_DB
+	 */
+	public $db;
+
+	/**
+	 * Event Organiser object.
+	 *
+	 * This is an "alias" of the Event Organiser object for backpat purposes.
+	 * Use `civicrm_eo()->wordpress->eo->foo()` in future.
+	 *
+	 * @since 0.1
+	 * @access public
+	 * @var CEO_WordPress_EO
 	 */
 	public $eo;
 
 	/**
 	 * Event Organiser Venue object.
 	 *
+	 * This is an "alias" of the Event Organiser Venue object for backpat purposes.
+	 * Use `civicrm_eo()->wordpress->eo_venue->foo()` in future.
+	 *
 	 * @since 0.1
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_EO_Venue
+	 * @var CEO_WordPress_EO_Venue
 	 */
 	public $eo_venue;
-
-	/**
-	 * Taxonomy Sync object.
-	 *
-	 * @since 0.4.2
-	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Taxonomy
-	 */
-	public $taxonomy;
-
-	/**
-	 * Shortcodes object.
-	 *
-	 * @since 0.6.3
-	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Shortcodes
-	 */
-	public $shortcodes;
-
-	/**
-	 * Term Description object.
-	 *
-	 * @since 0.2.1
-	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Term_Description
-	 */
-	public $term_html;
-
-	/**
-	 * CiviCRM Profile Sync compatibility object.
-	 *
-	 * @since 0.4.4
-	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CWPS
-	 */
-	public $cwps;
-
-	/**
-	 * CiviCRM ACF Integration compatibility object.
-	 *
-	 * @since 0.4.4
-	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CAI
-	 */
-	public $cai;
-
-	/**
-	 * Caldera Forms CiviCRM Redirect compatibility object.
-	 *
-	 * @since 0.5.3
-	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CFCR
-	 */
-	public $cfcr;
-
-	/**
-	 * Post Duplicator compatibility object.
-	 *
-	 * @since 0.7.5
-	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Post_Duplicator
-	 */
-	public $post_dupe;
 
 	/**
 	 * Initialises this object.
@@ -239,21 +212,12 @@ class CiviCRM_WP_Event_Organiser {
 		}
 
 		// Load our core class files.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-term-html.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-mapping.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/class-civicrm.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/eo/class-eo.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/eo/class-eo-venue.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-taxonomy.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-shortcodes.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/theme-functions.php';
-
-		// Load our compatibility class files.
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-cwps.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-cai.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-cfcr.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-post-duplicator.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/wordpress/class-wordpress.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-mapping.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-compat.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-db.php';
 
 		// We're done.
 		$done = true;
@@ -274,20 +238,14 @@ class CiviCRM_WP_Event_Organiser {
 		}
 
 		// Initialise core objects.
-		$this->term_html  = new CiviCRM_WP_Event_Organiser_Term_Description( $this );
-		$this->db         = new CiviCRM_WP_Event_Organiser_Admin( $this );
-		$this->mapping    = new CiviCRM_WP_Event_Organiser_Mapping( $this );
-		$this->civi       = new CiviCRM_WP_Event_Organiser_CiviCRM( $this );
-		$this->eo         = new CiviCRM_WP_Event_Organiser_EO( $this );
-		$this->eo_venue   = new CiviCRM_WP_Event_Organiser_EO_Venue( $this );
-		$this->taxonomy   = new CiviCRM_WP_Event_Organiser_Taxonomy( $this );
-		$this->shortcodes = new CiviCRM_WP_Event_Organiser_Shortcodes( $this );
+		$this->civi      = new CEO_CiviCRM( $this );
+		$this->wordpress = new CEO_WordPress( $this );
+		$this->mapping   = new CEO_Mapping( $this );
+		$this->compat    = new CEO_Compat( $this );
+		$this->admin     = new CEO_Admin( $this );
 
-		// Initialise compatibility objects.
-		$this->cwps      = new CiviCRM_WP_Event_Organiser_CWPS( $this );
-		$this->cai       = new CiviCRM_WP_Event_Organiser_CAI( $this );
-		$this->cfcr      = new CiviCRM_WP_Event_Organiser_CFCR( $this );
-		$this->post_dupe = new CiviCRM_WP_Event_Organiser_Post_Duplicator( $this );
+		// The admin class needs an "alias" for backpat.
+		$this->db = $this->admin;
 
 		// We're done.
 		$done = true;
@@ -318,7 +276,8 @@ class CiviCRM_WP_Event_Organiser {
 	 * Load translation files.
 	 *
 	 * A good reference on how to implement translation in WordPress:
-	 * http://ottopress.com/2012/internationalization-youre-probably-doing-it-wrong/
+	 *
+	 * @see http://ottopress.com/2012/internationalization-youre-probably-doing-it-wrong/
 	 *
 	 * @since 0.1
 	 */
@@ -508,7 +467,7 @@ class CiviCRM_WP_Event_Organiser {
  *
  * @since 0.2.2
  *
- * @return object $civicrm_wp_event_organiser The plugin reference.
+ * @return CiviCRM_Event_Organiser $civicrm_wp_event_organiser The plugin reference.
  */
 function civicrm_eo() {
 
@@ -517,7 +476,7 @@ function civicrm_eo() {
 
 	// Instantiate plugin if not yet instantiated.
 	if ( ! isset( $civicrm_wp_event_organiser ) ) {
-		$civicrm_wp_event_organiser = new CiviCRM_WP_Event_Organiser();
+		$civicrm_wp_event_organiser = new CiviCRM_Event_Organiser();
 	}
 
 	return $civicrm_wp_event_organiser;

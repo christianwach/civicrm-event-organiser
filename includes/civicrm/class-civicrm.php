@@ -4,27 +4,27 @@
  *
  * Handles interactions with CiviCRM.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser CiviCRM Class.
+ * CiviCRM Class.
  *
  * A class that encapsulates interactions with CiviCRM.
  *
  * @since 0.1
  */
-class CiviCRM_WP_Event_Organiser_CiviCRM {
+class CEO_CiviCRM {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
 
@@ -33,7 +33,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CiviCRM_Event
+	 * @var CEO_CiviCRM_Event
 	 */
 	public $event;
 
@@ -42,7 +42,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CiviCRM_Location
+	 * @var CEO_CiviCRM_Location
 	 */
 	public $location;
 
@@ -51,7 +51,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CiviCRM_Registration
+	 * @var CEO_CiviCRM_Registration
 	 */
 	public $registration;
 
@@ -115,9 +115,9 @@ class CiviCRM_WP_Event_Organiser_CiviCRM {
 	public function setup_objects() {
 
 		// Instantiate objects.
-		$this->event        = new CiviCRM_WP_Event_Organiser_CiviCRM_Event( $this );
-		$this->location     = new CiviCRM_WP_Event_Organiser_CiviCRM_Location( $this );
-		$this->registration = new CiviCRM_WP_Event_Organiser_CiviCRM_Registration( $this );
+		$this->event        = new CEO_CiviCRM_Event( $this );
+		$this->location     = new CEO_CiviCRM_Location( $this );
+		$this->registration = new CEO_CiviCRM_Registration( $this );
 
 	}
 

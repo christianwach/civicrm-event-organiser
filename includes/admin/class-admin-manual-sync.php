@@ -4,27 +4,27 @@
  *
  * Handles Admin Manual Sync functionality.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Manual Sync Admin Class.
+ * Admin Manual Sync Class.
  *
- * This class provides Manual Sync Admin functionality.
+ * This class provides Admin Manual Sync functionality.
  *
  * @since 0.7
  */
-class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
+class CEO_Admin_Manual_Sync {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
 
@@ -33,7 +33,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Admin
+	 * @var CEO_Admin
 	 */
 	public $admin;
 
@@ -42,7 +42,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Admin_Settings
+	 * @var CEO_Admin_Settings
 	 */
 	public $settings;
 
@@ -338,13 +338,13 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		);
 
 		// Get all CiviCRM Event Types and error check.
-		$all_types = $this->plugin->taxonomy->get_event_types();
+		$all_types = $this->plugin->wordpress->taxonomy->get_event_types();
 		if ( false === $all_types ) {
 			$all_types['values'] = [];
 		}
 
 		// Get all Event Organiser Event Category Terms.
-		$all_terms = $this->plugin->taxonomy->get_event_categories();
+		$all_terms = $this->plugin->wordpress->taxonomy->get_event_categories();
 
 		// Get all Civi Event Locations and error check.
 		$all_locations = $this->plugin->civi->location->get_all_locations();
@@ -866,7 +866,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			foreach ( $terms as $term ) {
 
 				// Update CiviCRM Event Term - or create if it doesn't exist.
-				$civi_event_type_id = $this->plugin->taxonomy->update_event_type( $term );
+				$civi_event_type_id = $this->plugin->wordpress->taxonomy->update_event_type( $term );
 
 				// Next on failure.
 				if ( false === $civi_event_type_id ) {
@@ -954,7 +954,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 		}
 
 		// Get option group ID and error check.
-		$opt_group_id = $this->plugin->taxonomy->get_event_types_optgroup_id();
+		$opt_group_id = $this->plugin->wordpress->taxonomy->get_event_types_optgroup_id();
 		if ( false !== $opt_group_id ) {
 
 			// Get Event Types (descriptions will be present if not null).
@@ -997,7 +997,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			foreach ( $types['values'] as $type ) {
 
 				// Update CiviCRM Event Term - or create if it doesn't exist.
-				$eo_term_id = $this->plugin->taxonomy->update_term( $type );
+				$eo_term_id = $this->plugin->wordpress->taxonomy->update_term( $type );
 
 				// Next on failure.
 				if ( false === $eo_term_id ) {
@@ -1136,7 +1136,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				$location = $this->plugin->civi->location->update_location( $venue );
 
 				// Store in Event Organiser Venue.
-				$this->plugin->eo_venue->store_civi_location( $venue_id, $location );
+				$this->plugin->wordpress->eo_venue->store_civi_location( $venue_id, $location );
 
 			}
 
@@ -1245,7 +1245,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 
 			// Update Event Organiser Venue - or create if it doesn't exist.
 			foreach ( $locations['values'] as $location ) {
-				$this->plugin->eo_venue->update_venue( $location );
+				$this->plugin->wordpress->eo_venue->update_venue( $location );
 			}
 
 			// Increment offset option.
@@ -1349,7 +1349,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 			foreach ( $events as $event ) {
 
 				// Get dates for this Event.
-				$dates = $this->plugin->eo->get_all_dates( $event->ID );
+				$dates = $this->plugin->wordpress->eo->get_all_dates( $event->ID );
 
 				// Update CiviCRM Event - or create if it doesn't exist.
 				$correspondences = $this->plugin->civi->event->update_civi_events( $event, $dates );
@@ -1544,7 +1544,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Manual_Sync {
 				do_action( 'ceo/admin/manual_sync/civi_to_eo/sync/before', $args_pre );
 
 				// Update a single Event Organiser Event - or create if it doesn't exist.
-				$event_id = $this->plugin->eo->update_event( $civi_event );
+				$event_id = $this->plugin->wordpress->eo->update_event( $civi_event );
 
 				// Skip if there's an error.
 				if ( is_wp_error( $event_id ) ) {

@@ -1,20 +1,20 @@
 /**
- * CiviCRM Event Organiser "Event Metabox" Javascript.
+ * "Event Metabox" Javascript.
  *
- * Implements sync functionality on the plugin's "Manual Sync" admin pages.
+ * Implements sync functionality on the plugin's "Event Metabox".
  *
  * @package CiviCRM_Event_Organiser
  */
 
 /**
- * Create CiviCRM Event Organiser "Manual Sync" object.
+ * Create "Event Metabox" object.
  *
  * This works as a "namespace" of sorts, allowing us to hang properties, methods
  * and "sub-namespaces" from it.
  *
  * @since 0.5.3
  */
-var CiviCRM_Event_Organiser_Event_Metabox = CiviCRM_Event_Organiser_Event_Metabox || {};
+var CEO_Event_Metabox = CEO_Event_Metabox || {};
 
 
 
@@ -32,7 +32,7 @@ var CiviCRM_Event_Organiser_Event_Metabox = CiviCRM_Event_Organiser_Event_Metabo
 	 *
 	 * @since 0.5.3
 	 */
-	CiviCRM_Event_Organiser_Event_Metabox.settings = new function() {
+	CEO_Event_Metabox.settings = new function() {
 
 		// Prevent reference collisions.
 		var me = this;
@@ -74,8 +74,8 @@ var CiviCRM_Event_Organiser_Event_Metabox = CiviCRM_Event_Organiser_Event_Metabo
 		 * @since 0.5.3
 		 */
 		this.init_localisation = function() {
-			if ( 'undefined' !== typeof CiviCRM_Event_Organiser_Metabox_Settings ) {
-				me.localisation = CiviCRM_Event_Organiser_Metabox_Settings.localisation;
+			if ( 'undefined' !== typeof CEO_Metabox_Settings ) {
+				me.localisation = CEO_Metabox_Settings.localisation;
 			}
 		};
 
@@ -100,8 +100,8 @@ var CiviCRM_Event_Organiser_Event_Metabox = CiviCRM_Event_Organiser_Event_Metabo
 		 * @since 0.5.3
 		 */
 		this.init_settings = function() {
-			if ( 'undefined' !== typeof CiviCRM_Event_Organiser_Metabox_Settings ) {
-				me.settings = CiviCRM_Event_Organiser_Metabox_Settings.settings;
+			if ( 'undefined' !== typeof CEO_Metabox_Settings ) {
+				me.settings = CEO_Metabox_Settings.settings;
 			}
 		};
 
@@ -124,7 +124,7 @@ var CiviCRM_Event_Organiser_Event_Metabox = CiviCRM_Event_Organiser_Event_Metabo
 	 *
 	 * @since 0.5.3
 	 */
-	CiviCRM_Event_Organiser_Event_Metabox.accordion = new function() {
+	CEO_Event_Metabox.accordion = new function() {
 
 		// Prevent reference collisions.
 		var me = this;
@@ -199,8 +199,8 @@ var CiviCRM_Event_Organiser_Event_Metabox = CiviCRM_Event_Organiser_Event_Metabo
 	};
 
 	// Call init methods.
-	CiviCRM_Event_Organiser_Event_Metabox.settings.init();
-	CiviCRM_Event_Organiser_Event_Metabox.accordion.init();
+	CEO_Event_Metabox.settings.init();
+	CEO_Event_Metabox.accordion.init();
 
 } )( jQuery );
 
@@ -214,7 +214,7 @@ var CiviCRM_Event_Organiser_Event_Metabox = CiviCRM_Event_Organiser_Event_Metabo
 jQuery(document).ready(function($) {
 
 	// The DOM is loaded now.
-	CiviCRM_Event_Organiser_Event_Metabox.settings.dom_ready();
-	CiviCRM_Event_Organiser_Event_Metabox.accordion.dom_ready();
+	CEO_Event_Metabox.settings.dom_ready();
+	CEO_Event_Metabox.accordion.dom_ready();
 
 }); // End document.ready()

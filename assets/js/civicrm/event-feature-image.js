@@ -1,5 +1,5 @@
 /**
- * CiviCRM Event Organiser "Feature Image" Javascript.
+ * "Feature Image" Javascript.
  *
  * Implements "Feature Image" functionality on CiviCRM Event pages.
  *
@@ -7,7 +7,7 @@
  */
 
 /**
- * Create CiviCRM Event Organiser "Feature Image" object.
+ * Create "Feature Image" object.
  *
  * This works as a "namespace" of sorts, allowing us to hang properties, methods
  * and "sub-namespaces" from it.

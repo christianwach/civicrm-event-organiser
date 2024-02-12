@@ -28,29 +28,38 @@
  * @see https://lab.civicrm.org/dev/core/-/issues/2103
  * @see https://github.com/civicrm/civicrm-core/pull/23041
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Venues Class.
+ * Venues Class.
  *
  * A class that encapsulates functionality related to Event Organiser Venues.
  *
  * @since 0.1
  */
-class CiviCRM_WP_Event_Organiser_EO_Venue {
+class CEO_WordPress_EO_Venue {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
+
+	/**
+	 * WordPress object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_WordPress
+	 */
+	public $wordpress;
 
 	/**
 	 * Constructor.
@@ -61,11 +70,12 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	 */
 	public function __construct( $parent ) {
 
-		// Store reference.
-		$this->plugin = $parent;
+		// Store references.
+		$this->plugin    = $parent->plugin;
+		$this->wordpress = $parent;
 
-		// Add hooks when plugin is loaded.
-		add_action( 'ceo/loaded', [ $this, 'register_hooks' ] );
+		// Add Event Organiser hooks when WordPress class is loaded.
+		add_action( 'ceo/wordpress/loaded', [ $this, 'register_hooks' ] );
 
 	}
 
@@ -77,7 +87,7 @@ class CiviCRM_WP_Event_Organiser_EO_Venue {
 	public function register_hooks() {
 
 		// Check for Event Organiser.
-		if ( ! $this->plugin->eo->is_active() ) {
+		if ( ! $this->plugin->wordpress->eo->is_active() ) {
 			return;
 		}
 

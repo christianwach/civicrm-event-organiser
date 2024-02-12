@@ -4,27 +4,27 @@
  *
  * Handles interactions with CiviCRM Events.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser CiviCRM Event Class.
+ * CiviCRM Event Class.
  *
  * A class that encapsulates interactions with CiviCRM.
  *
  * @since 0.7
  */
-class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
+class CEO_CiviCRM_Event {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
 
@@ -33,7 +33,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CiviCRM
+	 * @var CEO_CiviCRM
 	 */
 	public $civicrm;
 
@@ -42,7 +42,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CiviCRM_Location
+	 * @var CEO_CiviCRM_Location
 	 */
 	public $location;
 
@@ -51,7 +51,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CiviCRM_Registration
+	 * @var CEO_CiviCRM_Registration
 	 */
 	public $registration;
 
@@ -666,7 +666,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Add checkbox depending on CiviCRM Event sync setting.
-		$civicrm_event_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+		$civicrm_event_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
 		if ( 0 === $civicrm_event_sync ) {
 			return;
 		}
@@ -709,7 +709,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Add checkbox depending on CiviCRM Event sync setting.
-		$civicrm_event_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+		$civicrm_event_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
 		if ( 0 === $civicrm_event_sync ) {
 			return;
 		}
@@ -797,7 +797,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Query checkbox depending on CiviCRM Event sync setting.
-		$civicrm_event_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+		$civicrm_event_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
 		if ( 1 === $civicrm_event_sync ) {
 
 			// CiviCRM handles verification.
@@ -812,7 +812,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Update a single Event Organiser Event - or create if it doesn't exist.
-		$event_id = $this->plugin->eo->update_event( (array) $object_ref );
+		$event_id = $this->plugin->wordpress->eo->update_event( (array) $object_ref );
 
 		// Bail if we don't get an Event ID.
 		if ( is_wp_error( $event_id ) ) {
@@ -877,7 +877,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Query checkbox depending on CiviCRM Event sync setting.
-		$civicrm_event_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+		$civicrm_event_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
 		if ( 1 === $civicrm_event_sync ) {
 
 			// CiviCRM handles verification.
@@ -909,7 +909,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Update the Event Organiser Event.
-		$event_id = $this->plugin->eo->update_event( $updated_event );
+		$event_id = $this->plugin->wordpress->eo->update_event( $updated_event );
 
 		// Bail if we don't get an Event ID.
 		if ( is_wp_error( $event_id ) ) {
@@ -966,7 +966,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 
 		// Set the Event Organiser Event to 'draft' status if it's not a recurring Event.
 		if ( ! eo_recurs( $post_id ) ) {
-			$this->plugin->eo->update_event_status( $post_id, 'draft' );
+			$this->plugin->wordpress->eo->update_event_status( $post_id, 'draft' );
 		}
 
 	}
@@ -997,7 +997,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$civi_event['participant_listing_id'] = null;
 
 		// Get Status Sync setting.
-		$status_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_status_sync', 3 );
+		$status_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_status_sync', 3 );
 
 		/*
 		 * For "Do not sync" (3) and "Sync CiviCRM -> EO" (2), we can leave out
@@ -1035,7 +1035,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$venue_id = eo_get_venue( $post->ID );
 
 		// Get CiviCRM Event Location.
-		$location_id = $this->plugin->eo_venue->get_civi_location( $venue_id );
+		$location_id = $this->plugin->wordpress->eo_venue->get_civi_location( $venue_id );
 
 		// Did we get one?
 		if ( is_numeric( $location_id ) ) {
@@ -1052,7 +1052,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		$civi_event['is_online_registration'] = 0;
 
 		// Get CiviCRM Event Online Registration value.
-		$is_reg = $this->plugin->eo->get_event_registration( $post->ID );
+		$is_reg = $this->plugin->wordpress->eo->get_event_registration( $post->ID );
 
 		// Add Online Registration value to our params if we get one.
 		if ( is_numeric( $is_reg ) && 0 !== (int) $is_reg ) {
@@ -1080,7 +1080,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Event {
 		}
 
 		// Get Event Type pseudo-ID (or value), because it is required in CiviCRM.
-		$type_value = $this->plugin->taxonomy->get_default_event_type_value( $post );
+		$type_value = $this->plugin->wordpress->taxonomy->get_default_event_type_value( $post );
 
 		// Die if there are no Event Types defined in CiviCRM.
 		if ( false === $type_value ) {

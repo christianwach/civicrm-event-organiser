@@ -4,27 +4,27 @@
  *
  * Handles interactions with CiviCRM Locations.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser CiviCRM Location Class.
+ * CiviCRM Location Class.
  *
  * A class that encapsulates interactions with CiviCRM Locations.
  *
  * @since 0.7
  */
-class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
+class CEO_CiviCRM_Location {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
 
@@ -33,7 +33,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_CiviCRM
+	 * @var CEO_CiviCRM
 	 */
 	public $civicrm;
 
@@ -102,7 +102,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		$location = $this->get_location_by_id( $object_id );
 
 		// Get corresponding Event Organiser Venue ID.
-		$venue_id = $this->plugin->eo_venue->get_venue_id( $location );
+		$venue_id = $this->plugin->wordpress->eo_venue->get_venue_id( $location );
 		if ( empty( $venue_id ) ) {
 			return;
 		}
@@ -135,7 +135,7 @@ class CiviCRM_WP_Event_Organiser_CiviCRM_Location {
 		}
 
 		// Update the Venue.
-		$venue_id = $this->plugin->eo_venue->update_venue( $location );
+		$venue_id = $this->plugin->wordpress->eo_venue->update_venue( $location );
 
 	}
 

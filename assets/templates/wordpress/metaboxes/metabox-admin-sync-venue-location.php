@@ -4,7 +4,7 @@
  *
  * Handles markup for the Event Organiser Venues to CiviCRM Event Locations meta box.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 ?><!-- assets/templates/wordpress/metaboxes/metabox-admin-sync-venue-location.php -->

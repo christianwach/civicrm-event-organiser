@@ -4,30 +4,39 @@
  *
  * Handles sync between the Event Organiser custom Taxonomy and CiviCRM Event Types.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Taxonomy Class.
+ * Taxonomy Class.
  *
  * This class keeps the Event Organiser custom Taxonomy in sync with the CiviCRM
  * Event Types.
  *
  * @since 0.4.2
  */
-class CiviCRM_WP_Event_Organiser_Taxonomy {
+class CEO_WordPress_Taxonomy {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.4.2
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
+
+	/**
+	 * WordPress object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_WordPress
+	 */
+	public $wordpress;
 
 	/**
 	 * Term Meta key.
@@ -47,11 +56,12 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 	 */
 	public function __construct( $parent ) {
 
-		// Store reference.
-		$this->plugin = $parent;
+		// Store references.
+		$this->plugin    = $parent->plugin;
+		$this->wordpress = $parent;
 
-		// Add CiviCRM hooks when plugin is loaded.
-		add_action( 'ceo/loaded', [ $this, 'register_hooks' ] );
+		// Add Event Organiser hooks when WordPress class is loaded.
+		add_action( 'ceo/wordpress/loaded', [ $this, 'register_hooks' ] );
 
 	}
 
@@ -1660,7 +1670,7 @@ class CiviCRM_WP_Event_Organiser_Taxonomy {
 		$existing_value = false;
 
 		// Do we have a default set?
-		$default = $this->plugin->db->option_get( 'civi_eo_event_default_type' );
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_type' );
 
 		// Override with default value if we get one.
 		if ( '' !== $default && is_numeric( $default ) ) {

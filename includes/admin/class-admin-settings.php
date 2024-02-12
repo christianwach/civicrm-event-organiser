@@ -4,27 +4,27 @@
  *
  * Handles Admin Settings Page functionality.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Admin Settings Page Class.
+ * Admin Settings Page Class.
  *
  * A class that encapsulates Admin Settings Page functionality.
  *
  * @since 0.7
  */
-class CiviCRM_WP_Event_Organiser_Admin_Settings {
+class CEO_Admin_Settings {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
 
@@ -33,7 +33,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Admin
+	 * @var CEO_Admin
 	 */
 	public $admin;
 
@@ -540,7 +540,7 @@ class CiviCRM_WP_Event_Organiser_Admin_Settings {
 		$roles = $this->plugin->civi->registration->get_participant_roles_select( $event );
 
 		// Get all Event Types.
-		$types = $this->plugin->taxonomy->get_event_types_select();
+		$types = $this->plugin->wordpress->taxonomy->get_event_types_select();
 
 		// Get CiviCRM Event sync.
 		$civicrm_event_sync = $this->plugin->mapping->get_civicrm_event_sync_select();

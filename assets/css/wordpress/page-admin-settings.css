@@ -1,9 +1,9 @@
 /**
- * CiviCRM Event Organiser "Settings" Styles.
+ * Admin "Settings" page Styles.
  *
- * Implements styling for CiviCRM Event Organiser "Settings" page.
+ * Implements styling for "Settings" page.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 body.js .send-email-toggle {

@@ -4,29 +4,38 @@
  *
  * Handles compatibility with the "Caldera Forms CiviCRM Redirect" plugin.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser "Caldera Forms CiviCRM Redirect" Compatibility Class.
+ * Caldera Forms CiviCRM Redirect compatibility Class.
  *
  * This class provides compatibility with the "Caldera Forms CiviCRM Redirect" plugin.
  *
  * @since 0.5.3
  */
-class CiviCRM_WP_Event_Organiser_CFCR {
+class CEO_Compat_CFCR {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.5.3
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
+
+	/**
+	 * Compatibility object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_Compat
+	 */
+	public $compat;
 
 	/**
 	 * Caldera Forms CiviCRM Redirect reference.
@@ -46,8 +55,9 @@ class CiviCRM_WP_Event_Organiser_CFCR {
 	 */
 	public function __construct( $parent ) {
 
-		// Store reference.
-		$this->plugin = $parent;
+		// Store references.
+		$this->plugin = $parent->plugin;
+		$this->compat = $parent;
 
 		// Initialise after "Caldera Forms CiviCRM Redirect" is loaded.
 		add_action( 'plugins_loaded', [ $this, 'initialise' ], 50 );

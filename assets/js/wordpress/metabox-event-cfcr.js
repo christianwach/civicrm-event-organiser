@@ -1,5 +1,5 @@
 /**
- * CiviCRM Event Organiser "Caldera Forms CiviCRM Redirect" Switcher Javascript.
+ * Caldera Forms CiviCRM Redirect "Switcher" Javascript.
  *
  * Implements functionality for the metabox's "Switcher" button.
  *
@@ -7,14 +7,14 @@
  */
 
 /**
- * Create CiviCRM Event Organiser "Caldera Forms CiviCRM Redirect" Switcher object.
+ * Create "Caldera Forms CiviCRM Redirect" Switcher object.
  *
  * This works as a "namespace" of sorts, allowing us to hang properties, methods
  * and "sub-namespaces" from it.
  *
  * @since 0.5.3
  */
-var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
+var CEO_Switcher = CEO_Switcher || {};
 
 
 
@@ -32,7 +32,7 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 	 *
 	 * @since 0.5.3
 	 */
-	CiviCRM_Event_Organiser_Switcher.settings = new function() {
+	CEO_Switcher.settings = new function() {
 
 		// Prevent reference collisions.
 		var me = this;
@@ -74,8 +74,8 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 		 * @since 0.5.3
 		 */
 		this.init_localisation = function() {
-			if ( 'undefined' !== typeof CiviCRM_Event_Organiser_CFCR_Settings ) {
-				me.localisation = CiviCRM_Event_Organiser_CFCR_Settings.localisation;
+			if ( 'undefined' !== typeof CEO_CFCR_Settings ) {
+				me.localisation = CEO_CFCR_Settings.localisation;
 			}
 		};
 
@@ -100,8 +100,8 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 		 * @since 0.5.3
 		 */
 		this.init_settings = function() {
-			if ( 'undefined' !== typeof CiviCRM_Event_Organiser_CFCR_Settings ) {
-				me.settings = CiviCRM_Event_Organiser_CFCR_Settings.settings;
+			if ( 'undefined' !== typeof CEO_CFCR_Settings ) {
+				me.settings = CEO_CFCR_Settings.settings;
 			}
 		};
 
@@ -124,7 +124,7 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 	 *
 	 * @since 0.5.3
 	 */
-	CiviCRM_Event_Organiser_Switcher.switcher = new function() {
+	CEO_Switcher.switcher = new function() {
 
 		// Prevent reference collisions.
 		var me = this;
@@ -174,7 +174,7 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 
 			var src, spinner;
 
-			src = CiviCRM_Event_Organiser_Switcher.settings.get_setting( 'loading' ),
+			src = CEO_Switcher.settings.get_setting( 'loading' ),
 			spinner = '<img src="' + src + '" id="cfcr-redirect-loading" style="margin-top: 0.5em;" />'
 
 			// Init AJAX spinner.
@@ -223,9 +223,9 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 
 				// Override title and button in modal.
 				me.original_title = $('#link-modal-title').html();
-				$('#link-modal-title').html( CiviCRM_Event_Organiser_Switcher.settings.get_localisation( 'title' ) );
+				$('#link-modal-title').html( CEO_Switcher.settings.get_localisation( 'title' ) );
 				me.original_button = $('#wp-link-submit').val();
-				$('#wp-link-submit').val( CiviCRM_Event_Organiser_Switcher.settings.get_localisation( 'button' ) );
+				$('#wp-link-submit').val( CEO_Switcher.settings.get_localisation( 'button' ) );
 
 			});
 
@@ -237,7 +237,7 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 			deleter.on( 'click', function( event ) {
 
 				// Replace Post link.
-				$('.civi_eo_event_redirect_post_link').html( CiviCRM_Event_Organiser_Switcher.settings.get_localisation( 'no-selection' ) );
+				$('.civi_eo_event_redirect_post_link').html( CEO_Switcher.settings.get_localisation( 'no-selection' ) );
 
 				// Empty the value of the hidden input.
 				$('#civi_eo_event_redirect_post_id').val( 0 );
@@ -364,7 +364,7 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 			$.post(
 
 				// URL to post to.
-				CiviCRM_Event_Organiser_Switcher.settings.get_setting( 'ajax_url' ),
+				CEO_Switcher.settings.get_setting( 'ajax_url' ),
 
 				{
 
@@ -406,10 +406,10 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 	};
 
 	// Init settings.
-	CiviCRM_Event_Organiser_Switcher.settings.init();
+	CEO_Switcher.settings.init();
 
 	// Init Switcher.
-	CiviCRM_Event_Organiser_Switcher.switcher.init();
+	CEO_Switcher.switcher.init();
 
 } )( jQuery );
 
@@ -423,10 +423,10 @@ var CiviCRM_Event_Organiser_Switcher = CiviCRM_Event_Organiser_Switcher || {};
 jQuery(document).ready(function($) {
 
 	// The DOM is loaded now.
-	CiviCRM_Event_Organiser_Switcher.settings.dom_ready();
+	CEO_Switcher.settings.dom_ready();
 
 	// The DOM is loaded now.
-	CiviCRM_Event_Organiser_Switcher.switcher.dom_ready();
+	CEO_Switcher.switcher.dom_ready();
 
 }); // End document.ready()
 

@@ -4,29 +4,38 @@
  *
  * Handles compatibility with the "Post Duplicator" plugin.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser "Post Duplicator" Compatibility Class.
+ * Post Duplicator compatibility Class.
  *
  * This class provides compatibility with the "Post Duplicator" plugin.
  *
  * @since 0.7.5
  */
-class CiviCRM_WP_Event_Organiser_Post_Duplicator {
+class CEO_Compat_Post_Duplicator {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.7.5
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
+
+	/**
+	 * Compatibility object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_Compat
+	 */
+	public $compat;
 
 	/**
 	 * Constructor.
@@ -37,8 +46,9 @@ class CiviCRM_WP_Event_Organiser_Post_Duplicator {
 	 */
 	public function __construct( $parent ) {
 
-		// Store reference.
-		$this->plugin = $parent;
+		// Store references.
+		$this->plugin = $parent->plugin;
+		$this->compat = $parent;
 
 		// Initialise once "Post Duplicator" has loaded.
 		add_action( 'plugins_loaded', [ $this, 'initialise' ], 20 );

@@ -4,14 +4,14 @@
  *
  * Handles mapping between Event Organiser Events and CiviCRM Events.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Mapping Class.
+ * Mapping Class.
  *
  * A class that encapsulates mapping between Event Organiser Events and CiviCRM Events.
  *
@@ -60,14 +60,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.7
  */
-class CiviCRM_WP_Event_Organiser_Mapping {
+class CEO_Mapping {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
 
@@ -137,10 +137,10 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		}
 
 		// Overwrite event_disabled array.
-		$this->plugin->db->option_save( 'civi_eo_civi_event_disabled', [] );
+		$this->plugin->admin->option_save( 'civi_eo_civi_event_disabled', [] );
 
 		// Overwrite Event Organiser to CiviCRM data.
-		$this->plugin->db->option_save( 'civi_eo_civi_event_data', [] );
+		$this->plugin->admin->option_save( 'civi_eo_civi_event_data', [] );
 
 	}
 
@@ -163,7 +163,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		update_post_meta( $post_id, '_civi_eo_civicrm_events', $correspondences );
 
 		// Init array with stored value (or empty array).
-		$civi_event_data = $this->plugin->db->option_get( 'civi_eo_civi_event_data', [] );
+		$civi_event_data = $this->plugin->admin->option_get( 'civi_eo_civi_event_data', [] );
 
 		/*
 		 * Each CiviCRM Event needs to know the IDs of the Event Organiser Post
@@ -182,7 +182,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		}
 
 		// Store updated array as option.
-		$this->plugin->db->option_save( 'civi_eo_civi_event_data', $civi_event_data );
+		$this->plugin->admin->option_save( 'civi_eo_civi_event_data', $civi_event_data );
 
 		// Finally, store orphaned CiviCRM Events.
 		$this->store_orphaned_events( $post_id, $unlinked );
@@ -224,7 +224,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 	public function get_all_civi_to_eo_correspondences() {
 
 		// Get option.
-		$eo_event_data = $this->plugin->db->option_get( 'civi_eo_civi_event_data', [] );
+		$eo_event_data = $this->plugin->admin->option_get( 'civi_eo_civi_event_data', [] );
 
 		// --<
 		return $eo_event_data;
@@ -294,7 +294,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 			}
 
 			// Store updated array.
-			$this->plugin->db->option_save( 'civi_eo_civi_event_data', $civi_event_data );
+			$this->plugin->admin->option_save( 'civi_eo_civi_event_data', $civi_event_data );
 
 		}
 
@@ -366,7 +366,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 			}
 
 			// Store updated array.
-			$this->plugin->db->option_save( 'civi_eo_civi_event_data', $civi_event_data );
+			$this->plugin->admin->option_save( 'civi_eo_civi_event_data', $civi_event_data );
 
 		}
 
@@ -550,7 +550,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		$to_add = array_diff( $orphans, $existing );
 
 		// Init array with stored value (or empty array).
-		$civi_event_disabled = $this->plugin->db->option_get( 'civi_eo_civi_event_disabled', [] );
+		$civi_event_disabled = $this->plugin->admin->option_get( 'civi_eo_civi_event_disabled', [] );
 
 		// Do we have any orphans to add?
 		if ( count( $to_add ) > 0 ) {
@@ -573,7 +573,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		}
 
 		// Store updated array as option.
-		$this->plugin->db->option_save( 'civi_eo_civi_event_disabled', $civi_event_disabled );
+		$this->plugin->admin->option_save( 'civi_eo_civi_event_disabled', $civi_event_disabled );
 
 	}
 
@@ -643,7 +643,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 	public function get_eo_event_ids_for_orphans() {
 
 		// Return option.
-		return $this->plugin->db->option_get( 'civi_eo_civi_event_disabled', [] );
+		return $this->plugin->admin->option_get( 'civi_eo_civi_event_disabled', [] );
 
 	}
 
@@ -698,7 +698,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		];
 
 		// Get existing setting. Defaults to "Do not sync".
-		$civicrm_event_sync = $this->plugin->db->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
+		$civicrm_event_sync = $this->plugin->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
 
 		// Loop.
 		foreach ( $settings as $key => $setting ) {
@@ -746,7 +746,7 @@ class CiviCRM_WP_Event_Organiser_Mapping {
 		];
 
 		// Get existing setting. Defaults to "Do not sync".
-		$status_sync = $this->plugin->db->option_get( 'civi_eo_event_default_status_sync', 3 );
+		$status_sync = $this->plugin->admin->option_get( 'civi_eo_event_default_status_sync', 3 );
 
 		// Loop.
 		foreach ( $settings as $key => $setting ) {

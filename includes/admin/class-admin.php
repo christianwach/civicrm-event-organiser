@@ -4,27 +4,27 @@
  *
  * Handles Admin functionality.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Admin Class.
+ * Admin Class.
  *
  * A class that encapsulates admin functionality.
  *
  * @since 0.1
  */
-class CiviCRM_WP_Event_Organiser_Admin {
+class CEO_Admin {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
 
@@ -33,7 +33,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Admin_Settings
+	 * @var CEO_Admin_Settings
 	 */
 	public $settings;
 
@@ -42,7 +42,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Admin_Manual_Sync
+	 * @var CEO_Admin_Manual_Sync
 	 */
 	public $manual_sync;
 
@@ -51,7 +51,7 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	 *
 	 * @since 0.7
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser_Admin_Multisite
+	 * @var CEO_Admin_Multisite
 	 */
 	public $multisite;
 
@@ -152,12 +152,12 @@ class CiviCRM_WP_Event_Organiser_Admin {
 	public function setup_objects() {
 
 		// Instantiate Settings & Manual Sync Page objects.
-		$this->settings    = new CiviCRM_WP_Event_Organiser_Admin_Settings( $this );
-		$this->manual_sync = new CiviCRM_WP_Event_Organiser_Admin_Manual_Sync( $this );
+		$this->settings    = new CEO_Admin_Settings( $this );
+		$this->manual_sync = new CEO_Admin_Manual_Sync( $this );
 
 		// Maybe instantiate Multisite Page object.
 		if ( is_multisite() ) {
-			$this->multisite = new CiviCRM_WP_Event_Organiser_Admin_Multisite( $this );
+			$this->multisite = new CEO_Admin_Multisite( $this );
 		}
 
 	}
@@ -227,9 +227,9 @@ class CiviCRM_WP_Event_Organiser_Admin {
 		}
 
 		// Maybe upgrade Taxonomy to use "term meta".
-		if ( $this->plugin->taxonomy->can_query_by_term_meta() ) {
+		if ( $this->plugin->wordpress->taxonomy->can_query_by_term_meta() ) {
 			if ( 'fgffgs' === $this->option_get( 'civi_eo_term_meta_enabled', 'fgffgs' ) ) {
-				$this->plugin->taxonomy->upgrade();
+				$this->plugin->wordpress->taxonomy->upgrade();
 				$this->option_save( 'civi_eo_term_meta_enabled', 'yes' );
 			}
 		}

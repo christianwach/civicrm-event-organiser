@@ -4,29 +4,38 @@
  *
  * Handles plugin Shortcodes.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Shortcodes Class.
+ * Shortcodes Class.
  *
  * This class provides Shortcodes for this plugin.
  *
  * @since 0.6.3
  */
-class CiviCRM_WP_Event_Organiser_Shortcodes {
+class CEO_WordPress_Shortcodes {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.6.3
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
+
+	/**
+	 * WordPress object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_WordPress
+	 */
+	public $wordpress;
 
 	/**
 	 * Constructor.
@@ -37,11 +46,12 @@ class CiviCRM_WP_Event_Organiser_Shortcodes {
 	 */
 	public function __construct( $parent ) {
 
-		// Store reference.
-		$this->plugin = $parent;
+		// Store references.
+		$this->plugin    = $parent->plugin;
+		$this->wordpress = $parent;
 
-		// Add CiviCRM hooks when plugin is loaded.
-		add_action( 'ceo/loaded', [ $this, 'initialise' ] );
+		// Add Event Organiser hooks when WordPress class is loaded.
+		add_action( 'ceo/wordpress/loaded', [ $this, 'register_hooks' ] );
 
 	}
 

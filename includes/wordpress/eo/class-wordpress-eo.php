@@ -4,29 +4,38 @@
  *
  * Handles functionality generally related to Event Organiser.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * CiviCRM Event Organiser Event Organiser utility Class.
+ * Event Organiser Class.
  *
  * A class that encapsulates functionality generally related to Event Organiser.
  *
  * @since 0.1
  */
-class CiviCRM_WP_Event_Organiser_EO {
+class CEO_WordPress_EO {
 
 	/**
 	 * Plugin object.
 	 *
 	 * @since 0.1
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
+
+	/**
+	 * WordPress object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_WordPress
+	 */
+	public $wordpress;
 
 	/**
 	 * Insert Event flag.
@@ -79,11 +88,12 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 */
 	public function __construct( $parent ) {
 
-		// Store reference.
-		$this->plugin = $parent;
+		// Store references.
+		$this->plugin    = $parent->plugin;
+		$this->wordpress = $parent;
 
-		// Add Event Organiser hooks when plugin is loaded.
-		add_action( 'ceo/loaded', [ $this, 'register_hooks' ] );
+		// Add Event Organiser hooks when WordPress class is loaded.
+		add_action( 'ceo/wordpress/loaded', [ $this, 'register_hooks' ] );
 
 	}
 
@@ -172,7 +182,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( '0' === $installed_version || version_compare( $installed_version, '3', '<' ) ) {
 
 			// Let's show an admin notice.
-			add_action( 'admin_notices', [ $this->plugin->db, 'dependency_alert' ] );
+			add_action( 'admin_notices', [ $this->plugin->admin, 'dependency_alert' ] );
 
 			// We're not okay.
 			$eo_active = false;
@@ -317,7 +327,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 *
 	 * If the date(s) have been changed without "Sync this Event with CiviCRM"
 	 * selected, then the next time the Event is updated, the changed dates will
-	 * be handled by CiviCRM_WP_Event_Organiser_CiviCRM_Event::event_updated()
+	 * be handled by CEO_CiviCRM_Event::event_updated()
 	 *
 	 * If "Sync this Event with CiviCRM" is selected during the Event update and
 	 * the date(s) have been changed, then this method is called during the
@@ -533,13 +543,13 @@ class CiviCRM_WP_Event_Organiser_EO {
 			$location = $this->plugin->civi->location->get_location_by_id( $civi_event['loc_block_id'] );
 
 			// Get corresponding Event Organiser Venue ID.
-			$venue_id = $this->plugin->eo_venue->get_venue_id( $location );
+			$venue_id = $this->plugin->wordpress->eo_venue->get_venue_id( $location );
 
 			// If we get a match, create/update Venue.
 			if ( false === $venue_id ) {
-				$venue_id = $this->plugin->eo_venue->create_venue( $location );
+				$venue_id = $this->plugin->wordpress->eo_venue->create_venue( $location );
 			} else {
-				$venue_id = $this->plugin->eo_venue->update_venue( $location );
+				$venue_id = $this->plugin->wordpress->eo_venue->update_venue( $location );
 			}
 
 		}
@@ -558,14 +568,14 @@ class CiviCRM_WP_Event_Organiser_EO {
 			// We have a Category...
 
 			// Get Event Type data for this pseudo-ID (actually "value").
-			$type = $this->plugin->taxonomy->get_event_type_by_value( $civi_event['event_type_id'] );
+			$type = $this->plugin->wordpress->taxonomy->get_event_type_by_value( $civi_event['event_type_id'] );
 
 			// Does this Event Type have an existing Term?
-			$term_id = $this->plugin->taxonomy->get_term_id( $type );
+			$term_id = $this->plugin->wordpress->taxonomy->get_term_id( $type );
 
 			// If not then create one and assign Term ID.
 			if ( false === $term_id ) {
-				$term = $this->plugin->taxonomy->create_term( $type );
+				$term = $this->plugin->wordpress->taxonomy->create_term( $type );
 				if ( false !== $term ) {
 					$term_id = $term['term_id'];
 				}
@@ -596,7 +606,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		}
 
 		// Get Status Sync setting.
-		$status_sync = (int) $this->plugin->db->option_get( 'civi_eo_event_default_status_sync', 3 );
+		$status_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_status_sync', 3 );
 
 		// Do we have a Post ID for this Event?
 		$eo_post_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $civi_event['id'] );
@@ -1565,7 +1575,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( is_null( $value ) ) {
 
 			// Do we have a default set?
-			$default = $this->plugin->db->option_get( 'civi_eo_event_default_role' );
+			$default = $this->plugin->admin->option_get( 'civi_eo_event_default_role' );
 
 			// Override with default value if we get one.
 			if ( '' !== $default && is_numeric( $default ) ) {
@@ -1655,7 +1665,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( is_null( $profile_id ) ) {
 
 			// Do we have a default set?
-			$default = $this->plugin->db->option_get( 'civi_eo_event_default_profile' );
+			$default = $this->plugin->admin->option_get( 'civi_eo_event_default_profile' );
 
 			// Override with default value if we get one.
 			if ( '' !== $default && is_numeric( $default ) ) {
@@ -1783,7 +1793,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( is_null( $dedupe_rule_id ) ) {
 
 			// Do we have a default set?
-			$default = $this->plugin->db->option_get( 'civi_eo_event_default_dedupe' );
+			$default = $this->plugin->admin->option_get( 'civi_eo_event_default_dedupe' );
 
 			// Override with default value if we get one.
 			if ( '' !== $default && is_numeric( $default ) ) {
@@ -1897,7 +1907,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( is_null( $setting ) ) {
 
 			// Do we have a default set?
-			$default = $this->plugin->db->option_get( 'civi_eo_event_default_confirm' );
+			$default = $this->plugin->admin->option_get( 'civi_eo_event_default_confirm' );
 
 			// Override with default value if we get one.
 			if ( '' !== $default && is_numeric( $default ) ) {
@@ -1988,7 +1998,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( is_null( $setting ) ) {
 
 			// Do we have a default set?
-			$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email' );
+			$default = $this->plugin->admin->option_get( 'civi_eo_event_default_send_email' );
 
 			// Override with default value if we get one.
 			if ( '' !== $default && is_numeric( $default ) ) {
@@ -2081,7 +2091,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( is_null( $setting ) ) {
 
 			// Override with default value if we get one.
-			$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_from_name' );
+			$default = $this->plugin->admin->option_get( 'civi_eo_event_default_send_email_from_name' );
 			if ( ! empty( $default ) ) {
 				$setting = $default;
 			}
@@ -2172,7 +2182,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 		if ( is_null( $setting ) ) {
 
 			// Override with default value if we get one.
-			$default = $this->plugin->db->option_get( 'civi_eo_event_default_send_email_from' );
+			$default = $this->plugin->admin->option_get( 'civi_eo_event_default_send_email_from' );
 			if ( ! empty( $default ) ) {
 				$setting = $default;
 			}
@@ -2251,7 +2261,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * that default values are populated when necessary and the "blanked out" token is
 	 * substituted when necessary.
 	 *
-	 * @see CiviCRM_WP_Event_Organiser_CiviCRM_Registration::get_registration_send_email_cc()
+	 * @see CEO_CiviCRM_Registration::get_registration_send_email_cc()
 	 *
 	 * @since 0.7.4
 	 *
@@ -2361,7 +2371,7 @@ class CiviCRM_WP_Event_Organiser_EO {
 	 * that default values are populated when necessary and the "blanked out" token is
 	 * substituted when necessary.
 	 *
-	 * @see CiviCRM_WP_Event_Organiser_CiviCRM_Registration::get_registration_send_email_bcc()
+	 * @see CEO_CiviCRM_Registration::get_registration_send_email_bcc()
 	 *
 	 * @since 0.7.4
 	 *

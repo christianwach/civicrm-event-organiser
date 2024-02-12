@@ -4,7 +4,7 @@
  *
  * Provides a "CiviCRM Event ID Field" Custom ACF Field in ACF 5+.
  *
- * @package CiviCRM_WP_Event_Organiser
+ * @package CiviCRM_Event_Organiser
  */
 
 // Exit if accessed directly.
@@ -24,9 +24,18 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 * @access public
-	 * @var CiviCRM_WP_Event_Organiser
+	 * @var CiviCRM_Event_Organiser
 	 */
 	public $plugin;
+
+	/**
+	 * Compatibility object.
+	 *
+	 * @since 0.8.0
+	 * @access public
+	 * @var CEO_Compat
+	 */
+	public $compat;
 
 	/**
 	 * Field Type name.
@@ -117,8 +126,9 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 */
 	public function __construct( $parent ) {
 
-		// Store references to objects.
+		// Store references.
 		$this->plugin = $parent->plugin;
+		$this->compat = $parent;
 
 		// Define label.
 		$this->label = __( 'CiviCRM Event: Event ID (Read Only)', 'civicrm-event-organiser' );
