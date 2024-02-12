@@ -85,7 +85,7 @@ class CEO_Admin_Multisite {
 		add_action( 'network_admin_notices', [ $this, 'activation_warning' ] );
 
 		// Filter access capabilities.
-		add_filter( 'ceo/admin/page/settings/cap', [ $this, 'caps_filter' ] );
+		add_filter( 'ceo/admin/settings/cap', [ $this, 'caps_filter' ] );
 
 	}
 
@@ -109,7 +109,11 @@ class CEO_Admin_Multisite {
 		}
 
 		// Show Admin Notice.
-		echo '<div class="notice notice-error is-dismissible"><p>' . esc_html__( 'CiviCRM Event Organiser should not be network-activated. Please activate it on individual sites instead.', 'civicrm-event-organiser' ) . '</p></div>';
+		echo '<div class="notice notice-error is-dismissible">' .
+			'<p>' .
+				esc_html__( 'CiviCRM Event Organiser should not be network-activated. Please activate it on individual sites instead.', 'civicrm-event-organiser' ) .
+			'</p>' .
+		'</div>';
 
 	}
 
@@ -124,7 +128,16 @@ class CEO_Admin_Multisite {
 	public function caps_filter( $capability ) {
 
 		// Assign network admin capability.
-		$capability = 'manage_network_options';
+		$multisite_capability = 'manage_network_options';
+
+		/**
+		 * Filter the default multisite capability for access to Settings.
+		 *
+		 * @since 0.8.0
+		 *
+		 * @param string $multisite_capability The default multisite capability for access to Settings.
+		 */
+		$capability = apply_filters( 'ceo/admin/multisite/settings/cap', $multisite_capability );
 
 		// --<
 		return $capability;

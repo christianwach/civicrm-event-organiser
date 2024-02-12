@@ -172,11 +172,10 @@ class CiviCRM_Event_Organiser {
 			return false;
 		}
 
-		// Include files.
+		// Bootstrap plugin.
 		$this->include_files();
-
-		// Set up objects and references.
 		$this->setup_objects();
+		$this->register_hooks();
 
 		/**
 		 * Fires when this plugin has fully loaded.
@@ -249,6 +248,19 @@ class CiviCRM_Event_Organiser {
 
 		// We're done.
 		$done = true;
+
+	}
+
+	/**
+	 * Register hooks.
+	 *
+	 * @since 0.8.0
+	 */
+	public function register_hooks() {
+
+		// Add settings link.
+		add_filter( 'network_admin_plugin_action_links', [ $this, 'plugin_action_links' ], 10, 2 );
+		add_filter( 'plugin_action_links', [ $this, 'plugin_action_links' ], 10, 2 );
 
 	}
 
@@ -432,6 +444,35 @@ class CiviCRM_Event_Organiser {
 	}
 
 	/**
+	 * Utility to add link to settings page.
+	 *
+	 * @since 0.1
+	 *
+	 * @param array $links The existing links array.
+	 * @param str   $file The name of the plugin file.
+	 * @return array $links The modified links array.
+	 */
+	public function plugin_action_links( $links, $file ) {
+
+		// Add settings link.
+		if ( plugin_basename( dirname( __FILE__ ) . '/civicrm-event-organiser.php' ) === $file ) {
+
+			// Add settings link.
+			$link    = $this->admin->settings->page_settings_submit_url_get();
+			$links[] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'Settings', 'civicrm-event-organiser' ) . '</a>';
+
+			// Add Paypal link.
+			$paypal  = 'https://www.paypal.me/interactivist';
+			$links[] = '<a href="' . esc_url( $paypal ) . '" target="_blank">' . esc_html__( 'Donate!', 'civicrm-event-organiser' ) . '</a>';
+
+		}
+
+		// --<
+		return $links;
+
+	}
+
+	/**
 	 * Write to the error log.
 	 *
 	 * @since 0.8.0
@@ -467,78 +508,32 @@ class CiviCRM_Event_Organiser {
  *
  * @since 0.2.2
  *
- * @return CiviCRM_Event_Organiser $civicrm_wp_event_organiser The plugin reference.
+ * @return CiviCRM_Event_Organiser $plugin The plugin reference.
  */
 function civicrm_eo() {
 
 	// Return instance.
-	global $civicrm_wp_event_organiser;
+	static $plugin;
 
 	// Instantiate plugin if not yet instantiated.
-	if ( ! isset( $civicrm_wp_event_organiser ) ) {
-		$civicrm_wp_event_organiser = new CiviCRM_Event_Organiser();
+	if ( ! isset( $plugin ) ) {
+		$plugin = new CiviCRM_Event_Organiser();
 	}
 
-	return $civicrm_wp_event_organiser;
+	return $plugin;
 
 }
 
 // Bootstrap plugin.
 civicrm_eo();
 
-/**
- * Utility to add link to settings page.
- *
- * @since 0.1
- *
- * @param array $links The existing links array.
- * @param str   $file The name of the plugin file.
- * @return array $links The modified links array.
+// Activation.
+register_activation_hook( __FILE__, [ civicrm_eo(), 'activate' ] );
+
+// Deactivation.
+register_deactivation_hook( __FILE__, [ civicrm_eo(), 'deactivate' ] );
+
+/*
+ * Uninstall uses the 'uninstall.php' method.
+ * @see https://developer.wordpress.org/reference/functions/register_uninstall_hook/
  */
-function civicrm_wp_event_organiser_plugin_action_links( $links, $file ) {
-
-	// Bail if Event Organiser plugin is not present.
-	if ( ! defined( 'EVENT_ORGANISER_VER' ) ) {
-		return $links;
-	}
-
-	// Bail if CiviCRM plugin is not present.
-	if ( ! function_exists( 'civi_wp' ) ) {
-		return $links;
-	}
-
-	// Add links only when CiviCRM is fully installed.
-	if ( ! defined( 'CIVICRM_INSTALLED' ) ) {
-		return $links;
-	}
-	if ( ! CIVICRM_INSTALLED ) {
-		return $links;
-	}
-
-	// Add settings link.
-	if ( plugin_basename( dirname( __FILE__ ) . '/civicrm-event-organiser.php' ) === $file ) {
-
-		// Is this Network Admin?
-		if ( is_network_admin() ) {
-			$link = add_query_arg( [ 'page' => 'civi_eo_parent' ], network_admin_url( 'settings.php' ) );
-		} else {
-			$link = add_query_arg( [ 'page' => 'civi_eo_parent' ], admin_url( 'admin.php' ) );
-		}
-
-		// Add settings link.
-		$links[] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'Settings', 'civicrm-event-organiser' ) . '</a>';
-
-		// Add Paypal link.
-		$paypal  = 'https://www.paypal.me/interactivist';
-		$links[] = '<a href="' . $paypal . '" target="_blank">' . __( 'Donate!', 'civicrm-event-organiser' ) . '</a>';
-
-	}
-
-	// --<
-	return $links;
-
-}
-
-// Add filters for the above.
-add_filter( 'network_admin_plugin_action_links', 'civicrm_wp_event_organiser_plugin_action_links', 10, 2 );
-add_filter( 'plugin_action_links', 'civicrm_wp_event_organiser_plugin_action_links', 10, 2 );

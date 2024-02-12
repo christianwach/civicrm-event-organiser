@@ -317,11 +317,18 @@ class CEO_Admin_Settings {
 	 */
 	public function page_settings() {
 
-		// Only allow network admins when network activated.
-		if ( $this->admin->is_network_activated() ) {
-			if ( ! is_super_admin() ) {
-				wp_die( esc_html__( 'You do not have permission to access this page.', 'civicrm-event-organiser' ) );
-			}
+		/**
+		 * Set access capability but allow overrides.
+		 *
+		 * @since 0.7
+		 *
+		 * @param string The default capability for access to Settings.
+		 */
+		$capability = apply_filters( 'ceo/admin/settings/cap', 'manage_options' );
+
+		// Check user permissions.
+		if ( ! current_user_can( $capability ) ) {
+			return;
 		}
 
 		// Get Settings Page Tab URLs.

@@ -264,11 +264,18 @@ class CEO_Admin_Manual_Sync {
 	 */
 	public function page_manual_sync() {
 
-		// Only allow network admins when network activated.
-		if ( $this->admin->is_network_activated() ) {
-			if ( ! is_super_admin() ) {
-				wp_die( esc_html__( 'You do not have permission to access this page.', 'civicrm-event-organiser' ) );
-			}
+		/**
+		 * Set access capability but allow overrides.
+		 *
+		 * @since 0.7
+		 *
+		 * @param string The default capability for access to Settings.
+		 */
+		$capability = apply_filters( 'ceo/admin/settings/cap', 'manage_options' );
+
+		// Check user permissions.
+		if ( ! current_user_can( $capability ) ) {
+			return;
 		}
 
 		// Get current screen.
@@ -713,6 +720,36 @@ class CEO_Admin_Manual_Sync {
 	 */
 	public function form_submitted() {
 
+		// Our lengthy buttons array.
+		$buttons = [
+			'civi_eo_tax_eo_to_civi',
+			'civi_eo_tax_eo_to_civi_stop',
+			'civi_eo_tax_civi_to_eo',
+			'civi_eo_tax_civi_to_eo_stop',
+			'civi_eo_venue_eo_to_civi',
+			'civi_eo_venue_eo_to_civi_stop',
+			'civi_eo_venue_civi_to_eo',
+			'civi_eo_venue_civi_to_eo_stop',
+			'civi_eo_event_eo_to_civi',
+			'civi_eo_event_eo_to_civi_stop',
+			'civi_eo_event_civi_to_eo',
+			'civi_eo_event_civi_to_eo_stop',
+		];
+
+		// Was the form submitted?
+		$submitted = false;
+		foreach ( $buttons as $button ) {
+			if ( isset( $_POST[ $button ] ) ) {
+				$submitted = true;
+				break;
+			}
+		}
+
+		// Bail if none of our buttons was used.
+		if ( false === $submitted ) {
+			return;
+		}
+
 		// Check that we trust the source of the data.
 		check_admin_referer( $this->form_nonce_action, $this->form_nonce_field );
 
@@ -753,12 +790,12 @@ class CEO_Admin_Manual_Sync {
 		}
 
 		// Was an Event Type "Sync Now" button pressed?
-		$venue_eo_to_civi = isset( $_POST['civi_eo_venue_eo_to_civi'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_eo_to_civi'] ) ) : false;
-		if ( ! empty( $venue_eo_to_civi ) ) {
+		$tax_eo_to_civi = isset( $_POST['civi_eo_tax_eo_to_civi'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_tax_eo_to_civi'] ) ) : false;
+		if ( ! empty( $tax_eo_to_civi ) ) {
 			$this->stepped_sync_categories_to_types();
 		}
-		$venue_eo_to_civi = isset( $_POST['civi_eo_venue_eo_to_civi'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_venue_eo_to_civi'] ) ) : false;
-		if ( ! empty( $venue_eo_to_civi ) ) {
+		$tax_civi_to_eo = isset( $_POST['civi_eo_tax_civi_to_eo'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_tax_civi_to_eo'] ) ) : false;
+		if ( ! empty( $tax_civi_to_eo ) ) {
 			$this->stepped_sync_types_to_categories();
 		}
 
@@ -773,8 +810,8 @@ class CEO_Admin_Manual_Sync {
 		}
 
 		// Was an Event "Sync Now" button pressed?
-		$event_civi_to_eo = isset( $_POST['civi_eo_event_civi_to_eo'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_civi_to_eo'] ) ) : false;
-		if ( ! empty( $event_civi_to_eo ) ) {
+		$event_eo_to_civi = isset( $_POST['civi_eo_event_eo_to_civi'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_eo_to_civi'] ) ) : false;
+		if ( ! empty( $event_eo_to_civi ) ) {
 			$this->stepped_sync_events_eo_to_civi();
 		}
 		$event_civi_to_eo = isset( $_POST['civi_eo_event_civi_to_eo'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_civi_to_eo'] ) ) : false;
