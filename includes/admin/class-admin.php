@@ -227,11 +227,9 @@ class CEO_Admin {
 		}
 
 		// Maybe upgrade Taxonomy to use "term meta".
-		if ( $this->plugin->wordpress->taxonomy->can_query_by_term_meta() ) {
-			if ( 'fgffgs' === $this->option_get( 'civi_eo_term_meta_enabled', 'fgffgs' ) ) {
-				$this->plugin->wordpress->taxonomy->upgrade();
-				$this->option_save( 'civi_eo_term_meta_enabled', 'yes' );
-			}
+		if ( 'fgffgs' === $this->option_get( 'civi_eo_term_meta_enabled', 'fgffgs' ) ) {
+			$this->plugin->wordpress->taxonomy->upgrade();
+			$this->option_save( 'civi_eo_term_meta_enabled', 'yes' );
 		}
 
 	}

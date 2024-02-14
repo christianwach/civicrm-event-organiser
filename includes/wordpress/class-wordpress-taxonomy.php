@@ -225,39 +225,11 @@ class CEO_WordPress_Taxonomy {
 	}
 
 	/**
-	 * Can this version of WordPress perform "term meta" queries?
-	 *
-	 * The `unregister_meta_key()` function was introduced in WordPress 4.6,
-	 * so we look for that rather than potentially triggering autoloaders by
-	 * using a `class_exists( 'WP_Term_Query' )` lookup.
-	 *
-	 * @since 0.4.5
-	 *
-	 * @return bool True if Terms can be queried by their "term meta", false otherwise.
-	 */
-	public function can_query_by_term_meta() {
-
-		// Bail if this version of WordPress doesn't support "term meta" queries.
-		if ( ! function_exists( 'unregister_meta_key' ) ) {
-			return false;
-		}
-
-		// --<
-		return true;
-
-	}
-
-	/**
 	 * Upgrade all synced Terms to store linkage in "term_meta".
 	 *
 	 * @since 0.4.5
 	 */
 	public function upgrade() {
-
-		// Bail if "term meta" queries aren't available.
-		if ( ! $this->can_query_by_term_meta() ) {
-			return;
-		}
 
 		// Delay until "admin_init" hook.
 		add_action( 'admin_init', [ $this, 'upgrade_terms' ] );
@@ -923,11 +895,6 @@ class CEO_WordPress_Taxonomy {
 	 */
 	public function get_term_by_meta( $event_type ) {
 
-		// Bail if this version of WordPress doesn't support "term meta" queries.
-		if ( ! $this->can_query_by_term_meta() ) {
-			return false;
-		}
-
 		// Extract value.
 		if ( is_array( $event_type ) ) {
 			$value = $event_type['id'];
@@ -1001,11 +968,6 @@ class CEO_WordPress_Taxonomy {
 	 * @return int|bool $event_type_id The ID of the CiviCRM Event Type, or false on failure.
 	 */
 	public function get_term_meta( $term_id ) {
-
-		// Bail if this version of WordPress doesn't support "term meta" queries.
-		if ( ! $this->can_query_by_term_meta() ) {
-			return false;
-		}
 
 		// Get the Event Type ID from the Term's meta.
 		$event_type_id = get_term_meta( $term_id, $this->term_meta_key, true );
