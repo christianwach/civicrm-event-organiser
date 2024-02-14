@@ -216,7 +216,6 @@ class CiviCRM_Event_Organiser {
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-mapping.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-compat.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-db.php';
 
 		// We're done.
 		$done = true;
