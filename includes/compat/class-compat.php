@@ -98,7 +98,7 @@ class CEO_Compat {
 		 *
 		 * @since 0.8.0
 		 */
-		do_action( 'ceo/wordpress/loaded' );
+		do_action( 'ceo/compat/loaded' );
 
 	}
 

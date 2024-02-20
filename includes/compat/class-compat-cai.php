@@ -60,7 +60,7 @@ class CEO_Compat_CAI {
 		$this->compat = $parent;
 
 		// Add CiviCRM hooks when plugin is loaded.
-		add_action( 'ceo/loaded', [ $this, 'initialise' ] );
+		add_action( 'ceo/compat/loaded', [ $this, 'initialise' ] );
 
 	}
 
