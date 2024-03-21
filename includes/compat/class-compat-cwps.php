@@ -133,14 +133,6 @@ class CEO_Compat_CWPS {
 		// Include any Field Types that we have defined after ACFE does.
 		add_action( 'acf/include_field_types', [ $this, 'register_field_types' ], 100 );
 
-		$e = new \Exception();
-		$trace = $e->getTraceAsString();
-		error_log( print_r( [
-			'method' => __METHOD__,
-			//'args' => $args,
-			//'backtrace' => $trace,
-		], true ) );
-
 		// Listen for events from the Mapper that require Event updates.
 		add_action( 'cwps/acf/mapper/acf_fields/saved', [ $this, 'acf_fields_saved' ], 10, 1 );
 
