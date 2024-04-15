@@ -80,6 +80,15 @@ class CEO_WordPress_EO {
 	public $sync_data;
 
 	/**
+	 * Event correspondences to use once the Event has been deleted.
+	 *
+	 * @since 0.4
+	 * @access public
+	 * @var array
+	 */
+	private $saved_correspondences;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.1
