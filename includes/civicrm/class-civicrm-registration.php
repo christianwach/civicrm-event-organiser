@@ -138,7 +138,8 @@ class CEO_CiviCRM_Registration {
 			'is_active'       => 1,
 			'option_group_id' => $participant_role['id'],
 			'options'         => [
-				'sort' => 'weight ASC',
+				'limit' => 0, // Get all Participant Roles.
+				'sort'  => 'weight ASC',
 			],
 		];
 

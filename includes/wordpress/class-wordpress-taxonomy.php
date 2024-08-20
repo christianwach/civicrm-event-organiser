@@ -1528,7 +1528,8 @@ class CEO_WordPress_Taxonomy {
 			'version'         => 3,
 			'option_group_id' => $opt_group_id,
 			'options'         => [
-				'sort' => 'weight ASC',
+				'limit' => 0, // Get all Event Types.
+				'sort'  => 'weight ASC',
 			],
 		];
 
