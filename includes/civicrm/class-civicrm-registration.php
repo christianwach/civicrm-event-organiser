@@ -596,6 +596,9 @@ class CEO_CiviCRM_Registration {
 		// Define params.
 		$params = [
 			'version' => 3,
+			'options' => [
+				'limit' => 0, // Get all profiles.
+			],
 		];
 
 		// Get them via API.
