@@ -291,11 +291,13 @@ class CEO_CiviCRM_Registration {
 				// Use CiviCRM to construct link.
 				$link = civicrm_basepage_url(
 					'civicrm/event/register',
-					'reset=1&id=' . $civi_event['id']
+					'reset=1&id=' . $civi_event['id'],
+					true,
+					null,
+					false,
 				);
 
 			} else {
-
 
 				// Use CiviCRM to construct link.
 				$link = CRM_Utils_System::url(

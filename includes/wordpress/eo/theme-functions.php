@@ -179,7 +179,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		}
 
 		// Construct link if we get one.
-		$link = '<a class="civicrm-event-organiser-register-link" href="' . $url . '">' . $text . '</a>';
+		$link = '<a class="civicrm-event-organiser-register-link" href="' . esc_url( $url ) . '">' . $text . '</a>';
 
 		/**
 		 * Filter Registration link.
