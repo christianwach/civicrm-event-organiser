@@ -263,6 +263,9 @@ class CEO_CiviCRM_Registration {
 	/**
 	 * Get a CiviCRM Event's Registration link.
 	 *
+	 * This should always link to the CiviCRM Base Page regardless of whether there
+	 * is other CiviCRM content.
+	 *
 	 * @since 0.2.2
 	 * @since 0.7 Moved to this class.
 	 *
@@ -282,15 +285,29 @@ class CEO_CiviCRM_Registration {
 				return $link;
 			}
 
-			// Use CiviCRM to construct link.
-			$link = CRM_Utils_System::url(
-				'civicrm/event/register',
-				'reset=1&id=' . $civi_event['id'],
-				true,
-				null,
-				false,
-				true
-			);
+			// Use direct Base Page link method if present.
+			if ( function_exists( 'civicrm_basepage_url' ) ) {
+
+				// Use CiviCRM to construct link.
+				$link = civicrm_basepage_url(
+					'civicrm/event/register',
+					'reset=1&id=' . $civi_event['id']
+				);
+
+			} else {
+
+
+				// Use CiviCRM to construct link.
+				$link = CRM_Utils_System::url(
+					'civicrm/event/register',
+					'reset=1&id=' . $civi_event['id'],
+					true,
+					null,
+					false,
+					true
+				);
+
+			}
 
 		}
 
