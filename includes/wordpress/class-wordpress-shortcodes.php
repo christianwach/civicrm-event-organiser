@@ -50,31 +50,19 @@ class CEO_WordPress_Shortcodes {
 		$this->plugin    = $parent->plugin;
 		$this->wordpress = $parent;
 
-		// Add Event Organiser hooks when WordPress class is loaded.
-		add_action( 'ceo/wordpress/loaded', [ $this, 'register_hooks' ] );
+		// Register Shortcodes when WordPress class has loaded.
+		add_action( 'ceo/wordpress/loaded', [ $this, 'register_shortcodes' ] );
 
 	}
 
 	/**
-	 * Do stuff on plugin init.
+	 * Registers this plugin's Shortcodes.
 	 *
 	 * @since 0.6.3
 	 */
-	public function initialise() {
+	public function register_shortcodes() {
 
-		// Register hooks.
-		$this->register_hooks();
-
-	}
-
-	/**
-	 * Register hooks on plugin init.
-	 *
-	 * @since 0.6.3
-	 */
-	public function register_hooks() {
-
-		// Register shortcodes.
+		// Register Shortcodes.
 		add_shortcode( 'ceo_register_link', [ $this, 'register_link_render' ] );
 
 	}
