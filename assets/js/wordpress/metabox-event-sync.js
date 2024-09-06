@@ -16,8 +16,6 @@
  */
 var CEO_Event_Metabox = CEO_Event_Metabox || {};
 
-
-
 /**
  * Pass the jQuery shortcut in.
  *
@@ -204,8 +202,6 @@ var CEO_Event_Metabox = CEO_Event_Metabox || {};
 
 } )( jQuery );
 
-
-
 /**
  * Trigger dom_ready methods where necessary.
  *
@@ -217,4 +213,4 @@ jQuery(document).ready(function($) {
 	CEO_Event_Metabox.settings.dom_ready();
 	CEO_Event_Metabox.accordion.dom_ready();
 
-}); // End document.ready()
+});

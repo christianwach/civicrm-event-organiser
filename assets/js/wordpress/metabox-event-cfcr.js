@@ -16,8 +16,6 @@
  */
 var CEO_Switcher = CEO_Switcher || {};
 
-
-
 /**
  * Pass the jQuery shortcut in.
  *
@@ -413,8 +411,6 @@ var CEO_Switcher = CEO_Switcher || {};
 
 } )( jQuery );
 
-
-
 /**
  * Trigger dom_ready methods where necessary.
  *
@@ -428,7 +424,4 @@ jQuery(document).ready(function($) {
 	// The DOM is loaded now.
 	CEO_Switcher.switcher.dom_ready();
 
-}); // End document.ready()
-
-
-
+});

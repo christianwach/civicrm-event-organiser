@@ -16,8 +16,6 @@
  */
 var CEO_Manual_Sync = CEO_Manual_Sync || {};
 
-
-
 /**
  * Pass the jQuery shortcut in.
  *
@@ -393,8 +391,6 @@ var CEO_Manual_Sync = CEO_Manual_Sync || {};
 
 } )( jQuery );
 
-
-
 /**
  * Trigger dom_ready methods where necessary.
  *
@@ -408,7 +404,4 @@ jQuery(document).ready(function($) {
 	// The DOM is loaded now.
 	CEO_Manual_Sync.progress_bar.dom_ready();
 
-}); // End document.ready()
-
-
-
+});

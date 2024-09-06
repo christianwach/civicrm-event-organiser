@@ -16,8 +16,6 @@
  */
 var CEO_Feature_Image = CEO_Feature_Image || {};
 
-
-
 /**
  * Pass the jQuery shortcut in.
  *
@@ -346,8 +344,6 @@ var CEO_Feature_Image = CEO_Feature_Image || {};
 
 } )( jQuery );
 
-
-
 /**
  * Trigger dom_ready methods where necessary.
  *
@@ -361,7 +357,4 @@ jQuery(document).ready(function($) {
 	// The DOM is loaded now.
 	//CEO_Feature_Image.switcher.dom_ready();
 
-}); // End document.ready()
-
-
-
+});
