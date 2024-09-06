@@ -64,7 +64,7 @@ class CEO_CiviCRM_Registration {
 
 	}
 
-	// -------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------
 
 	/**
 	 * Get the existing Participant Role for a Post, but fall back to the default
@@ -217,7 +217,7 @@ class CEO_CiviCRM_Registration {
 
 	}
 
-	// -------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------
 
 	/**
 	 * Checks the status of a CiviCRM Event's Registration option.
@@ -707,7 +707,7 @@ class CEO_CiviCRM_Registration {
 
 	}
 
-	// -------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------
 
 	/**
 	 * Get the default Registration Dedupe Rule for an Event Organiser Event.
@@ -872,7 +872,7 @@ class CEO_CiviCRM_Registration {
 
 	}
 
-	// -------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------
 
 	/**
 	 * Get the default Registration form confirmation page setting for an Event Organiser Event.
@@ -917,7 +917,7 @@ class CEO_CiviCRM_Registration {
 
 	}
 
-	// -------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------
 
 	/**
 	 * Get the default Confirmation Email setting for an Event Organiser Event.

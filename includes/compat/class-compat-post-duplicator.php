@@ -84,7 +84,7 @@ class CEO_Compat_Post_Duplicator {
 
 	}
 
-	// -------------------------------------------------------------------------
+	// -----------------------------------------------------------------------------------
 
 	/**
 	 * Deletes the Event meta that links it to one or more CiviCRM Events.
