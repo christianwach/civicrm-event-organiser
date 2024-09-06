@@ -40,7 +40,7 @@ There is an issue with [Apple Calendar's display of Event Organiser iCal feeds](
 
 ### Requirements
 
-This plugin requires at least WordPress 4.9 and CiviCRM 5.13.
+This plugin recommends a minimum of WordPress 4.9 and CiviCRM 5.75 (the latest ESR).
 
 It also requires:
 
