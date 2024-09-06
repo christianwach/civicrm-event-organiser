@@ -95,7 +95,7 @@ class CEO_Compat_CFCR {
 	public function register_hooks() {
 
 		// Add option at the end of the Online Registration options.
-		add_action( 'civicrm_event_organiser_event_meta_box_online_reg_after', [ $this, 'metabox_append' ] );
+		add_action( 'ceo/event/metabox/event/sync/online_reg/after', [ $this, 'metabox_append' ] );
 
 		// Query new Redirect Location.
 		add_action( 'wp_ajax_url_to_post_id', [ $this, 'url_to_post_id' ] );
