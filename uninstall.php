@@ -13,25 +13,22 @@ defined( 'ABSPATH' ) || exit;
 // Exit if uninstall not called from WordPress.
 defined( 'WP_UNINSTALL_PLUGIN' ) || exit;
 
-// Access plugin.
-$ceo = civicrm_eo();
-
 // Delete version.
-$ceo->admin->option_delete( 'civi_eo_version' );
+delete_option( 'civi_eo_version' );
 
 // Delete defaults.
-$ceo->admin->option_delete( 'civi_eo_event_default_send_email' );
-$ceo->admin->option_delete( 'civi_eo_event_default_send_email_from_name' );
-$ceo->admin->option_delete( 'civi_eo_event_default_send_email_from' );
-$ceo->admin->option_delete( 'civi_eo_event_default_send_email_cc' );
-$ceo->admin->option_delete( 'civi_eo_event_default_send_email_bcc' );
-$ceo->admin->option_delete( 'civi_eo_event_default_confirm' );
-$ceo->admin->option_delete( 'civi_eo_event_default_profile' );
-$ceo->admin->option_delete( 'civi_eo_event_default_role' );
-$ceo->admin->option_delete( 'civi_eo_event_default_type' );
-$ceo->admin->option_delete( 'civi_eo_event_default_civicrm_event_sync' );
-$ceo->admin->option_delete( 'civi_eo_event_default_status_sync' );
+delete_option( 'civi_eo_event_default_send_email' );
+delete_option( 'civi_eo_event_default_send_email_from_name' );
+delete_option( 'civi_eo_event_default_send_email_from' );
+delete_option( 'civi_eo_event_default_send_email_cc' );
+delete_option( 'civi_eo_event_default_send_email_bcc' );
+delete_option( 'civi_eo_event_default_confirm' );
+delete_option( 'civi_eo_event_default_profile' );
+delete_option( 'civi_eo_event_default_role' );
+delete_option( 'civi_eo_event_default_type' );
+delete_option( 'civi_eo_event_default_civicrm_event_sync' );
+delete_option( 'civi_eo_event_default_status_sync' );
 
 // Delete data arrays.
-$ceo->admin->option_delete( 'civi_eo_civi_event_disabled' );
-$ceo->admin->option_delete( 'civi_eo_civi_event_data' );
+delete_option( 'civi_eo_civi_event_disabled' );
+delete_option( 'civi_eo_civi_event_data' );
