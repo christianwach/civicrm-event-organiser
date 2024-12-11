@@ -56,6 +56,24 @@ class CEO_CiviCRM_Event {
 	public $registration;
 
 	/**
+	 * Bridging property for CiviCRM Event ID.
+	 *
+	 * @since 0.7
+	 * @access private
+	 * @var integer
+	 */
+	private $civicrm_event_created_id;
+
+	/**
+	 * Bridging property for Event Organiser Event ID.
+	 *
+	 * @since 0.7
+	 * @access private
+	 * @var integer
+	 */
+	private $eo_event_created_id;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.7
