@@ -452,7 +452,7 @@ class CEO_Admin_Manual_Sync {
 		// Localise the WordPress way.
 		wp_localize_script(
 			'civi_eo_manual_sync_js',
-			'CiviCRM_Event_Organiser_Settings',
+			'CEO_Settings',
 			$vars
 		);
 
