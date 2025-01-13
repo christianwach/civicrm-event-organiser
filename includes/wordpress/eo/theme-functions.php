@@ -21,48 +21,48 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since 0.3
  *
- * @param int $post_id The numeric ID of the WP Post.
+ * @param int    $post_id The numeric ID of the WP Post.
+ * @param string $title The link title when the Event does not recur.
+ * @param string $classes The space-delimited classes to add to the links.
  */
-function civicrm_event_organiser_register_links( $post_id = null ) {
+function civicrm_event_organiser_register_links( $post_id = null, $title = null, $classes = null ) {
 
 	// Get links array.
-	$links = civicrm_event_organiser_get_register_links( $post_id );
+	$links = civicrm_event_organiser_get_register_links( $post_id, $title, $classes );
+	if ( empty( $links ) ) {
+		return;
+	}
 
-	// Show them if we have any.
-	if ( ! empty( $links ) ) {
+	// Combine into list.
+	$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
 
-		// Combine into list.
-		$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
+	// Top and tail.
+	$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
 
-		// Top and tail.
-		$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
+	// Is it recurring?
+	if ( eo_recurs() ) {
 
-		// Is it recurring?
-		if ( eo_recurs() ) {
+		// Wrap in unordered list.
+		$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
 
-			// Wrap in unordered list.
-			$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
+		// Open a list item.
+		echo '<li class="civicrm-event-register-links">';
 
-			// Open a list item.
-			echo '<li class="civicrm-event-register-links">';
+		// Show a title.
+		echo '<strong>' . esc_html__( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
 
-			// Show a title.
-			echo '<strong>' . esc_html__( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
+		// Show links.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $list;
 
-			// Show links.
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $list;
+		// Finish up.
+		echo '</li>' . "\n";
 
-			// Finish up.
-			echo '</li>' . "\n";
+	} else {
 
-		} else {
-
-			// Show link.
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo $list . "\n";
-
-		}
+		// Show link.
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo $list . "\n";
 
 	}
 
@@ -76,10 +76,12 @@ add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_reg
  *
  * @since 0.3
  *
- * @param int $post_id The numeric ID of the WP Post.
+ * @param int    $post_id The numeric ID of the WP Post.
+ * @param string $title The link title when the Event does not recur.
+ * @param string $classes The space-delimited classes to add to the links.
  * @return array $links The HTML links to the CiviCRM Registration pages.
  */
-function civicrm_event_organiser_get_register_links( $post_id = null ) {
+function civicrm_event_organiser_get_register_links( $post_id = null, $title = null, $classes = null ) {
 
 	// Init return.
 	$links = [];
@@ -96,8 +98,6 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 
 	// Need the Post ID.
 	$post_id = intval( empty( $post_id ) ? get_the_ID() : $post_id );
-
-	// Bail if not present.
 	if ( empty( $post_id ) ) {
 		return $links;
 	}
@@ -107,8 +107,6 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 
 	// Get CiviCRM Events.
 	$civi_events = $plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
-
-	// Sanity check.
 	if ( empty( $civi_events ) ) {
 		return $links;
 	}
@@ -156,10 +154,12 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		 * @since 0.8.0
 		 *
 		 * @param string $url The raw URL to the CiviCRM Registration page.
-		 * @param array $civi_event The array of data that represents a CiviCRM Event.
-		 * @param int $post_id The numeric ID of the WP Post.
+		 * @param array  $civi_event The array of data that represents a CiviCRM Event.
+		 * @param int    $post_id The numeric ID of the WP Post.
+		 * @param string $title The link title when the Event does not recur.
+		 * @param string $classes The space-delimited classes to add to the link.
 		 */
-		$url = apply_filters( 'ceo/theme/registration/url', $url, $civi_event, $post_id );
+		$url = apply_filters( 'ceo/theme/registration/url', $url, $civi_event, $post_id, $title, $classes );
 
 		// Set different link text for single and multiple Occurrences.
 		if ( $multiple ) {
@@ -175,11 +175,31 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 			);
 
 		} else {
+
+			// Default title.
 			$text = esc_html__( 'Register', 'civicrm-event-organiser' );
+
+			// Use custom title if provided.
+			if ( ! empty( $title ) ) {
+				$text = esc_html( $title );
+			}
+
 		}
 
-		// Construct link if we get one.
-		$link = '<a class="civicrm-event-organiser-register-link" href="' . esc_url( $url ) . '">' . $text . '</a>';
+		// Format classes if provided.
+		if ( ! empty( $classes ) ) {
+			$classes = explode( ' ', $classes );
+			array_walk(
+				$classes,
+				function( &$item ) {
+					$item = esc_attr( $item );
+				}
+			);
+			$classes = ' ' . implode( ' ', $classes );
+		}
+
+		// Construct link.
+		$link = '<a class="civicrm-event-organiser-register-link' . $classes . '" href="' . esc_url( $url ) . '">' . $text . '</a>';
 
 		/**
 		 * Filter Registration link.
@@ -195,16 +215,17 @@ function civicrm_event_organiser_get_register_links( $post_id = null ) {
 		$link = apply_filters_deprecated( 'civicrm_event_organiser_registration_link', [ $link, $url, $text, $post_id ], '0.8.0', 'ceo/theme/registration/link' );
 
 		/**
-		 * Filter Registration link.
+		 * Filter the Registration link.
 		 *
-		 * @since 0.3
+		 * @since 0.8.0
 		 *
 		 * @param string $link The HTML link to the CiviCRM Registration page.
 		 * @param string $url The raw URL to the CiviCRM Registration page.
 		 * @param string $text The text content of the link.
-		 * @param int $post_id The numeric ID of the WP Post.
+		 * @param int    $post_id The numeric ID of the WP Post.
+		 * @param string $classes The space-delimited classes to add to the link.
 		 */
-		$links[] = apply_filters( 'ceo/theme/registration/link', $link, $url, $text, $post_id );
+		$links[] = apply_filters( 'ceo/theme/registration/link', $link, $url, $text, $post_id, $classes );
 
 	}
 

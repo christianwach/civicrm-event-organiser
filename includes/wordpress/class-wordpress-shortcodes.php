@@ -82,8 +82,10 @@ class CEO_WordPress_Shortcodes {
 
 		// Init defaults.
 		$defaults = [
-			'event_id' => null, // Default to the current Event.
-			'wrap'     => null, // Default to previous markup.
+			'event_id' => null, // Defaults to the current Event.
+			'wrap'     => null, // Defaults to no wrapper element.
+			'class'    => null, // Defaults to no classes on wrapper element.
+			'title'    => null, // Defaults to "Register" for single Events.
 		];
 
 		// Parse attributes.
@@ -104,13 +106,29 @@ class CEO_WordPress_Shortcodes {
 			}
 		}
 
+		// Get the classes if the attribute exists.
+		$classes = null;
+		if ( ! empty( $shortcode_atts['wrap'] ) ) {
+			$class = trim( $shortcode_atts['class'] );
+			if ( ! empty( $class ) ) {
+				$classes = $class;
+			}
+		}
+
+		// Get the title if the attribute exists.
+		$title = null;
+		if ( ! empty( $shortcode_atts['wrap'] ) ) {
+			$att = trim( $shortcode_atts['title'] );
+			if ( ! empty( $att ) ) {
+				$title = $att;
+			}
+		}
+
 		// Init return.
 		$markup = '';
 
 		// Get links array.
-		$links = civicrm_event_organiser_get_register_links( $post_id );
-
-		// Bail if there are none.
+		$links = civicrm_event_organiser_get_register_links( $post_id, $title, $classes );
 		if ( empty( $links ) ) {
 			return $markup;
 		}
