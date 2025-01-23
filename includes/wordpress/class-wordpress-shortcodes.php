@@ -82,10 +82,11 @@ class CEO_WordPress_Shortcodes {
 
 		// Init defaults.
 		$defaults = [
-			'event_id' => null, // Defaults to the current Event.
-			'wrap'     => null, // Defaults to no wrapper element.
-			'class'    => null, // Defaults to no classes on wrapper element.
-			'title'    => null, // Defaults to "Register" for single Events.
+			'event_id'     => null, // Defaults to the current Event.
+			'wrap'         => null, // Defaults to no wrapper element. Can be "div" or "button".
+			'wrap_class'   => null, // Defaults to no classes on wrapper element.
+			'anchor_class' => null, // Defaults to no classes on anchor element.
+			'title'        => null, // Defaults to "Register" for single Events.
 		];
 
 		// Parse attributes.
@@ -101,23 +102,32 @@ class CEO_WordPress_Shortcodes {
 		$element = null;
 		if ( ! empty( $shortcode_atts['wrap'] ) ) {
 			$wrapper = trim( $shortcode_atts['wrap'] );
-			if ( 'button' === $wrapper ) {
+			if ( 'button' === $wrapper || 'div' === $wrapper ) {
 				$element = $wrapper;
 			}
 		}
 
-		// Get the classes if the attribute exists.
-		$classes = null;
-		if ( ! empty( $shortcode_atts['wrap'] ) ) {
-			$class = trim( $shortcode_atts['class'] );
+		// Get the wrapper classes if the attribute exists.
+		$wrap_classes = null;
+		if ( ! empty( $shortcode_atts['wrap_class'] ) ) {
+			$class = trim( $shortcode_atts['wrap_class'] );
 			if ( ! empty( $class ) ) {
-				$classes = $class;
+				$wrap_classes = $class;
+			}
+		}
+
+		// Get the anchor classes if the attribute exists.
+		$anchor_classes = null;
+		if ( ! empty( $shortcode_atts['anchor_class'] ) ) {
+			$class = trim( $shortcode_atts['anchor_class'] );
+			if ( ! empty( $class ) ) {
+				$anchor_classes = $class;
 			}
 		}
 
 		// Get the title if the attribute exists.
 		$title = null;
-		if ( ! empty( $shortcode_atts['wrap'] ) ) {
+		if ( ! empty( $shortcode_atts['title'] ) ) {
 			$att = trim( $shortcode_atts['title'] );
 			if ( ! empty( $att ) ) {
 				$title = $att;
@@ -128,19 +138,46 @@ class CEO_WordPress_Shortcodes {
 		$markup = '';
 
 		// Get links array.
-		$links = civicrm_event_organiser_get_register_links( $post_id, $title, $classes );
+		$links = civicrm_event_organiser_get_register_links( $post_id, $title, $anchor_classes );
 		if ( empty( $links ) ) {
 			return $markup;
 		}
 
 		// Wrap links if required.
 		if ( ! empty( $element ) ) {
-			array_walk(
-				$links,
-				function( &$item ) use ( $element ) {
-					$item = '<' . $element . ' type="' . $element . '">' . $item . '</' . $element . '>';
-				}
-			);
+
+			// Format classes if provided.
+			$classes = '';
+			if ( ! empty( $wrap_classes ) ) {
+				$classes = explode( ' ', $wrap_classes );
+				array_walk(
+					$classes,
+					function( &$item ) {
+						$item = esc_attr( $item );
+					}
+				);
+				$classes = implode( ' ', $classes );
+			}
+
+			// Handle button element.
+			if ( 'button' === $element ) {
+				array_walk(
+					$links,
+					function( &$item ) use ( $element, $classes ) {
+						$item = '<' . $element . ' type="' . $element . '" class="' . $classes . '">' . $item . '</' . $element . '>';
+					}
+				);
+			}
+
+			// Handle div element.
+			if ( 'div' === $element ) {
+				array_walk(
+					$links,
+					function( &$item ) use ( $element, $classes ) {
+						$item = '<' . $element . ' class="' . $classes . '">' . $item . '</' . $element . '>';
+					}
+				);
+			}
 		}
 
 		// Is it recurring?
