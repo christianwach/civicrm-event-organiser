@@ -164,7 +164,7 @@ class CEO_WordPress_Shortcodes {
 				array_walk(
 					$links,
 					function( &$item ) use ( $element, $classes ) {
-						$item = '<' . $element . ' type="' . $element . '" class="' . $classes . '">' . $item . '</' . $element . '>';
+						$item = '<button type="button" class="' . $classes . '">' . $item . '</button>';
 					}
 				);
 			}
@@ -174,10 +174,11 @@ class CEO_WordPress_Shortcodes {
 				array_walk(
 					$links,
 					function( &$item ) use ( $element, $classes ) {
-						$item = '<' . $element . ' class="' . $classes . '">' . $item . '</' . $element . '>';
+						$item = '<div class="' . $classes . '">' . $item . '</div>';
 					}
 				);
 			}
+
 		}
 
 		// Is it recurring?
