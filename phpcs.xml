@@ -24,7 +24,7 @@
 		<exclude name="Squiz.PHP.CommentedOutCode.Found" />
 		<exclude name="Squiz.Commenting.BlockComment.HasEmptyLineBefore" />
 
-		<!-- Allow non-strict array checks -->
+		<!-- Allow non-strict array checks. -->
 		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
 
 	</rule>
@@ -35,7 +35,7 @@
 		</properties>
 	</rule>
 
-	<!-- Allow short array syntax -->
+	<!-- Enforce short array syntax. -->
 	<rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
 		<severity>0</severity>
 	</rule>
