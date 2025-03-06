@@ -1251,7 +1251,7 @@ class CEO_WordPress_Taxonomy {
 			return false;
 		}
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->plugin->civi->is_active() ) {
 			return false;
 		}
@@ -1358,7 +1358,7 @@ class CEO_WordPress_Taxonomy {
 			return false;
 		}
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->plugin->civi->is_active() ) {
 			return false;
 		}

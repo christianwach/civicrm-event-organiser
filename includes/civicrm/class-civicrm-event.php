@@ -1174,7 +1174,7 @@ class CEO_CiviCRM_Event {
 	 */
 	public function create_civi_events( $post, $dates ) {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -1245,7 +1245,7 @@ class CEO_CiviCRM_Event {
 	 */
 	public function update_civi_events( $post, $dates ) {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -1674,7 +1674,7 @@ class CEO_CiviCRM_Event {
 	 */
 	public function get_all_civi_events() {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -1723,7 +1723,7 @@ class CEO_CiviCRM_Event {
 	 */
 	public function delete_civi_events( $civi_event_ids ) {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -1783,7 +1783,7 @@ class CEO_CiviCRM_Event {
 	 */
 	public function disable_civi_event( $civi_event_id ) {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}

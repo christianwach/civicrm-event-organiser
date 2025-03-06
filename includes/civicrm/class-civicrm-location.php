@@ -150,7 +150,7 @@ class CEO_CiviCRM_Location {
 	 */
 	public function update_location( $venue ) {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -192,7 +192,7 @@ class CEO_CiviCRM_Location {
 	 */
 	public function delete_location( $venue ) {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -231,7 +231,7 @@ class CEO_CiviCRM_Location {
 	 */
 	public function delete_location_by_id( $location_id ) {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -396,7 +396,7 @@ class CEO_CiviCRM_Location {
 	 */
 	public function get_all_locations() {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -440,7 +440,7 @@ class CEO_CiviCRM_Location {
 	 */
 	public function delete_all_locations() {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -487,7 +487,7 @@ class CEO_CiviCRM_Location {
 	 */
 	public function get_location_by_id( $loc_id ) {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}

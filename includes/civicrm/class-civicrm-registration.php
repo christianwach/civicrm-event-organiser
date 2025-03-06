@@ -118,7 +118,7 @@ class CEO_CiviCRM_Registration {
 	 */
 	public function get_participant_roles( $post = null ) {
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
@@ -170,7 +170,7 @@ class CEO_CiviCRM_Registration {
 		// Init html.
 		$html = '';
 
-		// Init CiviCRM or die.
+		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return $html;
 		}
