@@ -1009,7 +1009,7 @@ class CEO_CiviCRM_Event {
 
 		// Add items that are common to all CiviCRM Events.
 		$civi_event['title']                  = $post->post_title;
-		$civi_event['description']            = $post->post_content;
+		$civi_event['description']            = wpautop( $post->post_content );
 		$civi_event['summary']                = wp_strip_all_tags( $post->post_excerpt );
 		$civi_event['created_date']           = $post->post_date;
 		$civi_event['participant_listing_id'] = null;

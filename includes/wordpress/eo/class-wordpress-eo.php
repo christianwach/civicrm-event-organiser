@@ -520,7 +520,7 @@ class CEO_WordPress_EO {
 
 		// Assign Description and Summary if present.
 		if ( ! empty( $civi_event['description'] ) ) {
-			$post_data['post_content'] = $civi_event['description'];
+			$post_data['post_content'] = $this->wordpress->unautop( $civi_event['description'] );
 		}
 		if ( ! empty( $civi_event['summary'] ) ) {
 			$post_data['post_excerpt'] = $civi_event['summary'];
