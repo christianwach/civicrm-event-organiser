@@ -1039,7 +1039,7 @@ class CEO_CiviCRM_Location {
 
 				// Replace Address Name when it is different to Street Address.
 				if ( ! empty( $venue->name ) && $existing_address['street_address'] !== $venue->name ) {
-					$existing_address['name'] = $venue->name;
+					$existing_address['name'] = htmlspecialchars_decode( $venue->name );
 				}
 
 				// Replace or clear City.
