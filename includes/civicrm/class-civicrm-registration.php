@@ -270,46 +270,53 @@ class CEO_CiviCRM_Registration {
 	 * @since 0.7 Moved to this class.
 	 *
 	 * @param array $civi_event An array of data for the CiviCRM Event.
+	 * @param bool  $other Passing true returns the link to register someone else for the CiviCRM Event.
 	 * @return str $link The URL of the CiviCRM Registration page.
 	 */
-	public function get_registration_link( $civi_event ) {
+	public function get_registration_link( $civi_event, $other = false ) {
 
 		// Init link.
 		$link = '';
 
-		// If this Event has Registration enabled.
-		if ( isset( $civi_event['is_online_registration'] ) && 1 === (int) $civi_event['is_online_registration'] ) {
+		// Bail this Event does not have Registration enabled.
+		if ( ! isset( $civi_event['is_online_registration'] ) || 1 !== (int) $civi_event['is_online_registration'] ) {
+			return $link;
+		}
 
-			// Init CiviCRM or bail.
-			if ( ! $this->civicrm->is_active() ) {
-				return $link;
-			}
+		// Init CiviCRM or bail.
+		if ( ! $this->civicrm->is_active() ) {
+			return $link;
+		}
 
-			// Use direct Base Page link method if present.
-			if ( function_exists( 'civicrm_basepage_url' ) ) {
+		// Build CiviCRM query.
+		$query = 'reset=1&id=' . $civi_event['id'];
+		if ( false !== $other ) {
+			$query .= '&cid=0';
+		}
 
-				// Use CiviCRM to construct link.
-				$link = civicrm_basepage_url(
-					'civicrm/event/register',
-					'reset=1&id=' . $civi_event['id'],
-					true,
-					null,
-					false,
-				);
+		// Use direct Base Page link method if present.
+		if ( function_exists( 'civicrm_basepage_url' ) ) {
 
-			} else {
+			// Use CiviCRM to construct link.
+			$link = civicrm_basepage_url(
+				'civicrm/event/register',
+				$query,
+				true,
+				null,
+				false,
+			);
 
-				// Use CiviCRM to construct link.
-				$link = CRM_Utils_System::url(
-					'civicrm/event/register',
-					'reset=1&id=' . $civi_event['id'],
-					true,
-					null,
-					false,
-					true
-				);
+		} else {
 
-			}
+			// Use CiviCRM to construct link.
+			$link = CRM_Utils_System::url(
+				'civicrm/event/register',
+				$query,
+				true,
+				null,
+				false,
+				true
+			);
 
 		}
 
@@ -1114,6 +1121,70 @@ class CEO_CiviCRM_Registration {
 
 		// --<
 		return $setting;
+
+	}
+
+	/**
+	 * Check if a Contact is registered for a given CiviCRM Event.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param int $event_id The numeric ID of a CiviCRM Event.
+	 * @param int $contact_id The numeric ID of a CiviCRM Contact.
+	 * @return bool $is_registered True if the Contact is registered, false otherwise.
+	 */
+	public function is_registered( $event_id, $contact_id ) {
+
+		// Init as not registered.
+		$is_registered = false;
+
+		// Bail if we fail to init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $is_registered;
+		}
+
+		try {
+
+			// Call the API.
+			$result = \Civi\Api4\Participant::get( false )
+				->addSelect( '*' )
+				->addWhere( 'event_id', '=', $event_id )
+				->addWhere( 'contact_id', '=', $contact_id )
+				->execute();
+
+		} catch ( CRM_Core_Exception $e ) {
+			$log = [
+				'method'    => __METHOD__,
+				'error'     => $e->getMessage(),
+				'backtrace' => $e->getTraceAsString(),
+			];
+			$this->plugin->log_error( $log );
+			return $is_registered;
+		}
+
+		// Bail if there are none.
+		if ( 0 === $result->count() ) {
+			return $is_registered;
+		}
+
+		// We only need the array of records.
+		$participant_records = $result->getArrayCopy();
+
+		// Anyone whose status type has `is_counted` OR is on the waitlist should be considered as registered.
+		$is_counted          = CRM_Event_PseudoConstant::participantStatus( null, 'is_counted = 1' );
+		$on_waitlist         = CRM_Event_PseudoConstant::participantStatus( null, "name = 'On waitlist'" );
+		$registered_statuses = $is_counted + $on_waitlist;
+
+		// Let's check the records (though there should only be one).
+		foreach ( $participant_records as $participant_record ) {
+			if ( array_key_exists( $participant_record['status_id'], $registered_statuses ) ) {
+				$is_registered = true;
+				break;
+			}
+		}
+
+		// --<
+		return $is_registered;
 
 	}
 

@@ -242,4 +242,66 @@ class CEO_CiviCRM {
 
 	}
 
+	/**
+	 * Gets CiviCRM UFMatch data.
+	 *
+	 * Get UFMatch by CiviCRM "contact_id" or WordPress "user_id".
+	 *
+	 * It's okay not to find a UFMatch entry, so use "get" instead of "getsingle"
+	 * and only log when there's a genuine API error.
+	 *
+	 * @since 0.6.8
+	 *
+	 * @param integer $id The CiviCRM Contact ID or WordPress User ID.
+	 * @param string  $property Either 'contact_id' or 'uf_id'.
+	 * @return array $result The UFMatch data, or empty array on failure.
+	 */
+	public function get_ufmatch( $id, $property ) {
+
+		$ufmatch = [];
+
+		// Bail if CiviCRM is not active.
+		if ( ! $this->is_active() ) {
+			return $ufmatch;
+		}
+
+		// Bail if there's a problem with the param.
+		if ( ! in_array( $property, [ 'contact_id', 'uf_id' ], true ) ) {
+			return $ufmatch;
+		}
+
+		$params = [
+			'version'    => 3,
+			'sequential' => 1,
+			$property    => $id,
+		];
+
+		$result = civicrm_api( 'UFMatch', 'get', $params );
+
+		// Log and bail if there's an error.
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
+			$e     = new \Exception();
+			$trace = $e->getTraceAsString();
+			$log   = [
+				'method'    => __METHOD__,
+				'params'    => $params,
+				'backtrace' => $trace,
+			];
+			$this->plugin->log_error( $log );
+			return $ufmatch;
+
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return $ufmatch;
+		}
+
+		// The result set should contain only one item.
+		$ufmatch = array_pop( $result['values'] );
+
+		return $ufmatch;
+
+	}
+
 }

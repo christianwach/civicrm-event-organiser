@@ -73,13 +73,22 @@ class CiviCRM_Event_Organiser {
 	public $wordpress;
 
 	/**
-	 * Mapping object.
+	 * Event Mapping object.
 	 *
 	 * @since 0.7
 	 * @access public
 	 * @var CEO_Mapping
 	 */
 	public $mapping;
+
+	/**
+	 * User-Contact Matching object.
+	 *
+	 * @since 0.7
+	 * @access public
+	 * @var CEO_Mapping
+	 */
+	public $ufmatch;
 
 	/**
 	 * Compatibility object.
@@ -213,7 +222,8 @@ class CiviCRM_Event_Organiser {
 		// Load our core class files.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/civicrm/class-civicrm.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/wordpress/class-wordpress.php';
-		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/class-mapping.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes//mapping/class-mapping.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes//mapping/class-ufmatch.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-compat.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin.php';
 
@@ -239,6 +249,7 @@ class CiviCRM_Event_Organiser {
 		$this->civi      = new CEO_CiviCRM( $this );
 		$this->wordpress = new CEO_WordPress( $this );
 		$this->mapping   = new CEO_Mapping( $this );
+		$this->ufmatch   = new CEO_UFMatch( $this );
 		$this->compat    = new CEO_Compat( $this );
 		$this->admin     = new CEO_Admin( $this );
 
