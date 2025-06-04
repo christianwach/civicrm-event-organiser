@@ -151,7 +151,7 @@ class CEO_Compat_CWPS {
 		// Listen for queries from the Attachment class.
 		add_filter( 'cwps/acf/query_entity_table', [ $this, 'query_entity_table' ], 10, 2 );
 
-		// Exclude "Event" from being mapped to a Contact Type.
+		// Exclude "Event" from being mapped to a CiviCRM Entity Type.
 		add_filter( 'cwps/acf/post_types/get_all', [ $this, 'post_types_filter' ], 10, 1 );
 
 		// Listen for a CiviCRM Event being synced to an Event Organiser Event.
