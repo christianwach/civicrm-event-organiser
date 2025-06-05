@@ -172,8 +172,8 @@ var CEO_Switcher = CEO_Switcher || {};
 
 			var src, spinner;
 
-			src = CEO_Switcher.settings.get_setting( 'loading' ),
-			spinner = '<img src="' + src + '" id="cfcr-redirect-loading" style="margin-top: 0.5em;" />'
+			src = CEO_Switcher.settings.get_setting( 'loading' );
+			spinner = '<img src="' + src + '" id="cfcr-redirect-loading" style="margin-top: 0.5em;" />';
 
 			// Init AJAX spinner.
 			$(spinner).prependTo( $('.civi_eo_event_cfcr_post_link') ).hide();

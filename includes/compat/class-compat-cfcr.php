@@ -192,7 +192,7 @@ class CEO_Compat_CFCR {
 		// Localise.
 		wp_localize_script(
 			'civi_eo_event_metabox_cfcr_js',
-			'CiviCRM_Event_Organiser_CFCR_Settings',
+			'CEO_CFCR_Settings',
 			$vars
 		);
 
