@@ -40,11 +40,6 @@ if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_PATH' ) ) {
 	define( 'CIVICRM_WP_EVENT_ORGANISER_PATH', plugin_dir_path( CIVICRM_WP_EVENT_ORGANISER_FILE ) );
 }
 
-// Set debug constant.
-if ( ! defined( 'CIVICRM_WP_EVENT_ORGANISER_DEBUG' ) ) {
-	define( 'CIVICRM_WP_EVENT_ORGANISER_DEBUG', false );
-}
-
 /**
  * Plugin Class.
  *
@@ -492,7 +487,7 @@ class CiviCRM_Event_Organiser {
 	public function log_error( $data = [] ) {
 
 		// Skip if not debugging.
-		if ( CIVICRM_WP_EVENT_ORGANISER_DEBUG === false ) {
+		if ( ! defined( 'WP_DEBUG' ) || false === WP_DEBUG ) {
 			return;
 		}
 
