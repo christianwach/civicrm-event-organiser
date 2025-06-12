@@ -82,8 +82,11 @@ class CEO_WordPress_Shortcodes {
 
 		// Init defaults.
 		$defaults = [
-			'event_id' => null, // Default to the current Event.
-			'wrap'     => null, // Default to previous markup.
+			'event_id'     => null, // Defaults to the current Event.
+			'wrap'         => null, // Defaults to no wrapper element. Can be "div" or "button".
+			'wrap_class'   => null, // Defaults to no classes on wrapper element.
+			'anchor_class' => null, // Defaults to no classes on anchor element.
+			'title'        => null, // Defaults to "Register" for single Events.
 		];
 
 		// Parse attributes.
@@ -99,8 +102,35 @@ class CEO_WordPress_Shortcodes {
 		$element = null;
 		if ( ! empty( $shortcode_atts['wrap'] ) ) {
 			$wrapper = trim( $shortcode_atts['wrap'] );
-			if ( 'button' === $wrapper ) {
+			if ( 'button' === $wrapper || 'div' === $wrapper ) {
 				$element = $wrapper;
+			}
+		}
+
+		// Get the wrapper classes if the attribute exists.
+		$wrap_classes = null;
+		if ( ! empty( $shortcode_atts['wrap_class'] ) ) {
+			$class = trim( $shortcode_atts['wrap_class'] );
+			if ( ! empty( $class ) ) {
+				$wrap_classes = $class;
+			}
+		}
+
+		// Get the anchor classes if the attribute exists.
+		$anchor_classes = null;
+		if ( ! empty( $shortcode_atts['anchor_class'] ) ) {
+			$class = trim( $shortcode_atts['anchor_class'] );
+			if ( ! empty( $class ) ) {
+				$anchor_classes = $class;
+			}
+		}
+
+		// Get the title if the attribute exists.
+		$title = null;
+		if ( ! empty( $shortcode_atts['title'] ) ) {
+			$att = trim( $shortcode_atts['title'] );
+			if ( ! empty( $att ) ) {
+				$title = $att;
 			}
 		}
 
@@ -108,25 +138,86 @@ class CEO_WordPress_Shortcodes {
 		$markup = '';
 
 		// Get links array.
-		$links = civicrm_event_organiser_get_register_links( $post_id );
-
-		// Bail if there are none.
-		if ( empty( $links ) ) {
+		$links_data = civicrm_event_organiser_get_register_links( $post_id, $title, $anchor_classes );
+		if ( empty( $links_data ) ) {
 			return $markup;
 		}
 
 		// Wrap links if required.
 		if ( ! empty( $element ) ) {
-			array_walk(
-				$links,
-				function( &$item ) use ( $element ) {
-					$item = '<' . $element . ' type="' . $element . '">' . $item . '</' . $element . '>';
-				}
-			);
+
+			// Format classes if provided.
+			$classes = '';
+			if ( ! empty( $wrap_classes ) ) {
+				$classes = explode( ' ', $wrap_classes );
+				array_walk(
+					$classes,
+					function( &$item ) {
+						$item = esc_attr( $item );
+					}
+				);
+				$classes = implode( ' ', $classes );
+			}
+
+			// Handle button element.
+			if ( 'button' === $element ) {
+				array_walk(
+					$links_data,
+					function( &$item, $key ) use ( $element, $classes ) {
+						foreach ( $item as $index => $link ) {
+							if ( ! empty( $link['meta'] ) && 'active' === $link['meta'] ) {
+								if ( ! empty( $classes ) ) {
+									$link['link'] = '<button type="button" class="' . $classes . '">' . $link['link'] . '</button>';
+								} else {
+									$link['link'] = '<button type="button">' . $link['link'] . '</button>';
+								}
+							} else {
+								if ( ! empty( $link['meta'] ) && 'registration_closed' === $link['meta'] ) {
+									$link['link'] = '<p class="ceo-registration-closed">' . $link['link'] . '</p>';
+								}
+								if ( ! empty( $link['meta'] ) && 'is_registered' === $link['meta'] ) {
+									$link['link'] = '<p class="ceo-contact-is-registered">' . $link['link'] . '</p>';
+								}
+							}
+							$item[ $index ] = $link;
+						}
+					}
+				);
+			}
+
+			// Handle div element.
+			if ( 'div' === $element ) {
+				array_walk(
+					$links_data,
+					function( &$item, $key ) use ( $element, $classes ) {
+						foreach ( $item as $index => $link ) {
+							if ( ! empty( $link['meta'] ) && 'active' === $link['meta'] ) {
+								if ( ! empty( $classes ) ) {
+									$link['link'] = '<div class="' . $classes . '">' . $link['link'] . '</div>';
+								} else {
+									$link['link'] = '<div>' . $link['link'] . '</div>';
+								}
+							} else {
+								if ( ! empty( $link['meta'] ) && 'registration_closed' === $link['meta'] ) {
+									$link['link'] = '<p class="ceo-registration-closed">' . $link['link'] . '</p>';
+								}
+								if ( ! empty( $link['meta'] ) && 'is_registered' === $link['meta'] ) {
+									$link['link'] = '<p class="ceo-contact-is-registered">' . $link['link'] . '</p>';
+								}
+							}
+							$item[ $index ] = $link;
+						}
+					}
+				);
+			}
+
 		}
 
 		// Is it recurring?
 		if ( eo_recurs() ) {
+
+			// Extract links array.
+			$links = wp_list_pluck( $links_data, 'link' );
 
 			// Combine into list.
 			$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
@@ -152,7 +243,10 @@ class CEO_WordPress_Shortcodes {
 		} else {
 
 			// Show link.
-			$markup .= array_pop( $links );
+			$link_data = array_pop( $links_data );
+			foreach ( $link_data as $link ) {
+				$markup .= $link['link'];
+			}
 
 		}
 

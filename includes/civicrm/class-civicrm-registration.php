@@ -326,7 +326,7 @@ class CEO_CiviCRM_Registration {
 	}
 
 	/**
-	 * Check if Registration is closed for a given CiviCRM Event.
+	 * Gets the Registration status of a given CiviCRM Event.
 	 *
 	 * How this works in CiviCRM is as follows: if a CiviCRM Event has "Registration
 	 * Start Date" and "Registration End Date" set, then Registration is open
@@ -336,20 +336,19 @@ class CEO_CiviCRM_Registration {
 	 *
 	 * @see CRM_Event_BAO_Event::validRegistrationDate()
 	 *
-	 * @since 0.3.4
-	 * @since 0.7 Moved to this class.
+	 * @since 0.8.2
 	 *
 	 * @param array $civi_event The array of data that represents a CiviCRM Event.
-	 * @return bool $closed True if Registration is closed, false otherwise.
+	 * @return string|bool $status The Registration status, or false if Online Registration is not enabled.
 	 */
-	public function is_registration_closed( $civi_event ) {
+	public function get_registration_status( $civi_event ) {
 
 		// Bail if Online Registration is not enabled.
 		if ( ! isset( $civi_event['is_online_registration'] ) ) {
-			return true;
+			return false;
 		}
 		if ( 1 !== (int) $civi_event['is_online_registration'] ) {
-			return true;
+			return false;
 		}
 
 		// Gotta have a reference to now.
@@ -424,24 +423,53 @@ class CEO_CiviCRM_Registration {
 		}
 
 		// Assume open.
-		$open = true;
+		$status = 'open';
 
 		// Check if started yet.
 		if ( $reg_start && $reg_start >= $now ) {
-			$open = false;
+			$status = 'not-yet-open';
 
 			// Check if already ended.
 		} elseif ( $reg_end && $reg_end < $now ) {
-			$open = false;
+			$status = 'ended';
 
 			// If the Event has ended, Registration may still be specifically open.
-		} elseif ( false === $event_end && $event_end < $now && $reg_end ) {
-			$open = false;
+		} elseif ( $event_end && $event_end < $now && ! $reg_end ) {
+			$status = 'not-specifically-open';
 
 		}
 
-		// Flip for appropriate value.
-		$closed = ! $open;
+		// --<
+		return $status;
+
+	}
+
+	/**
+	 * Check if Registration is closed for a given CiviCRM Event.
+	 *
+	 * @since 0.3.4
+	 * @since 0.7 Moved to this class.
+	 *
+	 * @param array $civi_event The array of data that represents a CiviCRM Event.
+	 * @return bool $closed True if Registration is closed, false otherwise.
+	 */
+	public function is_registration_closed( $civi_event ) {
+
+		// Assume closed.
+		$closed = true;
+
+		// Get the Event's Registration status.
+		$status = $this->get_registration_status( $civi_event );
+
+		// Return early if Online Registration is not enabled.
+		if ( false === $status ) {
+			return $closed;
+		}
+
+		// Only open means open.
+		if ( 'open' === $status ) {
+			$closed = false;
+		}
 
 		// --<
 		return $closed;
