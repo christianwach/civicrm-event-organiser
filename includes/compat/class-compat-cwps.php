@@ -154,11 +154,20 @@ class CEO_Compat_CWPS {
 		// Exclude "Event" from being mapped to a CiviCRM Entity Type.
 		add_filter( 'cwps/acf/post_types/get_all', [ $this, 'post_types_filter' ], 10, 1 );
 
-		// Listen for a CiviCRM Event being synced to an Event Organiser Event.
+		// Listen for a CiviCRM Event being synced to an Event Organiser Event via Manual Sync.
 		add_action( 'ceo/admin/manual_sync/civi_to_eo/sync/after', [ $this, 'sync_to_eo' ], 10, 1 );
 
-		// Listen for an Event Organiser Event being synced to a CiviCRM Event.
+		// Listen for an Event Organiser Event being synced to a CiviCRM Event via Manual Sync.
 		add_action( 'ceo/admin/manual_sync/eo_to_civi/sync', [ $this, 'sync_to_civi' ], 10, 1 );
+
+		// Add any Event Fields attached to a Post.
+		add_filter( 'cwps/acf/fields_get_for_post', [ $this, 'acf_fields_get_for_post' ], 10, 3 );
+
+		// Listen for when an Event Organiser Event has been synced to a CiviCRM Event.
+		add_action( 'ceo/eo/event/updated', [ $this, 'event_sync_to_post' ], 10, 2 );
+
+		// Remove Event Organiser's faulty time picker.
+		add_action( 'admin_init', [ $this, 'eo_deregister_scripts' ], 6 );
 
 	}
 
@@ -227,6 +236,9 @@ class CEO_Compat_CWPS {
 		// We only ever update a CiviCRM Event via ACF.
 		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10 );
 
+		// Prevent reverse sync of CiviCRM Custom Fields.
+		$this->cwps->acf->civicrm->custom_field->unregister_mapper_hooks();
+
 		// Loop through the CiviCRM Events.
 		foreach ( $correspondences as $occurrence_id => $civi_event_id ) {
 
@@ -252,6 +264,9 @@ class CEO_Compat_CWPS {
 
 		// Restore hook.
 		add_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10, 4 );
+
+		// Restore sync of CiviCRM Custom Fields.
+		$this->cwps->acf->civicrm->custom_field->register_mapper_hooks();
 
 	}
 
@@ -290,31 +305,55 @@ class CEO_Compat_CWPS {
 			// Get the Field settings.
 			$settings = get_field_object( $selector, $post_id );
 
-			// Get the CiviCRM Custom Field.
-			$custom_field_id = $this->cwps->acf->civicrm->custom_field->custom_field_id_get( $settings );
+			// Get the CiviCRM Custom Field and Event Field.
+			$custom_field_id  = $this->cwps->acf->civicrm->custom_field->custom_field_id_get( $settings );
+			$event_field_name = $this->cwps->acf->civicrm->event->event_field_name_get( $settings );
 
-			// Skip if there's no corresponding CiviCRM Custom Field.
-			if ( empty( $custom_field_id ) ) {
-				continue;
+			// Do we have a synced Custom Field or Event Field?
+			if ( ! empty( $custom_field_id ) || ! empty( $event_field_name ) ) {
+
+				// If it's a Custom Field.
+				if ( ! empty( $custom_field_id ) ) {
+
+					// Build Custom Field code.
+					$code = 'custom_' . $custom_field_id;
+
+				} else {
+
+					// The Event Field code is the setting.
+					$code = $event_field_name;
+
+				}
+
+				// Build args for value conversion.
+				$args = [
+					'identifier'      => 'event',
+					'entity_id'       => $event_id,
+					'custom_field_id' => $custom_field_id,
+					'field_name'      => $event_field_name,
+					'selector'        => $selector,
+					'post_id'         => $post_id,
+				];
+
+				// Parse value by Field Type.
+				$value = $this->cwps->acf->acf->field->value_get_for_civicrm( $value, $settings['type'], $settings, $args );
+
+				// Some Event Fields cannot be empty.
+				$cannot_be_empty = [
+					'title',
+					'start_date',
+					'event_type_id',
+				];
+
+				// Add it to the Field data.
+				// phpcs:ignore Generic.CodeAnalysis.EmptyStatement.DetectedIf
+				if ( in_array( $code, $cannot_be_empty, true ) && empty( $value ) ) {
+					// Skip.
+				} else {
+					$event_data[ $code ] = $value;
+				}
+
 			}
-
-			// Build Custom Field code.
-			$code = 'custom_' . $custom_field_id;
-
-			// Build args for value conversion.
-			$args = [
-				'identifier'      => 'event',
-				'entity_id'       => $event_id,
-				'custom_field_id' => $custom_field_id,
-				'field_name'      => '',
-				'selector'        => $selector,
-				'post_id'         => $post_id,
-			];
-
-			$value = $this->cwps->acf->acf->field->value_get_for_civicrm( $value, $settings['type'], $settings, $args );
-
-			// Add it to the field data.
-			$event_data[ $code ] = $value;
 
 		}
 
@@ -405,6 +444,29 @@ class CEO_Compat_CWPS {
 	// -----------------------------------------------------------------------------------
 
 	/**
+	 * Add any Event Fields that are attached to a Post.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param array   $acf_fields The existing ACF Fields array.
+	 * @param array   $field The ACF Field.
+	 * @param integer $post_id The numeric ID of the WordPress Post.
+	 * @return array $acf_fields The modified ACF Fields array.
+	 */
+	public function acf_fields_get_for_post( $acf_fields, $field, $post_id ) {
+
+		// Get the CiviCRM Event Field and add if it has a reference to a CiviCRM Field.
+		$event_field_name = $this->cwps->acf->civicrm->event->event_field_name_get( $field );
+		if ( ! empty( $event_field_name ) ) {
+			$acf_fields['event'][ $field['name'] ] = $event_field_name;
+		}
+
+		// --<
+		return $acf_fields;
+
+	}
+
+	/**
 	 * Returns the choices for a Setting Field from this Entity when found.
 	 *
 	 * @since 0.6.4
@@ -423,6 +485,16 @@ class CEO_Compat_CWPS {
 			return $choices;
 		}
 
+		// Get the Fields on the Entity for this Field Type.
+		$core_fields = $this->cwps->acf->civicrm->event_field->data_get( $field['type'], 'public' );
+
+		// Get the Registration Fields on the Entity for this Field Type.
+		$registration_fields        = $this->cwps->acf->civicrm->event_registration->data_get( $field['type'], 'settings' );
+		$registration_screen_fields = $this->cwps->acf->civicrm->event_registration->data_get( $field['type'], 'register' );
+		$confirmation_screen_fields = $this->cwps->acf->civicrm->event_registration->data_get( $field['type'], 'confirm' );
+		$thankyou_screen_fields     = $this->cwps->acf->civicrm->event_registration->data_get( $field['type'], 'thankyou' );
+		$email_screen_fields        = $this->cwps->acf->civicrm->event_registration->data_get( $field['type'], 'email' );
+
 		// Get the Custom Fields for CiviCRM Events.
 		if ( method_exists( $this->cwps->civicrm->custom_field, 'get_for_entity_type' ) ) {
 			$custom_fields = $this->cwps->civicrm->custom_field->get_for_entity_type( 'Event', '' );
@@ -431,9 +503,9 @@ class CEO_Compat_CWPS {
 		}
 
 		/**
-		 * Filter the Custom Fields.
+		 * Filter the Custom Fields using the filter provided by CiviCRM Profile Sync.
 		 *
-		 * @since 0.6.4
+		 * @since CiviCRM Profile Sync 0.6.4
 		 *
 		 * @param array The initially empty array of filtered Custom Fields.
 		 * @param array $custom_fields The CiviCRM Custom Fields array.
@@ -442,18 +514,85 @@ class CEO_Compat_CWPS {
 		$filtered_fields = apply_filters( 'cwps/acf/query_settings/custom_fields_filter', [], $custom_fields, $field );
 
 		// Pass if not populated.
-		if ( empty( $filtered_fields ) ) {
+		if (
+			empty( $core_fields ) &&
+			empty( $registration_fields ) &&
+			empty( $registration_screen_fields ) &&
+			empty( $filtered_fields )
+		) {
 			return $choices;
 		}
 
-		// Build Custom Field choices array for dropdown.
-		$custom_field_prefix = $this->cwps->acf->civicrm->custom_field_prefix();
-		foreach ( $filtered_fields as $custom_group_name => $custom_group ) {
-			$custom_fields_label = esc_attr( $custom_group_name );
-			foreach ( $custom_group as $custom_field ) {
-				$choices[ $custom_fields_label ][ $custom_field_prefix . $custom_field['id'] ] = $custom_field['label'];
+		// Get Event Field prefix.
+		$event_field_prefix = $this->cwps->acf->civicrm->event_field_prefix();
+
+		// Build Event Field choices array for dropdown.
+		if ( ! empty( $core_fields ) ) {
+			$label = esc_attr__( 'Event Fields', 'civicrm-event-organiser' );
+			foreach ( $core_fields as $item ) {
+				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
 			}
 		}
+
+		// Build Custom Field choices array for dropdown.
+		if ( ! empty( $filtered_fields ) ) {
+			$custom_field_prefix = $this->cwps->acf->civicrm->custom_field_prefix();
+			foreach ( $filtered_fields as $custom_group_name => $custom_group ) {
+				$label = esc_attr( $custom_group_name );
+				foreach ( $custom_group as $custom_field ) {
+					$choices[ $label ][ $custom_field_prefix . $custom_field['id'] ] = $custom_field['label'];
+				}
+			}
+		}
+
+		// Build Event Registration Field choices array for dropdown.
+		if ( ! empty( $registration_fields ) ) {
+			$label = esc_attr__( 'Event Registration Fields', 'civicrm-event-organiser' );
+			foreach ( $registration_fields as $item ) {
+				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+			}
+		}
+
+		// Build Event Registration Screen Field choices array for dropdown.
+		if ( ! empty( $registration_screen_fields ) ) {
+			$label = esc_attr__( 'Event Registration Screen Fields', 'civicrm-event-organiser' );
+			foreach ( $registration_screen_fields as $item ) {
+				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+			}
+		}
+
+		// Build Event Registration Confirmation Screen Field choices array for dropdown.
+		if ( ! empty( $confirmation_screen_fields ) ) {
+			$label = esc_attr__( 'Event Registration Confirmation Screen Fields', 'civicrm-event-organiser' );
+			foreach ( $confirmation_screen_fields as $item ) {
+				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+			}
+		}
+
+		// Build Event Registration Thank You Screen Field choices array for dropdown.
+		if ( ! empty( $thankyou_screen_fields ) ) {
+			$label = esc_attr__( 'Event Registration Thank You Screen Fields', 'civicrm-event-organiser' );
+			foreach ( $thankyou_screen_fields as $item ) {
+				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+			}
+		}
+
+		// Build Event Registration Confirmation Email Field choices array for dropdown.
+		if ( ! empty( $email_screen_fields ) ) {
+			$label = esc_attr__( 'Event Registration Confirmation Email Fields', 'civicrm-event-organiser' );
+			foreach ( $email_screen_fields as $item ) {
+				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+			}
+		}
+
+		/**
+		 * Filter the choices to display in the "CiviCRM Field" select.
+		 *
+		 * @since 0.8.2
+		 *
+		 * @param array $choices The array of choices for the Setting Field.
+		 */
+		$choices = apply_filters( 'ceo/acf/civicrm/event/civicrm_field/choices', $choices );
 
 		// Return populated array.
 		return $choices;
@@ -684,8 +823,82 @@ class CEO_Compat_CWPS {
 	// -----------------------------------------------------------------------------------
 
 	/**
+	 * Intercept when an Event Organiser Event has been updated from a CiviCRM Event.
+	 *
+	 * Sync any associated ACF Fields mapped to built-in Event Fields.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param int   $event_id The numeric ID of the Event Organiser Event.
+	 * @param array $civi_event An array of data for the CiviCRM Event.
+	 */
+	public function event_sync_to_post( $event_id, $civi_event ) {
+
+		// Get Occurrences.
+		$occurrences = eo_get_the_occurrences_of( $event_id );
+
+		/*
+		 * In this context, a CiviCRM Event can only have an Event Organiser Event
+		 * with a single Occurrence associated with it, so use first item.
+		 */
+		$keys          = array_keys( $occurrences );
+		$occurrence_id = array_pop( $keys );
+
+		// Make an array of params.
+		$args = [
+			'post_id'       => $event_id,
+			'event_id'      => $event_id,
+			'occurrence_id' => $occurrence_id,
+			'civi_event_id' => $civi_event['id'],
+			'civi_event'    => $civi_event,
+		];
+
+		// Get all ACF Fields for the Event.
+		$acf_fields = $this->cwps->acf->acf->field->fields_get_for_post( $event_id );
+
+		// Bail if we don't have any Custom Fields in ACF.
+		if ( empty( $acf_fields['event'] ) ) {
+			return;
+		}
+
+		// Get the public Event Fields.
+		$public_event_fields  = $this->cwps->acf->civicrm->event_field->public_fields_get();
+		$public_event_fields += $this->cwps->acf->civicrm->event_location->settings_fields_get();
+		$public_event_fields += $this->cwps->acf->civicrm->event_registration->public_fields_get();
+
+		// Let's look at each ACF Field in turn.
+		foreach ( $acf_fields['event'] as $selector => $event_field ) {
+
+			// Skip if it's not a public Event Field.
+			if ( ! array_key_exists( $event_field, $public_event_fields ) ) {
+				continue;
+			}
+
+			// Does the mapped Event Field exist?
+			if ( isset( $civi_event[ $event_field ] ) ) {
+
+				// Modify value for ACF prior to update.
+				$value = $this->cwps->acf->civicrm->event_field->value_get_for_acf(
+					$civi_event[ $event_field ],
+					$event_field,
+					$selector,
+					$event_id
+				);
+
+				// Update it.
+				$this->cwps->acf->acf->field->value_update( $selector, $value, $event_id );
+
+			}
+
+		}
+	}
+
+	// -----------------------------------------------------------------------------------
+
+	/**
 	 * Intercept when a CiviCRM Event has been synced to an Event Organiser Event.
 	 *
+	 * This method is only called when sync is done via the "Manual Sync" page.
 	 * Update any associated ACF Fields with their Custom Field values.
 	 *
 	 * @since 0.5.2
@@ -785,6 +998,42 @@ class CEO_Compat_CWPS {
 
 		// Pass on.
 		$this->acf_fields_saved( $args );
+
+	}
+
+	/**
+	 * Removes Event Organiser's faulty legacy time picker.
+	 *
+	 * @since 0.8.2
+	 */
+	public function eo_deregister_scripts() {
+
+		/*
+		// Removing the offending script causes nags.
+		wp_deregister_script( 'eo-time-picker' );
+		wp_dequeue_script( 'eo-time-picker' );
+		*/
+
+		// Deregister and re-register "eo_event".
+		wp_deregister_script( 'eo_event' );
+		$version = defined( 'EVENT_ORGANISER_VER' ) ? EVENT_ORGANISER_VER : false;
+		$ext     = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
+		wp_register_script(
+			'eo_event',
+			EVENT_ORGANISER_URL . "js/event{$ext}.js",
+			[
+				'jquery',
+				'jquery-ui-datepicker',
+				'eo-timepicker',
+				'eo-venue-util',
+				'jquery-ui-autocomplete',
+				'jquery-ui-widget',
+				'jquery-ui-button',
+				'jquery-ui-position',
+			],
+			$version,
+			true
+		);
 
 	}
 
