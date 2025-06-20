@@ -529,15 +529,26 @@ class CEO_Compat_CWPS {
 			return $choices;
 		}
 
-		// Get Event Field prefix.
-		$event_field_prefix = $this->cwps->acf->civicrm->event_field_prefix();
+		// Set empty Event Field prefix.
+		$event_field_prefix = '';
 
-		// Build Event Field choices array for dropdown.
-		if ( ! empty( $core_fields ) ) {
-			$label = esc_attr__( 'Event Fields', 'civicrm-event-organiser' );
-			foreach ( $core_fields as $item ) {
-				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+		// Check for compatible CiviCRM Profile Sync.
+		$cwps_version = version_compare( CIVICRM_WP_PROFILE_SYNC_VERSION, '0.6.10', '>=' );
+
+		// If compatible CiviCRM Profile Sync.
+		if ( $cwps_version ) {
+
+			// Get Event Field prefix.
+			$event_field_prefix = $this->cwps->acf->civicrm->event_field_prefix();
+
+			// Build Event Field choices array for dropdown.
+			if ( ! empty( $core_fields ) ) {
+				$label = esc_attr__( 'Event Fields', 'civicrm-event-organiser' );
+				foreach ( $core_fields as $item ) {
+					$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+				}
 			}
+
 		}
 
 		// Build Custom Field choices array for dropdown.
@@ -551,44 +562,49 @@ class CEO_Compat_CWPS {
 			}
 		}
 
-		// Build Event Registration Field choices array for dropdown.
-		if ( ! empty( $registration_fields ) ) {
-			$label = esc_attr__( 'Event Registration Fields', 'civicrm-event-organiser' );
-			foreach ( $registration_fields as $item ) {
-				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
-			}
-		}
+		// If compatible CiviCRM Profile Sync.
+		if ( $cwps_version ) {
 
-		// Build Event Registration Screen Field choices array for dropdown.
-		if ( ! empty( $registration_screen_fields ) ) {
-			$label = esc_attr__( 'Event Registration Screen Fields', 'civicrm-event-organiser' );
-			foreach ( $registration_screen_fields as $item ) {
-				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+			// Build Event Registration Field choices array for dropdown.
+			if ( ! empty( $registration_fields ) ) {
+				$label = esc_attr__( 'Event Registration Fields', 'civicrm-event-organiser' );
+				foreach ( $registration_fields as $item ) {
+					$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+				}
 			}
-		}
 
-		// Build Event Registration Confirmation Screen Field choices array for dropdown.
-		if ( ! empty( $confirmation_screen_fields ) ) {
-			$label = esc_attr__( 'Event Registration Confirmation Screen Fields', 'civicrm-event-organiser' );
-			foreach ( $confirmation_screen_fields as $item ) {
-				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+			// Build Event Registration Screen Field choices array for dropdown.
+			if ( ! empty( $registration_screen_fields ) ) {
+				$label = esc_attr__( 'Event Registration Screen Fields', 'civicrm-event-organiser' );
+				foreach ( $registration_screen_fields as $item ) {
+					$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+				}
 			}
-		}
 
-		// Build Event Registration Thank You Screen Field choices array for dropdown.
-		if ( ! empty( $thankyou_screen_fields ) ) {
-			$label = esc_attr__( 'Event Registration Thank You Screen Fields', 'civicrm-event-organiser' );
-			foreach ( $thankyou_screen_fields as $item ) {
-				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+			// Build Event Registration Confirmation Screen Field choices array for dropdown.
+			if ( ! empty( $confirmation_screen_fields ) ) {
+				$label = esc_attr__( 'Event Registration Confirmation Screen Fields', 'civicrm-event-organiser' );
+				foreach ( $confirmation_screen_fields as $item ) {
+					$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+				}
 			}
-		}
 
-		// Build Event Registration Confirmation Email Field choices array for dropdown.
-		if ( ! empty( $email_screen_fields ) ) {
-			$label = esc_attr__( 'Event Registration Confirmation Email Fields', 'civicrm-event-organiser' );
-			foreach ( $email_screen_fields as $item ) {
-				$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+			// Build Event Registration Thank You Screen Field choices array for dropdown.
+			if ( ! empty( $thankyou_screen_fields ) ) {
+				$label = esc_attr__( 'Event Registration Thank You Screen Fields', 'civicrm-event-organiser' );
+				foreach ( $thankyou_screen_fields as $item ) {
+					$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+				}
 			}
+
+			// Build Event Registration Confirmation Email Field choices array for dropdown.
+			if ( ! empty( $email_screen_fields ) ) {
+				$label = esc_attr__( 'Event Registration Confirmation Email Fields', 'civicrm-event-organiser' );
+				foreach ( $email_screen_fields as $item ) {
+					$choices[ $label ][ $event_field_prefix . $item['name'] ] = $item['title'];
+				}
+			}
+
 		}
 
 		/**
@@ -619,7 +635,12 @@ class CEO_Compat_CWPS {
 	 * @param str $event_field_prefix The Event Field prefix.
 	 * @return array $choices The modified array of choices for the Setting Field.
 	 */
-	public function filter_setting_choices( $choices, $event_field_prefix ) {
+	public function filter_setting_choices( $choices, $event_field_prefix = '' ) {
+
+		// Bail if no Event Field prefix.
+		if ( empty( $event_field_prefix ) ) {
+			return $choices;
+		}
 
 		// These items are handled already.
 		$to_remove = [
