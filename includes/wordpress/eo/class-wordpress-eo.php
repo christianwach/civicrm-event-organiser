@@ -475,9 +475,8 @@ class CEO_WordPress_EO {
 	public function update_event( $civi_event ) {
 
 		// Make sure we have a valid end date.
-		if ( empty( $civi_event['end_date'] ) || 'null' === $civi_event['end_date'] ) {
-			$end_date = '';
-		} else {
+		$end_date = $this->plugin->civi->denullify( $civi_event['end_date'] );
+		if ( ! empty( $end_date ) ) {
 			$end_date = new DateTime( $civi_event['end_date'], eo_get_blog_timezone() );
 		}
 
@@ -514,16 +513,21 @@ class CEO_WordPress_EO {
 
 		// We must have at minimum a Post title.
 		$post_data['post_title'] = __( 'Untitled CiviCRM Event', 'civicrm-event-organiser' );
-		if ( ! empty( $civi_event['title'] ) ) {
-			$post_data['post_title'] = $civi_event['title'];
+		$title = $this->plugin->civi->denullify( $civi_event['title'] );
+		if ( ! empty( $title ) ) {
+			$post_data['post_title'] = $title;
 		}
 
-		// Assign Description and Summary if present.
-		if ( ! empty( $civi_event['description'] ) ) {
-			$post_data['post_content'] = $this->wordpress->unautop( $civi_event['description'] );
+		// Assign Description if present.
+		$description = $this->plugin->civi->denullify( $civi_event['description'] );
+		if ( ! empty( $description ) ) {
+			$post_data['post_content'] = $this->wordpress->unautop( $description );
 		}
-		if ( ! empty( $civi_event['summary'] ) ) {
-			$post_data['post_excerpt'] = $civi_event['summary'];
+
+		// Assign Summary if present.
+		$summary = $this->plugin->civi->denullify( $civi_event['summary'] );
+		if ( ! empty( $summary ) ) {
+			$post_data['post_excerpt'] = $summary;
 		}
 
 		// Test for created date, which may be absent.
