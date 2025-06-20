@@ -144,74 +144,7 @@ class CEO_WordPress_Shortcodes {
 		}
 
 		// Wrap links if required.
-		if ( ! empty( $element ) ) {
-
-			// Format classes if provided.
-			$classes = '';
-			if ( ! empty( $wrap_classes ) ) {
-				$classes = explode( ' ', $wrap_classes );
-				array_walk(
-					$classes,
-					function( &$item ) {
-						$item = esc_attr( $item );
-					}
-				);
-				$classes = implode( ' ', $classes );
-			}
-
-			// Handle button element.
-			if ( 'button' === $element ) {
-				array_walk(
-					$links_data,
-					function( &$item, $key ) use ( $element, $classes ) {
-						foreach ( $item as $index => $link ) {
-							if ( ! empty( $link['meta'] ) && 'active' === $link['meta'] ) {
-								if ( ! empty( $classes ) ) {
-									$link['link'] = '<button type="button" class="' . $classes . '">' . $link['link'] . '</button>';
-								} else {
-									$link['link'] = '<button type="button">' . $link['link'] . '</button>';
-								}
-							} else {
-								if ( ! empty( $link['meta'] ) && 'registration_closed' === $link['meta'] ) {
-									$link['link'] = '<p class="ceo-registration-closed">' . $link['link'] . '</p>';
-								}
-								if ( ! empty( $link['meta'] ) && 'is_registered' === $link['meta'] ) {
-									$link['link'] = '<p class="ceo-contact-is-registered">' . $link['link'] . '</p>';
-								}
-							}
-							$item[ $index ] = $link;
-						}
-					}
-				);
-			}
-
-			// Handle div element.
-			if ( 'div' === $element ) {
-				array_walk(
-					$links_data,
-					function( &$item, $key ) use ( $element, $classes ) {
-						foreach ( $item as $index => $link ) {
-							if ( ! empty( $link['meta'] ) && 'active' === $link['meta'] ) {
-								if ( ! empty( $classes ) ) {
-									$link['link'] = '<div class="' . $classes . '">' . $link['link'] . '</div>';
-								} else {
-									$link['link'] = '<div>' . $link['link'] . '</div>';
-								}
-							} else {
-								if ( ! empty( $link['meta'] ) && 'registration_closed' === $link['meta'] ) {
-									$link['link'] = '<p class="ceo-registration-closed">' . $link['link'] . '</p>';
-								}
-								if ( ! empty( $link['meta'] ) && 'is_registered' === $link['meta'] ) {
-									$link['link'] = '<p class="ceo-contact-is-registered">' . $link['link'] . '</p>';
-								}
-							}
-							$item[ $index ] = $link;
-						}
-					}
-				);
-			}
-
-		}
+		$links_data = $this->link_data_wrap( $links_data, $wrap_classes, $element );
 
 		// Is it recurring?
 		if ( eo_recurs() ) {
@@ -252,6 +185,93 @@ class CEO_WordPress_Shortcodes {
 
 		// --<
 		return $markup;
+
+	}
+
+	/**
+	 * Wraps links with elements and classes as defined in the Shortcode.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param array  $links_data The array of Registration link data.
+	 * @param array  $wrap_classes The array CSS classes.
+	 * @param string $element The wrapper element.
+	 * @return array $links_data The modified array of Registration link data.
+	 */
+	private function link_data_wrap( $links_data, $wrap_classes, $element ) {
+
+		// Wrap links if required.
+		if ( empty( $element ) ) {
+			return $links_data;
+		}
+
+		// Format classes if provided.
+		$classes = '';
+		if ( ! empty( $wrap_classes ) ) {
+			$classes = explode( ' ', $wrap_classes );
+			array_walk(
+				$classes,
+				function( &$item ) {
+					$item = esc_attr( $item );
+				}
+			);
+			$classes = implode( ' ', $classes );
+		}
+
+		// Handle button element.
+		if ( 'button' === $element ) {
+			array_walk(
+				$links_data,
+				function( &$item, $key ) use ( $element, $classes ) {
+					foreach ( $item as $index => $link ) {
+						if ( ! empty( $link['meta'] ) && 'active' === $link['meta'] ) {
+							if ( ! empty( $classes ) ) {
+								$link['link'] = '<button type="button" class="' . $classes . '">' . $link['link'] . '</button>';
+							} else {
+								$link['link'] = '<button type="button">' . $link['link'] . '</button>';
+							}
+						} else {
+							if ( ! empty( $link['meta'] ) && 'registration_closed' === $link['meta'] ) {
+								$link['link'] = '<p class="ceo-registration-closed">' . $link['link'] . '</p>';
+							}
+							if ( ! empty( $link['meta'] ) && 'is_registered' === $link['meta'] ) {
+								$link['link'] = '<p class="ceo-contact-is-registered">' . $link['link'] . '</p>';
+							}
+						}
+						$item[ $index ] = $link;
+					}
+				}
+			);
+		}
+
+		// Handle div element.
+		if ( 'div' === $element ) {
+			array_walk(
+				$links_data,
+				function( &$item, $key ) use ( $element, $classes ) {
+					foreach ( $item as $index => $link ) {
+						if ( ! empty( $link['meta'] ) && 'active' === $link['meta'] ) {
+							if ( ! empty( $classes ) ) {
+								$link['link'] = '<div class="' . $classes . '">' . $link['link'] . '</div>';
+							} else {
+								$link['link'] = '<div>' . $link['link'] . '</div>';
+							}
+						} else {
+							if ( ! empty( $link['meta'] ) && 'registration_closed' === $link['meta'] ) {
+								$link['link'] = '<p class="ceo-registration-closed">' . $link['link'] . '</p>';
+							}
+							if ( ! empty( $link['meta'] ) && 'is_registered' === $link['meta'] ) {
+								$link['link'] = '<p class="ceo-contact-is-registered">' . $link['link'] . '</p>';
+							}
+						}
+						$item[ $index ] = $link;
+					}
+				}
+			);
+		}
+
+		// --<
+		return $links_data;
 
 	}
 
