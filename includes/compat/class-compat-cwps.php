@@ -169,6 +169,9 @@ class CEO_Compat_CWPS {
 		// Remove Event Organiser's faulty time picker.
 		add_action( 'admin_init', [ $this, 'eo_deregister_scripts' ], 6 );
 
+		// Filter out any Event Fields that are already handled by this plugin.
+		add_filter( 'ceo/acf/civicrm/event/civicrm_field/choices', [ $this, 'filter_setting_choices' ], 10, 2 );
+
 	}
 
 	// -----------------------------------------------------------------------------------
@@ -591,11 +594,70 @@ class CEO_Compat_CWPS {
 		 * @since 0.8.2
 		 *
 		 * @param array $choices The array of choices for the Setting Field.
+		 * @param str $event_field_prefix The Event Field prefix.
 		 */
-		$choices = apply_filters( 'ceo/acf/civicrm/event/civicrm_field/choices', $choices );
+		$choices = apply_filters( 'ceo/acf/civicrm/event/civicrm_field/choices', $choices, $event_field_prefix );
 
 		// Return populated array.
 		return $choices;
+
+	}
+
+	/**
+	 * Filters the choices to display in the "CiviCRM Field" select.
+	 *
+	 * This method excludes any Fields which are already synced by this plugin because
+	 * we don't really want to have duplicate processing or add to setup confusion.
+	 * And anyway, ACF-derived values would be overwritten by built-in sync values.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param array $choices The array of choices for the Setting Field.
+	 * @param str $event_field_prefix The Event Field prefix.
+	 * @return array $choices The modified array of choices for the Setting Field.
+	 */
+	public function filter_setting_choices( $choices, $event_field_prefix ) {
+
+		// These items are handled already.
+		$to_remove = [
+			'title',
+			'description',
+			'summary',
+			'event_type_id',
+			'start_date',
+			'end_date',
+			'is_public',
+			'is_active',
+			'is_online_registration',
+			'dedupe_rule_group_id',
+			'is_confirm_enabled',
+			'is_email_confirm',
+			'confirm_from_name',
+			'confirm_from_email',
+			'cc_confirm',
+			'bcc_confirm',
+		];
+
+		// Prepend the Event Field prefix.
+		array_walk(
+			$to_remove,
+			function( &$item ) use ( $event_field_prefix ) {
+				$item = $event_field_prefix .  $item;
+			}
+		);
+
+		// Build filtered array.
+		$filtered = [];
+		foreach ( $choices as $label => $items ) {
+			foreach ( $items as $key => $item ) {
+				if ( ! in_array( $key, $to_remove ) ) {
+					$filtered[ $label ][ $key ] = $item;
+				}
+			}
+		}
+
+		// --<
+		return $filtered;
 
 	}
 
@@ -891,6 +953,7 @@ class CEO_Compat_CWPS {
 			}
 
 		}
+
 	}
 
 	// -----------------------------------------------------------------------------------
