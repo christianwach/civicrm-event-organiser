@@ -623,6 +623,7 @@ class CEO_Compat_CWPS {
 
 		// These items are handled already.
 		$to_remove = [
+			'id',
 			'title',
 			'description',
 			'summary',
