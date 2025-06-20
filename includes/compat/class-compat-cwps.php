@@ -521,6 +521,9 @@ class CEO_Compat_CWPS {
 			empty( $core_fields ) &&
 			empty( $registration_fields ) &&
 			empty( $registration_screen_fields ) &&
+			empty( $confirmation_screen_fields ) &&
+			empty( $thankyou_screen_fields ) &&
+			empty( $email_screen_fields ) &&
 			empty( $filtered_fields )
 		) {
 			return $choices;
