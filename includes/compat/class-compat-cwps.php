@@ -631,8 +631,8 @@ class CEO_Compat_CWPS {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param array $choices The array of choices for the Setting Field.
-	 * @param str $event_field_prefix The Event Field prefix.
+	 * @param array  $choices The array of choices for the Setting Field.
+	 * @param string $event_field_prefix The Event Field prefix.
 	 * @return array $choices The modified array of choices for the Setting Field.
 	 */
 	public function filter_setting_choices( $choices, $event_field_prefix = '' ) {
@@ -667,7 +667,7 @@ class CEO_Compat_CWPS {
 		array_walk(
 			$to_remove,
 			function( &$item ) use ( $event_field_prefix ) {
-				$item = $event_field_prefix .  $item;
+				$item = $event_field_prefix . $item;
 			}
 		);
 
