@@ -929,7 +929,6 @@ class CEO_Compat_CWPS {
 
 		// Get the public Event Fields.
 		$public_event_fields  = $this->cwps->acf->civicrm->event_field->public_fields_get();
-		$public_event_fields += $this->cwps->acf->civicrm->event_location->settings_fields_get();
 		$public_event_fields += $this->cwps->acf->civicrm->event_registration->public_fields_get();
 
 		// Let's look at each ACF Field in turn.
