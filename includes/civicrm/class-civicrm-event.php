@@ -1885,6 +1885,89 @@ class CEO_CiviCRM_Event {
 		// The result set should contain only one item.
 		$event = array_pop( $result['values'] );
 
+		// Backfill any missing keys.
+		$event = $this->backfill( $event );
+
+		// --<
+		return $event;
+
+	}
+
+	/**
+	 * Gets a CiviCRM Event by ID via API4.
+	 *
+	 * CiviCRM API4 helpfully includes *all* values when retrieving an Event. However,
+	 * it has a different format for Custom Field keys, so we can't use it for that.
+	 * So for now, this is useful for populating empty values via `self::backfill()`.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param int $event_id The numeric ID of the CiviCRM Event.
+	 * @return array|bool $event The array of CiviCRM Event data, or false if not found.
+	 */
+	public function get_by_id( $event_id ) {
+
+		// Init return.
+		$event = false;
+
+		// Bail if no CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $event;
+		}
+
+		try {
+
+			$result = \Civi\Api4\Event::get( false )
+				->addSelect( '*' )
+				->addWhere( 'id', '=', $event_id )
+				->execute();
+
+		} catch ( CRM_Core_Exception $e ) {
+			$log = [
+				'method'    => __METHOD__,
+				'error'     => $e->getMessage(),
+				'backtrace' => $e->getTraceAsString(),
+			];
+			$this->plugin->log_error( $log );
+			return $event;
+		}
+
+		// Bail if there is not exactly one result.
+		if ( 1 !== (int) $result->count() ) {
+			return $event;
+		}
+
+		// We only need the first item.
+		$event = $result->first();
+
+		// --<
+		return $event;
+
+	}
+
+	/**
+	 * Fill out the missing data for a CiviCRM Event.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param array $event The CiviCRM Event data.
+	 * @return array $event The backfilled CiviCRM Event data.
+	 */
+	public function backfill( $event ) {
+
+		// Get the full Event data.
+		$event_full = $this->get_by_id( (int) $event['id'] );
+		if ( false === $event_full ) {
+			return $event;
+		}
+
+		// Fill out missing Event data.
+		foreach ( $event_full as $key => $item ) {
+			if ( ! array_key_exists( $key, $event ) ) {
+				$event[ $key ] = $item;
+			}
+		}
+
 		// --<
 		return $event;
 
