@@ -166,11 +166,11 @@ class CEO_Compat_CWPS {
 		// Listen for when an Event Organiser Event has been synced to a CiviCRM Event.
 		add_action( 'ceo/eo/event/updated', [ $this, 'event_sync_to_post' ], 10, 2 );
 
-		// Remove Event Organiser's faulty time picker.
-		add_action( 'admin_init', [ $this, 'eo_deregister_scripts' ], 6 );
-
 		// Filter out any Event Fields that are already handled by this plugin.
 		add_filter( 'ceo/acf/civicrm/event/civicrm_field/choices', [ $this, 'filter_setting_choices' ], 10, 2 );
+
+		// Remove Event Organiser's faulty time picker.
+		add_action( 'admin_init', [ $this, 'eo_deregister_scripts' ], 6 );
 
 	}
 
