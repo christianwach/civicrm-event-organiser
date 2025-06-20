@@ -941,7 +941,7 @@ class CEO_Compat_CWPS {
 			}
 
 			// Does the mapped Event Field exist?
-			if ( isset( $civi_event[ $event_field ] ) ) {
+			if ( array_key_exists( $event_field, $civi_event ) ) {
 
 				// Modify value for ACF prior to update.
 				$value = $this->cwps->acf->civicrm->event_field->value_get_for_acf(
