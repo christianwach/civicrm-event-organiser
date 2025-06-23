@@ -201,16 +201,7 @@ var CEO_Feature_Image = CEO_Feature_Image || {};
 					event.stopPropagation();
 				}
 
-				var file_frame, // wp.media file_frame
-					button_id_array, post_id;
-
-				// Determine Post ID from the ID of the button.
-				button_id_array = $(this).attr( 'id' ).split( '-' );
-				if ( button_id_array.length === 5 ) {
-					post_id = button_id_array[4];
-				} else {
-					post_id = 0;
-				}
+				var file_frame; // wp.media file_frame
 
 				// Sanity check.
 				if ( file_frame ) {
@@ -243,7 +234,7 @@ var CEO_Feature_Image = CEO_Feature_Image || {};
 					$('input[name="ceo_attachment_id"]').val( attachment.id );
 
 					// Send the ID to the server.
-					me.send( post_id, attachment.id );
+					me.send( attachment.id );
 
 				});
 
@@ -262,10 +253,9 @@ var CEO_Feature_Image = CEO_Feature_Image || {};
 		 *
 		 * @since 0.6.3
 		 *
-		 * @param {Integer} post_id The numeric ID of the post.
 		 * @param {Integer} attachment_id The numeric ID of the attachment.
 		 */
-		this.send = function( post_id, attachment_id ) {
+		this.send = function( attachment_id ) {
 
 			// Declare vars.
 			var url, data;
@@ -276,7 +266,6 @@ var CEO_Feature_Image = CEO_Feature_Image || {};
 			// Data to pass.
 			data = {
 				action: 'ceo_feature_image',
-				post_id: post_id,
 				attachment_id: attachment_id,
 				_ajax_nonce: CEO_Feature_Image.settings.get_setting( 'ajax_nonce' )
 			};

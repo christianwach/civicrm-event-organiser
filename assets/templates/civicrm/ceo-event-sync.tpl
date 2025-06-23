@@ -14,7 +14,7 @@
   {literal}
 
   // jQuery will not move an item unless it is wrapped.
-  cj('tr.ceo_event_sync').insertAfter('.crm-event-manage-eventinfo-form-block-is_active');
+  cj('tr.ceo_event_sync').insertAfter('.crm-event-manage-eventinfo-form-block-title');
 
   {/literal}
 </script>
