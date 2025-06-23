@@ -65,6 +65,15 @@ class CEO_Compat {
 	public $post_dupe;
 
 	/**
+	 * Yoast Duplicate Post compatibility object.
+	 *
+	 * @since 0.8.2
+	 * @access public
+	 * @var CEO_Compat_Yoast_Duplicate_Post
+	 */
+	public $yoast_dp;
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.8.0
@@ -114,6 +123,7 @@ class CEO_Compat {
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-compat-cai.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-compat-cfcr.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-compat-post-duplicator.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-compat-yoast-duplicate-post.php';
 
 	}
 
@@ -129,6 +139,7 @@ class CEO_Compat {
 		$this->cai       = new CEO_Compat_CAI( $this );
 		$this->cfcr      = new CEO_Compat_CFCR( $this );
 		$this->post_dupe = new CEO_Compat_Post_Duplicator( $this );
+		$this->yoast_dp  = new CEO_Compat_Yoast_Duplicate_Post( $this );
 
 	}
 
