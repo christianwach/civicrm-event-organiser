@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
 
 <style>
 .civi_eo_event_sync_wrapper {
-	border-bottom: 2px solid #ddd;
 	padding-bottom: 0.8em;
+	border-bottom: 2px solid #ddd;
 }
 
 .civi_eo_event_reg_header {
@@ -50,31 +50,30 @@ body.js .civi_eo_event_send_email_toggle {
 
 <?php if ( current_user_can( 'publish_posts' ) ) : ?>
 
-	<div class="civi_eo_event_sync_wrapper">
+	<?php if ( $show_sync_checkbox || $multiple ) : ?>
+		<div class="civi_eo_event_sync_wrapper">
+			<?php if ( $show_sync_checkbox ) : ?>
+				<p>
+					<label for="civi_eo_event_sync"><?php esc_html_e( 'Sync this Event with CiviCRM:', 'civicrm-event-organiser' ); ?></label>
+					<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
+				</p>
 
-		<?php if ( $show_sync_checkbox ) : ?>
-			<p>
-				<label for="civi_eo_event_sync"><?php esc_html_e( 'Sync this Event with CiviCRM:', 'civicrm-event-organiser' ); ?></label>
-				<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
-			</p>
+				<p class="description">
+					<?php esc_html_e( 'Choose whether or not to sync this Event to CiviCRM. It is recommended that you finish configuring your Event before you sync it to CiviCRM.', 'civicrm-event-organiser' ); ?>
+				</p>
+			<?php endif; ?>
+			<?php if ( $multiple ) : ?>
+				<p>
+					<label for="civi_eo_event_delete_unused"><?php esc_html_e( 'Delete unused CiviCRM Events:', 'civicrm-event-organiser' ); ?></label>
+					<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
+				</p>
 
-			<p class="description">
-				<?php esc_html_e( 'Choose whether or not to sync this Event to CiviCRM. It is recommended that you finish configuring your Event before you sync it to CiviCRM.', 'civicrm-event-organiser' ); ?>
-			</p>
-		<?php endif; ?>
-
-		<?php if ( $multiple ) : ?>
-			<p>
-				<label for="civi_eo_event_delete_unused"><?php esc_html_e( 'Delete unused CiviCRM Events:', 'civicrm-event-organiser' ); ?></label>
-				<input type="checkbox" id="civi_eo_event_delete_unused" name="civi_eo_event_delete_unused" value="1" />
-			</p>
-
-			<p class="description">
-				<?php esc_html_e( 'If the sequence has changed, choose whether or not to delete the unused corresponding CiviCRM Events. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ); ?>
-			</p>
-		<?php endif; ?>
-
-	</div>
+				<p class="description">
+					<?php esc_html_e( 'If the sequence has changed, choose whether or not to delete the unused corresponding CiviCRM Events. If you do not delete them, they will be set to "disabled".', 'civicrm-event-organiser' ); ?>
+				</p>
+			<?php endif; ?>
+		</div>
+	<?php endif; ?>
 
 <?php endif; ?>
 

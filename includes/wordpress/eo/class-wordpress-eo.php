@@ -251,10 +251,19 @@ class CEO_WordPress_EO {
 			return;
 		}
 
-		// Is our checkbox checked?
-		$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
-		if ( '1' !== (string) $sync ) {
-			return;
+		// Get linked CiviCRM Events.
+		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
+
+		/*
+		 * Skip checking the "Sync this Event with CiviCRM" checkbox when there is exactly
+		 * one correspondence between an Event Organiser Event and a CiviCRM Event.
+		 */
+		if ( empty( $civi_events ) || 1 < count( $civi_events ) ) {
+			// Bail if the "Sync this Event with CiviCRM" checkbox is not checked.
+			$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
+			if ( '1' !== (string) $sync ) {
+				return;
+			}
 		}
 
 		// Get Post data.
@@ -357,6 +366,9 @@ class CEO_WordPress_EO {
 			if ( ! wp_verify_nonce( $nonce, $this->nonce_action ) ) {
 				return;
 			}
+
+			// Get linked CiviCRM Events.
+			$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
 
 			// Bail if our sync checkbox is not checked.
 			$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
@@ -516,7 +528,7 @@ class CEO_WordPress_EO {
 
 		// We must have at minimum a Post title.
 		$post_data['post_title'] = __( 'Untitled CiviCRM Event', 'civicrm-event-organiser' );
-		$title = $this->plugin->civi->denullify( $civi_event['title'] );
+		$title                   = $this->plugin->civi->denullify( $civi_event['title'] );
 		if ( ! empty( $title ) ) {
 			$post_data['post_title'] = $title;
 		}
