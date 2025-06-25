@@ -83,10 +83,10 @@ class CEO_WordPress_EO {
 	 * Event correspondences to use once the Event has been deleted.
 	 *
 	 * @since 0.4
-	 * @access public
+	 * @access private
 	 * @var array
 	 */
-	private $saved_correspondences;
+	private $saved_correspondences = [];
 
 	/**
 	 * Constructor.
@@ -323,7 +323,7 @@ class CEO_WordPress_EO {
 		}
 
 		// Get correspondences from post meta to use once the Event has been deleted.
-		$this->saved_correspondences = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
+		$this->saved_correspondences[ $post_id ] = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
 
 	}
 
@@ -381,10 +381,13 @@ class CEO_WordPress_EO {
 		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_deleted' ], 10 );
 
 		// Are we deleting an Event?
-		if ( doing_action( 'delete_post' ) && isset( $this->saved_correspondences ) ) {
+		if ( doing_action( 'delete_post' ) && ! empty( $this->saved_correspondences[ $post_id ] ) ) {
 
 			// Yes: get IDs from saved post meta.
-			$correspondences = $this->saved_correspondences;
+			$correspondences = $this->saved_correspondences[ $post_id ];
+
+			// Clear array entry.
+			unset( $this->saved_correspondences[ $post_id ] );
 
 		} else {
 
