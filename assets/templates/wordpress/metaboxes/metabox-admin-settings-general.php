@@ -88,6 +88,14 @@ do_action( 'ceo/admin/settings/metabox/general/before' );
 		</tr>
 	<?php endif; ?>
 
+	<tr valign="top">
+		<th scope="row"><?php esc_html_e( 'Syncing Event Organiser Events to CiviCRM', 'civicrm-event-organiser' ); ?></th>
+		<td>
+			<p class="description"><?php esc_html_e( 'When you create an Event in Event Organiser, there will always be a "Sync this Event with CiviCRM" checkbox. This allows you to create Events in Event Organiser that are not linked to Events in CiviCRM. When the Event in Event Organiser has a linked Event in CiviCRM, the checkbox will no longer appear and sync will happen every time the Event is saved.', 'civicrm-event-organiser' ); ?></p>
+			<p class="description"><?php esc_html_e( 'If you create a repeating Event in Event Organiser, however, the checkbox will remain. This because significant changes to repeating schedules for Event Organiser Events that are already have corresponding CiviCRM Events can result in unexpected outcomes. It is strongly recommended that you finalize your schedule before syncing the repeating Event to CiviCRM.', 'civicrm-event-organiser' ); ?></p>
+		</td>
+	</tr>
+
 	<?php if ( ! empty( $status_sync ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_status_sync"><?php esc_html_e( 'Map CiviCRM Event Status and EO Event Status', 'civicrm-event-organiser' ); ?></label></th>

@@ -981,6 +981,15 @@ class CEO_WordPress_EO {
 			$multiple = true;
 		}
 
+		// Decide if we should show the "Sync to CiviCRM" checkbox.
+		$show_sync_checkbox = true;
+		if ( ! empty( $civi_events ) ) {
+			$show_sync_checkbox = false;
+			if ( $multiple ) {
+				$show_sync_checkbox = true;
+			}
+		}
+
 		// Get Online Registration.
 		$is_reg_checked = $this->get_event_registration( $event->ID );
 

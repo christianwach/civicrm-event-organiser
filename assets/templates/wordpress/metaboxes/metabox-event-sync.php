@@ -52,14 +52,16 @@ body.js .civi_eo_event_send_email_toggle {
 
 	<div class="civi_eo_event_sync_wrapper">
 
-		<p>
-			<label for="civi_eo_event_sync"><?php esc_html_e( 'Sync this Event with CiviCRM:', 'civicrm-event-organiser' ); ?></label>
-			<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
-		</p>
+		<?php if ( $show_sync_checkbox ) : ?>
+			<p>
+				<label for="civi_eo_event_sync"><?php esc_html_e( 'Sync this Event with CiviCRM:', 'civicrm-event-organiser' ); ?></label>
+				<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
+			</p>
 
-		<p class="description">
-			<?php esc_html_e( 'Choose whether or not to sync this Event to CiviCRM. It is recommended that you finish configuring your Event before you sync it to CiviCRM.', 'civicrm-event-organiser' ); ?>
-		</p>
+			<p class="description">
+				<?php esc_html_e( 'Choose whether or not to sync this Event to CiviCRM. It is recommended that you finish configuring your Event before you sync it to CiviCRM.', 'civicrm-event-organiser' ); ?>
+			</p>
+		<?php endif; ?>
 
 		<?php if ( $multiple ) : ?>
 			<p>
