@@ -11,20 +11,26 @@
 defined( 'ABSPATH' ) || exit;
 
 ?><!-- assets/templates/wordpress/metaboxes/metabox-event-links.php -->
-<style>
-.civi_eo_event_list li {
-	margin: 0.5em 0;
-	padding: 0.5em 0 0.5em 0;
-	border-top: 1px solid #eee;
-	border-bottom: 1px solid #eee;
-}
-</style>
+<?php if ( ! empty( $links ) ) : ?>
+	<style>
+	.civi_eo_event_list li {
+		margin: 0.5em 0;
+		padding: 0.5em 0 0.5em 0;
+		border-top: 1px solid #eee;
+		border-bottom: 1px solid #eee;
+	}
+	</style>
 
-<ul class="civi_eo_event_list">
-	<?php foreach ( $links as $item ) : ?>
-		<li><?php echo $item; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?></li>
-	<?php endforeach; ?>
-</ul>
+	<ul class="civi_eo_event_list">
+		<?php foreach ( $links as $item ) : ?>
+			<li><?php echo $item; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?></li>
+		<?php endforeach; ?>
+	</ul>
+<?php else : ?>
+	<p>
+		<?php esc_html_e( 'This Event has no corresponding CiviCRM Events.', 'civicrm-event-organiser' ); ?>
+	</p>
+<?php endif; ?>
 
 <?php
 

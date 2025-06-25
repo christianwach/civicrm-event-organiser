@@ -1068,51 +1068,48 @@ class CEO_WordPress_EO {
 		// Get linked CiviCRM Events.
 		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
 
-		// Bail if we get none.
-		if ( empty( $civi_events ) ) {
-			return;
-		}
-
 		// Init links.
 		$links = [];
 
-		// Show them.
-		foreach ( $civi_events as $civi_event_id ) {
+		// Show them if there are some.
+		if ( ! empty( $civi_events ) ) {
+			foreach ( $civi_events as $civi_event_id ) {
 
-			// Get link.
-			$link = $this->plugin->civi->event->get_settings_link( $civi_event_id );
+				// Get link.
+				$link = $this->plugin->civi->event->get_settings_link( $civi_event_id );
 
-			// Get CiviCRM Event.
-			$civi_event = $this->plugin->civi->event->get_event_by_id( $civi_event_id );
-			if ( false === $civi_event ) {
-				continue;
+				// Get CiviCRM Event.
+				$civi_event = $this->plugin->civi->event->get_event_by_id( $civi_event_id );
+				if ( false === $civi_event ) {
+					continue;
+				}
+
+				// Get DateTime object.
+				$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
+
+				// Construct date and time format.
+				$format = get_option( 'date_format' );
+				if ( ! eo_is_all_day( $event->ID ) ) {
+					$format .= ' ' . get_option( 'time_format' );
+				}
+
+				// Get datetime string.
+				$datetime_string = eo_format_datetime( $start, $format );
+
+				// Construct link.
+				$link = '<a href="' . esc_url( $link ) . '">' . esc_html( $datetime_string ) . '</a>';
+
+				// Construct list item content.
+				$content = sprintf(
+					/* translators: %s: The formatted link to the Event. */
+					__( 'Info and Settings for: %s', 'civicrm-event-organiser' ),
+					$link
+				);
+
+				// Add to array.
+				$links[] = $content;
+
 			}
-
-			// Get DateTime object.
-			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
-
-			// Construct date and time format.
-			$format = get_option( 'date_format' );
-			if ( ! eo_is_all_day( $event->ID ) ) {
-				$format .= ' ' . get_option( 'time_format' );
-			}
-
-			// Get datetime string.
-			$datetime_string = eo_format_datetime( $start, $format );
-
-			// Construct link.
-			$link = '<a href="' . esc_url( $link ) . '">' . esc_html( $datetime_string ) . '</a>';
-
-			// Construct list item content.
-			$content = sprintf(
-				/* translators: %s: The formatted link to the Event. */
-				__( 'Info and Settings for: %s', 'civicrm-event-organiser' ),
-				$link
-			);
-
-			// Add to array.
-			$links[] = $content;
-
 		}
 
 		// Show Event Links Metabox.
