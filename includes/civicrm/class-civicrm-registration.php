@@ -599,7 +599,7 @@ class CEO_CiviCRM_Registration {
 	 * @since 0.2.4
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param object $post An Event Organiser Event object.
+	 * @param WP_Post $post An Event Organiser Event object.
 	 * @return int|bool $profile_id The default Registration form profile ID, false on failure.
 	 */
 	public function get_registration_profile( $post = null ) {
@@ -616,7 +616,7 @@ class CEO_CiviCRM_Registration {
 		}
 
 		// If we have a Post.
-		if ( isset( $post ) && is_object( $post ) ) {
+		if ( ! is_null( $post ) && ( $post instanceof WP_Post ) ) {
 
 			// Get stored value.
 			$stored_id = $this->plugin->wordpress->eo->get_event_registration_profile( $post->ID );
@@ -634,18 +634,22 @@ class CEO_CiviCRM_Registration {
 	}
 
 	/**
-	 * Get all CiviCRM Event Registration form profiles.
+	 * Gets all CiviCRM Profiles.
 	 *
 	 * @since 0.2.4
 	 * @since 0.7 Moved to this class.
+	 * @since 0.8.2 Returns Profiles array - not raw API return array.
 	 *
-	 * @return array|bool $result CiviCRM API return array, or false on failure.
+	 * @return array|bool $profiles The array of CiviCRM Profiles, or false on failure.
 	 */
 	public function get_registration_profiles() {
 
+		// Init return.
+		$profiles = false;
+
 		// Bail if we fail to init CiviCRM.
 		if ( ! $this->civicrm->is_active() ) {
-			return false;
+			return $profiles;
 		}
 
 		// Define params.
@@ -671,16 +675,24 @@ class CEO_CiviCRM_Registration {
 				'backtrace' => $trace,
 			];
 			$this->plugin->log_error( $log );
-			return false;
+			return $profiles;
 		}
 
+		// Return early if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return $profiles;
+		}
+
+		// Use result set.
+		$profiles = $result['values'];
+
 		// --<
-		return $result;
+		return $profiles;
 
 	}
 
 	/**
-	 * Get all CiviCRM Event Registration form profiles formatted as a dropdown list.
+	 * Gets all CiviCRM Profiles formatted as a dropdown list.
 	 *
 	 * @since 0.2.4
 	 * @since 0.7 Moved to this class.
@@ -693,49 +705,55 @@ class CEO_CiviCRM_Registration {
 		// Init return.
 		$html = '';
 
-		// Init CiviCRM or bail.
-		if ( ! $this->civicrm->is_active() ) {
+		// Get all profiles.
+		$profiles = $this->get_registration_profiles();
+		if ( false === $profiles ) {
 			return $html;
 		}
 
-		// Get all profiles.
-		$result = $this->get_registration_profiles();
+		// Get allowed Profiles.
+		$profiles_allowed = $this->plugin->admin->option_get( 'civi_eo_event_allowed_profiles', [] );
 
-		// Did we get any?
-		if ( false !== $result && 0 === (int) $result['is_error'] && ! empty( $result['values'] ) ) {
-
-			// Get the values array.
-			$profiles = $result['values'];
-
-			// Init options.
-			$options = [];
-
-			// Get existing profile ID.
-			$existing_id = $this->get_registration_profile( $post );
-
-			// Loop.
+		/*
+		 * Filter the Profiles, including only those allowed.
+		 * When no Profiles have been selected, show all.
+		 */
+		if ( ! empty( $profiles_allowed ) ) {
+			$allowed = [];
 			foreach ( $profiles as $key => $profile ) {
-
-				// Get profile value.
-				$profile_id = (int) $profile['id'];
-
-				// Init selected.
-				$selected = '';
-
-				// Set selected if this value is the same as the default.
-				if ( $existing_id === $profile_id ) {
-					$selected = ' selected="selected"';
+				if ( in_array( (int) $profile['id'], $profiles_allowed, true ) ) {
+					$allowed[] = $profile;
 				}
+			}
+		} else {
+			$allowed = $profiles;
+		}
 
-				// Construct option.
-				$options[] = '<option value="' . $profile_id . '"' . $selected . '>' . esc_html( $profile['title'] ) . '</option>';
+		// Init options.
+		$options = [];
 
+		// Get existing profile ID.
+		$existing_id = $this->get_registration_profile( $post );
+
+		// Build options.
+		foreach ( $allowed as $key => $profile ) {
+
+			// Get profile value.
+			$profile_id = (int) $profile['id'];
+
+			// Set selected if this value is the same as the default.
+			$selected = '';
+			if ( $existing_id === $profile_id ) {
+				$selected = ' selected="selected"';
 			}
 
-			// Create html.
-			$html = implode( "\n", $options );
+			// Construct option.
+			$options[] = '<option value="' . $profile_id . '"' . $selected . '>' . esc_html( $profile['title'] ) . '</option>';
 
 		}
+
+		// Create html.
+		$html = implode( "\n", $options );
 
 		// --<
 		return $html;

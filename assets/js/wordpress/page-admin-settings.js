@@ -25,9 +25,9 @@
 		// Set initial visibility.
 		var current_on = $('#civi_eo_event_default_send_email').prop( 'checked' );
 		if ( current_on ) {
-			$('.send-email-toggle').show();
+			$('.ceo_confirm_email_sub_setting').show();
 		} else {
-			$('.send-email-toggle').hide();
+			$('.ceo_confirm_email_sub_setting').hide();
 		}
 
 		/**
@@ -43,13 +43,16 @@
 			// Toggle depending on checked status.
 			var current_on = $(this).prop( 'checked' );
 			if ( current_on ) {
-				$('.send-email-toggle').slideDown( 'slow' );
+				$('.ceo_confirm_email_sub_setting').show();
 			} else {
-				$('.send-email-toggle').slideUp( 'slow' );
+				$('.ceo_confirm_email_sub_setting').hide();
 			}
 
 		});
 
-	});
+		// Enable Select2 on "Limit CiviCRM Profiles for Event Registration".
+		$('#civi_eo_event_allowed_profiles').select2();
+
+   	});
 
 } )( jQuery );

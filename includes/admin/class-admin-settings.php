@@ -376,16 +376,17 @@ class CEO_Admin_Settings {
 	 */
 	public function page_settings_css() {
 
-		/*
-		// Add admin css.
-		wp_enqueue_style(
-			'civi_eo_settings_css',
-			plugins_url( 'assets/css/wordpress/page-admin-settings.css', CIVICRM_WP_EVENT_ORGANISER_FILE ),
-			null,
-			CIVICRM_WP_EVENT_ORGANISER_VERSION,
+		// Register Select2 styles.
+		wp_register_style(
+			'civi_eo_settings_select2',
+			set_url_scheme( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css' ),
+			false,
+			CIVICRM_WP_EVENT_ORGANISER_VERSION, // Version.
 			'all' // Media.
 		);
-		*/
+
+		// Enqueue Select2 styles.
+		wp_enqueue_style( 'civi_eo_settings_select2' );
 
 	}
 
@@ -396,16 +397,26 @@ class CEO_Admin_Settings {
 	 */
 	public function page_settings_js() {
 
-		/*
-		// Enqueue javascript.
+		// Enqueue "Settings" page javascript.
 		wp_enqueue_script(
-			'civi_eo_settings_js',
+			'civi_eo_settings',
 			plugins_url( 'assets/js/wordpress/page-admin-settings.js', CIVICRM_WP_EVENT_ORGANISER_FILE ),
 			[ 'jquery' ],
 			CIVICRM_WP_EVENT_ORGANISER_VERSION, // Version.
 			true // In footer.
 		);
-		*/
+
+		// Register Select2.
+		wp_register_script(
+			'civi_eo_settings_select2',
+			set_url_scheme( 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js' ),
+			[ 'jquery' ],
+			CIVICRM_WP_EVENT_ORGANISER_VERSION,
+			false
+		);
+
+		// Enqueue Select2.
+		wp_enqueue_script( 'civi_eo_settings_select2' );
 
 	}
 
@@ -598,7 +609,13 @@ class CEO_Admin_Settings {
 		}
 
 		// Get all Event Registration Profiles.
-		$profiles = $this->plugin->civi->registration->get_registration_profiles_select();
+		$profiles_all = $this->plugin->civi->registration->get_registration_profiles();
+
+		// Get the current "Limit Event Registration Profiles" setting.
+		$profiles_allowed = $this->admin->option_get( 'civi_eo_event_allowed_profiles', [] );
+
+		// Get Event Registration Profile options.
+		$profile_options = $this->plugin->civi->registration->get_registration_profiles_select();
 
 		// Get all Event Registration Dedupe Rules.
 		$dedupe_rules = $this->plugin->civi->registration->get_registration_dedupe_rules_select();
@@ -678,7 +695,7 @@ class CEO_Admin_Settings {
 		// Check that we trust the source of the data.
 		check_admin_referer( $this->form_nonce_action, $this->form_nonce_field );
 
-		// Init vars. Nonce is checked in "form_nonce_check()".
+		// Init vars.
 		$role               = isset( $_POST['civi_eo_event_default_role'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_role'] ) ) : '0';
 		$type               = isset( $_POST['civi_eo_event_default_type'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_type'] ) ) : '0';
 		$profile            = isset( $_POST['civi_eo_event_default_profile'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_profile'] ) ) : '0';
@@ -692,6 +709,19 @@ class CEO_Admin_Settings {
 		$civicrm_event_sync = isset( $_POST['civi_eo_event_default_civievent_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_civievent_sync'] ) ) : '0';
 		$status_sync        = isset( $_POST['civi_eo_event_default_status_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_status_sync'] ) ) : '3';
 
+		// Retrieve and sanitise Allowed Profiles array.
+		$profiles_allowed = filter_input( INPUT_POST, 'civi_eo_event_allowed_profiles', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
+		if ( empty( $profiles_allowed ) ) {
+			$profiles_allowed = [];
+		} else {
+			array_walk(
+				$profiles_allowed,
+				function( &$item ) {
+					$item = (int) sanitize_text_field( wp_unslash( $item ) );
+				}
+			);
+		}
+
 		// Sanitise and save option.
 		$default_role = (int) $role;
 		$this->admin->option_save( 'civi_eo_event_default_role', $default_role );
@@ -699,6 +729,9 @@ class CEO_Admin_Settings {
 		// Sanitise and save option.
 		$default_type = (int) $type;
 		$this->admin->option_save( 'civi_eo_event_default_type', $default_type );
+
+		// Sanitise and save Allowed Profiles option.
+		$this->admin->option_save( 'civi_eo_event_allowed_profiles', $profiles_allowed );
 
 		// Sanitise and save option.
 		$default_profile = (int) $profile;

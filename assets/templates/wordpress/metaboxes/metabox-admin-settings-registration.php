@@ -50,12 +50,26 @@ do_action( 'ceo/admin/settings/metabox/registration/before' );
 
 	?>
 
-	<?php if ( ! empty( $profiles ) ) : ?>
+	<?php if ( ! empty( $profiles_all ) ) : ?>
+		<tr valign="top">
+			<th scope="row"><label for="civi_eo_event_allowed_profiles"><?php esc_html_e( 'Limit CiviCRM Profiles for Event Registration', 'civicrm-event-organiser' ); ?></label></th>
+			<td>
+				<select id="civi_eo_event_allowed_profiles" name="civi_eo_event_allowed_profiles[]" multiple="multiple" style="min-width: 50%;">
+					<?php foreach ( $profiles_all as $profile ) : ?>
+						<option value="<?php echo esc_attr( $profile['id'] ); ?>" <?php selected( in_array( (int) $profile['id'], $profiles_allowed, true ), true ); ?>><?php echo esc_html( ( ! empty( $profile['title'] ) ? $profile['title'] : __( 'Untitled', 'civicrm-event-organiser' ) ) ); ?></option>
+					<?php endforeach; ?>
+				</select>
+				<p class="description"><?php esc_html_e( 'Select the CiviCRM Profiles that you want to appear in the dropdown for Event Registration.', 'civicrm-event-organiser' ); ?></p>
+			</td>
+		</tr>
+	<?php endif; ?>
+
+	<?php if ( ! empty( $profile_options ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_profile"><?php esc_html_e( 'Default CiviCRM Event Registration Profile', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_profile" name="civi_eo_event_default_profile">
-					<?php echo $profiles; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+					<?php echo $profile_options; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 				</select>
 				<p class="description"><?php esc_html_e( 'Event Registration Pages require a Profile in order to display correctly.', 'civicrm-event-organiser' ); ?></p>
 				<?php if ( $profile_required ) : ?>
@@ -125,8 +139,8 @@ do_action( 'ceo/admin/settings/metabox/registration/before' );
 		</td>
 	</tr>
 
-	<tr valign="top">
-		<th scope="row"><label for="civi_eo_event_default_send_email_from_name"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "From Name"', 'civicrm-event-organiser' ); ?></label></th>
+	<tr valign="top" class="ceo_confirm_email_sub_setting">
+		<th scope="row" ><label for="civi_eo_event_default_send_email_from_name"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "From Name"', 'civicrm-event-organiser' ); ?></label></th>
 		<td>
 			<input type="text" class="widefat" id="civi_eo_event_default_send_email_from_name" name="civi_eo_event_default_send_email_from_name" value="<?php echo esc_attr( $send_email_from_name ); ?>">
 			<p class="description"><?php esc_html_e( 'The name to send the Confirmation Email from.', 'civicrm-event-organiser' ); ?></p>
@@ -136,7 +150,7 @@ do_action( 'ceo/admin/settings/metabox/registration/before' );
 		</td>
 	</tr>
 
-	<tr valign="top">
+	<tr valign="top" class="ceo_confirm_email_sub_setting">
 		<th scope="row"><label for="civi_eo_event_default_send_email_from"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "From Email"', 'civicrm-event-organiser' ); ?></label></th>
 		<td>
 			<input type="text" class="widefat" id="civi_eo_event_default_send_email_from" name="civi_eo_event_default_send_email_from" value="<?php echo esc_attr( $send_email_from ); ?>">
@@ -147,7 +161,7 @@ do_action( 'ceo/admin/settings/metabox/registration/before' );
 		</td>
 	</tr>
 
-	<tr valign="top">
+	<tr valign="top" class="ceo_confirm_email_sub_setting">
 		<th scope="row"><label for="civi_eo_event_default_send_email_cc"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "CC Recipients"', 'civicrm-event-organiser' ); ?></label></th>
 		<td>
 			<input type="text" class="widefat" id="civi_eo_event_default_send_email_cc" name="civi_eo_event_default_send_email_cc" value="<?php echo esc_attr( $send_email_cc ); ?>">
@@ -155,7 +169,7 @@ do_action( 'ceo/admin/settings/metabox/registration/before' );
 		</td>
 	</tr>
 
-	<tr valign="top">
+	<tr valign="top" class="ceo_confirm_email_sub_setting">
 		<th scope="row"><label for="civi_eo_event_default_send_email_bcc"><?php esc_html_e( 'Default CiviCRM Event Confirmation Email "BCC Recipients"', 'civicrm-event-organiser' ); ?></label></th>
 		<td>
 			<input type="text" class="widefat" id="civi_eo_event_default_send_email_bcc" name="civi_eo_event_default_send_email_bcc" value="<?php echo esc_attr( $send_email_bcc ); ?>">
