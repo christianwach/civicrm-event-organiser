@@ -122,7 +122,7 @@ class CEO_WordPress_EO {
 		add_action( 'wp_insert_post', [ $this, 'insert_post' ], 10, 2 );
 
 		// Intercept "Save Event".
-		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10, 1 );
+		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 		/*
 		// Intercept "Update Event" - though by misuse of a filter.
@@ -130,7 +130,7 @@ class CEO_WordPress_EO {
 		*/
 
 		// Intercept before "Delete Post".
-		add_action( 'before_delete_post', [ $this, 'intercept_before_delete_post' ], 10, 1 );
+		add_action( 'before_delete_post', [ $this, 'intercept_before_delete_post' ] );
 
 		// Intercept "Delete Event Occurrences" - which is the preferred way to hook into Event deletion.
 		add_action( 'eventorganiser_delete_event_occurrences', [ $this, 'delete_event_occurrences' ], 10, 2 );
@@ -278,9 +278,9 @@ class CEO_WordPress_EO {
 		*/
 
 		// Prevent recursion.
-		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_created' ], 10 );
-		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10 );
-		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_deleted' ], 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_created' ] );
+		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ] );
+		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_deleted' ] );
 
 		// Update our CiviCRM Events - or create new if none exist.
 		$this->plugin->civi->event->update_civi_events( $post, $dates );
@@ -388,9 +388,9 @@ class CEO_WordPress_EO {
 		 */
 
 		// Prevent recursion.
-		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_created' ], 10 );
-		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10 );
-		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_deleted' ], 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_created' ] );
+		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ] );
+		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_deleted' ] );
 
 		// Are we deleting an Event?
 		if ( doing_action( 'delete_post' ) && ! empty( $this->saved_correspondences[ $post_id ] ) ) {
@@ -653,8 +653,8 @@ class CEO_WordPress_EO {
 		}
 
 		// Remove hooks.
-		remove_action( 'wp_insert_post', [ $this, 'insert_post' ], 10 );
-		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10 );
+		remove_action( 'wp_insert_post', [ $this, 'insert_post' ] );
+		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 		// Use Event Organiser's API to create/update an Event.
 		if ( false === $eo_post_id ) {
@@ -679,7 +679,7 @@ class CEO_WordPress_EO {
 
 		// Re-add hooks.
 		add_action( 'wp_insert_post', [ $this, 'insert_post' ], 10, 2 );
-		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10, 1 );
+		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 		// Save Event meta if the Event has Online Registration enabled.
 		if ( ! empty( $civi_event['is_online_registration'] ) ) {
@@ -811,8 +811,8 @@ class CEO_WordPress_EO {
 	public function update_event_status( $post_id, $status ) {
 
 		// Remove hooks in case of recursion.
-		remove_action( 'wp_insert_post', [ $this, 'insert_post' ], 10 );
-		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10 );
+		remove_action( 'wp_insert_post', [ $this, 'insert_post' ] );
+		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 		// Set the Event Organiser Event to the status.
 		$post_data = [
@@ -825,7 +825,7 @@ class CEO_WordPress_EO {
 
 		// Re-add hooks.
 		add_action( 'wp_insert_post', [ $this, 'insert_post' ], 10, 2 );
-		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10, 1 );
+		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 	}
 
@@ -856,7 +856,7 @@ class CEO_WordPress_EO {
 		 */
 
 		// Unhook eventorganiser_save_event, because that relies on $_POST.
-		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ], 10 );
+		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 		// Get the CiviCRM Event that this Occurrence is synced with.
 		$this->temp_civi_event_id = $this->plugin->mapping->get_civi_event_id_by_eo_occurrence_id( $post_id, $occurrence_id );
@@ -865,7 +865,7 @@ class CEO_WordPress_EO {
 		$this->plugin->mapping->clear_event_correspondence( $post_id, $occurrence_id );
 
 		// Do not copy across the '_civi_eo_civicrm_events' meta.
-		add_filter( 'eventorganiser_breaking_occurrence_exclude_meta', [ $this, 'occurrence_exclude_meta' ], 10, 1 );
+		add_filter( 'eventorganiser_breaking_occurrence_exclude_meta', [ $this, 'occurrence_exclude_meta' ] );
 
 	}
 

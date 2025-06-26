@@ -99,7 +99,7 @@ class CEO_Compat_CAI {
 	public function register_hooks() {
 
 		// Listen for Events from the Mapper that require Event updates.
-		add_action( 'civicrm_acf_integration_mapper_acf_fields_saved', [ $this, 'acf_fields_saved' ], 10, 1 );
+		add_action( 'civicrm_acf_integration_mapper_acf_fields_saved', [ $this, 'acf_fields_saved' ] );
 
 		// Listen for queries from our Field Group class.
 		add_filter( 'civicrm_acf_integration_query_field_group_mapped', [ $this, 'query_field_group_mapped' ], 10, 2 );
@@ -111,13 +111,13 @@ class CEO_Compat_CAI {
 		add_filter( 'civicrm_acf_integration_query_post_id', [ $this, 'query_post_id' ], 10, 2 );
 
 		// Exclude "Event" from being mapped to a Contact Type.
-		add_filter( 'civicrm_acf_integration_post_types_get_all', [ $this, 'post_types_filter' ], 10, 1 );
+		add_filter( 'civicrm_acf_integration_post_types_get_all', [ $this, 'post_types_filter' ] );
 
 		// Listen for a CiviCRM Event being synced to an Event Organiser Event.
-		add_action( 'ceo/admin/manual_sync/civi_to_eo/sync/after', [ $this, 'sync_to_eo' ], 10, 1 );
+		add_action( 'ceo/admin/manual_sync/civi_to_eo/sync/after', [ $this, 'sync_to_eo' ] );
 
 		// Listen for an Event Organiser Event being synced to a CiviCRM Event.
-		add_action( 'ceo/admin/manual_sync/eo_to_civi/sync', [ $this, 'sync_to_civi' ], 10, 1 );
+		add_action( 'ceo/admin/manual_sync/eo_to_civi/sync', [ $this, 'sync_to_civi' ] );
 
 	}
 
@@ -162,7 +162,7 @@ class CEO_Compat_CAI {
 		$fields = get_fields( $args['post_id'] );
 
 		// We only ever update a CiviCRM Event via ACF.
-		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ] );
 
 		// Loop through the CiviCRM Events and update.
 		foreach ( $correspondences as $occurrence_id => $civi_event_id ) {

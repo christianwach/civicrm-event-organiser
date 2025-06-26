@@ -1378,9 +1378,9 @@ class CEO_Admin_Manual_Sync {
 			$data['to']   = $data['from'] + $diff;
 
 			// Prevent recursion.
-			remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_created' ], 10 );
-			remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10 );
-			remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_deleted' ], 10 );
+			remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_created' ] );
+			remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ] );
+			remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_deleted' ] );
 
 			// Loop.
 			foreach ( $events as $event ) {

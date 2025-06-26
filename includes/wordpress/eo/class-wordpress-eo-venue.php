@@ -92,17 +92,17 @@ class CEO_WordPress_EO_Venue {
 		}
 
 		// Intercept create Venue.
-		add_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ], 10, 1 );
+		add_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ] );
 
 		// Intercept save Venue.
-		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
+		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ] );
 
 		// Intercept Term deletion (before delete Venue).
 		add_action( 'delete_term', [ $this, 'delete_venue_term' ], 20, 4 );
 		add_action( 'delete_event-venue', [ $this, 'delete_venue' ], 20, 3 );
 
 		// Intercept after delete Venue.
-		add_action( 'eventorganiser_venue_deleted', [ $this, 'deleted_venue' ], 10, 1 );
+		add_action( 'eventorganiser_venue_deleted', [ $this, 'deleted_venue' ] );
 
 		// Add our Venue meta box.
 		add_action( 'add_meta_boxes', [ $this, 'venue_meta_box' ] );
@@ -406,8 +406,8 @@ class CEO_WordPress_EO_Venue {
 		}
 
 		// Remove actions to prevent recursion.
-		remove_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ], 10 );
-		remove_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10 );
+		remove_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ] );
+		remove_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ] );
 
 		// Retrieve Venue with slug-to-be-used.
 		$existing_venue = eo_get_venue_by( 'slug', sanitize_title( $name ) );
@@ -448,8 +448,8 @@ class CEO_WordPress_EO_Venue {
 		$result = eo_insert_venue( $name, $args );
 
 		// Add actions again.
-		add_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ], 10, 1 );
-		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
+		add_action( 'eventorganiser_insert_venue', [ $this, 'insert_venue' ] );
+		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ] );
 
 		// Log and bail if we get an error.
 		if ( is_wp_error( $result ) || ! isset( $result['term_id'] ) ) {
@@ -607,13 +607,13 @@ class CEO_WordPress_EO_Venue {
 		}
 
 		// Remove callback to prevent recursion.
-		remove_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10 );
+		remove_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ] );
 
 		// Insert Venue.
 		$result = eo_update_venue( $venue_id, $args );
 
 		// Restore callback.
-		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ], 10, 1 );
+		add_action( 'eventorganiser_save_venue', [ $this, 'save_venue' ] );
 
 		// Bail if we get an error.
 		if ( is_wp_error( $result ) || empty( $result['term_id'] ) ) {

@@ -152,7 +152,7 @@ class CEO_Compat_CWPS {
 		add_action( 'acf/include_field_types', [ $this, 'register_field_types' ], 100 );
 
 		// Listen for events from the Mapper that require Event updates.
-		add_action( 'cwps/acf/mapper/acf_fields/saved', [ $this, 'acf_fields_store' ], 10, 1 );
+		add_action( 'cwps/acf/mapper/acf_fields/saved', [ $this, 'acf_fields_store' ] );
 
 		// Listen for queries from our Field Group class.
 		add_filter( 'cwps/acf/query_field_group_mapped', [ $this, 'query_field_group_mapped' ], 10, 2 );
@@ -170,13 +170,13 @@ class CEO_Compat_CWPS {
 		add_filter( 'cwps/acf/query_entity_table', [ $this, 'query_entity_table' ], 10, 2 );
 
 		// Exclude "Event" from being mapped to a CiviCRM Entity Type.
-		add_filter( 'cwps/acf/post_types/get_all', [ $this, 'post_types_filter' ], 10, 1 );
+		add_filter( 'cwps/acf/post_types/get_all', [ $this, 'post_types_filter' ] );
 
 		// Listen for a CiviCRM Event being synced to an Event Organiser Event via Manual Sync.
-		add_action( 'ceo/admin/manual_sync/civi_to_eo/sync/after', [ $this, 'sync_to_eo' ], 10, 1 );
+		add_action( 'ceo/admin/manual_sync/civi_to_eo/sync/after', [ $this, 'sync_to_eo' ] );
 
 		// Listen for an Event Organiser Event being synced to a CiviCRM Event via Manual Sync.
-		add_action( 'ceo/admin/manual_sync/eo_to_civi/sync', [ $this, 'sync_to_civi' ], 10, 1 );
+		add_action( 'ceo/admin/manual_sync/eo_to_civi/sync', [ $this, 'sync_to_civi' ] );
 
 		// Add any Event Fields attached to a Post.
 		add_filter( 'cwps/acf/fields_get_for_post', [ $this, 'acf_fields_get_for_post' ], 10, 3 );
@@ -353,7 +353,7 @@ class CEO_Compat_CWPS {
 		$args['fields'] = $fields;
 
 		// We only ever update a CiviCRM Event via ACF.
-		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10 );
+		remove_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ] );
 
 		// Prevent reverse sync of CiviCRM Custom Fields.
 		$this->cwps->acf->civicrm->custom_field->unregister_mapper_hooks();

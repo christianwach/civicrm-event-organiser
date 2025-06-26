@@ -515,7 +515,7 @@ class CEO_CiviCRM_Event {
 		}
 
 		// Filter the image class.
-		add_filter( 'wp_get_attachment_image_attributes', [ $this, 'form_event_image_filter' ], 10, 1 );
+		add_filter( 'wp_get_attachment_image_attributes', [ $this, 'form_event_image_filter' ] );
 
 		// Get the Attachment Image markup.
 		$markup = wp_get_attachment_image( $attachment_id, 'medium', false );

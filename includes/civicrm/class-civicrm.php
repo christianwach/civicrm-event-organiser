@@ -129,7 +129,7 @@ class CEO_CiviCRM {
 	public function register_hooks() {
 
 		// Register template directory for form amends.
-		add_action( 'civicrm_config', [ $this, 'register_form_directory' ], 10 );
+		add_action( 'civicrm_config', [ $this, 'register_form_directory' ] );
 
 	}
 

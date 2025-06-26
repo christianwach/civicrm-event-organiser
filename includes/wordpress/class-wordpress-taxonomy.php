@@ -76,7 +76,7 @@ class CEO_WordPress_Taxonomy {
 		$this->hooks_wordpress_add();
 
 		// Add CiviCRM listeners once CiviCRM is available.
-		add_action( 'civicrm_config', [ $this, 'civicrm_config' ], 10, 1 );
+		add_action( 'civicrm_config', [ $this, 'civicrm_config' ] );
 
 		// Filter Radio Buttons for Taxonomies null Term insertion.
 		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', [ $this, 'skip_null_term' ], 20, 1 );
