@@ -47,6 +47,24 @@ class CEO_Compat_CWPS {
 	public $cwps = false;
 
 	/**
+	 * Bridging array for ACF Field data.
+	 *
+	 * This property is populated with arrays of arguments that are passed to the
+	 * callback for the "cwps/acf/mapper/acf_fields/saved" action which fired by the
+	 * CiviCRM Profile Sync Mapper when ACF Fields have been saved for a Post.
+	 *
+	 * It is used when the ACF plugin's callback to the "save_post" hook has been
+	 * registered before Event Organiser's callback.
+	 *
+	 * @see self::acf_fields_store()
+	 *
+	 * @since 0.8.2
+	 * @access private
+	 * @var array
+	 */
+	private $bridging_array = [];
+
+	/**
 	 * Constructor.
 	 *
 	 * @since 0.6.2
@@ -134,7 +152,7 @@ class CEO_Compat_CWPS {
 		add_action( 'acf/include_field_types', [ $this, 'register_field_types' ], 100 );
 
 		// Listen for events from the Mapper that require Event updates.
-		add_action( 'cwps/acf/mapper/acf_fields/saved', [ $this, 'acf_fields_saved' ], 10, 1 );
+		add_action( 'cwps/acf/mapper/acf_fields/saved', [ $this, 'acf_fields_store' ], 10, 1 );
 
 		// Listen for queries from our Field Group class.
 		add_filter( 'cwps/acf/query_field_group_mapped', [ $this, 'query_field_group_mapped' ], 10, 2 );
@@ -196,13 +214,26 @@ class CEO_Compat_CWPS {
 	// -----------------------------------------------------------------------------------
 
 	/**
-	 * Update the CiviCRM Events when the ACF Fields on an Event Organiser Event have been updated.
+	 * Stores the ACF Fields for an Event Organiser Event when it has been updated.
 	 *
-	 * @since 0.6.2
+	 * ACF and Event Organiser both hook into the "save_post" action with priority 10 -
+	 * but it appears (on my test installs) that ACF registers its callback first.
+	 *
+	 * This means that we cannot guarantee that the EO-Civi correspondences have been
+	 * created or updated at the point that this method is called.
+	 *
+	 * If the ACF callback fires first, then we store the array of arguments in our
+	 * bridging array and add a later "save_post" callback that retrieves them and
+	 * proceeds with the updates to the CiviCRM Event's Fields.
+	 *
+	 * If the Event Organiser callback fires first, then we skip the bridging array
+	 * and update to the CiviCRM Event's Fields immediately.
+	 *
+	 * @since 0.8.2
 	 *
 	 * @param array $args The array of WordPress params.
 	 */
-	public function acf_fields_saved( $args ) {
+	public function acf_fields_store( $args ) {
 
 		// Bail early if this Field Group is not attached to a Post Type.
 		if ( ! is_numeric( $args['post_id'] ) ) {
@@ -217,12 +248,97 @@ class CEO_Compat_CWPS {
 			return;
 		}
 
+		// Call save method directly if the Event Organiser fired first.
+		if ( did_action( 'eventorganiser_save_event' ) ) {
+			$this->acf_fields_save( $args );
+			return;
+		}
+
+		// Stash args in bridging array.
+		$this->bridging_array[ $post->ID ] = $args;
+
+		// Add callback after Event Organiser.
+		add_action( 'save_post', [ $this, 'acf_fields_update' ], 11, 3 );
+
+	}
+
+	/**
+	 * Called when the ACF Fields on an Event Organiser Event have been updated.
+	 *
+	 * @see self::acf_fields_saved()
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param integer $post_id The ID of the Post or revision.
+	 * @param integer $post The Post object.
+	 * @param bool    $update True if the Post is being updated, false if new.
+	 */
+	public function acf_fields_update( $post_id, $post, $update ) {
+
+		// Bail if there was a Multisite switch.
+		if ( is_multisite() && ms_is_switched() ) {
+			return;
+		}
+
+		// Bail if this is not an Event Organiser Event.
+		if ( 'event' !== $post->post_type ) {
+			return;
+		}
+
+		// Bail if there are no args for this Post in the bridging array.
+		if ( ! array_key_exists( $post_id, $this->bridging_array ) ) {
+			return;
+		}
+
+		// Maybe remove callback.
+		if ( has_action( 'save_post', [ $this, 'acf_fields_update' ] ) ) {
+			remove_action( 'save_post', [ $this, 'acf_fields_update' ], 11 );
+		}
+
+		// Populate the args and remove from bridging array.
+		$args = $this->bridging_array[ $post_id ];
+		unset( $this->bridging_array[ $post_id ] );
+
+		// Call method directly.
+		$this->acf_fields_save( $args );
+
+	}
+
+	/**
+	 * Updates the CiviCRM Events with ACF Field data for an Event Organiser Event.
+	 *
+	 * @see self::acf_fields_saved()
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param array $args The array of WordPress params.
+	 */
+	public function acf_fields_save( $args ) {
+
+		// Sanity checks.
+		if ( empty( $args ) || empty( $args['post_id'] ) ) {
+			return;
+		}
+
+		// Bail if this is not an Event Organiser Event.
+		$post = get_post( $args['post_id'] );
+		if ( 'event' !== $post->post_type ) {
+			return;
+		}
+
 		// Get existing CiviCRM Events from post meta.
 		$correspondences = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $args['post_id'] );
 
-		// Bail if we have no correspondences.
-		if ( count( $correspondences ) === 0 ) {
-			return;
+		/*
+		 * Skip checking the "Sync this Event with CiviCRM" checkbox when there is exactly
+		 * one correspondence between an Event Organiser Event and a CiviCRM Event.
+		 */
+		if ( empty( $correspondences ) || 1 < count( $correspondences ) ) {
+			// phpcs:ignore WordPress.Security.NonceVerification.Missing
+			$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
+			if ( '1' !== (string) $sync ) {
+				return;
+			}
 		}
 
 		/*
