@@ -1199,8 +1199,8 @@ class CEO_Compat_CWPS {
 	 */
 	public function sync_to_civi( $args ) {
 
-		// Pass on.
-		$this->acf_fields_saved( $args );
+		// Pass on to save method.
+		$this->acf_fields_save( $args );
 
 	}
 
