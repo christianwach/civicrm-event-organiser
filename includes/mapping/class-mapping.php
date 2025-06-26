@@ -187,6 +187,18 @@ class CEO_Mapping {
 		// Finally, store orphaned CiviCRM Events.
 		$this->store_orphaned_events( $post_id, $unlinked );
 
+		/**
+		 * Fires when the Event correspondences have been saved.
+		 *
+		 * @since 0.8.2
+		 *
+		 * @param int   $post_id The numeric ID of the WP Post.
+		 * @param array $correspondences CiviCRM Event IDs, keyed by Event Organiser Occurrence ID.
+		 * @param array $unlinked CiviCRM Event IDs that have been orphaned from an Event Organiser Event.
+		 * @param array $civi_event_data The array of linkages between CiviCRM Events and Event Organiser Events.
+		 */
+		do_action( 'ceo/mapping/correspondences/saved', $post_id, $correspondences, $unlinked, $civi_event_data );
+
 	}
 
 	/**
