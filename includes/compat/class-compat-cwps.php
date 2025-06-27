@@ -765,6 +765,7 @@ class CEO_Compat_CWPS {
 			'description',
 			'summary',
 			'event_type_id',
+			'default_role_id',
 			'start_date',
 			'end_date',
 			'is_public',
