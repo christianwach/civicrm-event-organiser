@@ -377,7 +377,7 @@ class CEO_CiviCRM {
 	 *
 	 * @return array $financial_types The array of CiviCRM Financial Types keyed by ID.
 	 */
-	public function financial_types_mapped() {
+	public function financial_types_get_mapped() {
 
 		// Get the full set of Financial Types.
 		$raw_financial_types = $this->financial_types_get_all();
@@ -388,7 +388,7 @@ class CEO_CiviCRM {
 		// Build keyed array.
 		$financial_types = [];
 		foreach ( $raw_financial_types as $key => $value ) {
-			$financial_types[ $value['id'] ] = $value['name'];
+			$financial_types[ (int) $value['id'] ] = $value['name'];
 		}
 
 		// --<
