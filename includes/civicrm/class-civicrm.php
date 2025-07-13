@@ -270,12 +270,14 @@ class CEO_CiviCRM {
 			return $ufmatch;
 		}
 
+		// Build params.
 		$params = [
 			'version'    => 3,
 			'sequential' => 1,
 			$property    => $id,
 		];
 
+		// Call the CiviCRM API.
 		$result = civicrm_api( 'UFMatch', 'get', $params );
 
 		// Log and bail if there's an error.
@@ -285,6 +287,7 @@ class CEO_CiviCRM {
 			$log   = [
 				'method'    => __METHOD__,
 				'params'    => $params,
+				'result'    => $result,
 				'backtrace' => $trace,
 			];
 			$this->plugin->log_error( $log );
