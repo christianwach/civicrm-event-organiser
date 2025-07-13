@@ -304,4 +304,93 @@ class CEO_CiviCRM {
 
 	}
 
+	/**
+	 * Gets the complete set of CiviCRM Financial Types.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @return array|bool $financial_types The array of CiviCRM Financial Types, or false on failure.
+	 */
+	public function financial_types_get_all() {
+
+		// Bail if CiviCRM is not active.
+		if ( ! $this->is_active() ) {
+			return false;
+		}
+
+		// Build params.
+		$params = [
+			'version'    => 3,
+			'sequential' => 1,
+			'is_active'  => 1,
+			'options'    => [
+				'limit' => 0,
+			],
+		];
+
+		/**
+		 * Filter Financial Type params before calling the CiviCRM API.
+		 *
+		 * @since 0.8.2
+		 *
+		 * @param array $params The params to be passed to the CiviCRM API.
+		 */
+		$params = apply_filters( 'ceo/civicrm/financial_types/get/params', $params );
+
+		// Call the CiviCRM API.
+		$result = civicrm_api( 'FinancialType', 'get', $params );
+
+		// Log and bail if something went wrong.
+		if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
+			$e     = new \Exception();
+			$trace = $e->getTraceAsString();
+			$log   = [
+				'method'    => __METHOD__,
+				'params'    => $params,
+				'result'    => $result,
+				'backtrace' => $trace,
+			];
+			$this->plugin->log_error( $log );
+			return false;
+		}
+
+		// Bail if there are no results.
+		if ( empty( $result['values'] ) ) {
+			return [];
+		}
+
+		// The result set it what we're after.
+		$financial_types = $result['values'];
+
+		// --<
+		return $financial_types;
+
+	}
+
+	/**
+	 * Gets the CiviCRM Financial Type names keyed by ID.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @return array $financial_types The array of CiviCRM Financial Types keyed by ID.
+	 */
+	public function financial_types_mapped() {
+
+		// Get the full set of Financial Types.
+		$raw_financial_types = $this->financial_types_get_all();
+		if ( empty( $raw_financial_types ) ) {
+			return [];
+		}
+
+		// Build keyed array.
+		$financial_types = [];
+		foreach ( $raw_financial_types as $key => $value ) {
+			$financial_types[ $value['id'] ] = $value['name'];
+		}
+
+		// --<
+		return $financial_types;
+
+	}
+
 }
