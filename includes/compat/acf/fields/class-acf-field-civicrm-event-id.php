@@ -135,9 +135,9 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 
 		// Define category.
 		if ( function_exists( 'acfe' ) ) {
-			$this->category = __( 'CiviCRM Post Type Sync only', 'civicrm-event-organiser' );
+			$this->category = __( 'CiviCRM Event Organiser Sync only', 'civicrm-event-organiser' );
 		} else {
-			$this->category = __( 'CiviCRM Post Type Sync', 'civicrm-event-organiser' );
+			$this->category = __( 'CiviCRM Event Organiser Sync', 'civicrm-event-organiser' );
 		}
 
 		// Define translations.
