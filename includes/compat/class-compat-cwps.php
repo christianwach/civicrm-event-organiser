@@ -38,6 +38,24 @@ class CEO_Compat_CWPS {
 	public $compat;
 
 	/**
+	 * CiviCRM Financial object.
+	 *
+	 * @since 0.7.2
+	 * @access public
+	 * @var CEO_Compat_CWPS_Financial
+	 */
+	public $financial;
+
+	/**
+	 * Quick Config Price Set object.
+	 *
+	 * @since 0.7.2
+	 * @access public
+	 * @var CEO_Compat_CWPS_Price_Set
+	 */
+	public $price_set_quick;
+
+	/**
 	 * CiviCRM Profile Sync plugin reference.
 	 *
 	 * @since 0.6.2
@@ -136,8 +154,43 @@ class CEO_Compat_CWPS {
 		// Store reference.
 		$this->cwps = $plugin;
 
-		// Register hooks.
+		// Bootstrap this class.
+		$this->include_files();
+		$this->setup_objects();
 		$this->register_hooks();
+
+		/**
+		 * Fires when this class is loaded.
+		 *
+		 * @since 0.8.2
+		 */
+		do_action( 'ceo/compat/cwps/loaded' );
+
+	}
+
+	/**
+	 * Include files.
+	 *
+	 * @since 0.7.2
+	 */
+	public function include_files() {
+
+		// Include class files.
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/acf/classes/class-compat-cwps-financial.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/acf/classes/class-compat-cwps-price-set-quick.php';
+
+	}
+
+	/**
+	 * Sets up the objects.
+	 *
+	 * @since 0.7.2
+	 */
+	public function setup_objects() {
+
+		// Init objects.
+		$this->financial       = new CEO_Compat_CWPS_Financial( $this );
+		$this->price_set_quick = new CEO_Compat_CWPS_Price_Set_Quick( $this );
 
 	}
 
@@ -181,8 +234,8 @@ class CEO_Compat_CWPS {
 		// Add any Event Fields attached to a Post.
 		add_filter( 'cwps/acf/fields_get_for_post', [ $this, 'acf_fields_get_for_post' ], 10, 3 );
 
-		// Listen for when an Event Organiser Event has been synced to a CiviCRM Event.
-		add_action( 'ceo/eo/event/updated', [ $this, 'event_sync_to_post' ], 10, 2 );
+		// Listen for when an Event Organiser Event has been synced from a CiviCRM Event.
+		add_action( 'ceo/eo/event/updated', [ $this, 'event_synced_to_post' ], 10, 2 );
 
 		// Filter out any Event Fields that are already handled by this plugin.
 		add_filter( 'ceo/acf/civicrm/event/civicrm_field/choices', [ $this, 'filter_setting_choices' ], 10, 2 );
@@ -205,9 +258,13 @@ class CEO_Compat_CWPS {
 
 		// Include Field Types.
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/acf/fields/class-acf-field-civicrm-event-id.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php';
 
 		// Init Field Types.
-		new CEO_ACF_Custom_CiviCRM_Event_ID_Field( $this );
+		$event_id = new CEO_ACF_Custom_CiviCRM_Event_ID_Field( $this );
+		acf_register_field_type( $event_id );
+		$price_set = new CEO_ACF_Custom_CiviCRM_Price_Set_Quick_Field( $this );
+		acf_register_field_type( $price_set );
 
 	}
 
@@ -322,7 +379,8 @@ class CEO_Compat_CWPS {
 
 		// Bail if this is not an Event Organiser Event.
 		$post = get_post( $args['post_id'] );
-		if ( 'event' !== $post->post_type ) {
+
+		if ( empty( $post ) || 'event' !== $post->post_type ) {
 			return;
 		}
 
@@ -371,7 +429,7 @@ class CEO_Compat_CWPS {
 			$args['post']          = $post;
 
 			/**
-			 * Broadcast that an Event has been updated when ACF Fields were saved.
+			 * Fires when a CiviCRM Event has been updated after ACF Fields were saved.
 			 *
 			 * @since 0.7.2
 			 *
@@ -1036,7 +1094,7 @@ class CEO_Compat_CWPS {
 	 * @param int   $event_id The numeric ID of the Event Organiser Event.
 	 * @param array $civi_event An array of data for the CiviCRM Event.
 	 */
-	public function event_sync_to_post( $event_id, $civi_event ) {
+	public function event_synced_to_post( $event_id, $civi_event ) {
 
 		// Get Occurrences.
 		$occurrences = eo_get_the_occurrences_of( $event_id );
@@ -1047,15 +1105,6 @@ class CEO_Compat_CWPS {
 		 */
 		$keys          = array_keys( $occurrences );
 		$occurrence_id = array_pop( $keys );
-
-		// Make an array of params.
-		$args = [
-			'post_id'       => $event_id,
-			'event_id'      => $event_id,
-			'occurrence_id' => $occurrence_id,
-			'civi_event_id' => $civi_event['id'],
-			'civi_event'    => $civi_event,
-		];
 
 		// Get all ACF Fields for the Event.
 		$acf_fields = $this->cwps->acf->acf->field->fields_get_for_post( $event_id );
