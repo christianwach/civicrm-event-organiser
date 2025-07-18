@@ -147,7 +147,7 @@ class CiviCRM_Event_Organiser {
 	public function __construct() {
 
 		// Use translation files.
-		add_action( 'plugins_loaded', [ $this, 'enable_translation' ] );
+		add_action( 'init', [ $this, 'enable_translation' ] );
 
 		// Initialise.
 		add_action( 'plugins_loaded', [ $this, 'initialise' ] );
