@@ -689,19 +689,13 @@ class CEO_Mapping {
 	}
 
 	/**
-	 * Get CiviCRM Event sync settings formatted as a dropdown list.
+	 * Gets the array of CiviCRM Event sync settings keyed by value.
 	 *
-	 * @since 0.7.7
+	 * @since 0.8.2
 	 *
-	 * @return str $html Markup containing select options.
+	 * @return array $settings The array of CiviCRM Event sync settings keyed by value.
 	 */
-	public function get_civicrm_event_sync_select() {
-
-		// Init return.
-		$html = '';
-
-		// Init build array.
-		$options = [];
+	public function get_civicrm_event_sync_mapped() {
 
 		// Init settings.
 		$settings = [
@@ -709,45 +703,19 @@ class CEO_Mapping {
 			1 => __( 'Show checkbox on each CiviEvent', 'civicrm-event-organiser' ),
 		];
 
-		// Get existing setting. Defaults to "Do not sync".
-		$civicrm_event_sync = $this->plugin->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
-
-		// Loop.
-		foreach ( $settings as $key => $setting ) {
-
-			// Set selected if this value is the same as the setting.
-			$selected = '';
-			if ( $key === (int) $civicrm_event_sync ) {
-				$selected = ' selected="selected"';
-			}
-
-			// Construct option.
-			$options[] = '<option value="' . $key . '"' . $selected . '>' . $setting . '</option>';
-
-		}
-
-		// Create html.
-		$html = implode( "\n", $options );
-
 		// --<
-		return $html;
+		return $settings;
 
 	}
 
 	/**
-	 * Get Status Sync settings formatted as a dropdown list.
+	 * Gets the array of Status Sync settings keyed by ID.
 	 *
-	 * @since 0.7.2
+	 * @since 0.8.2
 	 *
-	 * @return str $html Markup containing select options.
+	 * @return array $settings The array of Status Sync settings keyed by ID.
 	 */
-	public function get_status_sync_select() {
-
-		// Init return.
-		$html = '';
-
-		// Init build array.
-		$options = [];
+	public function get_status_sync_mapped() {
 
 		// Init settings.
 		$settings = [
@@ -757,28 +725,8 @@ class CEO_Mapping {
 			3 => __( 'Do not sync', 'civicrm-event-organiser' ),
 		];
 
-		// Get existing setting. Defaults to "Do not sync".
-		$status_sync = $this->plugin->admin->option_get( 'civi_eo_event_default_status_sync', 3 );
-
-		// Loop.
-		foreach ( $settings as $key => $setting ) {
-
-			// Set selected if this value is the same as the setting.
-			$selected = '';
-			if ( $key === (int) $status_sync ) {
-				$selected = ' selected="selected"';
-			}
-
-			// Construct option.
-			$options[] = '<option value="' . $key . '"' . $selected . '>' . $setting . '</option>';
-
-		}
-
-		// Create html.
-		$html = implode( "\n", $options );
-
 		// --<
-		return $html;
+		return $settings;
 
 	}
 

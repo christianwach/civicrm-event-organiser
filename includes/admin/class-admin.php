@@ -181,19 +181,19 @@ class CEO_Admin {
 
 		// Show an admin notice for possibly missing default profile setting.
 		$shown = false;
-		if ( 'fgffgs' === $this->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
+		if ( ! $this->option_exists( 'civi_eo_event_default_profile' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
 
 		// Show an admin notice for possibly missing default Confirmation Page setting.
-		if ( false === $shown && 'fgffgs' === $this->option_get( 'civi_eo_event_default_confirm', 'fgffgs' ) ) {
+		if ( false === $shown && ! $this->option_exists( 'civi_eo_event_default_confirm' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
 
 		// Show an admin notice for possibly missing default Confirmation Email setting.
-		if ( false === $shown && 'fgffgs' === $this->option_get( 'civi_eo_event_default_send_email', 'fgffgs' ) ) {
+		if ( false === $shown && ! $this->option_exists( 'civi_eo_event_default_send_email' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
@@ -215,19 +215,19 @@ class CEO_Admin {
 		}
 
 		// Show an admin notice for possibly missing default CiviCRM Event Sync setting.
-		if ( false === $shown && 'fgffgs' === $this->option_get( 'civi_eo_event_default_civicrm_event_sync', 'fgffgs' ) ) {
+		if ( false === $shown && ! $this->option_exists( 'civi_eo_event_default_civicrm_event_sync' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
 
 		// Show an admin notice for possibly missing default Status Sync setting.
-		if ( false === $shown && 'fgffgs' === $this->option_get( 'civi_eo_event_default_status_sync', 'fgffgs' ) ) {
+		if ( false === $shown && ! $this->option_exists( 'civi_eo_event_default_status_sync' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
 			$shown = true;
 		}
 
 		// Maybe upgrade Taxonomy to use "term meta".
-		if ( 'fgffgs' === $this->option_get( 'civi_eo_term_meta_enabled', 'fgffgs' ) ) {
+		if ( ! $this->option_exists( 'civi_eo_term_meta_enabled' ) ) {
 			$this->plugin->wordpress->taxonomy->upgrade();
 			$this->option_save( 'civi_eo_term_meta_enabled', 'yes' );
 		}
@@ -318,6 +318,25 @@ class CEO_Admin {
 	}
 
 	// -----------------------------------------------------------------------------------
+
+	/**
+	 * Tests for the existence of a specified option.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param string $key The option name.
+	 * @return bool Whether or not the option exists.
+	 */
+	public function option_exists( $key ) {
+
+		// Test by getting option with unlikely default.
+		if ( $this->option_get( $key, 'fenfgehgefdfdjgrkj' ) === 'fenfgehgefdfdjgrkj' ) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
 
 	/**
 	 * Gets an option.

@@ -55,7 +55,11 @@ do_action( 'ceo/admin/settings/metabox/general/before' );
 			<th scope="row"><label for="civi_eo_event_default_type"><?php esc_html_e( 'Default CiviCRM Event Type', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_type" name="civi_eo_event_default_type">
-					<?php echo $types; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+					<?php foreach ( $types as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $default_type, $value ); ?>>
+							<?php echo esc_html( $label ); ?>
+						</option>
+					<?php endforeach ?>
 				</select>
 			</td>
 		</tr>
@@ -66,7 +70,11 @@ do_action( 'ceo/admin/settings/metabox/general/before' );
 			<th scope="row"><label for="civi_eo_event_default_role"><?php esc_html_e( 'Default CiviCRM Participant Role for Events', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_role" name="civi_eo_event_default_role">
-					<?php echo $roles; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+					<?php foreach ( $roles as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $default_role, $value ); ?>>
+							<?php echo esc_html( $label ); ?>
+						</option>
+					<?php endforeach ?>
 				</select>
 				<p class="description"><?php esc_html_e( 'This will be the Participant Role that is set for Event Registrations when there is a Registration Profile that does not contain a Participant Role selector.', 'civicrm-event-organiser' ); ?></p>
 			</td>
@@ -78,7 +86,11 @@ do_action( 'ceo/admin/settings/metabox/general/before' );
 			<th scope="row"><label for="civi_eo_event_default_civievent_sync"><?php esc_html_e( 'Syncing CiviCRM Events to Event Organiser', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_civievent_sync" name="civi_eo_event_default_civievent_sync">
-					<?php echo $civicrm_event_sync; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+					<?php foreach ( $civicrm_event_sync as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $default_civicrm_event_sync, $value ); ?>>
+							<?php echo esc_html( $label ); ?>
+						</option>
+					<?php endforeach ?>
 				</select>
 				<p class="description"><?php esc_html_e( 'By default, all Events in CiviCRM will sync to Event Organiser. If you do not want all CiviCRM Events to sync, then you can enable a checkbox on each CiviCRM Event that must be cheecked in order to sync data to Event Organiser.', 'civicrm-event-organiser' ); ?></p>
 				<?php if ( $civicrm_event_sync_required ) : ?>
@@ -101,7 +113,11 @@ do_action( 'ceo/admin/settings/metabox/general/before' );
 			<th scope="row"><label for="civi_eo_event_default_status_sync"><?php esc_html_e( 'Map CiviCRM Event Status and EO Event Status', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_status_sync" name="civi_eo_event_default_status_sync">
-					<?php echo $status_sync; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+					<?php foreach ( $status_sync as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $default_status_sync, $value ); ?>>
+							<?php echo esc_html( $label ); ?>
+						</option>
+					<?php endforeach ?>
 				</select>
 				<p class="description"><?php esc_html_e( 'Choose how the CiviCRM Event "Is Public" and "Is Active" settings sync with the Event Organiser "Status" and "Visibility" settings.', 'civicrm-event-organiser' ); ?></p>
 				<?php if ( $status_sync_required ) : ?>

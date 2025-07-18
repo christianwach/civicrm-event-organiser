@@ -13,7 +13,7 @@
 	<h1><?php esc_html_e( 'CiviCRM Event Organiser', 'civicrm-event-organiser' ); ?></h1>
 
 	<h2 class="nav-tab-wrapper">
-			<?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+		<?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
 		<a href="<?php echo $urls['settings']; ?>" class="nav-tab"><?php esc_html_e( 'Settings', 'civicrm-event-organiser' ); ?></a>
 		<?php
 

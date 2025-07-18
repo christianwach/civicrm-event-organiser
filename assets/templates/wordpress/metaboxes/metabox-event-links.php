@@ -23,7 +23,17 @@ defined( 'ABSPATH' ) || exit;
 
 	<ul class="civi_eo_event_list">
 		<?php foreach ( $links as $item ) : ?>
-			<li><?php echo $item; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?></li>
+			<li>
+				<?php
+
+				printf(
+					/* translators: %s: The formatted link to the Event. */
+					esc_html__( 'Info and Settings for: %s', 'civicrm-event-organiser' ),
+					'<a href="' . esc_url( $link ) . '"">' . esc_html( $datetime_string ) . '</a>'
+				);
+
+				?>
+			</li>
 		<?php endforeach; ?>
 	</ul>
 <?php else : ?>

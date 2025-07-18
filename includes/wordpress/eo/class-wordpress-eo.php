@@ -1011,14 +1011,23 @@ class CEO_WordPress_EO {
 			$reg_checked = 1;
 		}
 
-		// Get Participant Roles.
-		$roles = $this->plugin->civi->registration->get_participant_roles_select( $event );
+		// Get all Participant Roles.
+		$roles = $this->plugin->civi->registration->get_participant_roles_mapped();
+
+		// Get default Participant Role.
+		$default_role = $this->plugin->civi->registration->get_participant_role( $event );
 
 		// Get Registration Profiles.
-		$profiles = $this->plugin->civi->registration->get_registration_profiles_select( $event );
+		$profiles = $this->plugin->civi->registration->get_registration_profiles_mapped();
 
-		// Get Registration Dedupe Rules.
-		$dedupe_rules = $this->plugin->civi->registration->get_registration_dedupe_rules_select( $event );
+		// Get default Registration Profile.
+		$default_profile = $this->plugin->civi->registration->get_registration_profile( $event );
+
+		// Get all Event Registration Dedupe Rules.
+		$dedupe_rules = $this->plugin->civi->registration->get_registration_dedupe_rules();
+
+		// Get default Dedupe Rule ID.
+		$default_dedupe_rule = $this->plugin->civi->registration->get_registration_dedupe_rule( $event );
 
 		// Get the current confirmation page setting.
 		$confirm_enabled = $this->plugin->civi->registration->get_registration_confirm_enabled( $event->ID );
@@ -1117,20 +1126,11 @@ class CEO_WordPress_EO {
 				// Get datetime string.
 				$datetime_string = eo_format_datetime( $start, $format );
 
-				// Construct link.
-				$link = '<a href="' . esc_url( $link ) . '">' . esc_html( $datetime_string ) . '</a>';
-
-				// Construct list item content.
-				$content = sprintf(
-					/* translators: %s: The formatted link to the Event. */
-					__( 'Info and Settings for: %s', 'civicrm-event-organiser' ),
-					$link
-				);
-
 				// Add to array.
-				$links[] = $content;
+				$links[ $link ] = $datetime_string;
 
 			}
+
 		}
 
 		// Show Event Links Metabox.

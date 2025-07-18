@@ -30,7 +30,11 @@ defined( 'ABSPATH' ) || exit;
 
 	<div class="civi_eo_event_cfcr_post_link">
 		<p class="civi_eo_event_redirect_post_link">
-			<?php echo $page; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+			<?php if ( empty( $redirect ) ) : ?>
+				<?php esc_html_e( 'None selected', 'civicrm-event-organiser' ); ?>
+			<?php else : ?>
+				<a href="<?php echo esc_url( get_permalink( $redirect->post_id ) ); ?>"><?php echo esc_html( $redirect->post_title ); ?></a>
+			<?php endif; ?>
 		</p>
 	</div>
 

@@ -64,12 +64,16 @@ do_action( 'ceo/admin/settings/metabox/registration/before' );
 		</tr>
 	<?php endif; ?>
 
-	<?php if ( ! empty( $profile_options ) ) : ?>
+	<?php if ( ! empty( $profiles ) ) : ?>
 		<tr valign="top">
 			<th scope="row"><label for="civi_eo_event_default_profile"><?php esc_html_e( 'Default CiviCRM Event Registration Profile', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_profile" name="civi_eo_event_default_profile">
-					<?php echo $profile_options; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+					<?php foreach ( $profiles as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $default_profile, $value ); ?>>
+							<?php echo esc_html( $label ); ?>
+						</option>
+					<?php endforeach ?>
 				</select>
 				<p class="description"><?php esc_html_e( 'Event Registration Pages require a Profile in order to display correctly.', 'civicrm-event-organiser' ); ?></p>
 				<?php if ( $profile_required ) : ?>
@@ -84,7 +88,12 @@ do_action( 'ceo/admin/settings/metabox/registration/before' );
 			<th scope="row"><label for="civi_eo_event_default_dedupe"><?php esc_html_e( 'Default CiviCRM Event Registration Dedupe Rule', 'civicrm-event-organiser' ); ?></label></th>
 			<td>
 				<select id="civi_eo_event_default_dedupe" name="civi_eo_event_default_dedupe">
-					<?php echo $dedupe_rules; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+					<option value="0" <?php selected( $default_dedupe_rule, false ); ?>><?php esc_html_e( 'CiviCRM Default', 'civicrm-event-organiser' ); ?></option>
+					<?php foreach ( $dedupe_rules as $value => $label ) : ?>
+						<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $default_dedupe_rule, $value ); ?>>
+							<?php echo esc_html( $label ); ?>
+						</option>
+					<?php endforeach ?>
 				</select>
 				<p class="description"><?php esc_html_e( 'By default, CiviCRM will use the "Unsupervised" Dedupe Rule to match Participants in anonymous registrations with existing Contacts.', 'civicrm-event-organiser' ); ?></p>
 			</td>

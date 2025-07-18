@@ -1557,74 +1557,42 @@ class CEO_WordPress_Taxonomy {
 	}
 
 	/**
-	 * Get all CiviCRM Event Types formatted as a dropdown list. The pseudo-ID
-	 * is actually the Event Type "value" rather than the Event Type ID.
+	 * Gets all CiviCRM Event Types keyed by pseudo-ID.
 	 *
-	 * @since 0.4.2
+	 * The pseudo-ID is actually the Event Type "value" rather than the Event Type ID.
 	 *
-	 * @return str $html Markup containing select options.
+	 * @since 0.8.2
+	 *
+	 * @return array $event_types The array of CiviCRM Event Types keyed by pseudo-ID.
 	 */
-	public function get_event_types_select() {
-
-		// Init return.
-		$html = '';
-
-		// Bail if we fail to init CiviCRM.
-		if ( ! $this->plugin->civi->is_active() ) {
-			return $html;
-		}
+	public function get_event_types_mapped() {
 
 		// Get all Event Types.
 		$result = $this->get_event_types();
 
-		// Did we get any?
-		if ( false !== $result && 0 === (int) $result['is_error'] && ! empty( $result['values'] ) ) {
+		// Bail on error or no results.
+		if ( false === $result || empty( $result['values'] ) ) {
+			return [];
+		}
 
-			// Get the values array.
-			$event_types = $result['values'];
-
-			// Init options.
-			$options = [];
-
-			// Get existing type value.
-			$existing_value = $this->get_default_event_type_value();
-
-			// Loop.
-			foreach ( $event_types as $key => $event_type ) {
-
-				// Get type value.
-				$event_type_value = (int) $event_type['value'];
-
-				// Init selected.
-				$selected = '';
-
-				// Override selected if this value is the same as in the Post.
-				if ( (int) $existing_value === $event_type_value ) {
-					$selected = ' selected="selected"';
-				}
-
-				// Construct option.
-				$options[] = '<option value="' . $event_type_value . '"' . $selected . '>' . esc_html( $event_type['label'] ) . '</option>';
-
-			}
-
-			// Create HTML.
-			$html = implode( "\n", $options );
-
+		// Build mapped array.
+		$event_types = [];
+		foreach ( $result['values'] as $key => $event_type ) {
+			$event_types[ (int) $event_type['value'] ] = $event_type['label'];
 		}
 
 		// --<
-		return $html;
+		return $event_types;
 
 	}
 
 	/**
-	 * Get the default Event Type value for a Post, but fall back to the default as set
+	 * Gets the default Event Type value for a Post, but fall back to the default as set
 	 * on the admin screen, Fall back to false otherwise.
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param object $post The WP Event object.
+	 * @param WP_Post $post The WP Event object.
 	 * @return int|bool $existing_value The numeric ID of the CiviCRM Event Type, or false if none exists.
 	 */
 	public function get_default_event_type_value( $post = null ) {

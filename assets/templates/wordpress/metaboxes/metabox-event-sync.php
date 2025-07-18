@@ -117,7 +117,11 @@ body.js .civi_eo_event_send_email_toggle {
 				<p>
 					<label for="civi_eo_event_profile"><?php esc_html_e( 'Online Registration Profile:', 'civicrm-event-organiser' ); ?></label>
 					<select id="civi_eo_event_profile" name="civi_eo_event_profile">
-						<?php echo $profiles; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+						<?php foreach ( $profiles as $value => $label ) : ?>
+							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $default_profile, $value ); ?>>
+								<?php echo esc_html( $label ); ?>
+							</option>
+						<?php endforeach ?>
 					</select>
 				</p>
 
@@ -130,7 +134,12 @@ body.js .civi_eo_event_send_email_toggle {
 				<p>
 					<label for="civi_eo_event_dedupe_rule"><?php esc_html_e( 'Online Registration Dedupe Rule:', 'civicrm-event-organiser' ); ?></label>
 					<select id="civi_eo_event_dedupe_rule" name="civi_eo_event_dedupe_rule">
-						<?php echo $dedupe_rules; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+						<option value="0" <?php selected( $default_dedupe_rule, false ); ?>><?php esc_html_e( 'CiviCRM Default', 'civicrm-event-organiser' ); ?></option>
+						<?php foreach ( $dedupe_rules as $value => $label ) : ?>
+							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $default_dedupe_rule, $value ); ?>>
+								<?php echo esc_html( $label ); ?>
+							</option>
+						<?php endforeach ?>
 					</select>
 				</p>
 
@@ -143,7 +152,11 @@ body.js .civi_eo_event_send_email_toggle {
 				<p>
 					<label for="civi_eo_event_role"><?php esc_html_e( 'Participant Role:', 'civicrm-event-organiser' ); ?></label>
 					<select id="civi_eo_event_role" name="civi_eo_event_role">
-						<?php echo $roles; /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
+						<?php foreach ( $roles as $value => $label ) : ?>
+							<option value="<?php echo esc_attr( $value ); ?>" <?php selected( $default_role, $value ); ?>>
+								<?php echo esc_html( $label ); ?>
+							</option>
+						<?php endforeach ?>
 					</select>
 				</p>
 

@@ -554,27 +554,38 @@ class CEO_Admin_Settings {
 	public function meta_box_general_render() {
 
 		// Get all Participant Roles.
-		$event = null;
-		$roles = $this->plugin->civi->registration->get_participant_roles_select( $event );
+		$roles = $this->plugin->civi->registration->get_participant_roles_mapped();
+
+		// Get default Participant Role.
+		$default_role = $this->plugin->civi->registration->get_participant_role();
 
 		// Get all Event Types.
-		$types = $this->plugin->wordpress->taxonomy->get_event_types_select();
+		$types = $this->plugin->wordpress->taxonomy->get_event_types_mapped();
+
+		// Get default Event Type.
+		$default_type = $this->plugin->wordpress->taxonomy->get_default_event_type_value();
 
 		// Get CiviCRM Event sync.
-		$civicrm_event_sync = $this->plugin->mapping->get_civicrm_event_sync_select();
+		$civicrm_event_sync = $this->plugin->mapping->get_civicrm_event_sync_mapped();
+
+		// Get default CiviCRM Event sync.
+		$default_civicrm_event_sync = $this->plugin->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
 
 		// Check for possibly missing default CiviCRM Event sync setting.
 		$civicrm_event_sync_required = false;
-		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 'fgffgs' ) ) {
+		if ( ! $this->admin->option_exists( 'civi_eo_event_default_civicrm_event_sync' ) ) {
 			$civicrm_event_sync_required = true;
 		}
 
 		// Get status sync.
-		$status_sync = $this->plugin->mapping->get_status_sync_select();
+		$status_sync = $this->plugin->mapping->get_status_sync_mapped();
+
+		// Get existing setting. Defaults to "Do not sync".
+		$default_status_sync = $this->plugin->admin->option_get( 'civi_eo_event_default_status_sync', 3 );
 
 		// Check for possibly missing default Status Sync setting.
 		$status_sync_required = false;
-		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_status_sync', 'fgffgs' ) ) {
+		if ( ! $this->admin->option_exists( 'civi_eo_event_default_status_sync' ) ) {
 			$status_sync_required = true;
 		}
 
@@ -592,19 +603,19 @@ class CEO_Admin_Settings {
 
 		// Check for possibly missing default profile setting.
 		$profile_required = false;
-		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_profile', 'fgffgs' ) ) {
+		if ( ! $this->admin->option_exists( 'civi_eo_event_default_profile' ) ) {
 			$profile_required = true;
 		}
 
 		// Check for possibly missing default confirmation page setting.
 		$confirm_required = false;
-		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_confirm', 'fgffgs' ) ) {
+		if ( ! $this->admin->option_exists( 'civi_eo_event_default_confirm' ) ) {
 			$confirm_required = true;
 		}
 
 		// Check for possibly missing default Confirmation Email setting.
 		$send_email_required = false;
-		if ( 'fgffgs' === $this->admin->option_get( 'civi_eo_event_default_send_email', 'fgffgs' ) ) {
+		if ( ! $this->admin->option_exists( 'civi_eo_event_default_send_email' ) ) {
 			$send_email_required = true;
 		}
 
@@ -614,11 +625,17 @@ class CEO_Admin_Settings {
 		// Get the current "Limit Event Registration Profiles" setting.
 		$profiles_allowed = $this->admin->option_get( 'civi_eo_event_allowed_profiles', [] );
 
-		// Get Event Registration Profile options.
-		$profile_options = $this->plugin->civi->registration->get_registration_profiles_select();
+		// Get Event Registration Profiles.
+		$profiles = $this->plugin->civi->registration->get_registration_profiles_mapped();
+
+		// Get default Profile ID.
+		$default_profile = $this->plugin->civi->registration->get_registration_profile();
 
 		// Get all Event Registration Dedupe Rules.
-		$dedupe_rules = $this->plugin->civi->registration->get_registration_dedupe_rules_select();
+		$dedupe_rules = $this->plugin->civi->registration->get_registration_dedupe_rules();
+
+		// Get default Dedupe Rule ID.
+		$default_dedupe_rule = $this->plugin->civi->registration->get_registration_dedupe_rule();
 
 		// Get the current confirmation page setting.
 		$confirm_checked = 0;

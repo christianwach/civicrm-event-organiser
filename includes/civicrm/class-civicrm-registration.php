@@ -157,63 +157,30 @@ class CEO_CiviCRM_Registration {
 	}
 
 	/**
-	 * Builds a form element for Participant Roles.
+	 * Builds an array of Participant Roles keyed by ID.
 	 *
-	 * @since 0.1
-	 * @since 0.7 Moved to this class.
+	 * @since 0.8.2
 	 *
-	 * @param object $post An Event Organiser Event object.
-	 * @return str $html Markup to display in the form.
+	 * @return array $participant_roles The array of Participant Roles keyed by ID.
 	 */
-	public function get_participant_roles_select( $post = null ) {
+	public function get_participant_roles_mapped() {
 
-		// Init html.
-		$html = '';
+		// First, get all Participant_Roles.
+		$result = $this->get_participant_roles();
 
-		// Bail if CiviCRM is not active.
-		if ( ! $this->civicrm->is_active() ) {
-			return $html;
+		// Bail on error or no results.
+		if ( false === $result || empty( $result['values'] ) ) {
+			return [];
 		}
 
-		// First, get all participant_roles.
-		$all_roles = $this->get_participant_roles();
-
-		// Did we get any?
-		if ( 0 === (int) $all_roles['is_error'] && ! empty( $all_roles['values'] ) ) {
-
-			// Get the values array.
-			$roles = $all_roles['values'];
-
-			// Init options.
-			$options = [];
-
-			// Get existing role ID.
-			$existing_id = $this->get_participant_role( $post );
-
-			// Loop.
-			foreach ( $roles as $key => $role ) {
-
-				// Get role.
-				$role_id = (int) $role['value'];
-
-				// Override if the value is the same as in the Post.
-				$selected = '';
-				if ( $existing_id === $role_id ) {
-					$selected = ' selected="selected"';
-				}
-
-				// Construct option.
-				$options[] = '<option value="' . $role_id . '"' . $selected . '>' . esc_html( $role['label'] ) . '</option>';
-
-			}
-
-			// Create html.
-			$html = implode( "\n", $options );
-
+		// Build mapped array.
+		$participant_roles = [];
+		foreach ( $result['values'] as $key => $participant_role ) {
+			$participant_roles[ (int) $participant_role['value'] ] = $participant_role['label'];
 		}
 
-		// Return.
-		return $html;
+		// --<
+		return $participant_roles;
 
 	}
 
@@ -692,23 +659,18 @@ class CEO_CiviCRM_Registration {
 	}
 
 	/**
-	 * Gets all CiviCRM Profiles formatted as a dropdown list.
+	 * Gets the array of allowed CiviCRM Profiles.
 	 *
-	 * @since 0.2.4
-	 * @since 0.7 Moved to this class.
+	 * @since 0.8.2
 	 *
-	 * @param object $post An Event Organiser Event object.
-	 * @return str $html Markup containing select options.
+	 * @return array $allowed The array of allowed CiviCRM Profiles.
 	 */
-	public function get_registration_profiles_select( $post = null ) {
-
-		// Init return.
-		$html = '';
+	public function get_registration_profiles_allowed() {
 
 		// Get all profiles.
-		$profiles = $this->get_registration_profiles();
-		if ( false === $profiles ) {
-			return $html;
+		$all_profiles = $this->get_registration_profiles();
+		if ( false === $all_profiles ) {
+			return [];
 		}
 
 		// Get allowed Profiles.
@@ -716,11 +678,11 @@ class CEO_CiviCRM_Registration {
 
 		/*
 		 * Filter the Profiles, including only those allowed.
-		 * When no Profiles have been selected, show all.
+		 * When no Profiles have been selected, get all.
 		 */
 		if ( ! empty( $profiles_allowed ) ) {
 			$allowed = [];
-			foreach ( $profiles as $key => $profile ) {
+			foreach ( $all_profiles as $key => $profile ) {
 				if ( in_array( (int) $profile['id'], $profiles_allowed, true ) ) {
 					$allowed[] = $profile;
 				}
@@ -729,34 +691,34 @@ class CEO_CiviCRM_Registration {
 			$allowed = $profiles;
 		}
 
-		// Init options.
-		$options = [];
+		// --<
+		return $allowed;
 
-		// Get existing profile ID.
-		$existing_id = $this->get_registration_profile( $post );
+	}
 
-		// Build options.
-		foreach ( $allowed as $key => $profile ) {
+	/**
+	 * Gets the array of allowed CiviCRM Profiles keyed by ID.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @return array $profiles The array of allowed CiviCRM Profiles keyed by ID.
+	 */
+	public function get_registration_profiles_mapped() {
 
-			// Get profile value.
-			$profile_id = (int) $profile['id'];
-
-			// Set selected if this value is the same as the default.
-			$selected = '';
-			if ( $existing_id === $profile_id ) {
-				$selected = ' selected="selected"';
-			}
-
-			// Construct option.
-			$options[] = '<option value="' . $profile_id . '"' . $selected . '>' . esc_html( $profile['title'] ) . '</option>';
-
+		// Get all profiles.
+		$allowed_profiles = $this->get_registration_profiles_allowed();
+		if ( false === $allowed_profiles ) {
+			return [];
 		}
 
-		// Create html.
-		$html = implode( "\n", $options );
+		// Build keyed array.
+		$profiles = [];
+		foreach ( $allowed_profiles as $key => $profile ) {
+			$profiles[ (int) $profile['id'] ] = $profile['title'];
+		}
 
 		// --<
-		return $html;
+		return $profiles;
 
 	}
 
@@ -846,10 +808,15 @@ class CEO_CiviCRM_Registration {
 				return $dedupe_rules;
 			}
 
-			// Add the results to the return array.
+			// Build the return array.
 			foreach ( $result as $item ) {
-				$title                       = ! empty( $item['title'] ) ? $item['title'] : ( ! empty( $item['name'] ) ? $item['name'] : $item['contact_type'] );
-				$dedupe_rules[ $item['id'] ] = $title . ' - ' . $item['used'];
+
+				// Format Dedupe Rule name.
+				$title = ! empty( $item['title'] ) ? $item['title'] : ( ! empty( $item['name'] ) ? $item['name'] : $item['contact_type'] );
+
+				// Add to return array with "used" appended.
+				$dedupe_rules[ (int) $item['id'] ] = $title . ' - ' . $item['used'];
+
 			}
 
 		} else {
@@ -861,67 +828,6 @@ class CEO_CiviCRM_Registration {
 
 		// --<
 		return $dedupe_rules;
-
-	}
-
-	/**
-	 * Gets the CiviCRM Event Registration Dedupe Rules formatted as a dropdown list.
-	 *
-	 * @since 0.7.6
-	 *
-	 * @param object $post An Event Organiser Event object.
-	 * @return str $html Markup containing select options.
-	 */
-	public function get_registration_dedupe_rules_select( $post = null ) {
-
-		// Init return.
-		$html = '';
-
-		// Bail if we fail to init CiviCRM.
-		if ( ! $this->civicrm->is_active() ) {
-			return $html;
-		}
-
-		// Get the Dedupe Rules.
-		$dedupe_rules = $this->get_registration_dedupe_rules();
-		if ( empty( $dedupe_rules ) ) {
-			return $html;
-		}
-
-		// Init options.
-		$options = [];
-
-		// Get existing Dedupe Rule ID.
-		$existing_id = $this->get_registration_dedupe_rule( $post );
-
-		// Set selected if this value is the same as the default.
-		$selected = '';
-		if ( '' === $existing_id || 0 === (int) $existing_id ) {
-			$selected = ' selected="selected"';
-		}
-
-		// Add default option.
-		$options[] = '<option value="0"' . $selected . '>' . esc_html__( 'CiviCRM Default', 'civicrm-event-organiser' ) . '</option>';
-
-		// Loop.
-		foreach ( $dedupe_rules as $key => $rule ) {
-
-			// Set selected if this value is the same as the default.
-			$selected = '';
-			if ( (int) $existing_id === (int) $key ) {
-				$selected = ' selected="selected"';
-			}
-
-			// Construct option.
-			$options[] = '<option value="' . esc_attr( $key ) . '"' . $selected . '>' . esc_html( $rule ) . '</option>';
-
-		}
-
-		// Create html.
-		$html = implode( "\n", $options );
-
-		// --<
-		return $html;
 
 	}
 

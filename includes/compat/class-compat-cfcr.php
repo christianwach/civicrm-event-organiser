@@ -147,13 +147,14 @@ class CEO_Compat_CFCR {
 			}
 		}
 
-		// Build markup for Post.
-		$page      = esc_html__( 'None selected', 'civicrm-event-organiser' );
+		// Init variables for template.
+		$redirect  = false;
 		$post_id   = 0;
 		$is_active = 0;
+
+		// Maybe override variables for template.
 		if ( ! empty( $redirects ) ) {
 			$redirect  = array_pop( $redirects );
-			$page      = '<a href="' . esc_url( get_permalink( $redirect->post_id ) ) . '">' . esc_html( $redirect->post_title ) . '</a>' . "\n";
 			$post_id   = $redirect->post_id;
 			$is_active = (int) $redirect->is_active;
 		}

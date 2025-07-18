@@ -1039,7 +1039,7 @@ class CEO_Compat_CWPS_Financial {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @return array $financial_types The array of CiviCRM Payment Processors keyed by ID.
+	 * @return array $payment_processors The array of CiviCRM Payment Processors keyed by ID.
 	 */
 	public function processors_get_mapped() {
 
