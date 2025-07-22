@@ -352,7 +352,7 @@ class CEO_CiviCRM {
 	 * @param string $name The name of the CiviCRM Setting.
 	 * @return mixed $setting The value of the CiviCRM Setting, or false on failure.
 	 */
-	public function get_setting( $name ) {
+	public function setting_get( $name ) {
 
 		// Init return.
 		$setting = false;

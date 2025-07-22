@@ -886,7 +886,7 @@ class CEO_Compat_CWPS_Financial {
 
 		// Get the setting from CiviCRM.
 		$setting = false;
-		$result  = $this->plugin->civi->get_setting( 'invoicing' );
+		$result  = $this->plugin->civi->setting_get( 'invoicing' );
 		if ( ! empty( $result ) ) {
 			$setting = $result;
 		}
