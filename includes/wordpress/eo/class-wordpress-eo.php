@@ -118,16 +118,8 @@ class CEO_WordPress_EO {
 			return;
 		}
 
-		// Intercept "Insert Post".
-		add_action( 'wp_insert_post', [ $this, 'insert_post' ], 10, 2 );
-
 		// Intercept "Save Event".
 		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
-
-		/*
-		// Intercept "Update Event" - though by misuse of a filter.
-		add_filter( 'eventorganiser_update_event_event_data', [ $this, 'intercept_update_event' ], 10, 3 );
-		*/
 
 		// Intercept before "Delete Post".
 		add_action( 'before_delete_post', [ $this, 'intercept_before_delete_post' ] );
@@ -147,22 +139,14 @@ class CEO_WordPress_EO {
 		// Intercept "Delete Occurrence" in admin calendar.
 		add_action( 'eventorganiser_admin_calendar_occurrence_deleted', [ $this, 'occurrence_deleted' ], 10, 2 );
 
-		/*
-		// Debug.
-		add_filter( 'eventorganiser_pre_event_content', [ $this, 'pre_event_content' ], 10, 2 );
-		*/
+		// Add our meta box to Event screens.
+		add_action( 'add_meta_boxes_event', [ $this, 'meta_boxes_register' ], 11 );
 
-		// Add our Event meta box.
-		add_action( 'add_meta_boxes_event', [ $this, 'event_meta_boxes' ], 11 );
+		// Add our "Delete unused CiviCRM Events" checkbox to the "Recurring Event notice".
+		add_filter( 'eventorganiser_event_metabox_notice', [ $this, 'partial_recurring_notice_render' ], 10, 2 );
 
-		// Maybe add a Menu Item to CiviCRM Admin Utilities menu.
-		add_action( 'civicrm_admin_utilities_menu_top', [ $this, 'menu_item_add_to_cau' ], 10, 2 );
-
-		// Maybe add a Menu Item to the CiviCRM Event's "Event Links" menu.
-		add_action( 'civicrm_alterContent', [ $this, 'menu_item_add_to_civi' ], 10, 4 );
-
-		// Maybe add a link to action links on the Events list table.
-		add_action( 'post_row_actions', [ $this, 'menu_item_add_to_row_actions' ], 10, 2 );
+		// Add our "Sync to CiviCRM" checkbox to the "Publish" metabox.
+		add_action( 'post_submitbox_misc_actions', [ $this, 'partial_sync_checkbox_render' ] );
 
 	}
 
@@ -206,29 +190,6 @@ class CEO_WordPress_EO {
 	// -----------------------------------------------------------------------------------
 
 	/**
-	 * Intercept "Insert Post" and check if we're inserting an Event.
-	 *
-	 * @since 0.1
-	 *
-	 * @param int    $post_id The numeric ID of the WP Post.
-	 * @param object $post The WP Post object.
-	 */
-	public function insert_post( $post_id, $post ) {
-
-		// Kick out if not Event.
-		if ( 'event' !== $post->post_type ) {
-			return;
-		}
-
-		// Set flag.
-		$this->insert_event = true;
-
-		// Check the validity of our CiviCRM options.
-		$success = $this->plugin->civi->event->validate_civi_options( $post_id, $post );
-
-	}
-
-	/**
 	 * Intercept "Save Event".
 	 *
 	 * @since 0.1
@@ -243,31 +204,21 @@ class CEO_WordPress_EO {
 			return;
 		}
 
-		// Save custom Event Organiser Event components.
+		// Always save custom Event Organiser Event components.
 		$this->save_event_components( $post_id );
-
-		// Sync checkbox is only shown to people who can publish Posts.
-		if ( ! current_user_can( 'publish_posts' ) ) {
-			return;
-		}
-
-		// Get linked CiviCRM Events.
-		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
-
-		/*
-		 * Skip checking the "Sync this Event with CiviCRM" checkbox when there is exactly
-		 * one correspondence between an Event Organiser Event and a CiviCRM Event.
-		 */
-		if ( empty( $civi_events ) || 1 < count( $civi_events ) ) {
-			// Bail if the "Sync this Event with CiviCRM" checkbox is not checked.
-			$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
-			if ( '1' !== (string) $sync ) {
-				return;
-			}
-		}
 
 		// Get Post data.
 		$post = get_post( $post_id );
+
+		// Bail if this Event should not be synced.
+		if ( ! $this->sync_allowed_for_event( $post ) ) {
+			return;
+		}
+
+		// Check the "Sync Event to CiviCRM" checkbox.
+		if ( ! $this->sync_progress_allowed( $post_id ) ) {
+			return;
+		}
 
 		// Get all dates.
 		$dates = $this->get_all_dates( $post_id );
@@ -289,28 +240,6 @@ class CEO_WordPress_EO {
 		add_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_created' ], 10, 4 );
 		add_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_updated' ], 10, 4 );
 		add_action( 'civicrm_post', [ $this->plugin->civi->event, 'event_deleted' ], 10, 4 );
-
-	}
-
-	/**
-	 * Intercept "Update Event".
-	 *
-	 * Disabled because it's unused. Also, there appears to be some confusion
-	 * regarding the filter signature in Event Organiser itself.
-	 *
-	 * @see https://github.com/stephenharris/Event-Organiser/blob/develop/includes/event.php#L76
-	 *
-	 * @since 0.1
-	 *
-	 * @param array $event_data The new Event data.
-	 * @param int   $post_id The numeric ID of the WP Post.
-	 * @param array $post_data The updated Post data.
-	 * @return array $event_data The updated Event data.
-	 */
-	public function intercept_update_event( $event_data, $post_id, $post_data ) {
-
-		// --<
-		return $event_data;
 
 	}
 
@@ -367,12 +296,16 @@ class CEO_WordPress_EO {
 				return;
 			}
 
-			// Get linked CiviCRM Events.
-			$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
+			// Get Post data.
+			$post = get_post( $post_id );
 
-			// Bail if our sync checkbox is not checked.
-			$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
-			if ( '1' !== (string) $sync ) {
+			// Bail if this Event should not be synced.
+			if ( ! $this->sync_allowed_for_event( $post ) ) {
+				return;
+			}
+
+			// Check the "Sync Event to CiviCRM" checkbox.
+			if ( ! $this->sync_progress_allowed( $post_id ) ) {
 				return;
 			}
 
@@ -395,7 +328,7 @@ class CEO_WordPress_EO {
 		// Are we deleting an Event?
 		if ( doing_action( 'delete_post' ) && ! empty( $this->saved_correspondences[ $post_id ] ) ) {
 
-			// Yes: get IDs from saved post meta.
+			// Yes: get IDs from pre-delete post meta.
 			$correspondences = $this->saved_correspondences[ $post_id ];
 
 			// Clear array entry.
@@ -442,7 +375,7 @@ class CEO_WordPress_EO {
 
 		// TODO: Decide if we delete CiviCRM Events.
 
-		// Delete those CiviCRM Events - not used at present.
+		// Delete those CiviCRM Events?
 		$this->plugin->civi->event->delete_civi_events( $correspondences );
 		*/
 
@@ -653,7 +586,6 @@ class CEO_WordPress_EO {
 		}
 
 		// Remove hooks.
-		remove_action( 'wp_insert_post', [ $this, 'insert_post' ] );
 		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 		// Use Event Organiser's API to create/update an Event.
@@ -678,7 +610,6 @@ class CEO_WordPress_EO {
 		}
 
 		// Re-add hooks.
-		add_action( 'wp_insert_post', [ $this, 'insert_post' ], 10, 2 );
 		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 		// Save Event meta if the Event has Online Registration enabled.
@@ -811,7 +742,6 @@ class CEO_WordPress_EO {
 	public function update_event_status( $post_id, $status ) {
 
 		// Remove hooks in case of recursion.
-		remove_action( 'wp_insert_post', [ $this, 'insert_post' ] );
 		remove_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 		// Set the Event Organiser Event to the status.
@@ -824,7 +754,6 @@ class CEO_WordPress_EO {
 		wp_update_post( $post_data );
 
 		// Re-add hooks.
-		add_action( 'wp_insert_post', [ $this, 'insert_post' ], 10, 2 );
 		add_action( 'eventorganiser_save_event', [ $this, 'intercept_save_event' ] );
 
 	}
@@ -913,40 +842,15 @@ class CEO_WordPress_EO {
 
 	}
 
-	/**
-	 * Intercept before Event content.
-	 *
-	 * @since 0.1
-	 *
-	 * @param str $event_content The Event Organiser Event content.
-	 * @param str $content The content of the WP Post.
-	 * @return str $event_content The modified Event Organiser Event content.
-	 */
-	public function pre_event_content( $event_content, $content ) {
-
-		// Init or die.
-		if ( ! $this->is_active() ) {
-			return $event_content;
-		}
-
-		/*
-		// Let's see.
-		$this->get_participant_roles();
-		*/
-
-		// --<
-		return $event_content;
-
-	}
-
 	// -----------------------------------------------------------------------------------
 
 	/**
-	 * Register Event meta boxes.
+	 * Registers the Event meta boxes.
 	 *
 	 * @since 0.1
+	 * @since 0.8.2 Renamed.
 	 */
-	public function event_meta_boxes() {
+	public function meta_boxes_register() {
 
 		// Check permission.
 		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) {
@@ -956,21 +860,21 @@ class CEO_WordPress_EO {
 		// Create CiviCRM Settings and Sync metabox.
 		add_meta_box(
 			'civi_eo_event_metabox',
-			__( 'CiviCRM Settings', 'civicrm-event-organiser' ),
-			[ $this, 'event_meta_box_render' ],
+			__( 'CiviCRM Event Settings', 'civicrm-event-organiser' ),
+			[ $this, 'meta_box_event_render' ],
 			'event',
-			'side', // Column: options are 'normal' and 'side'.
-			'core' // Vertical placement: options are 'core', 'high', 'low'.
+			'normal', // Column: options are 'normal' and 'side'.
+			'high' // Vertical placement: options are 'core', 'high', 'low'.
 		);
 
 		// Create CiviCRM Settings and Sync metabox.
 		add_meta_box(
 			'civi_eo_event_links_metabox',
-			__( 'Edit Events in CiviCRM', 'civicrm-event-organiser' ),
-			[ $this, 'event_links_meta_box_render' ],
+			__( 'Edit in CiviCRM', 'civicrm-event-organiser' ),
+			[ $this, 'meta_box_event_links_render' ],
 			'event',
-			'normal', // Column: options are 'normal' and 'side'.
-			'high' // Vertical placement: options are 'core', 'high', 'low'.
+			'side', // Column: options are 'normal' and 'side'.
+			'core' // Vertical placement: options are 'core', 'high', 'low'.
 		);
 
 	}
@@ -979,10 +883,11 @@ class CEO_WordPress_EO {
 	 * Render a meta box on Event edit screens.
 	 *
 	 * @since 0.1
+	 * @since 0.8.2 Renamed.
 	 *
 	 * @param object $event The Event Organiser Event.
 	 */
-	public function event_meta_box_render( $event ) {
+	public function meta_box_event_render( $event ) {
 
 		// Get linked CiviCRM Events.
 		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
@@ -993,13 +898,20 @@ class CEO_WordPress_EO {
 			$multiple = true;
 		}
 
+		// Get the Event Organiser Event sync setting.
+		$eo_event_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_eo_event_sync', 1 );
+
 		// Decide if we should show the "Sync to CiviCRM" checkbox.
-		$show_sync_checkbox = true;
-		if ( ! empty( $civi_events ) ) {
-			$show_sync_checkbox = false;
-			if ( $multiple ) {
-				$show_sync_checkbox = true;
+		if ( 1 === $eo_event_sync ) {
+			$show_sync_checkbox = true;
+			if ( ! empty( $civi_events ) ) {
+				$show_sync_checkbox = false;
+				if ( $multiple ) {
+					$show_sync_checkbox = true;
+				}
 			}
+		} else {
+			$show_sync_checkbox = false;
 		}
 
 		// Get Online Registration.
@@ -1090,10 +1002,11 @@ class CEO_WordPress_EO {
 	 * Render a meta box on Event edit screens with links to CiviCRM Events.
 	 *
 	 * @since 0.3.6
+	 * @since 0.8.2 Renamed.
 	 *
 	 * @param object $event The Event Organiser Event.
 	 */
-	public function event_links_meta_box_render( $event ) {
+	public function meta_box_event_links_render( $event ) {
 
 		// Get linked CiviCRM Events.
 		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
@@ -1127,7 +1040,10 @@ class CEO_WordPress_EO {
 				$datetime_string = eo_format_datetime( $start, $format );
 
 				// Add to array.
-				$links[ $link ] = $datetime_string;
+				$links[] = [
+					'url'  => $link,
+					'text' => $datetime_string,
+				];
 
 			}
 
@@ -1138,226 +1054,115 @@ class CEO_WordPress_EO {
 
 	}
 
-	// -----------------------------------------------------------------------------------
-
 	/**
-	 * Add a add a Menu Item to the CiviCRM Event's "Event Links" menu.
+	 * Adds the "Sync to CiviCRM" checkbox to the "Publish" metabox.
 	 *
-	 * @since 0.4.5
+	 * @since 0.8.2
 	 *
-	 * @param str    $content The previously generated content.
-	 * @param string $context The context of the content - 'page' or 'form'.
-	 * @param string $tpl_name The name of the ".tpl" template file.
-	 * @param object $object A reference to the page or form object.
+	 * @param WP_Post $event The Event Organiser Event.
 	 */
-	public function menu_item_add_to_civi( &$content, $context, $tpl_name, &$object ) {
+	public function partial_sync_checkbox_render( $event ) {
 
-		// Bail if not a form.
-		if ( 'form' !== $context ) {
+		// Sanity check.
+		if ( empty( $event ) || ! ( $event instanceof WP_Post ) ) {
 			return;
 		}
 
-		// Bail if not our target template.
-		if ( 'CRM/Event/Form/ManageEvent/Tab.tpl' !== $tpl_name ) {
+		// Bail if not an Event.
+		if ( 'event' !== $event->post_type ) {
 			return;
 		}
 
-		/*
-		 * We do this to Contact View = "CRM/Contact/Page/View/Summary.tpl" as
-		 * well, though the actions hook may work.
-		 */
-
-		// Get the ID of the displayed Event.
-		// phpcs:disable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-		if ( ! isset( $object->_defaultValues['id'] ) ) {
-			return;
-		}
-		if ( ! is_numeric( $object->_defaultValues['id'] ) ) {
-			return;
-		}
-		$event_id = (int) $object->_defaultValues['id'];
-		// phpcs:enable WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-
-		// Get the Post ID that this Event is mapped to.
-		$post_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $event_id );
-		if ( false === $post_id ) {
-			return;
-		}
-
-		// Build view link.
-		$link_view = '<li><a class="crm-event-wordpress-view" href="' . get_permalink( $post_id ) . '">' .
-			__( 'View Event in WordPress', 'civicrm-event-organiser' ) .
-		'</a><li>' . "\n";
-
-		// Add edit link if permissions allow.
-		$link_edit = '';
-		if ( current_user_can( 'edit_post', $post_id ) ) {
-			$link_edit = '<li><a class="crm-event-wordpress-edit" href="' . get_edit_post_link( $post_id ) . '">' .
-				__( 'Edit Event in WordPress', 'civicrm-event-organiser' ) .
-			'</a><li>' . "\n";
-		}
-
-		// Build final link.
-		$link = $link_view . $link_edit . '<li><a class="crm-event-info"';
-
-		// Gulp, do the replace.
-		$content = str_replace( '<li><a class="crm-event-info"', $link, $content );
-
-	}
-
-	/**
-	 * Add a add a Menu Item to the CiviCRM Admin Utilities menu.
-	 *
-	 * Currently this only adds a link when there is a one-to-one mapping
-	 * between an Event Organiser Event and a CiviCRM Event.
-	 *
-	 * @since 0.4.5
-	 *
-	 * @param str   $id The menu parent ID.
-	 * @param array $components The active CiviCRM Conponents.
-	 */
-	public function menu_item_add_to_cau( $id, $components ) {
-
-		// Access WordPress admin bar.
-		global $wp_admin_bar, $post;
-
-		// Bail if there's no Post.
-		if ( empty( $post ) ) {
-			return;
-		}
-
-		// Bail if there's no Post and it's WordPress admin.
-		if ( empty( $post ) && is_admin() ) {
-			return;
-		}
-
-		// Kick out if not Event.
-		if ( 'event' !== $post->post_type ) {
-			return;
-		}
-
-		// Check permission.
-		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) {
+		// Bail if User lacks capability.
+		if ( ! current_user_can( 'publish_posts' ) ) {
 			return;
 		}
 
 		// Get linked CiviCRM Events.
-		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post->ID );
+		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
 
-		// TODO: Consider how to display Repeating Events in menu.
+		// Set multiple status.
+		$multiple = false;
+		if ( count( $civi_events ) > 1 ) {
+			$multiple = true;
+		}
 
-		// Bail if we get more than one.
-		if ( empty( $civi_events ) || count( $civi_events ) > 1 ) {
+		// Do not show "Sync to CiviCRM" checkbox by default.
+		$show_sync_checkbox = false;
+
+		// Get the Event Organiser Event sync setting.
+		$eo_event_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_eo_event_sync', 1 );
+
+		// Always show checkbox when the setting says so and there are no CiviCRM Events.
+		if ( 1 === $eo_event_sync && empty( $civi_events ) ) {
+			$show_sync_checkbox = true;
+		}
+
+		// Always show checkbox for repeating Events.
+		if ( $multiple ) {
+			$show_sync_checkbox = true;
+		}
+
+		// Bail if not showing.
+		if ( ! $show_sync_checkbox ) {
 			return;
 		}
 
-		// Init links.
-		$links = [];
+		// Get the CiviCRM logo.
+		$civicrm_logo = $this->plugin->civi->logo_get();
 
-		// Show them.
-		foreach ( $civi_events as $civi_event_id ) {
-
-			// Get link.
-			$settings_link = $this->plugin->civi->event->get_settings_link( $civi_event_id );
-
-			/*
-			// Get CiviCRM Event.
-			$civi_event = $this->plugin->civi->event->get_event_by_id( $civi_event_id );
-			if ( $civi_event === false ) {
-				continue;
-			}
-
-			// Get DateTime object.
-			$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
-
-			// Construct date and time format.
-			$format = get_option( 'date_format' );
-			if ( ! eo_is_all_day( $event->ID ) ) {
-				$format .= ' ' . get_option( 'time_format' );
-			}
-
-			// Get datetime string.
-			$datetime_string = eo_format_datetime( $start, $format );
-
-			// Construct link.
-			$link = '<a href="' . esc_url( $settings_link ) . '">' . esc_html( $datetime_string ) . '</a>';
-
-			// Construct list item content.
-			$content = sprintf( __( 'Info and Settings for: %s', 'civicrm-event-organiser' ), $link );
-
-			// Add to array.
-			$links[] = $content;
-			*/
-
-			// Define item.
-			$node = [
-				'id'     => 'cau-0',
-				'parent' => $id,
-				// 'parent' => 'edit',
-				'title'  => __( 'Edit in CiviCRM', 'civicrm-event-organiser' ),
-				'href'   => $settings_link,
-			];
-
-			// Add item to menu.
-			$wp_admin_bar->add_node( $node );
-
-		}
+		// Show "Sync to CiviCRM" markup.
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/partials/partial-admin-event-sync.php';
 
 	}
 
 	/**
-	 * Add a link to action links on the Events list table.
+	 * Filters the "Recurring Event" notice at the top of the Event details metabox.
 	 *
-	 * Currently this only adds a link when there is a one-to-one mapping
-	 * between an Event Organiser Event and a CiviCRM Event.
+	 * @since 0.8.2
 	 *
-	 * @since 0.4.5
-	 *
-	 * @param array   $actions The array of row action links.
-	 * @param WP_Post $post The WordPress Post object.
+	 * @param string  $notices The original message text.
+	 * @param WP_Post $event The Event Organiser Event.
+	 * @return string $notices The modified message text.
 	 */
-	public function menu_item_add_to_row_actions( $actions, $post ) {
+	public function partial_recurring_notice_render( $notices, $event ) {
 
-		// Bail if there's no Post object.
-		if ( empty( $post ) ) {
-			return $actions;
-		}
-
-		// Kick out if not Event.
-		if ( 'event' !== $post->post_type ) {
-			return $actions;
-		}
-
-		// Check permission.
-		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) {
-			return $actions;
+		// Sanity check.
+		if ( empty( $event ) || ! ( $event instanceof WP_Post ) ) {
+			return $notices;
 		}
 
 		// Get linked CiviCRM Events.
-		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post->ID );
+		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
 
-		// Bail if we get more than one.
-		if ( empty( $civi_events ) || count( $civi_events ) > 1 ) {
-			return $actions;
+		// Set multiple status.
+		$multiple = false;
+		if ( count( $civi_events ) > 1 ) {
+			$multiple = true;
 		}
 
-		// Show them.
-		foreach ( $civi_events as $civi_event_id ) {
+		// Sneakily append our checkbox.
+		if ( $multiple ) {
 
-			// Get link.
-			$settings_link = $this->plugin->civi->event->get_settings_link( $civi_event_id );
+			// Close existing notices.
+			$notices .= '</p>';
 
-			// Add link to actions.
-			$actions['civicrm'] = sprintf(
-				'<a href="%1$s">%2$s</a>',
-				esc_url( $settings_link ),
-				esc_html__( 'CiviCRM', 'civicrm-event-organiser' )
-			);
+			// Get "Delete unused CiviCRM Events" markup.
+			ob_start();
+			include CIVICRM_WP_EVENT_ORGANISER_PATH . 'assets/templates/wordpress/partials/partial-admin-event-recurring.php';
+			$markup = ob_get_contents();
+			ob_end_clean();
+
+			// Append to notices.
+			$notices .= $markup;
+
+			// Reopen existing notices.
+			$notices .= '<p>';
 
 		}
 
 		// --<
-		return $actions;
+		return $notices;
 
 	}
 
@@ -1422,6 +1227,148 @@ class CEO_WordPress_EO {
 
 		// --<
 		return [];
+
+	}
+
+	/**
+	 * Checks if an Event Organiser Event should be synced to CiviCRM.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param WP_Post $post The WordPress Post object.
+	 * @return WP_Post|bool $post The WordPress Post object, or false if not allowed.
+	 */
+	public function sync_allowed_for_event( $post ) {
+
+		// Assume Post should be synced.
+		$should_be_synced = true;
+
+		// Do not sync if no Post object.
+		if ( ! $post ) {
+			$should_be_synced = false;
+		}
+
+		// Do not sync if not an Event Post object.
+		if ( $should_be_synced ) {
+			if ( 'event' !== $post->post_type ) {
+				$should_be_synced = false;
+			}
+		}
+
+		// Do not sync if the User cannot publish Posts.
+		if ( $should_be_synced ) {
+			if ( ! current_user_can( 'publish_posts' ) ) {
+				$should_be_synced = false;
+			}
+		}
+
+		// Do not sync if this is an auto-draft.
+		if ( $should_be_synced ) {
+			if ( 'auto-draft' === $post->post_status ) {
+				$should_be_synced = false;
+			}
+		}
+
+		// Do not sync if this Post is in the Trash.
+		if ( $should_be_synced ) {
+			if ( 'trash' === $post->post_status ) {
+				$should_be_synced = false;
+			}
+		}
+
+		// Do not sync if this is an autosave routine.
+		if ( $should_be_synced ) {
+			if ( wp_is_post_autosave( $post ) ) {
+				$should_be_synced = false;
+			}
+		}
+
+		// Do not sync if this is a revision.
+		if ( $should_be_synced ) {
+			if ( wp_is_post_revision( $post ) ) {
+				$should_be_synced = false;
+			}
+		}
+
+		// Do not sync if this is a draft and the setting suppresses the "Sync to CiviCRM" checkbox.
+		if ( $should_be_synced ) {
+			$eo_event_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_eo_event_sync', 1 );
+			if ( 0 === $eo_event_sync && 'draft' === $post->post_status ) {
+				$should_be_synced = false;
+			}
+		}
+
+		/**
+		 * Filters whether or not an Event should be synced to CiviCRM.
+		 *
+		 * @since 0.8.2
+		 *
+		 * @param bool    $should_be_synced True if the Post should be synced, false otherwise.
+		 * @param WP_Post $post The WordPress Post object.
+		 */
+		$should_be_synced = apply_filters( 'ceo/eo/event/sync_allowed_for_event', $should_be_synced, $post );
+
+		// Return the Post object if it should be synced.
+		if ( $should_be_synced ) {
+			return $post;
+		}
+
+		// Do not sync.
+		return false;
+
+	}
+
+	/**
+	 * Checks if "Sync Event to CiviCRM" process should be take place.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param integer $post_id The ID of the WordPress Post.
+	 * @return bool True if "Sync Event to CiviCRM" process should happen, or false if not allowed.
+	 */
+	public function sync_progress_allowed( $post_id ) {
+
+		// Bail if no Post ID.
+		if ( empty( $post_id ) ) {
+			return false;
+		}
+
+		// Get the "Sync Event to CiviCRM" setting.
+		$eo_event_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_eo_event_sync', 1 );
+
+		// Get linked CiviCRM Events from post meta.
+		$correspondences = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
+
+		// Check if this Event is repeating.
+		$repeating = ( 1 < count( $correspondences ) ) ? true : false;
+
+		/*
+		 * There is no need to check the "Sync Event to CiviCRM" checkbox when the
+		 * "Sync all Event Organiser Events to CiviCRM" setting has been chosen and
+		 * it's not a repeating Event.
+		 */
+		if ( 0 === $eo_event_sync && ! $repeating ) {
+			return true;
+		}
+
+		/*
+		 * We can also skip checking the checkbox when there is *exactly one*
+		 * correspondence between an Event Organiser Event and a CiviCRM Event.
+		 */
+		if ( ! empty( $correspondences ) && ! $repeating ) {
+			return true;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
+
+		// Only sync if the "Sync this Event with CiviCRM" checkbox is checked.
+		if ( '1' === (string) $sync ) {
+			return true;
+		}
+
+		// Do not sync.
+		return false;
 
 	}
 

@@ -220,6 +220,12 @@ class CEO_Admin {
 			$shown = true;
 		}
 
+		// Show an admin notice for possibly missing default Event Organiser Event Sync setting.
+		if ( false === $shown && ! $this->option_exists( 'civi_eo_event_default_eo_event_sync' ) ) {
+			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
+			$shown = true;
+		}
+
 		// Show an admin notice for possibly missing default Status Sync setting.
 		if ( false === $shown && ! $this->option_exists( 'civi_eo_event_default_status_sync' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );

@@ -709,6 +709,26 @@ class CEO_Mapping {
 	}
 
 	/**
+	 * Gets the array of Event Organiser Event sync settings keyed by value.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @return array $settings The array of Event Organiser Event sync settings keyed by value.
+	 */
+	public function get_eo_event_sync_mapped() {
+
+		// Init settings.
+		$settings = [
+			0 => __( 'Sync all Event Organiser Events to CiviCRM', 'civicrm-event-organiser' ),
+			1 => __( 'Show checkbox on each Event Organiser Event', 'civicrm-event-organiser' ),
+		];
+
+		// --<
+		return $settings;
+
+	}
+
+	/**
 	 * Gets the array of Status Sync settings keyed by ID.
 	 *
 	 * @since 0.8.2

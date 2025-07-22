@@ -27,6 +27,7 @@ delete_option( 'civi_eo_event_default_profile' );
 delete_option( 'civi_eo_event_default_role' );
 delete_option( 'civi_eo_event_default_type' );
 delete_option( 'civi_eo_event_default_civicrm_event_sync' );
+delete_option( 'civi_eo_event_default_eo_event_sync' );
 delete_option( 'civi_eo_event_default_status_sync' );
 
 // Delete data arrays.

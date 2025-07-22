@@ -14,31 +14,23 @@ defined( 'ABSPATH' ) || exit;
 <?php if ( ! empty( $links ) ) : ?>
 	<style>
 	.civi_eo_event_list li {
-		margin: 0.5em 0;
+		margin: 0;
 		padding: 0.5em 0 0.5em 0;
-		border-top: 1px solid #eee;
 		border-bottom: 1px solid #eee;
+	}
+	.civi_eo_event_list li:first-child {
+		border-top: 1px solid #eee;
 	}
 	</style>
 
 	<ul class="civi_eo_event_list">
 		<?php foreach ( $links as $item ) : ?>
-			<li>
-				<?php
-
-				printf(
-					/* translators: %s: The formatted link to the Event. */
-					esc_html__( 'Info and Settings for: %s', 'civicrm-event-organiser' ),
-					'<a href="' . esc_url( $link ) . '"">' . esc_html( $datetime_string ) . '</a>'
-				);
-
-				?>
-			</li>
+			<li><span class="dashicons dashicons-external"></span> <a href="<?php echo esc_url( $item['url'] ); ?>"><?php echo esc_html( $item['text'] ); ?></a></li>
 		<?php endforeach; ?>
 	</ul>
 <?php else : ?>
 	<p>
-		<?php esc_html_e( 'This Event has no corresponding CiviCRM Events.', 'civicrm-event-organiser' ); ?>
+		<?php esc_html_e( 'This Event does not have any corresponding Events in CiviCRM.', 'civicrm-event-organiser' ); ?>
 	</p>
 <?php endif; ?>
 

@@ -377,26 +377,17 @@ class CEO_Compat_CWPS {
 			return;
 		}
 
-		// Bail if this is not an Event Organiser Event.
+		// Get the Post object.
 		$post = get_post( $args['post_id'] );
 
-		if ( empty( $post ) || 'event' !== $post->post_type ) {
+		// Bail if this Event should not be synced.
+		if ( ! $this->plugin->wordpress->eo->sync_allowed_for_event( $post ) ) {
 			return;
 		}
 
-		// Get existing CiviCRM Events from post meta.
-		$correspondences = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $args['post_id'] );
-
-		/*
-		 * Skip checking the "Sync this Event with CiviCRM" checkbox when there is exactly
-		 * one correspondence between an Event Organiser Event and a CiviCRM Event.
-		 */
-		if ( empty( $correspondences ) || 1 < count( $correspondences ) ) {
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing
-			$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
-			if ( '1' !== (string) $sync ) {
-				return;
-			}
+		// Check the "Sync Event to CiviCRM" checkbox.
+		if ( ! $this->plugin->wordpress->eo->sync_progress_allowed( $args['post_id'] ) ) {
+			return;
 		}
 
 		/*
@@ -415,6 +406,9 @@ class CEO_Compat_CWPS {
 
 		// Prevent reverse sync of CiviCRM Custom Fields.
 		$this->cwps->acf->civicrm->custom_field->unregister_mapper_hooks();
+
+		// Get linked CiviCRM Events from post meta.
+		$correspondences = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $args['post_id'] );
 
 		// Loop through the CiviCRM Events.
 		foreach ( $correspondences as $occurrence_id => $civi_event_id ) {

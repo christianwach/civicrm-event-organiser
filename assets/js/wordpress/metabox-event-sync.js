@@ -185,9 +185,67 @@ var CEO_Event_Metabox = CEO_Event_Metabox || {};
 
 				// Toggle visibility of "Confirmation Email" section.
 				if ( current_on ) {
-					$('.civi_eo_event_send_email_toggle').slideDown( 'slow' );
+					$('.civi_eo_event_send_email_toggle').show();
 				} else {
-					$('.civi_eo_event_send_email_toggle').slideUp( 'slow' );
+					$('.civi_eo_event_send_email_toggle').hide();
+				}
+
+			});
+
+			/**
+			 * Toggle "Delete unused CiviCRM Events" information.
+			 *
+			 * Depends on the state of the Event Organiser "Check to edit this event and
+			 * its recurrences" checkbox.
+			 *
+			 * @since 0.8.2
+			 *
+			 * @param {Object} e The click event object.
+			 */
+			$('#eo-event-recurrring-notice').click( function(e) {
+
+				var current_on;
+
+				// Get checked state.
+				current_on = $(this).prop( 'checked' );
+
+				// Toggle visibility of "Delete unused CiviCRM Events" information.
+				if ( current_on ) {
+					$('.ceo_multiple_delete_unused').show();
+				} else {
+					$('.ceo_multiple_delete_unused').hide();
+				}
+
+			});
+
+			/**
+			 * Toggle "Delete unused CiviCRM Events" checkbox.
+			 *
+			 * Depends on the state of the "Sync Event to CiviCRM" checkbox.
+			 *
+			 * @since 0.8.2
+			 *
+			 * @param {Object} e The click event object.
+			 */
+			$('#civi_eo_event_sync').click( function(e) {
+
+				var current_on;
+
+				console.log( 'there', $('.ceo-delete-unused-toggle').length );
+
+				// Bail if there is no checkbox.
+				if ( ! $('.ceo-delete-unused-toggle').length ) {
+					return;
+				}
+
+				// Get checked state.
+				current_on = $(this).prop( 'checked' );
+
+				// Toggle visibility of "Delete unused CiviCRM Events" checkbo.
+				if ( current_on ) {
+					$('.ceo-delete-unused-toggle').show();
+				} else {
+					$('.ceo-delete-unused-toggle').hide();
 				}
 
 			});

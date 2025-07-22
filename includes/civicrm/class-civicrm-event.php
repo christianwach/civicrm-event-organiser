@@ -1998,46 +1998,4 @@ class CEO_CiviCRM_Event {
 
 	}
 
-	// -----------------------------------------------------------------------------------
-
-	/**
-	 * Validate all CiviCRM Event data for an Event Organiser Event.
-	 *
-	 * @since 0.1
-	 * @since 0.7 Moved to this class.
-	 *
-	 * @param int    $post_id The numeric ID of the WP Post.
-	 * @param object $post The WP Post object.
-	 * @return mixed True if success, otherwise WP error object.
-	 */
-	public function validate_civi_options( $post_id, $post ) {
-
-		/*
-		// Check default Event Type.
-		$result = $this->_validate_event_type();
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
-		// Check participant_role.
-		$result = $this->_validate_participant_role();
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
-		// Check is_online_registration.
-		$result = $this->_validate_is_online_registration();
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-
-		// Check LocBlock ID.
-		$result = $this->_validate_loc_block_id();
-		if ( is_wp_error( $result ) ) {
-			return $result;
-		}
-		*/
-
-	}
-
 }

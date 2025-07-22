@@ -577,6 +577,18 @@ class CEO_Admin_Settings {
 			$civicrm_event_sync_required = true;
 		}
 
+		// Get Event Organiser Event sync.
+		$eo_event_sync = $this->plugin->mapping->get_eo_event_sync_mapped();
+
+		// Get default Event Organiser Event sync.
+		$default_eo_event_sync = $this->plugin->admin->option_get( 'civi_eo_event_default_eo_event_sync', 1 );
+
+		// Check for possibly missing default Event Organiser Event sync setting.
+		$eo_event_sync_required = false;
+		if ( ! $this->admin->option_exists( 'civi_eo_event_default_eo_event_sync' ) ) {
+			$eo_event_sync_required = true;
+		}
+
 		// Get status sync.
 		$status_sync = $this->plugin->mapping->get_status_sync_mapped();
 
@@ -724,6 +736,7 @@ class CEO_Admin_Settings {
 		$cc                 = isset( $_POST['civi_eo_event_default_send_email_cc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_cc'] ) ) : '';
 		$bcc                = isset( $_POST['civi_eo_event_default_send_email_bcc'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_bcc'] ) ) : '';
 		$civicrm_event_sync = isset( $_POST['civi_eo_event_default_civievent_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_civievent_sync'] ) ) : '0';
+		$eo_event_sync      = isset( $_POST['civi_eo_event_default_eoevent_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_eoevent_sync'] ) ) : '0';
 		$status_sync        = isset( $_POST['civi_eo_event_default_status_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_status_sync'] ) ) : '3';
 
 		// Retrieve and sanitise Allowed Profiles array.
@@ -812,6 +825,10 @@ class CEO_Admin_Settings {
 		// Sanitise and save CiviCRM Event sync option.
 		$default_civicrm_event_sync = (int) $civicrm_event_sync;
 		$this->admin->option_save( 'civi_eo_event_default_civicrm_event_sync', $default_civicrm_event_sync );
+
+		// Sanitise and save Event Organiser Event sync option.
+		$default_eo_event_sync = (int) $eo_event_sync;
+		$this->admin->option_save( 'civi_eo_event_default_eo_event_sync', $default_eo_event_sync );
 
 		// Sanitise and save Status Sync option.
 		$default_status_sync = (int) $status_sync;

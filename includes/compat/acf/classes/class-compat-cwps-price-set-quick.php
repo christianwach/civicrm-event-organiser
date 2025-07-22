@@ -252,6 +252,18 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 			return false;
 		}
 
+		// Bail if there are no values to apply.
+		if ( empty( $values ) ) {
+			/*
+			 * This probably isn't what we want to do... it could be that the intention
+			 * is to *delete all* existing Price Field Values, or it could be that none
+			 * are defined.
+			 *
+			 * This is a temporary measure until I figure out the logic.
+			 */
+			return $price_set;
+		}
+
 		// Cast Event ID as integer.
 		$event_id = (int) $args['civi_event_id'];
 
