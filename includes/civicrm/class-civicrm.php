@@ -305,6 +305,46 @@ class CEO_CiviCRM {
 	}
 
 	/**
+	 * Gets the CiviCRM logo.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @return string $logo The CiviCRM logo, or false on failure.
+	 */
+	public function logo_get() {
+
+		// Init return.
+		static $logo;
+		if ( isset( $logo ) ) {
+			return $logo;
+		}
+
+		// Bail if the CiviCRM constant isn't set.
+		if ( ! defined( 'CIVICRM_PLUGIN_DIR' ) ) {
+			return false;
+		}
+
+		// Get the WordPress filesystem object.
+		$wp_filesystem = $this->plugin->wordpress->filesystem_init();
+		if ( ! $wp_filesystem ) {
+			return false;
+		}
+
+		// Get the CiviCRM logo.
+		$civicrm_logo = $wp_filesystem->get_contents( CIVICRM_PLUGIN_DIR . 'assets/images/civilogo.svg.b64' );
+		if ( ! $civicrm_logo ) {
+			return false;
+		}
+
+		// Remove stray whitespace.
+		$logo = str_replace( "\n", '', $civicrm_logo );
+
+		// --<
+		return $logo;
+
+	}
+
+	/**
 	 * Gets a CiviCRM Setting.
 	 *
 	 * @since 0.8.2
