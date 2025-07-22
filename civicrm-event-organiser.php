@@ -86,6 +86,15 @@ class CiviCRM_Event_Organiser {
 	public $ufmatch;
 
 	/**
+	 * Menu object.
+	 *
+	 * @since 0.8.2
+	 * @access public
+	 * @var CEO_Menus
+	 */
+	public $menus;
+
+	/**
 	 * Compatibility object.
 	 *
 	 * @since 0.8.0
@@ -219,6 +228,7 @@ class CiviCRM_Event_Organiser {
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/wordpress/class-wordpress.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes//mapping/class-mapping.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes//mapping/class-ufmatch.php';
+		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes//mapping/class-menus.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/compat/class-compat.php';
 		include CIVICRM_WP_EVENT_ORGANISER_PATH . 'includes/admin/class-admin.php';
 
@@ -245,6 +255,7 @@ class CiviCRM_Event_Organiser {
 		$this->wordpress = new CEO_WordPress( $this );
 		$this->mapping   = new CEO_Mapping( $this );
 		$this->ufmatch   = new CEO_UFMatch( $this );
+		$this->menus     = new CEO_Menus( $this );
 		$this->compat    = new CEO_Compat( $this );
 		$this->admin     = new CEO_Admin( $this );
 
