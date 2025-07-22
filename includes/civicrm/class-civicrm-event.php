@@ -1704,64 +1704,54 @@ class CEO_CiviCRM_Event {
 	}
 
 	/**
-	 * Delete all CiviCRM Events.
-	 *
-	 * WARNING: only for dev purposes really!
+	 * Deletes a set of CiviCRM Events.
 	 *
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param array $civi_event_ids An array of CiviCRM Event IDs.
-	 * @return array $results An array of CiviCRM results.
+	 * @param array $event_ids An array of CiviCRM Event IDs.
+	 * @return array|bool $events The IDs of the deleted Events, or false on error.
 	 */
-	public function delete_civi_events( $civi_event_ids ) {
+	public function delete_civi_events( $event_ids ) {
+
+		// Bail if there are no Events to delete.
+		if ( empty( $event_ids ) | ! is_array( $event_ids ) ) {
+			return false;
+		}
 
 		// Bail if CiviCRM is not active.
 		if ( ! $this->civicrm->is_active() ) {
 			return false;
 		}
 
-		// Just for safety, check we get some.
-		if ( count( $civi_event_ids ) === 0 ) {
+		try {
+
+			// Call the API.
+			$result = \Civi\Api4\Event::delete( false )
+				->addWhere( 'id', 'IN', $event_ids )
+				->execute();
+
+		} catch ( CRM_Core_Exception $e ) {
+			$log = [
+				'method'    => __METHOD__,
+				'event_ids' => $event_ids,
+				'error'     => $e->getMessage(),
+				'backtrace' => $e->getTraceAsString(),
+			];
+			$this->plugin->log_error( $log );
 			return false;
 		}
 
-		// Init return.
-		$results = [];
-
-		// One by one, it seems.
-		foreach ( $civi_event_ids as $civi_event_id ) {
-
-			// Construct "query".
-			$params = [
-				'version' => 3,
-				'id'      => $civi_event_id,
-			];
-
-			// Okay, let's do it.
-			$result = civicrm_api( 'Event', 'delete', $params );
-
-			// Log failures and skip to next.
-			if ( ! empty( $result['is_error'] ) && 1 === (int) $result['is_error'] ) {
-				$e     = new Exception();
-				$trace = $e->getTraceAsString();
-				$log   = [
-					'method'    => __METHOD__,
-					'message'   => $result['error_message'],
-					'params'    => $params,
-					'backtrace' => $trace,
-				];
-				$this->plugin->log_error( $log );
-				continue;
-			}
-
-			// Add to return array.
-			$results[] = $result;
-
+		// Return empty array if no result.
+		if ( 0 === $result->count() ) {
+			return [];
 		}
 
+		// We only need the ArrayObject.
+		$events = $result->getArrayCopy();
+
 		// --<
-		return $results;
+		return $events;
 
 	}
 
