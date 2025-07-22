@@ -220,4 +220,40 @@ class CEO_WordPress {
 
 	}
 
+	/**
+	 * Initialises the WordPress Filesystem.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @return WP_Filesystem|bool The WordPress Filesystem object if intialised, false otherwise.
+	 */
+	public function filesystem_init() {
+
+		global $wp_filesystem;
+
+		// If not yet intialised.
+		if ( ! $wp_filesystem || ! is_object( $wp_filesystem ) ) {
+
+			// Require file if init function is unavailable.
+			if ( ! function_exists( 'WP_Filesystem' ) ) {
+				require_once ABSPATH . 'wp-admin/includes/file.php';
+			}
+
+			// Suppress output to get direct access credentials.
+			ob_start();
+			$credentials = request_filesystem_credentials( '' );
+			ob_end_clean();
+
+			// Bail if init fails for some reason.
+			if ( false === $credentials || ! WP_Filesystem( $credentials ) ) {
+				return false;
+			}
+
+		}
+
+		// --<
+		return $wp_filesystem;
+
+	}
+
 }
