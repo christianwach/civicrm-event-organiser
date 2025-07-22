@@ -691,6 +691,15 @@ class CEO_CiviCRM_Registration {
 			$allowed = $all_profiles;
 		}
 
+		/**
+		 * Filters the allowed CiviCRM Profiles.
+		 *
+		 * @since 0.8.2
+		 *
+		 * @param array $allowed The array of allowed CiviCRM Profiles.
+		 */
+		$allowed = apply_filters( 'ceo/civicrm/registration/profiles/allowed', $allowed );
+
 		// --<
 		return $allowed;
 
