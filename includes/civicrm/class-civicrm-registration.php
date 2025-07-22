@@ -688,7 +688,7 @@ class CEO_CiviCRM_Registration {
 				}
 			}
 		} else {
-			$allowed = $profiles;
+			$allowed = $all_profiles;
 		}
 
 		// --<
