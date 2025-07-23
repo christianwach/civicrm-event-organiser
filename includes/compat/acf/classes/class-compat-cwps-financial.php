@@ -406,6 +406,123 @@ class CEO_Compat_CWPS_Financial {
 	}
 
 	/**
+	 * Checks if a CiviCRM Price Set exists for a given name.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param string $price_set_name The name of the CiviCRM Price Set.
+	 * @return bool True if the CiviCRM Price Set exists, or false otherwise.
+	 */
+	public function price_set_exists( $price_set_name ) {
+
+		// Get the Price Set.
+		$price_set = $this->price_set_get_by_name( $price_set_name );
+
+		// Return boolean.
+		if ( false === $price_set ) {
+			return false;
+		} else {
+			return true;
+		}
+
+	}
+
+	/**
+	 * Gets the CiviCRM Price Set for a given name.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param int $price_set_name The name of the CiviCRM Price Set.
+	 * @return int|bool $price_set The array of CiviCRM Price Set data, or false on failure.
+	 */
+	public function price_set_get_by_name( $price_set_name ) {
+
+		// Sanity checks.
+		if ( empty( $price_set_name ) || ! is_string( $price_set_name ) ) {
+			return false;
+		}
+
+		// Try and init CiviCRM.
+		if ( ! $this->plugin->civi->is_active() ) {
+			return false;
+		}
+
+		try {
+
+			// Call the API.
+			$result = \Civi\Api4\PriceSet::get( false )
+				->addWhere( 'name', '=', $price_set_name )
+				->execute();
+
+		} catch ( CRM_Core_Exception $e ) {
+			$log = [
+				'method'         => __METHOD__,
+				'price_set_name' => $price_set_name,
+				'error'          => $e->getMessage(),
+				'backtrace'      => $e->getTraceAsString(),
+			];
+			$this->plugin->log_error( $log );
+		}
+
+		// Return failure if no result.
+		if ( 0 === $result->count() ) {
+			return false;
+		}
+
+		// The first result is what we're after.
+		$price_set = $result->first();
+
+		// --<
+		return $price_set;
+
+	}
+
+	/**
+	 * Generates a unique name for a CiviCRM Price Set.
+	 *
+	 * @see https://github.com/civicrm/civicrm-core/blob/6ab37c09a59e5cf6601cb51704dc0b1b755f2bc2/CRM/Event/Form/ManageEvent/Fee.php#L605-L615
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param string  $name The previously-generated name for the CiviCRM Price Set.
+	 * @param integer $event_id The ID of the CiviCRM Event.
+	 * @return string $new_name The modified name for the CiviCRM Price Set.
+	 */
+	public function price_set_unique_name( $name, $event_id ) {
+
+		// Return early if this is already unique.
+		if ( ! $this->price_set_exists( $name ) ) {
+			return $name;
+		}
+
+		// Append Event ID.
+		$new_name = $name . '_' . $event_id;
+
+		// Return early if this is unique.
+		if ( ! $this->price_set_exists( $new_name ) ) {
+			return $new_name;
+		}
+
+		// Init flag.
+		$exists = 1;
+
+		do {
+
+			// Append a datetime string for a hopefully unique name.
+			$time_sec = explode( '.', microtime( true ) );
+			$new_name = $name . '_' . date( 'is', $time_sec[0] ) . $time_sec[1];
+
+			// How did we do?
+			$exists = $this->price_set_exists( $new_name );
+
+		} while ( (int) $exists > 0 );
+
+		// --<
+		return $new_name;
+
+	}
+
+	/**
 	 * Deletes a CiviCRM Price Set for a given ID.
 	 *
 	 * @since 0.8.2
