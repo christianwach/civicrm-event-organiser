@@ -908,6 +908,19 @@ class CEO_CiviCRM_Event {
 
 		}
 
+		/**
+		 * Fires after an updated CiviCRM Event has passed sync checks but before sequence checks.
+		 *
+		 * Used internally to unlink "Quick Config Price Set" ACF Fields when an edit is
+		 * made on the CiviCRM side.
+		 *
+		 * @see CEO_Compat_CWPS_Price_Set_Quick::event_unlink_from_field()
+		 *
+		 * @param integer $object_id The ID of the CiviCRM Event.
+		 * @param object  $object_ref The CiviCRM Event object.
+		 */
+		do_action( 'ceo/civicrm/event/event_updated/sequence/pre', $object_id, $object_ref );
+
 		// Bail if this CiviCRM Event is part of an Event Organiser sequence.
 		if ( $this->plugin->mapping->is_civi_event_in_eo_sequence( $object_id ) ) {
 			return;
