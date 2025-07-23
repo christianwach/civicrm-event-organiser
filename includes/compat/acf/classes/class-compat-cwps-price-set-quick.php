@@ -254,10 +254,12 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 			foreach ( $value as $index => &$row ) {
 
 				// Unserialise existing value.
-				$price_field_value_ids = $this->price_field_value_ids_get_from_field( $row['field_ceo_civicrm_pfv_id'] );
+				$price_field_value_ids = $this->price_field_value_ids_get_from_subfield( $row['field_ceo_civicrm_pfv_id'] );
 
-				// Remove the entry for this CiviCRM Event.
-				unset( $price_field_value_ids[ $civicrm_event_id ] );
+				// Set the entry for this CiviCRM Event to numeric zero.
+				$price_field_value_ids[ $civicrm_event_id ] = 0;
+
+				// Overwrite row.
 				$row['field_ceo_civicrm_pfv_id'] = maybe_serialize( $price_field_value_ids );
 
 			}
@@ -672,6 +674,16 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 
 		// Get the Price Field Value IDs for this Event.
 		$pfv_ids = $this->price_field_value_ids_get_from_field_for_event( $values, $event_id );
+
+		/*
+		 * When all Price Field Value IDs are set to zero, then this CiviCRM Event has
+		 * been "unlinked" from updates when the Event Organiser Event is updated.
+		 *
+		 * @see self::event_unlink_from_field()
+		 */
+		if ( 1 === count( array_unique( $pfv_ids ) ) && 0 === reset( $pfv_ids ) ) {
+			return;
+		}
 
 		// Records to delete are missing from the ACF data.
 		foreach ( $current_pfvs as $current_pfv ) {
@@ -1242,7 +1254,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 		if ( ! empty( $value['field_ceo_civicrm_pfv_id'] ) && ! empty( $event_id ) ) {
 
 			// Unserialise existing value.
-			$price_field_value_ids = $this->price_field_value_ids_get_from_field( $value['field_ceo_civicrm_pfv_id'] );
+			$price_field_value_ids = $this->price_field_value_ids_get_from_subfield( $value['field_ceo_civicrm_pfv_id'] );
 
 			// Set the Price Field Value ID if present.
 			if ( ! empty( $price_field_value_ids[ $event_id ] ) ) {
@@ -1321,7 +1333,38 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	// -----------------------------------------------------------------------------------
 
 	/**
-	 * Gets the array of Price Field_Value IDs for a CiviCRM Event ID from an ACF Sub-field.
+	 * Gets the array of Price Field_Value IDs from an ACF Field.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param array   $field The array of ACF Field data.
+	 * @return array $price_field_value_ids The array of Price Field_Value IDs.
+	 */
+	public function price_field_value_ids_get_from_field( $field ) {
+
+		// Extract all ACF Price Field Value IDs.
+		$price_field_value_ids = wp_list_pluck( $field, 'field_ceo_civicrm_pfv_id' );
+
+		// Return early if there are none.
+		if ( empty( $price_field_value_ids ) ) {
+			return [];
+		}
+
+		// Sanitise array contents.
+		array_walk(
+			$price_field_value_ids,
+			function( &$item ) {
+				$item = maybe_unserialize( trim( $item ) );
+			}
+		);
+
+		// --<
+		return $price_field_value_ids;
+
+	}
+
+	/**
+	 * Gets the array of Price Field_Value IDs for a CiviCRM Event ID from an ACF Field.
 	 *
 	 * @since 0.8.2
 	 *
@@ -1332,15 +1375,12 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	public function price_field_value_ids_get_from_field_for_event( $field, $event_id ) {
 
 		// Extract all ACF Price Field Value IDs.
-		$acf_pfv_ids = wp_list_pluck( $field, 'field_ceo_civicrm_pfv_id' );
+		$acf_pfv_ids = $this->price_field_value_ids_get_from_field( $field );
 
-		// Sanitise array contents.
-		array_walk(
-			$acf_pfv_ids,
-			function( &$item ) {
-				$item = maybe_unserialize( trim( $item ) );
-			}
-		);
+		// Return early if there are none.
+		if ( empty( $acf_pfv_ids ) ) {
+			return [];
+		}
 
 		/*
 		 * In order to support repeating Events, the Price Field Value IDs are stored in
@@ -1370,7 +1410,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 * @param string $sub_field The Price Field Value ID Sub-field data.
 	 * @return array $price_field_value_ids The array of Price Field_Value IDs, keyed by CiviCRM Event ID.
 	 */
-	public function price_field_value_ids_get_from_field( $sub_field ) {
+	public function price_field_value_ids_get_from_subfield( $sub_field ) {
 
 		// Return early if empty.
 		if ( empty( $sub_field ) ) {
@@ -1420,7 +1460,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 			$existing_value = $existing[ $params['key'] ]['field_ceo_civicrm_pfv_id'];
 
 			// Unserialise existing value.
-			$price_field_value_ids = $this->price_field_value_ids_get_from_field( $sub_field );
+			$price_field_value_ids = $this->price_field_value_ids_get_from_subfield( $existing_value );
 
 			// Set new Price Field Value ID, keyed by CiviCRM Event ID.
 			$price_field_value_ids[ $params['event_id'] ] = $params['price_field_value_id'];
