@@ -364,7 +364,7 @@ class CEO_Menus {
 	}
 
 	/**
-	 * Add a add a Menu Item to the CiviCRM Event's "Event Links" menu.
+	 * Adds a Menu Item to the CiviCRM Event's "Event Links" menu.
 	 *
 	 * @since 0.4.5
 	 * @since 0.8.2 Moved to this class and renamed.
