@@ -717,7 +717,7 @@ class CEO_ACF_Custom_CiviCRM_Price_Set_Quick_Field extends acf_field {
 			'key'               => 'field_ceo_civicrm_pfv_id',
 			'label'             => __( 'CiviCRM ID', 'civicrm-event-organiser' ),
 			'name'              => 'ceo_civicrm_pfv_id',
-			'type'              => 'number',
+			'type'              => 'textarea',
 			'parent'            => $field['key'],
 			'instructions'      => '',
 			'required'          => 0,

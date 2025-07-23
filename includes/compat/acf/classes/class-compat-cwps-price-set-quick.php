@@ -289,7 +289,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 			$civicrm_event = $this->plugin->civi->event->get_event_by_id( $event_id );
 
 			// Create a Price Set for it.
-			$price_set = $this->price_set_quick_config_create( $civicrm_event['title'], $settings['financial_type_id'], $extends );
+			$price_set = $this->price_set_quick_config_create( $civicrm_event['title'], $settings['financial_type_id'], $extends, $event_id );
 			if ( empty( $price_set ) ) {
 				return false;
 			}
@@ -493,26 +493,47 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 		// Let's look at each ACF Record and check its Price Field Value ID.
 		foreach ( $values as $key => $value ) {
 
+			// Get the Price Field Value IDs for this CiviCRM Event.
+			$price_field_value_ids = maybe_unserialize( $value['field_ceo_civicrm_pfv_id'] );
+			if ( empty( $price_field_value_ids ) ) {
+				$price_field_value_ids = [];
+			}
+
 			// New Records have no Price Field Value ID.
-			if ( empty( $value['field_ceo_civicrm_pfv_id'] ) ) {
+			if ( empty( $price_field_value_ids[ $event_id ] ) ) {
 				$actions['create'][ $key ] = $value;
 				continue;
 			}
 
 			// Records to update have a Price Field Value ID.
-			if ( ! empty( $value['field_ceo_civicrm_pfv_id'] ) ) {
+			if ( ! empty( $price_field_value_ids[ $event_id ] ) ) {
 				$actions['update'][ $key ] = $value;
 				continue;
 			}
 
 		}
 
-		// Grab the ACF Price Field Value IDs.
+		// Extract all ACF Price Field Value IDs.
 		$acf_pfv_ids = wp_list_pluck( $values, 'field_ceo_civicrm_pfv_id' );
 
 		// Sanitise array contents.
 		array_walk(
 			$acf_pfv_ids,
+			function( &$item ) {
+				$item = maybe_unserialize( trim( $item ) );
+			}
+		);
+
+		/*
+		 * In order to support repeating Events, the Price Field Value IDs are stored in
+		 * an array where they key is the CiviCRM Event ID and the value is the ID of the
+		 * Price Field Value.
+		 */
+		$pfv_ids = wp_list_pluck( $acf_pfv_ids, $event_id );
+
+		// Sanitise array contents.
+		array_walk(
+			$pfv_ids,
 			function( &$item ) {
 				$item = (int) trim( $item );
 			}
@@ -530,8 +551,8 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 
 		// Records to delete are missing from the ACF data.
 		foreach ( $current_pfvs as $current_pfv ) {
-			if ( ! in_array( (int) $current_pfv['id'], $acf_pfv_ids, true ) ) {
-				$actions['delete'][] = $current_pfv['id'];
+			if ( ! in_array( (int) $current_pfv['id'], $pfv_ids, true ) ) {
+				$actions['delete'][] = (int) $current_pfv['id'];
 				continue;
 			}
 		}
@@ -547,7 +568,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 
 			// Add data from Price Field and ACF Field settings.
 			$data['price_field_id']    = $price_field_id;
-			$data['financial_type_id'] = $settings['financial_type_id'];
+			$data['financial_type_id'] = (int) $settings['financial_type_id'];
 
 			// Maybe set as default.
 			$is_default = ! empty( $value['field_ceo_civicrm_default'] ) ? true : false;
@@ -602,7 +623,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 		foreach ( $actions['update'] as $key => $value ) {
 
 			// Build required data from ACF Field.
-			$data = $this->prepare_from_field( $value );
+			$data = $this->prepare_from_field( $value, $event_id );
 
 			// Add data from Price Field and ACF Field settings.
 			$data['price_field_id'] = $price_field_id;
@@ -753,9 +774,10 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 * @param string $title The title of the Event for which to create the "Quick Config Price Set".
 	 * @param int    $financial_type_id The ID of the CiviCRM Financial Type.
 	 * @param int    $extends The ID of the CiviCRM Component.
+	 * @param int    $event_id The ID of the CiviCRM Event.
 	 * @return array $price_set The array of "Quick Config Price Set" data.
 	 */
-	public function price_set_quick_config_create( $title, $financial_type_id, $extends ) {
+	public function price_set_quick_config_create( $title, $financial_type_id, $extends, $event_id ) {
 
 		// Sanity checks.
 		if ( empty( $title ) || ! is_string( $title ) ) {
@@ -773,8 +795,11 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 			return false;
 		}
 
-		// Follow the same logic as CiviCRM for the Price Set "name".
-		$name = strtolower( CRM_Utils_String::munge( $title, '_', 245 ) );
+		// Use the same method as CiviCRM to create the Price Set "name".
+		$candidate = strtolower( CRM_Utils_String::munge( $title, '_', 245 ) );
+
+		// Let's get a verifiably unique name.
+		$name = $this->compat->financial->price_set_unique_name( $candidate, $event_id );
 
 		try {
 
@@ -1080,26 +1105,31 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param array   $value The array of Price Field Value data in the ACF Field.
-	 * @param integer $price_field_value_id The numeric ID of the Price Field Value Record (or null if new).
+	 * @param array  $value The array of Price Field Value data in the ACF Field.
+	 * @param integer $event_id The ID of the CiviCRM Event.
 	 * @return array $data The CiviCRM "Quick Config Price Set" Record data.
 	 */
-	public function prepare_from_field( $value, $price_field_value_id = null ) {
+	public function prepare_from_field( $value, $event_id = null ) {
 
 		// Init required data.
 		$data = [];
 
-		// Maybe add the "Quick Config Price Set" ID.
-		if ( ! empty( $data ) ) {
-			$data['id'] = (int) $price_field_value_id;
+		// Maybe add the Price Field Value ID.
+		if ( ! empty( $value['field_ceo_civicrm_pfv_id'] ) && ! empty( $event_id ) ) {
+
+			// Unserialise existing value.
+			$price_field_value_ids = $this->price_field_value_ids_get_from_field( $value['field_ceo_civicrm_pfv_id'] );
+
+			// Set the Price Field Value ID if present.
+			if ( ! empty( $price_field_value_ids[ $event_id ] ) ) {
+				$data['id'] = (int) $price_field_value_ids[ $event_id ];
+			}
+
 		}
 
 		// Convert ACF data to CiviCRM data.
 		$data['label']  = sanitize_text_field( $value['field_ceo_civicrm_fee_label'] );
 		$data['amount'] = $value['field_ceo_civicrm_amount'];
-		if ( ! empty( $value['field_ceo_civicrm_pfv_id'] ) ) {
-			$data['id'] = (int) $value['field_ceo_civicrm_pfv_id'];
-		}
 
 		// --<
 		return $data;
@@ -1163,6 +1193,34 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
+	 * @param string $sub_field The Price Field Value ID Sub-field data.
+	 * @return array $price_field_value_ids The array of Price Field_Value IDs, keyed by CiviCRM Event ID.
+	 */
+	public function price_field_value_ids_get_from_field( $sub_field ) {
+
+		// Return early if empty.
+		if ( empty( $sub_field ) ) {
+			return [];
+		}
+
+		// Unserialise existing value.
+		$price_field_value_ids = maybe_unserialize( $sub_field );
+
+		// Make sure the an array is returned.
+		if ( empty( $price_field_value_ids ) ) {
+			$price_field_value_ids = [];
+		}
+
+		// --<
+		return $price_field_value_ids;
+
+	}
+
+	/**
+	 * Syncs the CiviCRM Price Field Value ID back to the ACF Fields on a WordPress Post.
+	 *
+	 * @since 0.8.2
+	 *
 	 * @param array $params The "Quick Config Price Set" data.
 	 * @param array $args The array of WordPress params.
 	 */
@@ -1178,12 +1236,27 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 
 		// Add Price Field Value ID and overwrite array element.
 		if ( ! empty( $existing[ $params['key'] ] ) ) {
+
 			/*
-			// Do we want to sync this back in CiviCRM money format>
+			// Do we also want to sync this back in CiviCRM money format?
 			$params['value']['field_ceo_civicrm_amount'] = $params['price_field_value']['amount'];
 			*/
-			$params['value']['field_ceo_civicrm_pfv_id'] = $params['price_field_value_id'];
-			$existing[ $params['key'] ]                  = $params['value'];
+
+			// Get the existing value of the Sub-field.
+			$existing_value = $existing[ $params['key'] ]['field_ceo_civicrm_pfv_id'];
+
+			// Unserialise existing value.
+			$price_field_value_ids = $this->price_field_value_ids_get_from_field( $sub_field );
+
+			// Set new Price Field Value ID, keyed by CiviCRM Event ID.
+			$price_field_value_ids[ $params['event_id'] ] = $params['price_field_value_id'];
+
+			// Overwrite data Sub-field.
+			$params['value']['field_ceo_civicrm_pfv_id'] = maybe_serialize( $price_field_value_ids );
+
+			// Overwrite Field.
+			$existing[ $params['key'] ] = $params['value'];
+
 		}
 
 		// Now update Field.
