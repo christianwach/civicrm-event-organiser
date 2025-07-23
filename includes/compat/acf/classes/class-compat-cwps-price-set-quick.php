@@ -106,11 +106,17 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 */
 	public function register_hooks() {
 
-		// Listen for when a CiviCRM Event has been updated after ACF Fields were saved.
-		add_action( 'ceo/acf/event/acf_fields_saved', [ $this, 'fields_handled_update' ], 10 );
-
 		// Listen for when an Event Organiser Event has been synced from a CiviCRM Event.
 		add_action( 'ceo/eo/event/updated', [ $this, 'event_synced_to_post' ], 10, 2 );
+
+		// Listen for when a CiviCRM Event has been updated.
+		add_action( 'ceo/civicrm/event/event_updated/sequence/pre', [ $this, 'event_unlink_from_field' ], 10, 4 );
+
+		// Maybe add "Cannot sync to WordPress" information into the Event Fees form.
+		add_action( 'civicrm_alterContent', [ $this, 'event_notice_add_to_civicrm' ], 10, 4 );
+
+		// Listen for when a CiviCRM Event has been updated after ACF Fields were saved.
+		add_action( 'ceo/acf/event/acf_fields_saved', [ $this, 'fields_handled_update' ], 10 );
 
 		// Maybe sync the Price Field Value ID Record "CiviCRM ID" to the ACF Subfields.
 		add_action( 'ceo/acf/civicrm/price_field_value/created', [ $this, 'maybe_sync_price_field_value_id' ], 10, 2 );
@@ -123,9 +129,14 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	// -----------------------------------------------------------------------------------
 
 	/**
-	 * Intercept when an Event Organiser Event has been updated from a CiviCRM Event.
+	 * Updates ACF Fields when an Event Organiser Event has been updated from a CiviCRM Event.
 	 *
-	 * Sync any associated ACF Fields mapped to built-in Event Fields.
+	 * Syncs the CiviCRM Price Field Values in a "Quick Config Price Set" attached to a
+	 * CiviCRM Event to the "Quick Config Price Set" ACF Fields on a linked Event Organiser
+	 * Event in WordPress.
+	 *
+	 * Note that this method only fires when there is a one-to-one correspondence between
+	 * Events in WordPress and CiviCRM.
 	 *
 	 * @since 0.8.2
 	 *
@@ -136,6 +147,12 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 
 		// Cast Event ID as integer.
 		$civicrm_event_id = (int) $civicrm_event['id'];
+
+		// Bail if this CiviCRM Event is part of a sequence.
+		if ( $this->plugin->mapping->is_civi_event_in_eo_sequence( $civicrm_event_id ) ) {
+			$this->event_unlink_from_field( $event_id, $civicrm_event_id );
+			return;
+		}
 
 		// Get the current "Quick Config Price Set" Record.
 		$current_price_set = $this->price_set_quick_config_get( $civicrm_event_id );
@@ -173,7 +190,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 			foreach ( $current_pfvs as $current_pfv ) {
 
 				// Convert to ACF "Quick Config Price Set" data.
-				$acf_price_field_value = $this->prepare_from_civicrm( $current_pfv );
+				$acf_price_field_value = $this->prepare_from_civicrm( $current_pfv, $civicrm_event_id );
 
 				// Add to Field value.
 				$value[] = $acf_price_field_value;
@@ -184,6 +201,136 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 			$this->compat->cwps->acf->acf->field->value_update( $selector, $value, $event_id );
 
 		}
+
+	}
+
+	/**
+	 * Unlinks the Price Field Values of a CiviCRM Event from an Event Organiser Event.
+	 *
+	 * When the CiviCRM Event is part of an Event Organiser series, the "CiviCRM ID" needs
+	 * to be updated to exclude the modified CiviCRM Event.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param integer $civicrm_event_id The ID of the CiviCRM Event.
+	 * @param object  $civicrm_event The CiviCRM Event object.
+	 */
+	public function event_unlink_from_field( $civicrm_event_id, $civicrm_event ) {
+
+		// Make sure Event ID is an integer.
+		$civicrm_event_id = (int) $civicrm_event_id;
+
+		// Bail if this CiviCRM Event is not part of a sequence.
+		if ( ! $this->plugin->mapping->is_civi_event_in_eo_sequence( $civicrm_event_id ) ) {
+			return;
+		}
+
+		// Get the current "Quick Config Price Set" Record.
+		$current_price_set = $this->price_set_quick_config_get( $civicrm_event_id );
+
+		// Bail if there is no "Quick Config Price Set" Record.
+		if ( empty( $current_price_set ) ) {
+			return;
+		}
+
+		// Get the Event Organiser Event ID for this CiviCRM Event.
+		$event_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $civicrm_event_id );
+
+		// Get all ACF Fields for the Event.
+		$acf_fields = $this->compat->cwps->acf->acf->field->fields_get_for_post( $event_id );
+
+		// Bail if there are no "Quick Config Price Set" Record Fields.
+		if ( empty( $acf_fields['price_set_quick'] ) ) {
+			return;
+		}
+
+		// Let's look at each ACF Field in turn.
+		foreach ( $acf_fields['price_set_quick'] as $selector => $field ) {
+
+			// Get the current value of the ACF Field.
+			$value = get_field( $selector, $event_id );
+
+			// Let's handle each Field Row in turn.
+			foreach ( $value as $index => &$row ) {
+
+				// Unserialise existing value.
+				$price_field_value_ids = $this->price_field_value_ids_get_from_field( $row['field_ceo_civicrm_pfv_id'] );
+
+				// Remove the entry for this CiviCRM Event.
+				unset( $price_field_value_ids[ $civicrm_event_id ] );
+				$row['field_ceo_civicrm_pfv_id'] = maybe_serialize( $price_field_value_ids );
+
+			}
+
+			// Now update Field.
+			$this->compat->cwps->acf->acf->field->value_update( $selector, $value, $event_id );
+
+		}
+
+	}
+
+	/**
+	 * Adds "Cannot sync to WordPress" information into the Event form.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param string $content The previously generated content.
+	 * @param string $context The context of the content - 'page' or 'form'.
+	 * @param string $tpl_name The name of the ".tpl" template file.
+	 * @param object $object A reference to the page or form object.
+	 */
+	public function event_notice_add_to_civicrm( &$content, $context, $tpl_name, &$object ) {
+
+		// Bail if not a form.
+		if ( 'form' !== $context ) {
+			return;
+		}
+
+		// Bail if not our target template.
+		if ( 'CRM/Event/Form/ManageEvent/Fee.tpl' !== $tpl_name ) {
+			return;
+		}
+
+		// Bail if we can't find an Event ID.
+		if ( empty( $object->_id ) ) {
+			return;
+		}
+
+		// Cast Event ID as integer.
+		$civicrm_event_id = (int) $object->_id;
+
+		// Bail if this CiviCRM Event is not part of a sequence.
+		if ( ! $this->plugin->mapping->is_civi_event_in_eo_sequence( $civicrm_event_id ) ) {
+			return;
+		}
+
+		// Get the current "Quick Config Price Set" Record.
+		$current_price_set = $this->price_set_quick_config_get( $civicrm_event_id );
+
+		// Bail if there is no "Quick Config Price Set" Record.
+		if ( empty( $current_price_set ) ) {
+			return;
+		}
+
+		// Get the Event Organiser Event ID for this CiviCRM Event.
+		$event_id = $this->plugin->mapping->get_eo_event_id_by_civi_event_id( $civicrm_event_id );
+
+		// Get all ACF Fields for the Event.
+		$acf_fields = $this->compat->cwps->acf->acf->field->fields_get_for_post( $event_id );
+
+		// Bail if there are no "Quick Config Price Set" Record Fields.
+		if ( empty( $acf_fields['price_set_quick'] ) ) {
+			return;
+		}
+
+		// Show information.
+		$information = '<p>' . esc_html__( 'Please Note: This Event is part of a series in WordPress which has a "Quick Config Price Set" ACF Field attached to it. You can edit the Regular Fees below but they will not be synced to the ACF Field. Subsequent updates to the ACF Field on the Event in WordPress will not be synced here either.', 'civicrm-event-organiser' ) . '</p>';
+
+		// Use `<table id="map-field-table">`.
+		$information .= '<table id="map-field-table">';
+
+		// Lastly, do the replacement.
+		$content = str_replace( '<table id="map-field-table">', $information, $content );
 
 	}
 
@@ -513,32 +660,6 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 
 		}
 
-		// Extract all ACF Price Field Value IDs.
-		$acf_pfv_ids = wp_list_pluck( $values, 'field_ceo_civicrm_pfv_id' );
-
-		// Sanitise array contents.
-		array_walk(
-			$acf_pfv_ids,
-			function( &$item ) {
-				$item = maybe_unserialize( trim( $item ) );
-			}
-		);
-
-		/*
-		 * In order to support repeating Events, the Price Field Value IDs are stored in
-		 * an array where they key is the CiviCRM Event ID and the value is the ID of the
-		 * Price Field Value.
-		 */
-		$pfv_ids = wp_list_pluck( $acf_pfv_ids, $event_id );
-
-		// Sanitise array contents.
-		array_walk(
-			$pfv_ids,
-			function( &$item ) {
-				$item = (int) trim( $item );
-			}
-		);
-
 		// Grab the current Price Field ID and Price Field Values.
 		$price_field_id = false;
 		$current_pfvs   = [];
@@ -548,6 +669,9 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 			$current_pfvs   = $price_field['price_field_values'];
 			break;
 		}
+
+		// Get the Price Field Value IDs for this Event.
+		$pfv_ids = $this->price_field_value_ids_get_from_field_for_event( $values, $event_id );
 
 		// Records to delete are missing from the ACF data.
 		foreach ( $current_pfvs as $current_pfv ) {
@@ -1137,14 +1261,15 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	}
 
 	/**
-	 * Prepare the ACF Field data from a CiviCRM "Quick Config Price Set" Record.
+	 * Prepares the ACF Field data from a CiviCRM Price Field Value Record.
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param array $value The array of "Quick Config Price Set" Record data in CiviCRM.
+	 * @param array   $value The array of CiviCRM Price Field Value data.
+	 * @param integer $civicrm_event_id The ID of the CiviCRM Event.
 	 * @return array $data The ACF "Quick Config Price Set" data.
 	 */
-	public function prepare_from_civicrm( $value ) {
+	public function prepare_from_civicrm( $value, $civicrm_event_id ) {
 
 		// Init required data.
 		$data = [];
@@ -1157,7 +1282,14 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 		// Convert CiviCRM data to ACF data.
 		$data['field_ceo_civicrm_fee_label'] = trim( $value->label );
 		$data['field_ceo_civicrm_amount']    = $value->amount;
-		$data['field_ceo_civicrm_pfv_id']    = (int) $value->id;
+
+		// Use a fresh Price Field Value IDs array.
+		$price_field_value_ids = [
+			$civicrm_event_id => (int) $value->id,
+		];
+
+		// Apply to Sub-field.
+		$data['field_ceo_civicrm_pfv_id'] = maybe_serialize( $price_field_value_ids );
 
 		// --<
 		return $data;
@@ -1189,7 +1321,49 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	// -----------------------------------------------------------------------------------
 
 	/**
-	 * Sync the CiviCRM ""Quick Config Price Set" ID" to the ACF Fields on a WordPress Post.
+	 * Gets the array of Price Field_Value IDs for a CiviCRM Event ID from an ACF Sub-field.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param array   $field The array of ACF Field data.
+	 * @param integer $event_id The ID of the CiviCRM Event.
+	 * @return array $price_field_value_ids The array of Price Field_Value IDs.
+	 */
+	public function price_field_value_ids_get_from_field_for_event( $field, $event_id ) {
+
+		// Extract all ACF Price Field Value IDs.
+		$acf_pfv_ids = wp_list_pluck( $field, 'field_ceo_civicrm_pfv_id' );
+
+		// Sanitise array contents.
+		array_walk(
+			$acf_pfv_ids,
+			function( &$item ) {
+				$item = maybe_unserialize( trim( $item ) );
+			}
+		);
+
+		/*
+		 * In order to support repeating Events, the Price Field Value IDs are stored in
+		 * an array where they key is the CiviCRM Event ID and the value is the ID of the
+		 * Price Field Value.
+		 */
+		$price_field_value_ids = wp_list_pluck( $acf_pfv_ids, $event_id );
+
+		// Sanitise array contents.
+		array_walk(
+			$price_field_value_ids,
+			function( &$item ) {
+				$item = (int) trim( $item );
+			}
+		);
+
+		// --<
+		return $price_field_value_ids;
+
+	}
+
+	/**
+	 * Gets the array of Price Field_Value IDs from the ACF Sub-field.
 	 *
 	 * @since 0.8.2
 	 *
