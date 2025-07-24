@@ -100,7 +100,7 @@ class CEO_Admin_Manual_Sync {
 	 *
 	 * @since 0.7
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_Admin $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -1684,7 +1684,7 @@ class CEO_Admin_Manual_Sync {
 	 * @since 0.7
 	 *
 	 * @param string $type The type of mapping.
-	 * @return integer $step_count The number of items to sync for this mapping.
+	 * @return int $step_count The number of items to sync for this mapping.
 	 */
 	public function step_count_get( $type ) {
 

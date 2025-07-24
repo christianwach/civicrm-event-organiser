@@ -87,7 +87,7 @@ class CEO_Compat_CWPS {
 	 *
 	 * @since 0.6.2
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_Compat $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -326,8 +326,8 @@ class CEO_Compat_CWPS {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer $post_id The ID of the Post or revision.
-	 * @param integer $post The Post object.
+	 * @param int     $post_id The ID of the Post or revision.
+	 * @param WP_Post $post The WordPress Post object.
 	 * @param bool    $update True if the Post is being updated, false if new.
 	 */
 	public function acf_fields_update( $post_id, $post, $update ) {
@@ -619,9 +619,9 @@ class CEO_Compat_CWPS {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param array   $acf_fields The existing ACF Fields array.
-	 * @param array   $field The ACF Field.
-	 * @param integer $post_id The numeric ID of the WordPress Post.
+	 * @param array $acf_fields The existing ACF Fields array.
+	 * @param array $field The ACF Field.
+	 * @param int   $post_id The numeric ID of the WordPress Post.
 	 * @return array $acf_fields The modified ACF Fields array.
 	 */
 	public function acf_fields_get_for_post( $acf_fields, $field, $post_id ) {
@@ -780,8 +780,8 @@ class CEO_Compat_CWPS {
 		 *
 		 * @since 0.8.2
 		 *
-		 * @param array $choices The array of choices for the Setting Field.
-		 * @param str $event_field_prefix The Event Field prefix.
+		 * @param array  $choices The array of choices for the Setting Field.
+		 * @param string $event_field_prefix The Event Field prefix.
 		 */
 		$choices = apply_filters( 'ceo/acf/civicrm/event/civicrm_field/choices', $choices, $event_field_prefix );
 

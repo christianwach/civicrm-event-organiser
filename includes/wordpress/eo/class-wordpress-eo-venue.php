@@ -66,7 +66,7 @@ class CEO_WordPress_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_WordPress $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -209,10 +209,10 @@ class CEO_WordPress_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $term The Term object of the Venue.
-	 * @param int    $tt_id The numeric ID of the Venue Term Taxonomy.
-	 * @param string $taxonomy The deleted Term's Taxonomy name.
-	 * @param object $deleted_term The deleted Term object of the Venue.
+	 * @param WP_Term $term The Term object of the Venue.
+	 * @param int     $tt_id The numeric ID of the Venue Term Taxonomy.
+	 * @param string  $taxonomy The deleted Term's Taxonomy name.
+	 * @param WP_Term $deleted_term The deleted Term object of the Venue.
 	 */
 	public function delete_venue_term( $term, $tt_id, $taxonomy, $deleted_term ) {
 
@@ -237,9 +237,9 @@ class CEO_WordPress_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $term The Term object of the Venue.
-	 * @param int    $tt_id The numeric ID of the Venue Term Taxonomy.
-	 * @param object $deleted_term The deleted Term object of the Venue.
+	 * @param WP_Term $term The Term object of the Venue.
+	 * @param int     $tt_id The numeric ID of the Venue Term Taxonomy.
+	 * @param WP_Term $deleted_term The deleted Term object of the Venue.
 	 */
 	public function delete_venue( $term, $tt_id, $deleted_term ) {
 
@@ -258,7 +258,7 @@ class CEO_WordPress_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $deleted_term The Term object of the Venue.
+	 * @param WP_Term $deleted_term The Term object of the Venue.
 	 */
 	public function delete_venue_meta( $deleted_term ) {
 
@@ -435,7 +435,7 @@ class CEO_WordPress_EO_Venue {
 		 *
 		 * @since 0.8.0
 		 *
-		 * @param bool False by default, which does not force unique slugs.
+		 * @param bool $unique_slug False by default, which does not force unique slugs.
 		 */
 		$unique_slug = apply_filters( 'ceo/eo/venue/unique_slug', $unique_slug );
 
@@ -1022,8 +1022,8 @@ class CEO_WordPress_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the Venue.
-	 * @param str $venue_email The Email associated with the Venue.
+	 * @param int    $venue_id The numeric ID of the Venue.
+	 * @param string $venue_email The Email associated with the Venue.
 	 */
 	public function update_venue_email( $venue_id, $venue_email ) {
 
@@ -1045,8 +1045,8 @@ class CEO_WordPress_EO_Venue {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int $venue_id The numeric ID of the Venue.
-	 * @param str $venue_phone The phone number associated with the Venue.
+	 * @param int    $venue_id The numeric ID of the Venue.
+	 * @param string $venue_phone The phone number associated with the Venue.
 	 */
 	public function update_venue_phone( $venue_id, $venue_phone ) {
 

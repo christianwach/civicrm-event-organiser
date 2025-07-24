@@ -42,7 +42,7 @@ class CEO_Admin_Multisite {
 	 *
 	 * @since 0.7
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_Admin $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 

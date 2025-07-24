@@ -378,7 +378,7 @@ class CEO_Compat_CWPS_Financial {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer $price_field_value_id The numeric ID of the Price Field Value.
+	 * @param int $price_field_value_id The numeric ID of the Price Field Value.
 	 * @return array|bool $price_set The array of Price Set data, or false on failure.
 	 */
 	public function price_set_get_by_price_field_value_id( $price_field_value_id ) {
@@ -484,8 +484,8 @@ class CEO_Compat_CWPS_Financial {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param string  $name The previously-generated name for the CiviCRM Price Set.
-	 * @param integer $event_id The ID of the CiviCRM Event.
+	 * @param string $name The previously-generated name for the CiviCRM Price Set.
+	 * @param int    $event_id The ID of the CiviCRM Event.
 	 * @return string $new_name The modified name for the CiviCRM Price Set.
 	 */
 	public function price_set_unique_name( $name, $event_id ) {
@@ -510,7 +510,7 @@ class CEO_Compat_CWPS_Financial {
 
 			// Append a datetime string for a hopefully unique name.
 			$time_sec = explode( '.', microtime( true ) );
-			$new_name = $name . '_' . date( 'is', $time_sec[0] ) . $time_sec[1];
+			$new_name = $name . '_' . gmdate( 'is', $time_sec[0] ) . $time_sec[1];
 
 			// How did we do?
 			$exists = $this->price_set_exists( $new_name );
@@ -698,7 +698,7 @@ class CEO_Compat_CWPS_Financial {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer $price_field_value_id The numeric ID of the Price Field Value.
+	 * @param int $price_field_value_id The numeric ID of the Price Field Value.
 	 * @return array|bool $price_field The array of Price Field data, or false on failure.
 	 */
 	public function price_field_get_by_price_field_value_id( $price_field_value_id ) {
@@ -850,7 +850,7 @@ class CEO_Compat_CWPS_Financial {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer $price_field_value_id The numeric ID of the Price Field Value.
+	 * @param int $price_field_value_id The numeric ID of the Price Field Value.
 	 * @return array|bool $price_field_value The array of Price Field Value data, or false on failure.
 	 */
 	public function price_field_value_get_by_id( $price_field_value_id ) {
@@ -1404,7 +1404,7 @@ class CEO_Compat_CWPS_Financial {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer|float $number The number to convert.
+	 * @param int|float $number The number to convert.
 	 * @return float $civicrm_number The CiviCRM-compliant number.
 	 */
 	public function civicrm_float( $number ) {

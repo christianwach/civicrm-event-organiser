@@ -122,7 +122,7 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 *
-	 * @param object $parent The parent object reference.
+	 * @param CEO_Compat $parent The parent object reference.
 	 */
 	public function __construct( $parent ) {
 
@@ -186,9 +186,9 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 *
-	 * @param mixed          $value The value found in the database.
-	 * @param integer|string $post_id The ACF "Post ID" from which the value was loaded.
-	 * @param array          $field The Field array holding all the Field options.
+	 * @param mixed      $value The value found in the database.
+	 * @param int|string $post_id The ACF "Post ID" from which the value was loaded.
+	 * @param array      $field The Field array holding all the Field options.
 	 * @return mixed $value The modified value.
 	 */
 	public function load_value( $value, $post_id, $field ) {
@@ -222,9 +222,9 @@ class CEO_ACF_Custom_CiviCRM_Event_ID_Field extends acf_field {
 	 *
 	 * @since 0.7.3
 	 *
-	 * @param mixed   $value The value found in the database.
-	 * @param integer $post_id The Post ID from which the value was loaded.
-	 * @param array   $field The Field array holding all the Field options.
+	 * @param mixed $value The value found in the database.
+	 * @param int   $post_id The Post ID from which the value was loaded.
+	 * @param array $field The Field array holding all the Field options.
 	 * @return mixed $value The modified value.
 	 */
 	public function update_value( $value, $post_id, $field ) {

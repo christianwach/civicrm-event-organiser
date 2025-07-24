@@ -280,8 +280,8 @@ class CEO_Menus {
 	 * @since 0.4.5
 	 * @since 0.8.2 Moved to this class and renamed.
 	 *
-	 * @param str   $id The menu parent ID.
-	 * @param array $components The active CiviCRM Conponents.
+	 * @param string $id The menu parent ID.
+	 * @param array  $components The active CiviCRM Conponents.
 	 */
 	public function item_add_to_cau( $id, $components ) {
 
@@ -369,7 +369,7 @@ class CEO_Menus {
 	 * @since 0.4.5
 	 * @since 0.8.2 Moved to this class and renamed.
 	 *
-	 * @param str    $content The previously generated content.
+	 * @param string $content The previously generated content.
 	 * @param string $context The context of the content - 'page' or 'form'.
 	 * @param string $tpl_name The name of the ".tpl" template file.
 	 * @param object $object A reference to the page or form object.

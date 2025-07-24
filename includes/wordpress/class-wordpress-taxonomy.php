@@ -52,7 +52,7 @@ class CEO_WordPress_Taxonomy {
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_WordPress $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -105,7 +105,7 @@ class CEO_WordPress_Taxonomy {
 	 *
 	 * @since 0.4.6
 	 *
-	 * @param object $config The CiviCRM config object.
+	 * @param CRM_Core_Config $config The CiviCRM config object.
 	 */
 	public function civicrm_config( &$config ) {
 
@@ -429,10 +429,10 @@ class CEO_WordPress_Taxonomy {
 	 *
 	 * @since 0.1
 	 *
-	 * @param int    $term_id The numeric ID of the deleted Term.
-	 * @param array  $tt_id The numeric ID of the deleted Term Taxonomy.
-	 * @param string $taxonomy Name of the Taxonomy.
-	 * @param object $deleted_term The deleted Term object.
+	 * @param int     $term_id The numeric ID of the deleted Term.
+	 * @param array   $tt_id The numeric ID of the deleted Term Taxonomy.
+	 * @param string  $taxonomy Name of the Taxonomy.
+	 * @param WP_Term $deleted_term The deleted Term object.
 	 */
 	public function intercept_delete_term( $term_id, $tt_id, $taxonomy, $deleted_term ) {
 
@@ -710,7 +710,7 @@ class CEO_WordPress_Taxonomy {
 	 * @param int    $term_id The ID of the Term whose Taxonomy we want.
 	 * @param string $output Passed to get_term.
 	 * @param string $filter Passed to get_term.
-	 * @return object $term The WP Term object passed by reference.
+	 * @return WP_Term $term The WP Term object passed by reference.
 	 */
 	public function &get_term_by_id( $term_id, $output = OBJECT, $filter = 'raw' ) {
 
@@ -799,9 +799,9 @@ class CEO_WordPress_Taxonomy {
 	 *
 	 * @since 0.3.5
 	 *
-	 * @param str   $output The existing output.
-	 * @param array $parsed_args The arguments used to build the drop-down.
-	 * @return str $output The modified output.
+	 * @param string $output The existing output.
+	 * @param array  $parsed_args The arguments used to build the drop-down.
+	 * @return string $output The modified output.
 	 */
 	public function terms_dropdown_clear( $output, $parsed_args ) {
 
@@ -1240,8 +1240,8 @@ class CEO_WordPress_Taxonomy {
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param object $new_term The new Event Organiser Event Category Term.
-	 * @param object $old_term The Event Organiser Event Category Term as it was before update.
+	 * @param WP_Term $new_term The new Event Organiser Event Category Term.
+	 * @param WP_Term $old_term The Event Organiser Event Category Term as it was before update.
 	 * @return int|bool $event_type_id The CiviCRM Event Type ID, or false on failure.
 	 */
 	public function update_event_type( $new_term, $old_term = null ) {
@@ -1348,7 +1348,7 @@ class CEO_WordPress_Taxonomy {
 	 *
 	 * @since 0.4.2
 	 *
-	 * @param object $term The Event Organiser Event Category Term.
+	 * @param WP_Term $term The Event Organiser Event Category Term.
 	 * @return array|bool CiviCRM API data array on success, false on failure.
 	 */
 	public function delete_event_type( $term ) {

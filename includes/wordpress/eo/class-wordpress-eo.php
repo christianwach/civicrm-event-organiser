@@ -93,7 +93,7 @@ class CEO_WordPress_EO {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_WordPress $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -711,7 +711,7 @@ class CEO_WordPress_EO {
 		 * @since 0.3.2
 		 * @deprecated 0.8.0 Use the {@see 'ceo/eo/event/updated'} filter instead.
 		 *
-		 * @param int $event_id The numeric ID of the Event Organiser Event.
+		 * @param int   $event_id The numeric ID of the Event Organiser Event.
 		 * @param array $civi_event An array of data for the CiviCRM Event.
 		 */
 		do_action_deprecated( 'civicrm_event_organiser_eo_event_updated', [ $event_id, $civi_event ], '0.8.0', 'ceo/eo/event/updated' );
@@ -721,7 +721,7 @@ class CEO_WordPress_EO {
 		 *
 		 * @since 0.8.0
 		 *
-		 * @param int $event_id The numeric ID of the Event Organiser Event.
+		 * @param int   $event_id The numeric ID of the Event Organiser Event.
 		 * @param array $civi_event An array of data for the CiviCRM Event.
 		 */
 		do_action( 'ceo/eo/event/updated', $event_id, $civi_event );
@@ -736,8 +736,8 @@ class CEO_WordPress_EO {
 	 *
 	 * @since 0.6.4
 	 *
-	 * @param int $post_id The numeric ID of the Event Organiser Event.
-	 * @param str $status The status for the Event Organiser Event.
+	 * @param int    $post_id The numeric ID of the Event Organiser Event.
+	 * @param string $status The status for the Event Organiser Event.
 	 */
 	public function update_event_status( $post_id, $status ) {
 
@@ -885,7 +885,7 @@ class CEO_WordPress_EO {
 	 * @since 0.1
 	 * @since 0.8.2 Renamed.
 	 *
-	 * @param object $event The Event Organiser Event.
+	 * @param WP_Post $event The Event Organiser Event.
 	 */
 	public function meta_box_event_render( $event ) {
 
@@ -1004,7 +1004,7 @@ class CEO_WordPress_EO {
 	 * @since 0.3.6
 	 * @since 0.8.2 Renamed.
 	 *
-	 * @param object $event The Event Organiser Event.
+	 * @param WP_Post $event The Event Organiser Event.
 	 */
 	public function meta_box_event_links_render( $event ) {
 
@@ -1323,7 +1323,7 @@ class CEO_WordPress_EO {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer $post_id The ID of the WordPress Post.
+	 * @param int $post_id The ID of the WordPress Post.
 	 * @return bool True if "Sync Event to CiviCRM" process should happen, or false if not allowed.
 	 */
 	public function sync_progress_allowed( $post_id ) {
@@ -1794,7 +1794,7 @@ class CEO_WordPress_EO {
 	 * @since 0.7.6
 	 *
 	 * @param int $post_id The numeric ID of the WP Post.
-	 * @return int|str $dedupe_rule_id The Dedupe Rule ID, or empty string if not set.
+	 * @return int|string $dedupe_rule_id The Dedupe Rule ID, or empty string if not set.
 	 */
 	public function get_event_registration_dedupe_rule( $post_id ) {
 
@@ -1832,8 +1832,8 @@ class CEO_WordPress_EO {
 	 *
 	 * @since 0.6.4
 	 *
-	 * @param int $event_id The numeric ID of the Event.
-	 * @param str $value Whether the Registration Confirmation screen is enabled or not.
+	 * @param int    $event_id The numeric ID of the Event.
+	 * @param string $value Whether the Registration Confirmation screen is enabled or not.
 	 */
 	public function update_event_registration_confirm( $event_id, $value = '0' ) {
 
@@ -1923,8 +1923,8 @@ class CEO_WordPress_EO {
 	 *
 	 * @since 0.7.2
 	 *
-	 * @param int $event_id The numeric ID of the Event.
-	 * @param str $value Whether the Confirmation Email is enabled or not.
+	 * @param int    $event_id The numeric ID of the Event.
+	 * @param string $value Whether the Confirmation Email is enabled or not.
 	 */
 	public function update_event_registration_send_email( $event_id, $value = '0' ) {
 
@@ -2014,8 +2014,8 @@ class CEO_WordPress_EO {
 	 *
 	 * @since 0.7.2
 	 *
-	 * @param int $event_id The numeric ID of the Event.
-	 * @param str $value The Confirmation Email "From Name" value.
+	 * @param int    $event_id The numeric ID of the Event.
+	 * @param string $value The Confirmation Email "From Name" value.
 	 */
 	public function update_event_registration_send_email_from_name( $event_id, $value = '' ) {
 
@@ -2105,8 +2105,8 @@ class CEO_WordPress_EO {
 	 *
 	 * @since 0.7.2
 	 *
-	 * @param int $event_id The numeric ID of the Event.
-	 * @param str $value The Confirmation Email "From Email" value.
+	 * @param int    $event_id The numeric ID of the Event.
+	 * @param string $value The Confirmation Email "From Email" value.
 	 */
 	public function update_event_registration_send_email_from( $event_id, $value = '' ) {
 
@@ -2196,8 +2196,8 @@ class CEO_WordPress_EO {
 	 *
 	 * @since 0.7.4
 	 *
-	 * @param int $event_id The numeric ID of the Event.
-	 * @param str $value The Confirmation Email "CC" value.
+	 * @param int    $event_id The numeric ID of the Event.
+	 * @param string $value The Confirmation Email "CC" value.
 	 */
 	public function update_event_registration_send_email_cc( $event_id, $value = '' ) {
 
@@ -2306,8 +2306,8 @@ class CEO_WordPress_EO {
 	 *
 	 * @since 0.7.4
 	 *
-	 * @param int $event_id The numeric ID of the Event.
-	 * @param str $value The Confirmation Email "BCC" value.
+	 * @param int    $event_id The numeric ID of the Event.
+	 * @param string $value The Confirmation Email "BCC" value.
 	 */
 	public function update_event_registration_send_email_bcc( $event_id, $value = '' ) {
 

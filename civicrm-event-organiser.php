@@ -464,8 +464,8 @@ class CiviCRM_Event_Organiser {
 	 *
 	 * @since 0.1
 	 *
-	 * @param array $links The existing links array.
-	 * @param str   $file The name of the plugin file.
+	 * @param array  $links The existing links array.
+	 * @param string $file The name of the plugin file.
 	 * @return array $links The modified links array.
 	 */
 	public function plugin_action_links( $links, $file ) {

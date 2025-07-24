@@ -42,7 +42,7 @@ class CEO_CiviCRM_Registration {
 	 *
 	 * @since 0.7
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_CiviCRM $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -73,7 +73,7 @@ class CEO_CiviCRM_Registration {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param object $post An Event Organiser Event object.
+	 * @param WP_Post $post An Event Organiser Event object.
 	 * @return mixed $existing_id The numeric ID of the role, false if none exists.
 	 */
 	public function get_participant_role( $post = null ) {
@@ -113,7 +113,7 @@ class CEO_CiviCRM_Registration {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param object $post An Event Organiser Event object.
+	 * @param WP_Post $post An Event Organiser Event object.
 	 * @return array|bool $participant_roles Array of CiviCRM role data, or false if none exist.
 	 */
 	public function get_participant_roles( $post = null ) {
@@ -192,8 +192,8 @@ class CEO_CiviCRM_Registration {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param object $post The WP Event object.
-	 * @return str $default Checkbox checked or not.
+	 * @param WP_Post $post The Event Organiser Event object.
+	 * @return string $default Checkbox checked or not.
 	 */
 	public function get_registration( $post ) {
 
@@ -238,7 +238,7 @@ class CEO_CiviCRM_Registration {
 	 *
 	 * @param array $civi_event An array of data for the CiviCRM Event.
 	 * @param bool  $other Passing true returns the link to register someone else for the CiviCRM Event.
-	 * @return str $link The URL of the CiviCRM Registration page.
+	 * @return string $link The URL of the CiviCRM Registration page.
 	 */
 	public function get_registration_link( $civi_event, $other = false ) {
 
@@ -337,7 +337,7 @@ class CEO_CiviCRM_Registration {
 		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/registration/start_date'} filter instead.
 		 *
 		 * @param DateTime|bool $reg_start The starting DateTime object for Registration.
-		 * @param array $civi_event The array of data that represents a CiviCRM Event.
+		 * @param array         $civi_event The array of data that represents a CiviCRM Event.
 		 */
 		$reg_start = apply_filters_deprecated( 'civicrm_event_organiser_registration_start_date', [ $reg_start, $civi_event ], '0.8.0', 'ceo/civicrm/registration/start_date' );
 
@@ -347,7 +347,7 @@ class CEO_CiviCRM_Registration {
 		 * @since 0.8.0
 		 *
 		 * @param DateTime|bool $reg_start The starting DateTime object for Registration.
-		 * @param array $civi_event The array of data that represents a CiviCRM Event.
+		 * @param array         $civi_event The array of data that represents a CiviCRM Event.
 		 */
 		$reg_start = apply_filters( 'ceo/civicrm/registration/start_date', $reg_start, $civi_event );
 
@@ -366,8 +366,8 @@ class CEO_CiviCRM_Registration {
 		 * @since 0.7 Moved to this class.
 		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/registration/end_date'} filter instead.
 		 *
-		 * @param obj $reg_end The ending DateTime object for Registration.
-		 * @param array $civi_event The array of data that represents a CiviCRM Event.
+		 * @param DateTime|bool $reg_end The ending DateTime object for Registration.
+		 * @param array         $civi_event The array of data that represents a CiviCRM Event.
 		 */
 		$reg_end = apply_filters_deprecated( 'civicrm_event_organiser_registration_end_date', [ $reg_end, $civi_event ], '0.8.0', 'ceo/civicrm/registration/end_date' );
 
@@ -376,8 +376,8 @@ class CEO_CiviCRM_Registration {
 		 *
 		 * @since 0.8.0
 		 *
-		 * @param obj $reg_end The ending DateTime object for Registration.
-		 * @param array $civi_event The array of data that represents a CiviCRM Event.
+		 * @param DateTime|bool $reg_end The ending DateTime object for Registration.
+		 * @param array         $civi_event The array of data that represents a CiviCRM Event.
 		 */
 		$reg_end = apply_filters( 'ceo/civicrm/registration/end_date', $reg_end, $civi_event );
 
@@ -459,8 +459,8 @@ class CEO_CiviCRM_Registration {
 	 * @since 0.2.4
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param array  $civi_event An array of data representing a CiviCRM Event.
-	 * @param object $post The WP Post object.
+	 * @param array   $civi_event An array of data representing a CiviCRM Event.
+	 * @param WP_Post $post The WordPress Post object.
 	 */
 	public function enable_registration( $civi_event, $post = null ) {
 
@@ -741,7 +741,7 @@ class CEO_CiviCRM_Registration {
 	 *
 	 * @since 0.7.6
 	 *
-	 * @param object $post An Event Organiser Event object.
+	 * @param WP_Post $post An Event Organiser Event object.
 	 * @return int|bool $dedupe_rule_id The default Registration Dedupe Rule ID, or false on failure.
 	 */
 	public function get_registration_dedupe_rule( $post = null ) {

@@ -22,7 +22,7 @@
 		 *
 		 * @since 0.7
 		 *
-		 * @param array $urls The array of subpage URLs.
+		 * @param array  $urls The array of subpage URLs.
 		 * @param string The key of the active tab in the subpage URLs array.
 		 */
 		do_action( 'ceo/admin/settings/nav_tabs', $urls, 'manual-sync' );

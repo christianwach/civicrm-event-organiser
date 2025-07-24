@@ -42,7 +42,7 @@ class CEO_WordPress_Shortcodes {
 	 *
 	 * @since 0.6.3
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_WordPress $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -74,9 +74,9 @@ class CEO_WordPress_Shortcodes {
 	 *
 	 * @since 0.6.3
 	 *
-	 * @param array $attr The saved Shortcode attributes.
-	 * @param str   $content The enclosed content of the Shortcode.
-	 * @return str $markup The HTML markup for the Shortcode.
+	 * @param array  $attr The saved Shortcode attributes.
+	 * @param string $content The enclosed content of the Shortcode.
+	 * @return string $markup The HTML markup for the Shortcode.
 	 */
 	public function register_link_render( $attr, $content = null ) {
 

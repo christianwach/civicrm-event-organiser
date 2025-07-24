@@ -105,7 +105,7 @@ class CEO_Admin_Settings {
 	 *
 	 * @since 0.7
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_Admin $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -228,7 +228,7 @@ class CEO_Admin_Settings {
 	 * @since 0.2.4
 	 *
 	 * @global string $plugin_page The current plugin page.
-	 * @global array $submenu_file The referenced submenu file.
+	 * @global array  $submenu_file The referenced submenu file.
 	 */
 	public function admin_menu_highlight() {
 
@@ -465,7 +465,7 @@ class CEO_Admin_Settings {
 		 *
 		 * @since 0.7
 		 *
-		 * @param array $submit_url The Settings Page submit URL.
+		 * @param string $submit_url The Settings Page submit URL.
 		 */
 		$submit_url = apply_filters( 'ceo/admin/page/settings/submit_url', $submit_url );
 

@@ -60,7 +60,7 @@ class CEO_CiviCRM_Event {
 	 *
 	 * @since 0.7
 	 * @access private
-	 * @var integer
+	 * @var int
 	 */
 	private $civicrm_event_created_id;
 
@@ -69,7 +69,7 @@ class CEO_CiviCRM_Event {
 	 *
 	 * @since 0.7
 	 * @access private
-	 * @var integer
+	 * @var int
 	 */
 	private $eo_event_created_id;
 
@@ -78,7 +78,7 @@ class CEO_CiviCRM_Event {
 	 *
 	 * @since 0.7
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_CiviCRM $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -575,7 +575,7 @@ class CEO_CiviCRM_Event {
 		 * @since 0.7 Moved to this class.
 		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/event/media/view/cap'} filter instead.
 		 *
-		 * @param str The default capability needed to view all media.
+		 * @param string The default capability needed to view all media.
 		 */
 		$capability = apply_filters_deprecated( 'civicrm_event_organiser_filter_media', [ 'edit_posts' ], '0.8.0', 'ceo/civicrm/event/media/view/cap' );
 
@@ -584,7 +584,7 @@ class CEO_CiviCRM_Event {
 		 *
 		 * @since 0.8.0
 		 *
-		 * @param str The default capability needed to view all media.
+		 * @param string $capability The default capability needed to view all media.
 		 */
 		$capability = apply_filters( 'ceo/civicrm/event/media/view/cap', $capability );
 
@@ -780,10 +780,10 @@ class CEO_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param string  $op The type of database operation.
-	 * @param string  $object_name The type of object.
-	 * @param integer $object_id The ID of the object.
-	 * @param object  $object_ref The object.
+	 * @param string $op The type of database operation.
+	 * @param string $object_name The type of object.
+	 * @param int    $object_id The ID of the object.
+	 * @param object $object_ref The object.
 	 */
 	public function event_created( $op, $object_name, $object_id, $object_ref ) {
 
@@ -860,10 +860,10 @@ class CEO_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param string  $op The type of database operation.
-	 * @param string  $object_name The type of object.
-	 * @param integer $object_id The ID of the object.
-	 * @param object  $object_ref The object.
+	 * @param string $op The type of database operation.
+	 * @param string $object_name The type of object.
+	 * @param int    $object_id The ID of the object.
+	 * @param object $object_ref The object.
 	 */
 	public function event_updated( $op, $object_name, $object_id, $object_ref ) {
 
@@ -916,8 +916,8 @@ class CEO_CiviCRM_Event {
 		 *
 		 * @see CEO_Compat_CWPS_Price_Set_Quick::event_unlink_from_field()
 		 *
-		 * @param integer $object_id The ID of the CiviCRM Event.
-		 * @param object  $object_ref The CiviCRM Event object.
+		 * @param int    $object_id The ID of the CiviCRM Event.
+		 * @param object $object_ref The CiviCRM Event object.
 		 */
 		do_action( 'ceo/civicrm/event/event_updated/sequence/pre', $object_id, $object_ref );
 
@@ -961,10 +961,10 @@ class CEO_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param string  $op The type of database operation.
-	 * @param string  $object_name The type of object.
-	 * @param integer $object_id The ID of the object.
-	 * @param object  $object_ref The object.
+	 * @param string $op The type of database operation.
+	 * @param string $object_name The type of object.
+	 * @param int    $object_id The ID of the object.
+	 * @param object $object_ref The object.
 	 */
 	public function event_deleted( $op, $object_name, $object_id, $object_ref ) {
 
@@ -1003,8 +1003,8 @@ class CEO_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param object $post The WordPress Post object.
-	 * @return array $civi_event The basic CiviCRM Event data.
+	 * @param WP_Post $post The WordPress Post object.
+	 * @return array  $civi_event The basic CiviCRM Event data.
 	 */
 	public function prepare_civi_event( $post ) {
 
@@ -1151,8 +1151,8 @@ class CEO_CiviCRM_Event {
 		 * @since 0.7 Moved to this class.
 		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/event/prepared'} filter instead.
 		 *
-		 * @param array $civi_event The array of data for the CiviCRM Event.
-		 * @param object $post The WP Post object.
+		 * @param array   $civi_event The array of data for the CiviCRM Event.
+		 * @param WP_Post $post The WP Post object.
 		 */
 		$civi_event = apply_filters_deprecated( 'civicrm_event_organiser_prepared_civi_event', [ $civi_event, $post ], '0.8.0', 'ceo/civicrm/event/prepared' );
 
@@ -1161,8 +1161,8 @@ class CEO_CiviCRM_Event {
 		 *
 		 * @since 0.8.0
 		 *
-		 * @param array $civi_event The array of data for the CiviCRM Event.
-		 * @param object $post The WP Post object.
+		 * @param array   $civi_event The array of data for the CiviCRM Event.
+		 * @param WP_Post $post The WordPress Post object.
 		 */
 		return apply_filters( 'ceo/civicrm/event/prepared', $civi_event, $post );
 
@@ -1174,8 +1174,8 @@ class CEO_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param object $post The WP Post object.
-	 * @param array  $dates Array of properly formatted dates.
+	 * @param WP_Post $post The WP Post object.
+	 * @param array   $dates Array of properly formatted dates.
 	 * @return array|bool $correspondences Array of correspondences keyed by Occurrence ID, or false on failure.
 	 */
 	public function create_civi_events( $post, $dates ) {
@@ -1245,8 +1245,8 @@ class CEO_CiviCRM_Event {
 	 * @since 0.1
 	 * @since 0.7 Moved to this class.
 	 *
-	 * @param object $post The WP Post object.
-	 * @param array  $dates Array of properly formatted dates.
+	 * @param WP_Post $post The WP Post object.
+	 * @param array   $dates Array of properly formatted dates.
 	 * @return array|bool $correspondences Array of correspondences keyed by Occurrence ID, or false on failure.
 	 */
 	public function update_civi_events( $post, $dates ) {
@@ -1792,7 +1792,7 @@ class CEO_CiviCRM_Event {
 		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/event/disable/skip'} filter instead.
 		 *
 		 * @param bool False by default, pass true to skip.
-		 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
+		 * @param int  $civi_event_id The numeric ID of the CiviCRM Event.
 		 */
 		$skip = apply_filters_deprecated( 'ceo_skip_disable_civi_event', [ false, $civi_event_id ], '0.8.0', 'ceo/civicrm/event/disable/skip' );
 
@@ -1802,7 +1802,7 @@ class CEO_CiviCRM_Event {
 		 * @since 0.8.0
 		 *
 		 * @param bool $skip False by default, return true to skip.
-		 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
+		 * @param int  $civi_event_id The numeric ID of the CiviCRM Event.
 		 */
 		$skip = apply_filters( 'ceo/civicrm/event/disable/skip', $skip, $civi_event_id );
 		if ( true === $skip ) {

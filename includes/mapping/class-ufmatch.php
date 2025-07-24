@@ -33,7 +33,7 @@ class CEO_UFMatch {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param object $parent The parent object.
+	 * @param CiviCRM_Event_Organiser $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -68,9 +68,9 @@ class CEO_UFMatch {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer        $user_id The numeric ID of the WordPress User.
-	 * @param integer|string $domain_id The Domain ID (defaults to current Domain ID) or a string to search all Domains.
-	 * @return integer|bool $contact_id The CiviCRM contact ID, or false on failure.
+	 * @param int        $user_id The numeric ID of the WordPress User.
+	 * @param int|string $domain_id The Domain ID (defaults to current Domain ID) or a string to search all Domains.
+	 * @return int|bool $contact_id The CiviCRM Contact ID, or false on failure.
 	 */
 	public function contact_id_get_by_user_id( $user_id, $domain_id = '' ) {
 
@@ -133,8 +133,8 @@ class CEO_UFMatch {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer        $contact_id The numeric ID of the CiviCRM Contact.
-	 * @param integer|string $domain_id The Domain ID (defaults to current Domain ID) or a string to search all Domains.
+	 * @param int        $contact_id The numeric ID of the CiviCRM Contact.
+	 * @param int|string $domain_id The Domain ID (defaults to current Domain ID) or a string to search all Domains.
 	 * @return int|bool $user_id The numeric WordPress User ID, or false on failure.
 	 */
 	public function user_id_get_by_contact_id( $contact_id, $domain_id = '' ) {
@@ -195,8 +195,8 @@ class CEO_UFMatch {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer        $contact_id The numeric ID of the CiviCRM Contact.
-	 * @param integer|string $domain_id The CiviCRM Domain ID (defaults to current Domain ID).
+	 * @param int        $contact_id The numeric ID of the CiviCRM Contact.
+	 * @param int|string $domain_id The CiviCRM Domain ID (defaults to current Domain ID).
 	 * @return array|object|bool $entry The UFMatch data on success, or false on failure.
 	 */
 	public function entry_get_by_contact_id( $contact_id, $domain_id = '' ) {
@@ -294,8 +294,8 @@ class CEO_UFMatch {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer        $user_id The numeric ID of the WordPress User.
-	 * @param integer|string $domain_id The CiviCRM Domain ID (defaults to current Domain ID).
+	 * @param int        $user_id The numeric ID of the WordPress User.
+	 * @param int|string $domain_id The CiviCRM Domain ID (defaults to current Domain ID).
 	 * @return array|object|bool $entry The UFMatch data on success, or false on failure.
 	 */
 	public function entry_get_by_user_id( $user_id, $domain_id = '' ) {
@@ -388,8 +388,8 @@ class CEO_UFMatch {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param string         $email The WordPress User's email address.
-	 * @param integer|string $domain_id The CiviCRM Domain ID (defaults to current Domain ID).
+	 * @param string     $email The WordPress User's email address.
+	 * @param int|string $domain_id The CiviCRM Domain ID (defaults to current Domain ID).
 	 * @return array|object|bool $entry The UFMatch data on success, or false on failure.
 	 */
 	public function entry_get_by_user_email( $email, $domain_id = '' ) {

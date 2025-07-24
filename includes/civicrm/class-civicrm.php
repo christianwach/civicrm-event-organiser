@@ -60,7 +60,7 @@ class CEO_CiviCRM {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $parent The parent object.
+	 * @param CiviCRM_Event_Organiser $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -220,7 +220,7 @@ class CEO_CiviCRM {
 	 * @since 0.1
 	 * @since 0.6.3 Renamed.
 	 *
-	 * @param object $config The CiviCRM config object.
+	 * @param CRM_Core_Config $config The CiviCRM config object.
 	 */
 	public function register_form_directory( &$config ) {
 
@@ -245,7 +245,7 @@ class CEO_CiviCRM {
 	 *
 	 * @since 0.3
 	 *
-	 * @param str $permission The permission string.
+	 * @param string $permission The permission string.
 	 * @return bool $permitted True if allowed, false otherwise.
 	 */
 	public function check_permission( $permission ) {
@@ -267,8 +267,8 @@ class CEO_CiviCRM {
 		 * @since 0.3.4
 		 * @deprecated 0.8.0 Use the {@see 'ceo/civicrm/permitted'} filter instead.
 		 *
-		 * @param bool $permitted True if allowed, false otherwise.
-		 * @param str $permission The CiviCRM permission string.
+		 * @param bool   $permitted True if allowed, false otherwise.
+		 * @param string $permission The CiviCRM permission string.
 		 */
 		$permitted = apply_filters_deprecated( 'civicrm_event_organiser_permitted', [ $permitted, $permission ], '0.8.0', 'ceo/civicrm/permitted' );
 
@@ -277,8 +277,8 @@ class CEO_CiviCRM {
 		 *
 		 * @since 0.8.0
 		 *
-		 * @param bool $permitted True if allowed, false otherwise.
-		 * @param str $permission The CiviCRM permission string.
+		 * @param bool   $permitted True if allowed, false otherwise.
+		 * @param string $permission The CiviCRM permission string.
 		 */
 		return apply_filters( 'ceo/civicrm/permitted', $permitted, $permission );
 
@@ -448,8 +448,8 @@ class CEO_CiviCRM {
 	 *
 	 * @since 0.6.8
 	 *
-	 * @param integer $id The CiviCRM Contact ID or WordPress User ID.
-	 * @param string  $property Either 'contact_id' or 'uf_id'.
+	 * @param int    $id The CiviCRM Contact ID or WordPress User ID.
+	 * @param string $property Either 'contact_id' or 'uf_id'.
 	 * @return array $result The UFMatch data, or empty array on failure.
 	 */
 	public function get_ufmatch( $id, $property ) {

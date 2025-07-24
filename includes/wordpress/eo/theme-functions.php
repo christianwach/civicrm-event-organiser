@@ -199,9 +199,9 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 			 * @since 0.8.2
 			 *
 			 * @param string $text The text content.
-			 * @param int $post_id The numeric ID of the WP Post.
-			 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
-			 * @param int $contact_id The numeric ID of the CiviCRM Contact.
+			 * @param int    $post_id The numeric ID of the WP Post.
+			 * @param int    $civi_event_id The numeric ID of the CiviCRM Event.
+			 * @param int    $contact_id The numeric ID of the CiviCRM Contact.
 			 */
 			$text = apply_filters( 'ceo/theme/registration/closed', $text, $post_id, $civi_event_id, $contact_id );
 
@@ -242,9 +242,9 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 			 * @since 0.8.2
 			 *
 			 * @param string $text The text content.
-			 * @param int $post_id The numeric ID of the WP Post.
-			 * @param int $civi_event_id The numeric ID of the CiviCRM Event.
-			 * @param int $contact_id The numeric ID of the CiviCRM Contact.
+			 * @param int    $post_id The numeric ID of the WP Post.
+			 * @param int    $civi_event_id The numeric ID of the CiviCRM Event.
+			 * @param int    $contact_id The numeric ID of the CiviCRM Contact.
 			 */
 			$text = apply_filters( 'ceo/theme/registration/text', $text, $post_id, $civi_event_id, $contact_id );
 
@@ -276,8 +276,8 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 		 * @deprecated 0.8.0 Use the {@see 'ceo/theme/registration/url'} filter instead.
 		 *
 		 * @param string $url The raw URL to the CiviCRM Registration page.
-		 * @param array $civi_event The array of data that represents a CiviCRM Event.
-		 * @param int $post_id The numeric ID of the WP Post.
+		 * @param array  $civi_event The array of data that represents a CiviCRM Event.
+		 * @param int    $post_id The numeric ID of the WP Post.
 		 */
 		$url = apply_filters_deprecated( 'civicrm_event_organiser_registration_url', [ $url, $civi_event, $post_id ], '0.8.0', 'ceo/theme/registration/url' );
 
@@ -343,7 +343,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 		 * @param string $link The HTML link to the CiviCRM Registration page.
 		 * @param string $url The raw URL to the CiviCRM Registration page.
 		 * @param string $text The text content of the link.
-		 * @param int $post_id The numeric ID of the WP Post.
+		 * @param int    $post_id The numeric ID of the WP Post.
 		 */
 		$link = apply_filters_deprecated( 'civicrm_event_organiser_registration_link', [ $link, $url, $text, $post_id ], '0.8.0', 'ceo/theme/registration/link' );
 

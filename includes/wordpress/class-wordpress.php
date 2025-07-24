@@ -78,7 +78,7 @@ class CEO_WordPress {
 	 *
 	 * @since 0.8.0
 	 *
-	 * @param object $parent The parent object.
+	 * @param CiviCRM_Event_Organiser $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -177,7 +177,7 @@ class CEO_WordPress {
 	 *
 	 * @param string $text The string to match paragraphs tags in.
 	 * @param bool   $br (Optional) Whether to process line breaks.
-	 * @return string
+	 * @return str
 	 */
 	public function unautop( $text, $br = true ) {
 

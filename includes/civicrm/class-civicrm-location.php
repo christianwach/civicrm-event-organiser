@@ -42,7 +42,7 @@ class CEO_CiviCRM_Location {
 	 *
 	 * @since 0.7
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_CiviCRM $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -76,10 +76,10 @@ class CEO_CiviCRM_Location {
 	 *
 	 * @since 0.7.1
 	 *
-	 * @param string  $op The type of database operation.
-	 * @param string  $object_name The type of object.
-	 * @param integer $object_id The ID of the object.
-	 * @param object  $object_ref The object.
+	 * @param string $op The type of database operation.
+	 * @param string $object_name The type of object.
+	 * @param int    $object_id The ID of the object.
+	 * @param object $object_ref The object.
 	 */
 	public function locblock_edited( $op, $object_name, $object_id, $object_ref ) {
 
@@ -1284,7 +1284,7 @@ class CEO_CiviCRM_Location {
 	 *
 	 * @since 0.7.1
 	 *
-	 * @param integer $country_id The numeric ID of the Country.
+	 * @param int $country_id The numeric ID of the Country.
 	 * @return array $country The array of Country data.
 	 */
 	public function country_get_by_id( $country_id ) {
@@ -1424,7 +1424,7 @@ class CEO_CiviCRM_Location {
 	 *
 	 * @since 0.7.1
 	 *
-	 * @param integer $state_province_id The numeric ID of the State/Province.
+	 * @param int $state_province_id The numeric ID of the State/Province.
 	 * @return array $state_province The array of State/Province data.
 	 */
 	public function state_province_get_by_id( $state_province_id ) {
@@ -1470,8 +1470,8 @@ class CEO_CiviCRM_Location {
 	 *
 	 * @since 0.7.1
 	 *
-	 * @param string  $abbreviation The short name of the State/Province.
-	 * @param integer $country_id The numeric ID of the Country.
+	 * @param string $abbreviation The short name of the State/Province.
+	 * @param int    $country_id The numeric ID of the Country.
 	 * @return array $state_province The array of State/Province data.
 	 */
 	public function state_province_get_by_short( $abbreviation, $country_id = 0 ) {
@@ -1522,8 +1522,8 @@ class CEO_CiviCRM_Location {
 	 *
 	 * @since 0.7.1
 	 *
-	 * @param string  $name The name of the State/Province.
-	 * @param integer $country_id The numeric ID of the Country.
+	 * @param string $name The name of the State/Province.
+	 * @param int    $country_id The numeric ID of the Country.
 	 * @return array $state_province The array of State/Province data.
 	 */
 	public function state_province_get_by_name( $name, $country_id = 0 ) {

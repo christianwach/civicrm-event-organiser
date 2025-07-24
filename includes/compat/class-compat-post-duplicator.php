@@ -42,7 +42,7 @@ class CEO_Compat_Post_Duplicator {
 	 *
 	 * @since 0.7.5
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_Compat $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 

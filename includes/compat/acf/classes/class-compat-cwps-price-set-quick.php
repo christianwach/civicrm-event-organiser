@@ -67,7 +67,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param object $parent The parent object reference.
+	 * @param CEO_Compat_CWPS $parent The parent object reference.
 	 */
 	public function __construct( $parent ) {
 
@@ -212,8 +212,8 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer $civicrm_event_id The ID of the CiviCRM Event.
-	 * @param object  $civicrm_event The CiviCRM Event object.
+	 * @param int    $civicrm_event_id The ID of the CiviCRM Event.
+	 * @param object $civicrm_event The CiviCRM Event object.
 	 */
 	public function event_unlink_from_field( $civicrm_event_id, $civicrm_event ) {
 
@@ -848,7 +848,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param integer $event_id The numeric ID of the CiviCRM Event.
+	 * @param int $event_id The numeric ID of the CiviCRM Event.
 	 * @return array $price_set The array of "Quick Config Price Set" Record data for the CiviCRM Event.
 	 */
 	public function price_set_quick_config_get( $event_id ) {
@@ -1241,8 +1241,8 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param array  $value The array of Price Field Value data in the ACF Field.
-	 * @param integer $event_id The ID of the CiviCRM Event.
+	 * @param array $value The array of Price Field Value data in the ACF Field.
+	 * @param int   $event_id The ID of the CiviCRM Event.
 	 * @return array $data The CiviCRM "Quick Config Price Set" Record data.
 	 */
 	public function prepare_from_field( $value, $event_id = null ) {
@@ -1277,8 +1277,8 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param array   $value The array of CiviCRM Price Field Value data.
-	 * @param integer $civicrm_event_id The ID of the CiviCRM Event.
+	 * @param array $value The array of CiviCRM Price Field Value data.
+	 * @param int   $civicrm_event_id The ID of the CiviCRM Event.
 	 * @return array $data The ACF "Quick Config Price Set" data.
 	 */
 	public function prepare_from_civicrm( $value, $civicrm_event_id ) {
@@ -1313,9 +1313,9 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param array   $acf_fields The existing ACF Fields array.
-	 * @param array   $field The ACF Field.
-	 * @param integer $post_id The numeric ID of the WordPress Post.
+	 * @param array $acf_fields The existing ACF Fields array.
+	 * @param array $field The ACF Field.
+	 * @param int   $post_id The numeric ID of the WordPress Post.
 	 * @return array $acf_fields The modified ACF Fields array.
 	 */
 	public function acf_fields_get_for_post( $acf_fields, $field, $post_id ) {
@@ -1337,7 +1337,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param array   $field The array of ACF Field data.
+	 * @param array $field The array of ACF Field data.
 	 * @return array $price_field_value_ids The array of Price Field_Value IDs.
 	 */
 	public function price_field_value_ids_get_from_field( $field ) {
@@ -1368,8 +1368,8 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param array   $field The array of ACF Field data.
-	 * @param integer $event_id The ID of the CiviCRM Event.
+	 * @param array $field The array of ACF Field data.
+	 * @param int   $event_id The ID of the CiviCRM Event.
 	 * @return array $price_field_value_ids The array of Price Field_Value IDs.
 	 */
 	public function price_field_value_ids_get_from_field_for_event( $field, $event_id ) {

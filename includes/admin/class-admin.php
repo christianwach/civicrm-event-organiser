@@ -69,12 +69,12 @@ class CEO_Admin {
 	 *
 	 * @since 0.1
 	 *
-	 * @param object $parent The parent object.
+	 * @param CiviCRM_Event_Organiser $plugin The plugin object.
 	 */
-	public function __construct( $parent ) {
+	public function __construct( $plugin ) {
 
 		// Store reference.
-		$this->plugin = $parent;
+		$this->plugin = $plugin;
 
 		// Initialise.
 		add_action( 'ceo/loaded', [ $this, 'initialise' ] );

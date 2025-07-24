@@ -78,7 +78,7 @@ class CEO_Compat {
 	 *
 	 * @since 0.8.0
 	 *
-	 * @param object $parent The parent object.
+	 * @param CiviCRM_Event_Organiser $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 

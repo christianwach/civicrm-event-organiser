@@ -49,7 +49,7 @@ class CEO_WordPress_Term_Description {
 	 *
 	 * @since 0.2.1
 	 *
-	 * @param object $parent The parent object.
+	 * @param CEO_WordPress $parent The parent object.
 	 */
 	public function __construct( $parent ) {
 
@@ -96,8 +96,8 @@ class CEO_WordPress_Term_Description {
 	 *
 	 * @since 0.2.1
 	 *
-	 * @param object $tag The WordPress tag object.
-	 * @param str    $taxonomy The WordPress Taxonomy.
+	 * @param WP_Term $tag The WordPress tag object.
+	 * @param string  $taxonomy The WordPress Taxonomy.
 	 */
 	public function render_field_edit( $tag, $taxonomy ) {
 
@@ -127,7 +127,7 @@ class CEO_WordPress_Term_Description {
 	 *
 	 * @since 0.2.1
 	 *
-	 * @param str $taxonomy The WordPress Taxonomy.
+	 * @param string $taxonomy The WordPress Taxonomy.
 	 */
 	public function render_field_add( $taxonomy ) {
 
