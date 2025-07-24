@@ -51,7 +51,7 @@ class CEO_Compat_CWPS_Financial {
 		$this->cwps   = $parent;
 
 		// Init when the CiviCRM object is loaded.
-		add_action( 'ceo/civicrm/loaded', [ $this, 'initialise' ] );
+		add_action( 'ceo/compat/cwps/loaded', [ $this, 'initialise' ] );
 
 	}
 
@@ -1425,16 +1425,15 @@ class CEO_Compat_CWPS_Financial {
 	}
 
 	/**
-	 * Calculate the percentage for a given amount.
+	 * Calculates the percentage for a given amount.
 	 *
 	 * @since 0.8.2
 	 *
-	 * @param string $amount The amount.
-	 * @param string $percentage The percentage.
-	 * @return string $amount The calculated percentage amount.
+	 * @param int|float|string $amount The numeric amount.
+	 * @param int|float|string $percentage The numeric percentage.
+	 * @return int|float $amount The calculated percentage amount.
 	 */
 	public function percentage( $amount, $percentage ) {
-		// TODO: Check return format.
 		return ( $percentage / 100 ) * $amount;
 	}
 
