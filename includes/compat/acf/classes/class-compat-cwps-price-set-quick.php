@@ -5,7 +5,6 @@
  * Handles CiviCRM "Quick Config Price Set" functionality.
  *
  * @package CiviCRM_WP_Profile_Sync
- * @since 0.8.2
  */
 
 // Exit if accessed directly.
