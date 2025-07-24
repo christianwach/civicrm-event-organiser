@@ -159,21 +159,10 @@ class CEO_ACF_Custom_CiviCRM_Price_Set_Quick_Field extends acf_field {
 	 */
 	public function render_field_settings( $field ) {
 
-		// Define setting Field.
-		$setting = [
-			'label'         => __( 'CiviCRM Price Field Value ID', 'civicrm-event-organiser' ),
-			'name'          => 'show_pfv_id',
-			'type'          => 'true_false',
-			'instructions'  => __( 'Show the Price Field Value ID for debugging.', 'civicrm-event-organiser' ),
-			'ui'            => 1,
-			'ui_on_text'    => __( 'Show', 'civicrm-event-organiser' ),
-			'ui_off_text'   => __( 'Hide', 'civicrm-event-organiser' ),
-			'default_value' => 0,
-			'required'      => 0,
-		];
-
-		// Now add it.
-		acf_render_field_setting( $field, $setting );
+		// Only render Debug Setting Field here in ACF prior to version 6.
+		if ( ! version_compare( ACF_MAJOR_VERSION, '6', '>=' ) ) {
+			acf_render_field_setting( $field, $this->setting_field_debug_get() );
+		}
 
 		// Define Currency setting Field.
 		$financial_type_field = [
@@ -321,6 +310,20 @@ class CEO_ACF_Custom_CiviCRM_Price_Set_Quick_Field extends acf_field {
 
 		// Now add it.
 		acf_render_field_setting( $field, $pay_later_billing_field );
+
+	}
+
+	/**
+	 * Renders the Field settings used in the "Presentation" tab.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param array $field The field settings array.
+	 */
+	public function render_field_presentation_settings( $field ) {
+
+		// Add the Debug Settings Field.
+		acf_render_field_setting( $field, $this->setting_field_debug_get() );
 
 	}
 
@@ -742,6 +745,33 @@ class CEO_ACF_Custom_CiviCRM_Price_Set_Quick_Field extends acf_field {
 
 		// --<
 		return $sub_fields;
+
+	}
+
+	/**
+	 * Get the Debug Settings Field definition.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @return array $field The Field array holding all the Field options.
+	 */
+	public function setting_field_debug_get() {
+
+		// Define setting Field.
+		$field = [
+			'label'         => __( 'CiviCRM Price Field Value ID', 'civicrm-event-organiser' ),
+			'name'          => 'show_pfv_id',
+			'type'          => 'true_false',
+			'instructions'  => __( 'Show the Price Field Value ID for debugging.', 'civicrm-event-organiser' ),
+			'ui'            => 1,
+			'ui_on_text'    => __( 'Show', 'civicrm-event-organiser' ),
+			'ui_off_text'   => __( 'Hide', 'civicrm-event-organiser' ),
+			'default_value' => 0,
+			'required'      => 0,
+		];
+
+		// --<
+		return $field;
 
 	}
 
