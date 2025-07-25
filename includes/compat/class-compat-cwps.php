@@ -40,7 +40,7 @@ class CEO_Compat_CWPS {
 	/**
 	 * CiviCRM Financial object.
 	 *
-	 * @since 0.7.2
+	 * @since 0.8.2
 	 * @access public
 	 * @var CEO_Compat_CWPS_Financial
 	 */
@@ -49,7 +49,7 @@ class CEO_Compat_CWPS {
 	/**
 	 * Quick Config Price Set object.
 	 *
-	 * @since 0.7.2
+	 * @since 0.8.2
 	 * @access public
 	 * @var CEO_Compat_CWPS_Price_Set
 	 */
