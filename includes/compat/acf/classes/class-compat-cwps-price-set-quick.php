@@ -114,6 +114,9 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 		// Maybe add "Cannot sync to WordPress" information into the Event Fees form.
 		add_action( 'civicrm_alterContent', [ $this, 'event_notice_add_to_civicrm' ], 10, 4 );
 
+		// Listen for a CiviCRM Event being synced to an Event Organiser Event via Manual Sync.
+		add_action( 'ceo/admin/manual_sync/civi_to_eo/sync/after', [ $this, 'event_manual_sync_to_eo' ] );
+
 		// Listen for when a CiviCRM Event has been updated after ACF Fields were saved.
 		add_action( 'ceo/acf/event/acf_fields_saved', [ $this, 'fields_handled_update' ], 10 );
 
@@ -146,12 +149,6 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 
 		// Cast Event ID as integer.
 		$civicrm_event_id = (int) $civicrm_event['id'];
-
-		// Bail if this CiviCRM Event is part of a sequence.
-		if ( $this->plugin->mapping->is_civi_event_in_eo_sequence( $civicrm_event_id ) ) {
-			$this->event_unlink_from_field( $event_id, $civicrm_event_id );
-			return;
-		}
 
 		// Get the current "Quick Config Price Set" Record.
 		$current_price_set = $this->price_set_quick_config_get( $civicrm_event_id );
@@ -332,6 +329,79 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 
 		// Lastly, do the replacement.
 		$content = str_replace( '<table id="map-field-table">', $information, $content );
+
+	}
+
+	/**
+	 * Intercept when a CiviCRM Event has been synced to an Event Organiser Event.
+	 *
+	 * This method is only called when sync is done via the "Manual Sync" page.
+	 * Update any associated ACF Fields with their Quick Config Price Set values.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param array $args The array of CiviCRM Event and Event Organiser Event params.
+	 */
+	public function event_manual_sync_to_eo( $args ) {
+
+		// Cast CiviCRM Event ID as integer.
+		$civicrm_event_id = (int) $args['civi_event_id'];
+
+		// Bail if this CiviCRM Event is part of a sequence.
+		if ( $this->plugin->mapping->is_civi_event_in_eo_sequence( $civicrm_event_id ) ) {
+			return;
+		}
+
+		// Get the current "Quick Config Price Set" Record.
+		$current_price_set = $this->price_set_quick_config_get( $civicrm_event_id );
+
+		// Bail if there is no "Quick Config Price Set" Record.
+		if ( empty( $current_price_set ) ) {
+			return;
+		}
+
+		// Grab Event ID.
+		$event_id = (int) $args['event_id'];
+
+		// Get all ACF Fields for the Event.
+		$acf_fields = $this->compat->cwps->acf->acf->field->fields_get_for_post( $event_id );
+
+		// Bail if there are no "Quick Config Price Set" Record Fields.
+		if ( empty( $acf_fields['price_set_quick'] ) ) {
+			return;
+		}
+
+		// Let's look at each ACF Field in turn.
+		foreach ( $acf_fields['price_set_quick'] as $selector => $field ) {
+
+			// Init Field value.
+			$value = [];
+
+			// Grab the current Price Field ID and Price Field Values.
+			$price_field_id = false;
+			$current_pfvs   = [];
+			foreach ( $current_price_set['price_fields'] as $price_field_id => $price_field ) {
+				// This Price Field should only have one set of Price Field Values.
+				$price_field_id = (int) $price_field['id'];
+				$current_pfvs   = $price_field['price_field_values'];
+				break;
+			}
+
+			// Let's look at each "Quick Config Price Set" in turn.
+			foreach ( $current_pfvs as $current_pfv ) {
+
+				// Convert to ACF "Quick Config Price Set" data.
+				$acf_price_field_value = $this->prepare_from_civicrm( $current_pfv, $civicrm_event_id );
+
+				// Add to Field value.
+				$value[] = $acf_price_field_value;
+
+			}
+
+			// Now update Field.
+			$this->compat->cwps->acf->acf->field->value_update( $selector, $value, $event_id );
+
+		}
 
 	}
 
