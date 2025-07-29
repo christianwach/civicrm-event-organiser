@@ -46,7 +46,7 @@
 	<p class="description"><?php esc_html_e( 'Please note: Manual Sync is intended for use on initial setup and may produce inconsistent results once you have linked Events. Always back up before using this feature.', 'civicrm-event-organiser' ); ?></p>
 
 	<?php /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped */ ?>
-	<form method="post" id="ceo_acf_sync_form" action="<?php echo $this->settings->page_settings_submit_url_get(); ?>">
+	<form method="post" id="ceo_acf_sync_form" action="<?php echo $this->page_submit_url_get(); ?>">
 
 		<?php wp_nonce_field( $this->form_nonce_action, $this->form_nonce_field ); ?>
 		<?php wp_nonce_field( 'meta-box-order', 'meta-box-order-nonce', false ); ?>

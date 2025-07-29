@@ -520,6 +520,32 @@ class CEO_Admin_Manual_Sync {
 
 	}
 
+	/**
+	 * Get the URL for the Manual Sync Page form action attribute.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @return string $submit_url The URL for the Manual Sync Page form action.
+	 */
+	public function page_submit_url_get() {
+
+		// Get Settings Page submit URL.
+		$submit_url = menu_page_url( $this->sync_page_slug, false );
+
+		/**
+		 * Filter the Manual Sync Page submit URL.
+		 *
+		 * @since 0.8.2
+		 *
+		 * @param string $submit_url The Manual Sync Page submit URL.
+		 */
+		$submit_url = apply_filters( 'ceo/admin/page/manual_sync/submit_url', $submit_url );
+
+		// --<
+		return $submit_url;
+
+	}
+
 	// -----------------------------------------------------------------------------------
 
 	/**
