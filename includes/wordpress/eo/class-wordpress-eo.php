@@ -467,15 +467,19 @@ class CEO_WordPress_EO {
 		}
 
 		// Assign Description if present.
-		$description = $this->plugin->civi->denullify( $civi_event['description'] );
-		if ( ! empty( $description ) ) {
-			$post_data['post_content'] = $this->wordpress->unautop( $description );
+		if ( isset( $civi_event['description'] ) ) {
+			$description = $this->plugin->civi->denullify( $civi_event['description'] );
+			if ( ! empty( $description ) ) {
+				$post_data['post_content'] = $this->wordpress->unautop( $description );
+			}
 		}
 
 		// Assign Summary if present.
-		$summary = $this->plugin->civi->denullify( $civi_event['summary'] );
-		if ( ! empty( $summary ) ) {
-			$post_data['post_excerpt'] = $summary;
+		if ( isset( $civi_event['summary'] ) ) {
+			$summary = $this->plugin->civi->denullify( $civi_event['summary'] );
+			if ( ! empty( $summary ) ) {
+				$post_data['post_excerpt'] = $summary;
+			}
 		}
 
 		// Test for created date, which may be absent.
