@@ -1013,23 +1013,21 @@ class CEO_WordPress_EO {
 	public function meta_box_event_links_render( $event ) {
 
 		// Get linked CiviCRM Events.
-		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
+		$civi_event_ids = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
 
 		// Init links.
 		$links = [];
 
 		// Show them if there are some.
-		if ( ! empty( $civi_events ) ) {
-			foreach ( $civi_events as $civi_event_id ) {
+		if ( ! empty( $civi_event_ids ) ) {
+
+			// Let's do a single query for all the CiviCRM Events.
+			$civi_events = $this->plugin->civi->event->get_events_by_ids( $civi_event_ids );
+
+			foreach ( $civi_events as $civi_event ) {
 
 				// Get link.
-				$link = $this->plugin->civi->event->get_settings_link( $civi_event_id );
-
-				// Get CiviCRM Event.
-				$civi_event = $this->plugin->civi->event->get_event_by_id( $civi_event_id );
-				if ( false === $civi_event ) {
-					continue;
-				}
+				$link = $this->plugin->civi->event->get_settings_link( $civi_event['id'] );
 
 				// Get DateTime object.
 				$start = new DateTime( $civi_event['start_date'], eo_get_blog_timezone() );
