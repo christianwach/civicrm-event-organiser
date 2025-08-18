@@ -1839,6 +1839,56 @@ class CEO_CiviCRM_Event {
 	}
 
 	/**
+	 * Gets a set of CiviCRM Events by their IDs.
+	 *
+	 * @since 0.8.2
+	 *
+	 * @param int[] $event_ids The array of CiviCRM Event IDs.
+	 * @return array $events The array of CiviCRM Event data, or empty if not found.
+	 */
+	public function get_events_by_ids( $event_ids ) {
+
+		// Init return.
+		$events = [];
+
+		// Bail if no CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $events;
+		}
+
+		try {
+
+			// Call the CiviCRM API.
+			$result = \Civi\Api4\Event::get( false )
+				->addSelect( '*' )
+				->addWhere( 'id', 'IN', $event_ids )
+				->addOrderBy( 'start_date', 'ASC' )
+				->execute();
+
+		} catch ( CRM_Core_Exception $e ) {
+			$log = [
+				'method'    => __METHOD__,
+				'error'     => $e->getMessage(),
+				'backtrace' => $e->getTraceAsString(),
+			];
+			$this->plugin->log_error( $log );
+			return $events;
+		}
+
+		// Bail if there are none.
+		if ( $result->count() === 0 ) {
+			return $events;
+		}
+
+		// We only need the ArrayObject.
+		$events = $result->getArrayCopy();
+
+		// --<
+		return $events;
+
+	}
+
+	/**
 	 * Gets a CiviCRM Event by ID.
 	 *
 	 * @since 0.1
