@@ -402,8 +402,8 @@ class CEO_ACF_Custom_CiviCRM_Price_Set_Quick_Field extends acf_field {
 		echo '
 		<style type="text/css">
 			/* Hide Repeater column */
-			.pfv_id_hidden th[data-key="field_pfv_id"],
-			.pfv_id_hidden td.civicrm_pfv_id
+			.pfv_id_hidden th[data-key="field_ceo_civicrm_pfv_id"],
+			.pfv_id_hidden td.civicrm_event_pfv_id
 			{
 				display: none;
 			}
