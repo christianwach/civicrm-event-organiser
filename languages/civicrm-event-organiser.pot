@@ -2,16 +2,16 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.8.1a\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.8.2a\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-01-09T14:29:17+00:00\n"
+"POT-Creation-Date: 2025-08-22T12:39:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.11.0\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: civicrm-event-organiser\n"
 
 #. Plugin Name of the plugin
@@ -49,35 +49,55 @@ msgstr ""
 msgid "Default CiviCRM Event Type"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:66
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:70
 msgid "Default CiviCRM Participant Role for Events"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:71
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:79
 msgid "This will be the Participant Role that is set for Event Registrations when there is a Registration Profile that does not contain a Participant Role selector."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:78
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:86
 msgid "Syncing CiviCRM Events to Event Organiser"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:83
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:95
 msgid "By default, all Events in CiviCRM will sync to Event Organiser. If you do not want all CiviCRM Events to sync, then you can enable a checkbox on each CiviCRM Event that must be cheecked in order to sync data to Event Organiser."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:85
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:97
 msgid "Please select a default for syncing CiviCRM Events to Event Organiser."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:93
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:105
+msgid "Syncing Event Organiser Events to CiviCRM"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:114
+msgid "The default is that there should always be a \"Sync this Event with CiviCRM\" checkbox. This allows you to create Events in Event Organiser that are not linked to Events in CiviCRM. When the Event in Event Organiser has a linked Event in CiviCRM, then the checkbox will no longer appear and sync will happen every time the Event is saved."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:115
+msgid "If you select the \"Sync all Event Organiser Events to CiviCRM\" option, then an Event Organiser Event will be synced every time it is saved. The only exception to this is when the Event is in \"Draft\" status, e.g. when a new Event is created. To sync an Event Organiser Event to CiviCRM without publishing it, you can set its status to \"Pending Review\"."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:116
+msgid "However, if you create a repeating Event in Event Organiser, then the checkbox will always be present regardless of this setting. This because significant changes to repeating schedules for Event Organiser Events that are already have corresponding CiviCRM Events can result in unexpected outcomes. It is strongly recommended that you finalize your schedule before syncing the repeating Event to CiviCRM."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:118
+msgid "Please select a default for syncing Event Organiser Events to CiviCRM."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:126
 msgid "Map CiviCRM Event Status and EO Event Status"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:98
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:135
 msgid "Choose how the CiviCRM Event \"Is Public\" and \"Is Active\" settings sync with the Event Organiser \"Status\" and \"Visibility\" settings."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:100
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-general.php:137
 msgid "Please select a default for Event Status sync."
 msgstr ""
 
@@ -86,90 +106,107 @@ msgid "The following options configure some CiviCRM Online Registration defaults
 msgstr ""
 
 #: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:55
-msgid "Default CiviCRM Event Registration Profile"
+msgid "Limit CiviCRM Profiles for Event Registration"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:60
-msgid "Event Registration Pages require a Profile in order to display correctly."
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:59
+msgid "Untitled"
 msgstr ""
 
 #: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:62
+msgid "Select the CiviCRM Profiles that you want to appear in the dropdown for Event Registration."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:69
+msgid "Default CiviCRM Event Registration Profile"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:78
+msgid "Event Registration Pages require a Profile in order to display correctly."
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:80
 msgid "Please select a default Profile for Event Registration Pages."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:70
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:88
 msgid "Default CiviCRM Event Registration Dedupe Rule"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:75
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:91
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:88
+msgid "CiviCRM Default"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:98
 msgid "By default, CiviCRM will use the \"Unsupervised\" Dedupe Rule to match Participants in anonymous registrations with existing Contacts."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:81
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:104
 msgid "Default CiviCRM Event Registration Confirmation Screen Setting"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:84
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:107
 msgid "Use a Registration Confirmation Screen for free Events."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:86
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:109
 msgid "Please choose the default setting for Registration Confirmation Screens."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:117
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:140
 msgid "Default CiviCRM Event Confirmation Email Setting"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:120
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:143
 msgid "Send a Confirmation Email."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:121
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:144
 msgid "The Confirmation Email includes event date(s), location and contact information. For Paid Events, the Confirmation Email is also a receipt for payment."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:123
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:146
 msgid "Please choose the default setting for sending a Confirmation Email."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:129
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:152
 msgid "Default CiviCRM Event Confirmation Email \"From Name\""
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:132
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:155
 msgid "The name to send the Confirmation Email from."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:134
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:157
 msgid "Please add a default \"From Name\" for the Confirmation Email."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:140
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:163
 msgid "Default CiviCRM Event Confirmation Email \"From Email\""
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:143
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:166
 msgid "The Email Address to send the Confirmation Email from."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:145
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:168
 msgid "Please add a default Email Address for sending a Confirmation Email from."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:151
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:174
 msgid "Default CiviCRM Event Confirmation Email \"CC Recipients\""
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:154
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:177
 msgid "Carbon Copied recipients of each Confirmation Email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:159
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:182
 msgid "Default CiviCRM Event Confirmation Email \"BCC Recipients\""
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:162
+#: assets/templates/wordpress/metaboxes/metabox-admin-settings-registration.php:185
 msgid "Blind Carbon Copied recipients of each Confirmation Email. Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
 msgstr ""
 
@@ -208,126 +245,118 @@ msgstr ""
 msgid "Stop Sync"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:28
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:27
 msgid "Registration Page Redirect"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:38
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:32
+#: includes/compat/class-compat-cfcr.php:178
+msgid "None selected"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:40
 msgid "Choose New"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:38
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:40
 msgid "Delete"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:42
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:44
 msgid "Is active?"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:50
+#: assets/templates/wordpress/metaboxes/metabox-event-cfcr.php:51
 msgid "Redirect from an Event Registration Form to a Post or Page containing a Caldera Form."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:56
-msgid "Sync this Event with CiviCRM:"
-msgstr ""
-
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:61
-msgid "Choose whether or not to sync this Event to CiviCRM. It is recommended that you finish configuring your Event before you sync it to CiviCRM."
-msgstr ""
-
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:66
-msgid "Delete unused CiviCRM Events:"
-msgstr ""
-
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:71
-msgid "If the sequence has changed, choose whether or not to delete the unused corresponding CiviCRM Events. If you do not delete them, they will be set to \"disabled\"."
-msgstr ""
-
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:81
-msgid "CiviCRM Event Options"
+#: assets/templates/wordpress/metaboxes/metabox-event-links.php:33
+msgid "This Event does not have any corresponding Events in CiviCRM."
 msgstr ""
 
 #. translators: 1: The opening strong tag, 2: The closing strong tag.
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:87
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:35
+#, php-format
 msgid "%1$sNOTE%2$s: Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page."
 msgstr ""
 
 #. translators: 1: The opening emphasis tag, 2: The closing emphasis tag.
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:96
-msgid "These options will be set for %1$sall corresponding CiviCRM Events%2$s when you sync this Event to CiviCRM."
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:44
+#, php-format
+msgid "Because this is a repeating Event, these options will be set for %1$sall corresponding CiviCRM Events%2$s when you sync this Event to CiviCRM."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:108
-msgid "Enable Online Registration:"
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:57
+msgid "Online Registration"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:117
-msgid "Online Registration Profile:"
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:60
+msgid "Check this to enable Online Registration."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:124
-msgid "The profile assigned to the Online Registration form."
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:71
+msgid "Profile"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:130
-msgid "Online Registration Dedupe Rule:"
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:80
+msgid "Select the Registration Profile assigned to the Online Registration form."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:137
-msgid "The Dedupe Rule assigned to the Online Registration form."
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:85
+msgid "Dedupe Rule"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:143
-msgid "Participant Role:"
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:95
+msgid "Select the CiviCRM the Dedupe Rule assigned to the Online Registration form."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:150
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:100
+msgid "Participant Role"
+msgstr ""
+
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:109
 msgid "This role is automatically assigned to people when they register online for this Event and where the Registration Profile does not allow a role to be selected."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:156
-msgid "Use a Confirmation Screen:"
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:114
+msgid "Confirmation Screen"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:161
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:117
 msgid "If this is a free Event, use a Registration Confirmation Screen."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:167
-msgid "Send Confirmation Email:"
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:122
+msgid "Send Confirmation Email"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:172
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:125
 msgid "Email includes date(s), location and contact information. If this is a paid Event, the Email is also the receipt."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:177
-msgid "From Name:"
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:130
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:137
+msgid "From Name"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:181
-msgid "From Email:"
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:144
+msgid "CC Confirmation To"
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:185
-msgid "CC Confirmation To:"
-msgstr ""
-
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:187
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:192
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:147
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:155
 msgid "Multiple email addresses should be separated by a comma (e.g. jane@example.org, paula@example.org)."
 msgstr ""
 
-#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:190
-msgid "BCC Confirmation To:"
+#: assets/templates/wordpress/metaboxes/metabox-event-sync.php:152
+msgid "BCC Confirmation To"
 msgstr ""
 
 #: assets/templates/wordpress/pages/page-admin-manual-sync.php:17
 #: assets/templates/wordpress/pages/page-admin-settings.php:18
-#: civicrm-event-organiser.php:461
+#: civicrm-event-organiser.php:478
 #: includes/admin/class-admin-settings.php:203
-#: includes/admin/class-admin-settings.php:500
+#: includes/admin/class-admin-settings.php:511
 msgid "Settings"
 msgstr ""
 
@@ -356,7 +385,19 @@ msgstr ""
 msgid "Please note: Manual Sync is intended for use on initial setup and may produce inconsistent results once you have linked Events. Always back up before using this feature."
 msgstr ""
 
-#: civicrm-event-organiser.php:465
+#: assets/templates/wordpress/partials/partial-admin-event-recurring.php:22
+msgid "If you change the sequence, make sure that you choose whether or not to delete the unused corresponding CiviCRM Events when you save this Event. If you choose not to delete them (for example because they have additional data associated with them) then they will be set to \"disabled\" instead."
+msgstr ""
+
+#: assets/templates/wordpress/partials/partial-admin-event-sync.php:42
+msgid "Sync Event to CiviCRM"
+msgstr ""
+
+#: assets/templates/wordpress/partials/partial-admin-event-sync.php:47
+msgid "Delete unused CiviCRM Events"
+msgstr ""
+
+#: civicrm-event-organiser.php:482
 msgid "Donate!"
 msgstr ""
 
@@ -436,35 +477,35 @@ msgstr ""
 msgid "All done!"
 msgstr ""
 
-#: includes/admin/class-admin-manual-sync.php:561
+#: includes/admin/class-admin-manual-sync.php:587
 msgid "Event Organiser Categories &rarr; CiviCRM Event Types"
 msgstr ""
 
-#: includes/admin/class-admin-manual-sync.php:574
+#: includes/admin/class-admin-manual-sync.php:600
 msgid "CiviCRM Event Types &rarr; Event Organiser Categories"
 msgstr ""
 
-#: includes/admin/class-admin-manual-sync.php:587
+#: includes/admin/class-admin-manual-sync.php:613
 msgid "Event Organiser Venues &rarr; CiviCRM Event Locations"
 msgstr ""
 
-#: includes/admin/class-admin-manual-sync.php:600
+#: includes/admin/class-admin-manual-sync.php:626
 msgid "CiviCRM Event Locations &rarr; Event Organiser Venues"
 msgstr ""
 
-#: includes/admin/class-admin-manual-sync.php:613
+#: includes/admin/class-admin-manual-sync.php:639
 msgid "Event Organiser Events &rarr; CiviCRM Events"
 msgstr ""
 
-#: includes/admin/class-admin-manual-sync.php:626
+#: includes/admin/class-admin-manual-sync.php:652
 msgid "CiviCRM Events &rarr; Event Organiser Events"
 msgstr ""
 
-#: includes/admin/class-admin-manual-sync.php:916
+#: includes/admin/class-admin-manual-sync.php:942
 msgid "Could not sync Event Term"
 msgstr ""
 
-#: includes/admin/class-admin-manual-sync.php:1047
+#: includes/admin/class-admin-manual-sync.php:1073
 msgid "Could not sync Event Type"
 msgstr ""
 
@@ -481,48 +522,50 @@ msgstr ""
 msgid "Event Organiser"
 msgstr ""
 
-#: includes/admin/class-admin-settings.php:510
+#: includes/admin/class-admin-settings.php:521
 msgid "General Event Settings"
 msgstr ""
 
-#: includes/admin/class-admin-settings.php:520
+#: includes/admin/class-admin-settings.php:531
 msgid "Online Registration Settings"
 msgstr ""
 
 #. translators: 1: The opening anchor tag, 2: The closing anchor tag.
-#: includes/admin/class-admin.php:276
+#: includes/admin/class-admin.php:282
+#, php-format
 msgid "CiviCRM Event Organiser needs your attention. Please visit the %1$sSettings Page%2$s."
 msgstr ""
 
-#: includes/admin/class-admin.php:300
+#: includes/admin/class-admin.php:306
 msgid "CiviCRM Event Organiser requires Event Organiser version 3 or higher."
 msgstr ""
 
-#: includes/civicrm/class-civicrm-event.php:200
-#: includes/civicrm/class-civicrm-event.php:296
-#: includes/civicrm/class-civicrm-event.php:424
-#: includes/civicrm/class-civicrm-event.php:459
-msgid "Choose Feature Image"
-msgstr ""
-
-#: includes/civicrm/class-civicrm-event.php:206
-#: includes/civicrm/class-civicrm-event.php:302
+#: includes/civicrm/class-civicrm-event.php:327
 msgid "If you would like to add a Feature Image to the Event, do so here."
 msgstr ""
 
-#: includes/civicrm/class-civicrm-event.php:430
+#: includes/civicrm/class-civicrm-event.php:405
 msgid "If you would like to add a Feature Image to the Event Organiser Event, choose one here."
 msgstr ""
 
+#: includes/civicrm/class-civicrm-event.php:410
+msgid "If you would like to change the Feature Image for the Event Organiser Event, choose one here."
+msgstr ""
+
+#: includes/civicrm/class-civicrm-event.php:431
 #: includes/civicrm/class-civicrm-event.php:460
+msgid "Choose Feature Image"
+msgstr ""
+
+#: includes/civicrm/class-civicrm-event.php:461
 msgid "Set Feature Image"
 msgstr ""
 
-#: includes/civicrm/class-civicrm-event.php:774
+#: includes/civicrm/class-civicrm-event.php:767
 msgid "Sync this Event to WordPress now"
 msgstr ""
 
-#: includes/civicrm/class-civicrm-event.php:1105
+#: includes/civicrm/class-civicrm-event.php:1111
 msgid "You must have some CiviCRM Event Types defined"
 msgstr ""
 
@@ -554,32 +597,22 @@ msgstr ""
 msgid "Could not update CiviCRM Address."
 msgstr ""
 
-#: includes/civicrm/class-civicrm-registration.php:851
-msgid "CiviCRM Default"
+#: includes/compat/acf/classes/class-compat-cwps-financial.php:355
+msgid "Select a Price Field"
 msgstr ""
 
-#: includes/class-mapping.php:696
-msgid "Sync all CiviEvents to WordPress"
+#. translators: 1: Price Set title, 2: Price Field label
+#: includes/compat/acf/classes/class-compat-cwps-financial.php:362
+#, php-format
+msgid "%1$s (%2$s)"
 msgstr ""
 
-#: includes/class-mapping.php:697
-msgid "Show checkbox on each CiviEvent"
+#: includes/compat/acf/classes/class-compat-cwps-price-set-quick.php:325
+msgid "Please Note: This Event is part of a series in WordPress which has a \"Quick Config Price Set\" ACF Field attached to it. You can edit the Regular Fees below but they will not be synced to the ACF Field. Subsequent updates to the ACF Field on the Event in WordPress will not be synced here either."
 msgstr ""
 
-#: includes/class-mapping.php:742
-msgid "Sync in both directions"
-msgstr ""
-
-#: includes/class-mapping.php:743
-msgid "One-way sync: EO &rarr; CiviCRM"
-msgstr ""
-
-#: includes/class-mapping.php:744
-msgid "One-way sync: CiviCRM &rarr; EO"
-msgstr ""
-
-#: includes/class-mapping.php:745
-msgid "Do not sync"
+#: includes/compat/acf/classes/class-compat-cwps-price-set-quick.php:1078
+msgid "Event Fee(s)"
 msgstr ""
 
 #: includes/compat/acf/fields/class-acf-field-civicrm-event-id.php:134
@@ -587,37 +620,213 @@ msgid "CiviCRM Event: Event ID (Read Only)"
 msgstr ""
 
 #: includes/compat/acf/fields/class-acf-field-civicrm-event-id.php:138
-msgid "CiviCRM Post Type Sync only"
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:138
+msgid "CiviCRM Event Organiser Sync only"
 msgstr ""
 
 #: includes/compat/acf/fields/class-acf-field-civicrm-event-id.php:140
-msgid "CiviCRM Post Type Sync"
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:140
+msgid "CiviCRM Event Organiser Sync"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:134
+msgid "CiviCRM Event: Quick Config Price Set"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:169
+msgid "CiviCRM Currency"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:172
+msgid "Choose the Currency for this Price Set."
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:189
+msgid "CiviCRM Financial Type"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:192
+msgid "Choose the Financial Type for this Price Set."
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:209
+msgid "CiviCRM Payment Processor"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:212
+msgid "Choose the CiviCRM Payment Processor for transactions."
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:229
+msgid "CiviCRM Pay Later"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:232
+msgid "Do you want to enable offline payments, e.g. mail in a check, call in a credit card?"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:243
+msgid "CiviCRM Pay Later Label"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:249
+msgid "I will send payment by check"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:267
+msgid "CiviCRM Pay Later Instructions"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:293
+msgid "CiviCRM Pay Later Billing Address required"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:296
+msgid "Enable this to require those who select the Pay Later option to provide a Billing Name and Address."
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:499
+msgid "Please make sure all rows have a Fee Label "
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:516
+msgid "Please make sure all rows have an Amount"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:623
+msgid "Add Fee Level"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:647
+msgid "Fee Label"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:670
+msgid "Amount"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:693
+msgid "Is Default"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:706
+msgid "Default"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:721
+msgid "CiviCRM ID"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:762
+msgid "CiviCRM Price Field Value ID"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:765
+msgid "Show the Price Field Value ID for debugging."
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:767
+msgid "Show"
+msgstr ""
+
+#: includes/compat/acf/fields/class-acf-field-civicrm-price-set-quick.php:768
+msgid "Hide"
 msgstr ""
 
 #: includes/compat/class-compat-cai.php:280
-#: includes/compat/class-compat-cwps.php:371
+#: includes/compat/class-compat-cwps.php:581
 msgid "A numeric ID must be present to update an Event."
 msgstr ""
 
-#: includes/compat/class-compat-cfcr.php:151
-#: includes/compat/class-compat-cfcr.php:177
-msgid "None selected"
-msgstr ""
-
-#: includes/compat/class-compat-cfcr.php:175
+#: includes/compat/class-compat-cfcr.php:176
 msgid "Choose Redirect Location"
 msgstr ""
 
-#: includes/compat/class-compat-cfcr.php:176
+#: includes/compat/class-compat-cfcr.php:177
 msgid "Set Redirect Location"
 msgstr ""
 
-#: includes/compat/class-compat-cwps.php:607
+#: includes/compat/class-compat-cwps.php:714
+msgid "Event Fields"
+msgstr ""
+
+#: includes/compat/class-compat-cwps.php:738
+msgid "Event Registration Fields"
+msgstr ""
+
+#: includes/compat/class-compat-cwps.php:746
+msgid "Event Registration Screen Fields"
+msgstr ""
+
+#: includes/compat/class-compat-cwps.php:754
+msgid "Event Registration Confirmation Screen Fields"
+msgstr ""
+
+#: includes/compat/class-compat-cwps.php:762
+msgid "Event Registration Thank You Screen Fields"
+msgstr ""
+
+#: includes/compat/class-compat-cwps.php:770
+msgid "Event Registration Confirmation Email Fields"
+msgstr ""
+
+#: includes/compat/class-compat-cwps.php:1002
 msgid "Event"
 msgstr ""
 
-#: includes/wordpress/class-wordpress-shortcodes.php:144
-#: includes/wordpress/eo/theme-functions.php:50
+#: includes/mapping/class-mapping.php:702
+msgid "Sync all CiviEvents to WordPress"
+msgstr ""
+
+#: includes/mapping/class-mapping.php:703
+msgid "Show checkbox on each CiviEvent"
+msgstr ""
+
+#: includes/mapping/class-mapping.php:722
+msgid "Sync all Event Organiser Events to CiviCRM"
+msgstr ""
+
+#: includes/mapping/class-mapping.php:723
+msgid "Show checkbox on each Event Organiser Event"
+msgstr ""
+
+#: includes/mapping/class-mapping.php:742
+msgid "Sync in both directions"
+msgstr ""
+
+#: includes/mapping/class-mapping.php:743
+msgid "One-way sync: EO &rarr; CiviCRM"
+msgstr ""
+
+#: includes/mapping/class-mapping.php:744
+msgid "One-way sync: CiviCRM &rarr; EO"
+msgstr ""
+
+#: includes/mapping/class-mapping.php:745
+msgid "Do not sync"
+msgstr ""
+
+#: includes/mapping/class-menus.php:159
+msgid "CiviCRM"
+msgstr ""
+
+#: includes/mapping/class-menus.php:247
+#: includes/mapping/class-menus.php:256
+#: includes/mapping/class-menus.php:265
+#: includes/mapping/class-menus.php:355
+msgid "Configure in CiviCRM"
+msgstr ""
+
+#: includes/mapping/class-menus.php:413
+msgid "View Event in WordPress"
+msgstr ""
+
+#: includes/mapping/class-menus.php:420
+msgid "Edit Event in WordPress"
+msgstr ""
+
+#: includes/wordpress/class-wordpress-shortcodes.php:168
+#: includes/wordpress/eo/theme-functions.php:59
 msgid "Registration Links"
 msgstr ""
 
@@ -645,7 +854,6 @@ msgid "Venue not created."
 msgstr ""
 
 #: includes/wordpress/eo/class-wordpress-eo-venue.php:746
-#: includes/wordpress/eo/class-wordpress-eo.php:940
 msgid "CiviCRM Settings"
 msgstr ""
 
@@ -657,40 +865,56 @@ msgstr ""
 msgid "Phone contact:"
 msgstr ""
 
-#: includes/wordpress/eo/class-wordpress-eo.php:516
+#: includes/wordpress/eo/class-wordpress-eo.php:463
 msgid "Untitled CiviCRM Event"
 msgstr ""
 
-#: includes/wordpress/eo/class-wordpress-eo.php:950
-msgid "Edit Events in CiviCRM"
+#: includes/wordpress/eo/class-wordpress-eo.php:867
+msgid "CiviCRM Event Settings"
 msgstr ""
 
-#. translators: %s: The formatted link to the Event.
-#: includes/wordpress/eo/class-wordpress-eo.php:1102
-msgid "Info and Settings for: %s"
-msgstr ""
-
-#: includes/wordpress/eo/class-wordpress-eo.php:1164
-msgid "View Event in WordPress"
-msgstr ""
-
-#: includes/wordpress/eo/class-wordpress-eo.php:1171
-msgid "Edit Event in WordPress"
-msgstr ""
-
-#: includes/wordpress/eo/class-wordpress-eo.php:1272
+#: includes/wordpress/eo/class-wordpress-eo.php:877
 msgid "Edit in CiviCRM"
 msgstr ""
 
-#: includes/wordpress/eo/class-wordpress-eo.php:1329
-msgid "CiviCRM"
+#. translators: 1: The formatted Event Occurrence, 2: The date, 3: The time.
+#: includes/wordpress/eo/theme-functions.php:162
+#, php-format
+msgid "Online registration for %1$s will open on %2$s at %3$s."
 msgstr ""
 
 #. translators: %s: The formatted Event Occurrence.
-#: includes/wordpress/eo/theme-functions.php:173
+#: includes/wordpress/eo/theme-functions.php:171
+#, php-format
+msgid "Online registration has closed for %s."
+msgstr ""
+
+#. translators: 1: The date, 2: The time.
+#: includes/wordpress/eo/theme-functions.php:185
+#, php-format
+msgid "Online registration will open on %1$s at %2$s."
+msgstr ""
+
+#: includes/wordpress/eo/theme-functions.php:191
+msgid "Online registration has closed."
+msgstr ""
+
+#. translators: %s: The formatted Event Occurrence.
+#: includes/wordpress/eo/theme-functions.php:231
+#, php-format
+msgid "You are already registered for %s."
+msgstr ""
+
+#: includes/wordpress/eo/theme-functions.php:236
+msgid "You are already registered for this event."
+msgstr ""
+
+#. translators: %s: The formatted Event Occurrence.
+#: includes/wordpress/eo/theme-functions.php:306
+#, php-format
 msgid "Register for %s"
 msgstr ""
 
-#: includes/wordpress/eo/theme-functions.php:178
+#: includes/wordpress/eo/theme-functions.php:313
 msgid "Register"
 msgstr ""
