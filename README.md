@@ -82,8 +82,20 @@ Now that you've installed the plugin, you'll want to find out:
 * How to [configure the CiviCRM Event Organiser settings](/docs/settings.md).
 * How to [add synced Events to your website](/docs/events.md).
 
+### Shortcode
+
+CiviCRM Event Organiser provides a `[ceo_register_link]` Shortcode through which you can render the Register button in your page wherever you want.
+
+The attributes that the Shortcode accepts are:
+
+* `event_id` which defaults to the currently displayed Event.
+* `wrap` which defaults to no wrapper element - but can be "div" or "button".
+* `wrap_class` which defaults to no classes on the wrapper element.
+* `anchor_class` which defaults to no classes on the anchor element.
+* `title` which defaults to "Register" for single Events.
+
 ### Known Issues
 
-There is currently no proper integration with *CiviCRM's* implementation of repeating events in version 4.7.n because, at present, *CiviCRM* does not save (or expose) the schedule that generates the sequence. To get around this limitation, this plugin prioritises a workflow based on creating events in *Event Organiser* and then (optionally, via the "CiviCRM Settings" metabox on the event's edit page) passing the data over to *CiviCRM* when requested.
+There is currently no proper integration with *CiviCRM's* implementation of repeating events because, at present, *CiviCRM* does not save (or expose) the schedule that generates the sequence. To get around this limitation, this plugin prioritises a workflow based on creating events in *Event Organiser* and then (optionally, via the "CiviCRM Settings" metabox on the event's edit page) passing the data over to *CiviCRM* when requested.
 
 The plugin implements automatic linking to an event's online registration page(s) via the [`eventorganiser_additional_event_meta`](https://github.com/boonebgorges/Event-Organiser/commit/1c94d707741b12d5a8731fc39507aa80af805c4a) hook which has been available since *Event Organiser* 2.12.5. If you have overridden the *Event Organiser* template(s) you may have to apply the function to the appropriate hook in your template(s) yourself. See the documentation for the function `civicrm_event_organiser_register_links()` for details. Thanks to [Consilience Media](https://github.com/consilience/) for providing the resources to push this forward.
