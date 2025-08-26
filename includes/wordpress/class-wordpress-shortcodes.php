@@ -150,7 +150,11 @@ class CEO_WordPress_Shortcodes {
 		if ( eo_recurs() ) {
 
 			// Extract links array.
-			$links = wp_list_pluck( $links_data, 'link' );
+			$links = [];
+			foreach ( $links_data as $link_data ) {
+				$sub_links = wp_list_pluck( $link_data, 'link' );
+				$links[]   = implode( ' ', $sub_links );
+			}
 
 			// Combine into list.
 			$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
