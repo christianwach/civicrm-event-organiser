@@ -1080,12 +1080,9 @@ class CEO_WordPress_EO {
 			return;
 		}
 
-		// Get linked CiviCRM Events.
-		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
-
 		// Set multiple status.
 		$multiple = false;
-		if ( count( $civi_events ) > 1 ) {
+		if ( eo_recurs( $event->ID ) ) {
 			$multiple = true;
 		}
 
