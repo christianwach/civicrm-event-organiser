@@ -41,7 +41,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="ceo-civicrm-logo" style="background-image:url('<?php echo esc_attr( $civicrm_logo ); ?>');"></div>
 	<label for="civi_eo_event_sync"><?php esc_html_e( 'Sync Event to CiviCRM', 'civicrm-event-organiser' ); ?></label>
 	<input type="checkbox" id="civi_eo_event_sync" name="civi_eo_event_sync" value="1" />
-	<?php if ( ! empty( $multiple ) ) : ?>
+	<?php if ( ! empty( $multiple_linked ) ) : ?>
 		<br>
 		<span class="ceo-delete-unused-toggle">
 			<label for="civi_eo_event_delete_unused" class="ceo-delete-unused"><?php echo esc_html_e( 'Delete unused CiviCRM Events', 'civicrm-event-organiser' ); ?></label>

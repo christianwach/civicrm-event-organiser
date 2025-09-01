@@ -996,7 +996,7 @@ class CEO_WordPress_EO {
 		// Localise.
 		wp_localize_script(
 			'civi_eo_event_metabox_js',
-			'CiviCRM_Event_Organiser_Metabox_Settings',
+			'CEO_Metabox_Settings',
 			$vars
 		);
 
@@ -1084,6 +1084,23 @@ class CEO_WordPress_EO {
 		$multiple = false;
 		if ( eo_recurs( $event->ID ) ) {
 			$multiple = true;
+		}
+
+		// Get linked CiviCRM Events.
+		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
+
+		$e = new \Exception();
+		$trace = $e->getTraceAsString();
+		error_log( print_r( [
+			'method' => __METHOD__,
+			'civi_events' => $civi_events,
+			//'backtrace' => $trace,
+		], true ) );
+
+		// Set "multiple linked" status.
+		$multiple_linked = false;
+		if ( count( $civi_events ) > 1 ) {
+			$multiple_linked = true;
 		}
 
 		// Do not show "Sync to CiviCRM" checkbox by default.

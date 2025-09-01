@@ -231,8 +231,6 @@ var CEO_Event_Metabox = CEO_Event_Metabox || {};
 
 				var current_on;
 
-				console.log( 'there', $('.ceo-delete-unused-toggle').length );
-
 				// Bail if there is no checkbox.
 				if ( ! $('.ceo-delete-unused-toggle').length ) {
 					return;
