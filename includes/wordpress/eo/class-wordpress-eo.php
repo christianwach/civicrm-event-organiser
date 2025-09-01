@@ -1089,14 +1089,6 @@ class CEO_WordPress_EO {
 		// Get linked CiviCRM Events.
 		$civi_events = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $event->ID );
 
-		$e = new \Exception();
-		$trace = $e->getTraceAsString();
-		error_log( print_r( [
-			'method' => __METHOD__,
-			'civi_events' => $civi_events,
-			//'backtrace' => $trace,
-		], true ) );
-
 		// Set "multiple linked" status.
 		$multiple_linked = false;
 		if ( count( $civi_events ) > 1 ) {
