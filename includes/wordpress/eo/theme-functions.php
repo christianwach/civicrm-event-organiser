@@ -146,6 +146,11 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 			// Get the Event's Registration status.
 			$status = $plugin->civi->registration->get_registration_status( $civi_event );
 
+			// Do not add item if Registration is not enabled.
+			if ( false === $status ) {
+				continue;
+			}
+
 			// Set different text for single and multiple Occurrences.
 			if ( $multiple ) {
 
