@@ -2,14 +2,14 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.8.2a\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.8.3a\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-08-22T12:39:57+00:00\n"
+"POT-Creation-Date: 2025-09-15T16:05:53+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: civicrm-event-organiser\n"
@@ -825,7 +825,7 @@ msgstr ""
 msgid "Edit Event in WordPress"
 msgstr ""
 
-#: includes/wordpress/class-wordpress-shortcodes.php:168
+#: includes/wordpress/class-wordpress-shortcodes.php:172
 #: includes/wordpress/eo/theme-functions.php:59
 msgid "Registration Links"
 msgstr ""
@@ -878,43 +878,43 @@ msgid "Edit in CiviCRM"
 msgstr ""
 
 #. translators: 1: The formatted Event Occurrence, 2: The date, 3: The time.
-#: includes/wordpress/eo/theme-functions.php:162
+#: includes/wordpress/eo/theme-functions.php:167
 #, php-format
 msgid "Online registration for %1$s will open on %2$s at %3$s."
 msgstr ""
 
 #. translators: %s: The formatted Event Occurrence.
-#: includes/wordpress/eo/theme-functions.php:171
+#: includes/wordpress/eo/theme-functions.php:176
 #, php-format
 msgid "Online registration has closed for %s."
 msgstr ""
 
 #. translators: 1: The date, 2: The time.
-#: includes/wordpress/eo/theme-functions.php:185
+#: includes/wordpress/eo/theme-functions.php:190
 #, php-format
 msgid "Online registration will open on %1$s at %2$s."
 msgstr ""
 
-#: includes/wordpress/eo/theme-functions.php:191
+#: includes/wordpress/eo/theme-functions.php:196
 msgid "Online registration has closed."
 msgstr ""
 
 #. translators: %s: The formatted Event Occurrence.
-#: includes/wordpress/eo/theme-functions.php:231
+#: includes/wordpress/eo/theme-functions.php:236
 #, php-format
 msgid "You are already registered for %s."
 msgstr ""
 
-#: includes/wordpress/eo/theme-functions.php:236
+#: includes/wordpress/eo/theme-functions.php:241
 msgid "You are already registered for this event."
 msgstr ""
 
 #. translators: %s: The formatted Event Occurrence.
-#: includes/wordpress/eo/theme-functions.php:306
+#: includes/wordpress/eo/theme-functions.php:311
 #, php-format
 msgid "Register for %s"
 msgstr ""
 
-#: includes/wordpress/eo/theme-functions.php:313
+#: includes/wordpress/eo/theme-functions.php:318
 msgid "Register"
 msgstr ""
