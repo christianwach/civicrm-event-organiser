@@ -238,6 +238,9 @@ class CEO_WordPress_Shortcodes {
 							if ( ! empty( $link['meta'] ) && 'registration_closed' === $link['meta'] ) {
 								$link['link'] = '<p class="ceo-registration-closed">' . $link['link'] . '</p>';
 							}
+							if ( ! empty( $link['meta'] ) && 'event_full' === $link['meta'] ) {
+								$link['link'] = '<p class="ceo-event-is-full">' . $link['link'] . '</p>';
+							}
 							if ( ! empty( $link['meta'] ) && 'is_registered' === $link['meta'] ) {
 								$link['link'] = '<p class="ceo-contact-is-registered">' . $link['link'] . '</p>';
 							}
@@ -263,6 +266,9 @@ class CEO_WordPress_Shortcodes {
 						} else {
 							if ( ! empty( $link['meta'] ) && 'registration_closed' === $link['meta'] ) {
 								$link['link'] = '<p class="ceo-registration-closed">' . $link['link'] . '</p>';
+							}
+							if ( ! empty( $link['meta'] ) && 'event_full' === $link['meta'] ) {
+								$link['link'] = '<p class="ceo-event-is-full">' . $link['link'] . '</p>';
 							}
 							if ( ! empty( $link['meta'] ) && 'is_registered' === $link['meta'] ) {
 								$link['link'] = '<p class="ceo-contact-is-registered">' . $link['link'] . '</p>';

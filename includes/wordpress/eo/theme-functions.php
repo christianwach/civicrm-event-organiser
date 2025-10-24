@@ -140,7 +140,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 		// Init closed flag.
 		$closed = false;
 
-		// Skip to next if Registration is not open.
+		// Assign the status of the Event if Registration is not open.
 		if ( $plugin->civi->registration->is_registration_closed( $civi_event ) ) {
 
 			// Get the Event's Registration status.
@@ -221,6 +221,43 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 
 		}
 
+		// Check if the Event is full.
+		if ( $plugin->civi->registration->is_full( $civi_event ) ) {
+
+			// Set different text for single and multiple Occurrences.
+			if ( $multiple ) {
+				$text = sprintf(
+					/* translators: %s: The formatted Event Occurrence. */
+					esc_html__( 'The event on %s is currently full.', 'civicrm-event-organiser' ),
+					eo_format_event_occurrence( $post_id, $occurrence_id )
+				);
+			} else {
+				$text = esc_html__( 'This event is currently full.', 'civicrm-event-organiser' );
+			}
+
+			/**
+			 * Filter the "event full" text.
+			 *
+			 * @since 0.8.2
+			 *
+			 * @param string $text The text content.
+			 * @param int    $post_id The numeric ID of the WP Post.
+			 * @param int    $civi_event_id The numeric ID of the CiviCRM Event.
+			 * @param int    $contact_id The numeric ID of the CiviCRM Contact.
+			 */
+			$text = apply_filters( 'ceo/theme/registration/full', $text, $post_id, $civi_event_id, $contact_id );
+
+			// Add to return array.
+			$links[ $civi_event_id ][] = [
+				'link' => $text,
+				'meta' => 'event_full',
+			];
+
+			// Update closed flag.
+			$closed = true;
+
+		}
+
 		// Skip to next if this Contact is already registered.
 		if ( ! empty( $contact_id ) && $plugin->civi->registration->is_registered( $civi_event_id, $contact_id ) ) {
 
@@ -263,7 +300,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 
 		}
 
-		// Allows both of the above messages to be rendered.
+		// Allows all the above messages to be rendered.
 		if ( true === $closed ) {
 			continue;
 		}

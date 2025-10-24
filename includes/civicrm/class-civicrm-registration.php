@@ -184,6 +184,168 @@ class CEO_CiviCRM_Registration {
 
 	}
 
+	/**
+	 * Gets the "counted" CiviCRM Participants for a given CiviCRM Event ID.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @param integer $event_id The numeric CiviCRM Event ID.
+	 * @param string  $select The fields to return from the query. Default is all fields.
+	 * @return array|bool $participants An array of Participant data, or false on failure.
+	 */
+	public function participants_get_counted_for_event( $event_id, $select = '*' ) {
+
+		// Init data.
+		$participants = false;
+
+		// Get the "counted" Status IDs.
+		$counted    = $this->participant_types_counted_get();
+		$status_ids = array_keys( $counted );
+		if ( empty( $status_ids ) ) {
+			return $participants;
+		}
+
+		// Bail if we fail to init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $is_registered;
+		}
+
+		try {
+
+			// Call the API.
+			$result = \Civi\Api4\Participant::get( false )
+				->addSelect( $select )
+				->addWhere( 'event_id', '=', $event_id )
+				->addWhere( 'status_id', 'IN', $status_ids )
+				->execute();
+
+		} catch ( CRM_Core_Exception $e ) {
+			$log = [
+				'method'    => __METHOD__,
+				'error'     => $e->getMessage(),
+				'backtrace' => $e->getTraceAsString(),
+			];
+			$this->plugin->log_error( $log );
+			return $participants;
+		}
+
+		// Bail if there are no results.
+		if ( 0 === $result->count() ) {
+			return [];
+		}
+
+		// We only need the array.
+		$participants = $result->getArrayCopy();
+
+		// --<
+		return $participants;
+
+	}
+
+	/**
+	 * Gets the data for the "counted" CiviCRM Participant Types.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @return array $participant_types An array of Participant Type data, or empty on failure.
+	 */
+	public function participant_types_counted_get() {
+
+		// Init return.
+		$participant_types = [];
+
+		// Bail if CiviCRM is not active.
+		if ( ! $this->civicrm->is_active() ) {
+			return $participant_types;
+		}
+
+		try {
+
+			// Call the API.
+			$result = \Civi\Api4\ParticipantStatusType::get( false )
+				->addWhere( 'is_counted', '=', true )
+				->execute();
+
+		} catch ( CRM_Core_Exception $e ) {
+			$log = [
+				'method'    => __METHOD__,
+				'error'     => $e->getMessage(),
+				'backtrace' => $e->getTraceAsString(),
+			];
+			$this->plugin->log_error( $log );
+			return $participant_types;
+		}
+
+		// Bail if there are no results.
+		if ( 0 === $result->count() ) {
+			return $participant_types;
+		}
+
+		// Parse the result set.
+		foreach ( $result as $item ) {
+			$participant_types[ (int) $item['id'] ] = $item;
+		}
+
+		// Sort for convenience.
+		ksort( $participant_types );
+
+		// --<
+		return $participant_types;
+
+	}
+
+	/**
+	 * Gets the data for the "not counted" CiviCRM Participant Types.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @return array $participant_types An array of Participant Type data, or empty on failure.
+	 */
+	public function participant_types_not_counted_get() {
+
+		// Init return.
+		$participant_types = [];
+
+		// Bail if CiviCRM is not active.
+		if ( ! $this->civicrm->is_active() ) {
+			return $participant_types;
+		}
+
+		try {
+
+			// Call the API.
+			$result = \Civi\Api4\ParticipantStatusType::get( false )
+				->addWhere( 'is_counted', '=', false )
+				->execute();
+
+		} catch ( CRM_Core_Exception $e ) {
+			$log = [
+				'method'    => __METHOD__,
+				'error'     => $e->getMessage(),
+				'backtrace' => $e->getTraceAsString(),
+			];
+			$this->plugin->log_error( $log );
+			return $participant_types;
+		}
+
+		// Bail if there are no results.
+		if ( 0 === $result->count() ) {
+			return $participant_types;
+		}
+
+		// Parse the result set.
+		foreach ( $result as $item ) {
+			$participant_types[ (int) $item['id'] ] = $item;
+		}
+
+		// Sort for convenience.
+		ksort( $participant_types );
+
+		// --<
+		return $participant_types;
+
+	}
+
 	// -----------------------------------------------------------------------------------
 
 	/**
@@ -1146,6 +1308,55 @@ class CEO_CiviCRM_Registration {
 
 		// --<
 		return $is_registered;
+
+	}
+
+	/**
+	 * Checks if a CiviCRM Event is full.
+	 *
+	 * @since 0.6.4
+	 *
+	 * @param array $civi_event The array of CiviCRM Event data.
+	 * @return bool $full True if the Event is full, false otherwise.
+	 */
+	public function is_full( $civi_event ) {
+
+		// Assume not full.
+		$full = false;
+
+		// If "max_participants" is not set, then there is no Participant limit.
+		if ( ! empty( $civi_event['max_participants'] ) ) {
+
+			// Get the Event's "counted" Participants.
+			$participants = $this->participants_get_counted_for_event( $civi_event['id'] );
+
+			// Skip on error.
+			if ( false !== $participants ) {
+
+				// It's full when the count is greater than the Field setting.
+				if ( count( $participants ) >= (int) $civi_event['max_participants'] ) {
+					$full = true;
+				}
+
+			}
+
+		}
+
+		/**
+		 * Allows the "is full" logic in this method to be overridden.
+		 *
+		 * Some plugins or extensions may determine what it means for an Event to be full
+		 * in custom ways.
+		 *
+		 * @since 0.6.4
+		 *
+		 * @param bool  $full True if the Event is full, false otherwise.
+		 * @param array $civi_event The array of CiviCRM Event data.
+		 */
+		$full = apply_filters( 'ceo/civicrm/registration/is_full', $full, $civi_event );
+
+		// --<
+		return $full;
 
 	}
 
