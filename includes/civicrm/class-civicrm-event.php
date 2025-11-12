@@ -682,6 +682,13 @@ class CEO_CiviCRM_Event {
 			return;
 		}
 
+		// The "Configure Event" screen should not load template in the page.
+		// phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+		$path = implode( '/', $form->urlPath );
+		if ( false !== strstr( $path, 'civicrm/event/manage' ) ) {
+			return;
+		}
+
 		// Add checkbox depending on CiviCRM Event sync setting.
 		$civicrm_event_sync = (int) $this->plugin->admin->option_get( 'civi_eo_event_default_civicrm_event_sync', 0 );
 		if ( 0 === $civicrm_event_sync ) {
