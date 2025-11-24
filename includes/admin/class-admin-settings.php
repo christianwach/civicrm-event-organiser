@@ -625,6 +625,12 @@ class CEO_Admin_Settings {
 			$confirm_required = true;
 		}
 
+		// Check for possibly missing default confirmation page title setting.
+		$confirm_title_required = false;
+		if ( ! $this->admin->option_exists( 'civi_eo_event_default_confirm_title' ) ) {
+			$confirm_title_required = true;
+		}
+
 		// Check for possibly missing default Confirmation Email setting.
 		$send_email_required = false;
 		if ( ! $this->admin->option_exists( 'civi_eo_event_default_send_email' ) ) {
@@ -649,12 +655,15 @@ class CEO_Admin_Settings {
 		// Get default Dedupe Rule ID.
 		$default_dedupe_rule = $this->plugin->civi->registration->get_registration_dedupe_rule();
 
-		// Get the current confirmation page setting.
+		// Get the current Confirmation Screen enabled setting.
 		$confirm_checked = 0;
 		$confirm_enabled = $this->plugin->civi->registration->get_registration_confirm_enabled();
 		if ( $confirm_enabled ) {
 			$confirm_checked = 1;
 		}
+
+		// Set default values for Confirmation Screen sub-fields.
+		$confirm_title = $this->plugin->civi->registration->get_registration_confirm_title();
 
 		// Get the current Confirmation Email setting.
 		$send_email_checked = 0;
@@ -730,6 +739,7 @@ class CEO_Admin_Settings {
 		$profile            = isset( $_POST['civi_eo_event_default_profile'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_profile'] ) ) : '0';
 		$dedupe             = isset( $_POST['civi_eo_event_default_dedupe'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_dedupe'] ) ) : '0';
 		$confirm            = isset( $_POST['civi_eo_event_default_confirm'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_confirm'] ) ) : '';
+		$confirm_title      = isset( $_POST['civi_eo_event_default_confirm_title'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_confirm_title'] ) ) : '';
 		$send_email         = isset( $_POST['civi_eo_event_default_send_email'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email'] ) ) : '';
 		$from_name          = isset( $_POST['civi_eo_event_default_send_email_from_name'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_default_send_email_from_name'] ) ) : '';
 		$from               = isset( $_POST['civi_eo_event_default_send_email_from'] ) ? sanitize_email( wp_unslash( $_POST['civi_eo_event_default_send_email_from'] ) ) : '';
@@ -777,6 +787,9 @@ class CEO_Admin_Settings {
 		} else {
 			$this->admin->option_save( 'civi_eo_event_default_confirm', '0' );
 		}
+
+		// Save Confirmation Screen page title option.
+		$this->admin->option_save( 'civi_eo_event_default_confirm_title', $confirm_title );
 
 		// Save Confirmation Email option.
 		if ( '1' === $send_email ) {

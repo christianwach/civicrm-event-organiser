@@ -114,7 +114,15 @@ body.js .civi_eo_event_send_email_toggle {
 				<th scope="row"><label for="civi_eo_event_confirm"><?php esc_html_e( 'Confirmation Screen', 'civicrm-event-organiser' ); ?></label></th>
 				<td>
 					<input type="checkbox" id="civi_eo_event_confirm" name="civi_eo_event_confirm" value="1"<?php checked( $confirm_checked, 1 ); ?> />
-					<p class="description"><?php esc_html_e( 'If this is a free Event, use a Registration Confirmation Screen.', 'civicrm-event-organiser' ); ?></p>
+					<p class="description"><?php esc_html_e( 'Use a Registration Confirmation Screen for this Event. A Confirmation Screen is optional for free Events.', 'civicrm-event-organiser' ); ?></p>
+				</td>
+			</tr>
+
+			<tr valign="top" class="civi_eo_event_confirm_toggle">
+				<th scope="row"><label for="civi_eo_event_confirm_title"><?php esc_html_e( 'Confirmation Screen Title', 'civicrm-event-organiser' ); ?></label></th>
+				<td>
+					<input type="text" class="widefat" id="civi_eo_event_confirm_title" name="civi_eo_event_confirm_title" value="<?php echo esc_attr( $confirm_title ); ?>" />
+				<p class="description"><?php esc_html_e( 'The page title of the Confirmation Screen.', 'civicrm-event-organiser' ); ?></p>
 				</td>
 			</tr>
 

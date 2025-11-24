@@ -170,6 +170,29 @@ var CEO_Event_Metabox = CEO_Event_Metabox || {};
 			});
 
 			/**
+			 * Toggle accordion depending on state of "Confirmation Screen" checkbox.
+			 *
+			 * @since 0.5.3
+			 *
+			 * @param {Object} e The click event object.
+			 */
+			$('#civi_eo_event_confirm').click( function(e) {
+
+				var current_on;
+
+				// Get checked state.
+				current_on = $(this).prop( 'checked' );
+
+				// Toggle visibility of "Confirmation Screen" section.
+				if ( current_on ) {
+					$('.civi_eo_event_confirm_toggle').show();
+				} else {
+					$('.civi_eo_event_confirm_toggle').hide();
+				}
+
+			});
+
+			/**
 			 * Toggle accordion depending on state of "Confirmation Email" checkbox.
 			 *
 			 * @since 0.5.3

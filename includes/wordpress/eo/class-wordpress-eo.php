@@ -954,6 +954,9 @@ class CEO_WordPress_EO {
 			$confirm_checked = 1;
 		}
 
+		// Get the Confirmation Screen sub-field settings.
+		$confirm_title = $this->plugin->civi->registration->get_registration_confirm_title( $event->ID );
+
 		// Get the current Confirmation Email setting.
 		$send_email_enabled = $this->plugin->civi->registration->get_registration_send_email_enabled( $event->ID );
 
@@ -1921,6 +1924,97 @@ class CEO_WordPress_EO {
 
 		// Delete the meta value.
 		delete_post_meta( $post_id, '_civi_registration_confirm' );
+
+	}
+
+	// -----------------------------------------------------------------------------------
+
+	/**
+	 * Update Event Confirmation Screen "Page Title" value from Event Organiser meta box.
+	 *
+	 * @since 0.8.5
+	 *
+	 * @param int    $event_id The numeric ID of the Event.
+	 * @param string $value The Confirmation Screen "Page Title" value.
+	 */
+	public function update_event_registration_confirm_title( $event_id, $value = '' ) {
+
+		// Retrieve meta value. Nonce is checked in "intercept_save_event".
+		// phpcs:ignore WordPress.Security.NonceVerification.Missing
+		$confirm_title = isset( $_POST['civi_eo_event_confirm_title'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_confirm_title'] ) ) : '';
+
+		// Maybe apply meta value.
+		if ( ! empty( $confirm_title ) ) {
+			$value = $confirm_title;
+		} else {
+			$value = null;
+		}
+
+		// Go ahead and set the value.
+		$this->set_event_registration_confirm_title( $event_id, $value );
+
+	}
+
+	/**
+	 * Get Event Confirmation Screen "Page Title" value.
+	 *
+	 * @since 0.8.5
+	 *
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @return int $setting The Event Confirmation Screen "Page Title" setting for the CiviCRM Event.
+	 */
+	public function get_event_registration_confirm_title( $post_id ) {
+
+		// Get the meta value.
+		$setting = get_post_meta( $post_id, '_civi_registration_confirm_title', true );
+
+		// If it's empty, cast as string.
+		if ( empty( $setting ) ) {
+			$setting = '';
+		}
+
+		// --<
+		return $setting;
+
+	}
+
+	/**
+	 * Update Event Confirmation Screen "Page Title" value.
+	 *
+	 * @since 0.8.5
+	 *
+	 * @param int $event_id The numeric ID of the Event.
+	 * @param int $setting The Event Confirmation Screen "Page Title" setting for the CiviCRM Event.
+	 */
+	public function set_event_registration_confirm_title( $event_id, $setting = null ) {
+
+		// If not set.
+		if ( is_null( $setting ) ) {
+
+			// Override with default value if we get one.
+			$default = $this->plugin->admin->option_get( 'civi_eo_event_default_confirm_title' );
+			if ( ! empty( $default ) ) {
+				$setting = $default;
+			}
+
+		}
+
+		// Update Event meta.
+		update_post_meta( $event_id, '_civi_registration_confirm_title', $setting );
+
+	}
+
+	/**
+	 * Delete Event Confirmation Screen "Page Title" setting for a CiviCRM Event.
+	 *
+	 * @since 0.8.5
+	 *
+	 * @param int $post_id The numeric ID of the WP Post.
+	 */
+	public function clear_event_registration_confirm_title( $post_id ) {
+
+		// Delete the meta value.
+		delete_post_meta( $post_id, '_civi_registration_confirm_title' );
 
 	}
 

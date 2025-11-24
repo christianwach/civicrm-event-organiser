@@ -192,6 +192,12 @@ class CEO_Admin {
 			$shown = true;
 		}
 
+		// Show an admin notice for possibly missing default Confirmation Page Title setting.
+		if ( false === $shown && ! $this->option_exists( 'civi_eo_event_default_confirm_title' ) ) {
+			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );
+			$shown = true;
+		}
+
 		// Show an admin notice for possibly missing default Confirmation Email setting.
 		if ( false === $shown && ! $this->option_exists( 'civi_eo_event_default_send_email' ) ) {
 			add_action( 'admin_notices', [ $this, 'upgrade_alert' ] );

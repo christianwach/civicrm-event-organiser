@@ -104,9 +104,20 @@ do_action( 'ceo/admin/settings/metabox/registration/before' );
 		<th scope="row"><?php esc_html_e( 'Default CiviCRM Event Registration Confirmation Screen Setting', 'civicrm-event-organiser' ); ?></th>
 		<td>
 			<input type="checkbox" id="civi_eo_event_default_confirm" name="civi_eo_event_default_confirm" value="1"<?php checked( $confirm_checked, 1 ); ?>>
-			<label for="civi_eo_event_default_confirm"><?php esc_html_e( 'Use a Registration Confirmation Screen for free Events.', 'civicrm-event-organiser' ); ?></label>
+			<label for="civi_eo_event_default_confirm"><?php esc_html_e( 'Use a Registration Confirmation Screen by default. A Confirmation Screen is optional for free Events.', 'civicrm-event-organiser' ); ?></label>
 			<?php if ( $confirm_required ) : ?>
 				<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please choose the default setting for Registration Confirmation Screens.', 'civicrm-event-organiser' ); ?></p></div>
+			<?php endif; ?>
+		</td>
+	</tr>
+
+	<tr valign="top">
+		<th scope="row" ><label for="civi_eo_event_default_confirm_title"><?php esc_html_e( 'Default CiviCRM Confirmation Screen Title', 'civicrm-event-organiser' ); ?></label></th>
+		<td>
+			<input type="text" class="widefat" id="civi_eo_event_default_confirm_title" name="civi_eo_event_default_confirm_title" value="<?php echo esc_attr( $confirm_title ); ?>">
+			<p class="description"><?php esc_html_e( 'The page title of the Confirmation Screen.', 'civicrm-event-organiser' ); ?></p>
+			<?php if ( $confirm_title_required ) : ?>
+				<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please add a default page title for the Confirmation Screen.', 'civicrm-event-organiser' ); ?></p></div>
 			<?php endif; ?>
 		</td>
 	</tr>
