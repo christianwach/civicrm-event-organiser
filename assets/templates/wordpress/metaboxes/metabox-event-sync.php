@@ -127,6 +127,14 @@ body.js .civi_eo_event_send_email_toggle {
 			</tr>
 
 			<tr valign="top">
+				<th scope="row"><label for="civi_eo_event_thank_you_title"><?php esc_html_e( 'Thank You Screen Title', 'civicrm-event-organiser' ); ?></label></th>
+				<td>
+					<input type="text" class="widefat" id="civi_eo_event_thank_you_title" name="civi_eo_event_thank_you_title" value="<?php echo esc_attr( $thank_you_title ); ?>" />
+				<p class="description"><?php esc_html_e( 'The page title of the Thank You Screen.', 'civicrm-event-organiser' ); ?></p>
+				</td>
+			</tr>
+
+			<tr valign="top">
 				<th scope="row"><label for="civi_eo_event_send_email"><?php esc_html_e( 'Send Confirmation Email', 'civicrm-event-organiser' ); ?></label></th>
 				<td>
 					<input type="checkbox" id="civi_eo_event_send_email" name="civi_eo_event_send_email" value="1"<?php checked( $send_email_checked, 1 ); ?> />

@@ -122,6 +122,17 @@ do_action( 'ceo/admin/settings/metabox/registration/before' );
 		</td>
 	</tr>
 
+	<tr valign="top">
+		<th scope="row" ><label for="civi_eo_event_default_thank_you_title"><?php esc_html_e( 'Default CiviCRM Thank You Screen Title', 'civicrm-event-organiser' ); ?></label></th>
+		<td>
+			<input type="text" class="widefat" id="civi_eo_event_default_thank_you_title" name="civi_eo_event_default_thank_you_title" value="<?php echo esc_attr( $thank_you_title ); ?>">
+			<p class="description"><?php esc_html_e( 'The page title of the Confirmation Screen.', 'civicrm-event-organiser' ); ?></p>
+			<?php if ( $thank_you_title_required ) : ?>
+				<div class="notice notice-warning inline"><p><?php esc_html_e( 'Please add a default page title for the Thank You Screen.', 'civicrm-event-organiser' ); ?></p></div>
+			<?php endif; ?>
+		</td>
+	</tr>
+
 	<?php
 
 	/**

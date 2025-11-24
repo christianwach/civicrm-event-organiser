@@ -24,6 +24,7 @@ delete_option( 'civi_eo_event_default_send_email_cc' );
 delete_option( 'civi_eo_event_default_send_email_bcc' );
 delete_option( 'civi_eo_event_default_confirm' );
 delete_option( 'civi_eo_event_default_confirm_title' );
+delete_option( 'civi_eo_event_default_thank_you_title' );
 delete_option( 'civi_eo_event_default_profile' );
 delete_option( 'civi_eo_event_default_role' );
 delete_option( 'civi_eo_event_default_type' );

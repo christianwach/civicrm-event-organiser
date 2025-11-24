@@ -1093,6 +1093,51 @@ class CEO_CiviCRM_Registration {
 	// -----------------------------------------------------------------------------------
 
 	/**
+	 * Get the default Thank You Screen "Page Title" setting for an Event Organiser Event.
+	 *
+	 * Falls back to the default as set on the plugin settings screen.
+	 * Falls back to CiviCRM default otherwise.
+	 *
+	 * @since 0.8.5
+	 *
+	 * @param int $post_id The numeric ID of an Event Organiser Event.
+	 * @return string $setting The default Confirmation Screen "Page Title" setting.
+	 */
+	public function get_registration_thank_you_title( $post_id = null ) {
+
+		// Init as empty.
+		$setting = '';
+
+		// Use default value if we have one.
+		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_thank_you_title' );
+		if ( ! empty( $default ) ) {
+			$setting = $default;
+		}
+
+		// If we have a Post.
+		if ( ! empty( $post_id ) && is_numeric( $post_id ) ) {
+
+			// Override with stored value if we get a value.
+			$stored_setting = $this->plugin->wordpress->eo->get_event_registration_thank_you_title( $post_id );
+			if ( ! empty( $stored_setting ) ) {
+				$setting = $stored_setting;
+			}
+
+		}
+
+		// If still empty, use the CiviCRM default.
+		if ( empty( $setting ) ) {
+			$setting = __( 'Thank You for Registering', 'civicrm-event-organiser' );
+		}
+
+		// --<
+		return $setting;
+
+	}
+
+	// -----------------------------------------------------------------------------------
+
+	/**
 	 * Get the default Confirmation Email setting for an Event Organiser Event.
 	 *
 	 * Falls back to the default as set on the plugin settings screen.

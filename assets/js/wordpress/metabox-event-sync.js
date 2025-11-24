@@ -172,7 +172,7 @@ var CEO_Event_Metabox = CEO_Event_Metabox || {};
 			/**
 			 * Toggle accordion depending on state of "Confirmation Screen" checkbox.
 			 *
-			 * @since 0.5.3
+			 * @since 0.8.5
 			 *
 			 * @param {Object} e The click event object.
 			 */
