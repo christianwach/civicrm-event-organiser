@@ -77,7 +77,114 @@ class CEO_WordPress_Shortcodes {
 	public function register_shortcodes() {
 
 		// Register Shortcodes.
+		add_shortcode( 'ceo_register_messages', [ $this, 'register_messages_render' ] );
 		add_shortcode( 'ceo_register_link', [ $this, 'register_link_render' ] );
+
+	}
+
+	// -----------------------------------------------------------------------------------
+
+	/**
+	 * Adds the CiviCRM Registration messages to an Event via a Shortcode.
+	 *
+	 * @since 0.8.6
+	 *
+	 * @param array  $attr The saved Shortcode attributes.
+	 * @param string $content The enclosed content of the Shortcode.
+	 * @return string $markup The HTML markup for the Shortcode.
+	 */
+	public function register_messages_render( $attr, $content = null ) {
+
+		// Init defaults.
+		$defaults = [
+			'event_id' => null, // Defaults to the current Event.
+			'class'    => null, // Defaults to no classes on wrapper element.
+		];
+
+		// Parse attributes.
+		$shortcode_atts = shortcode_atts( $defaults, $attr, 'ceo_register_messages' );
+
+		// Set a Post ID if the attribute exists.
+		$post_id = null;
+		if ( ! empty( $shortcode_atts['event_id'] ) ) {
+			$post_id = (int) trim( $shortcode_atts['event_id'] );
+		}
+
+		// Default to the current Event.
+		$post_id = intval( empty( $post_id ) ? get_the_ID() : $post_id );
+
+		// Init return.
+		$markup = '';
+
+		// Get links array.
+		$links_data = civicrm_event_organiser_get_register_links( $post_id );
+		if ( empty( $links_data ) ) {
+			return $markup;
+		}
+
+		// Process messages.
+		array_walk(
+			$links_data,
+			function( &$item, $key ) {
+
+				// Standalone messages.
+				if ( ! empty( $item['meta'] ) && in_array( 'waitlist', $item['meta'] ) ) {
+					$item['link'] = '<span class="ceo-event-has-waitlist">' . implode( ' ', $item['messages'] ) . '</span>';
+				}
+				if ( ! empty( $item['meta'] ) && in_array( 'is_registered', $item['meta'] ) ) {
+					$item['link'] = '<span class="ceo-contact-is-registered">' . implode( ' ', $item['messages'] ) . '</span>';
+				}
+				if ( ! empty( $item['meta'] ) && in_array( 'event_full', $item['meta'] ) ) {
+					$item['link'] = '<span class="ceo-event-is-full">' . implode( ' ', $item['messages'] ) . '</span>';
+				}
+				if ( ! empty( $item['meta'] ) && in_array( 'registration_closed', $item['meta'] ) ) {
+					$item['link'] = '<span class="ceo-registration-closed">' . implode( ' ', $item['messages'] ) . '</span>';
+				}
+
+				// Valid Register links have no messages.
+				if ( empty( $item['messages'] ) ) {
+					$item['link'] = '';
+				}
+
+			}
+		);
+
+		// Extract links array.
+		$links = array_filter( wp_list_pluck( $links_data, 'link' ) );
+
+		// Is it recurring?
+		if ( eo_recurs( $post_id ) ) {
+
+			// Combine into list.
+			$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
+
+			// Top and tail.
+			$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
+
+			// Wrap in unordered list.
+			$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
+
+			// Open a list item.
+			$markup .= '<li class="civicrm-event-register-links">';
+
+			// Show a title.
+			$markup .= '<strong>' . esc_html__( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
+
+			// Show links.
+			$markup .= $list;
+
+			// Finish up.
+			$markup .= '</li>' . "\n";
+
+		} else {
+
+			// Show messages.
+			$markup .= implode( ' ', $links );
+
+		}
+
+		// --<
+		return $markup;
 
 	}
 
@@ -101,6 +208,7 @@ class CEO_WordPress_Shortcodes {
 			'wrap_class'   => null, // Defaults to no classes on wrapper element.
 			'anchor_class' => null, // Defaults to no classes on anchor element.
 			'title'        => null, // Defaults to "Register" for single Events.
+			'messages'     => null, // Defaults to showing messages.
 		];
 
 		// Parse attributes.
@@ -148,6 +256,15 @@ class CEO_WordPress_Shortcodes {
 			}
 		}
 
+		// Set the Show Messages" attribute.
+		$show_messages = true;
+		if ( ! empty( $shortcode_atts['messages'] ) ) {
+			$att = trim( $shortcode_atts['messages'] );
+			if ( ! empty( $att ) && in_array( $att, [ 'false', 'no' ] ) ) {
+				$show_messages = false;
+			}
+		}
+
 		// Init return.
 		$markup = '';
 
@@ -158,16 +275,16 @@ class CEO_WordPress_Shortcodes {
 		}
 
 		// Wrap links if required.
-		$links_data = $this->link_data_wrap( $links_data, $wrap_classes, $element );
+		$links_data = $this->link_data_wrap( $links_data, $wrap_classes, $element, $show_messages );
 
 		// Make sure we have a Post ID.
 		$post_id = intval( empty( $post_id ) ? get_the_ID() : $post_id );
 
+		// Extract links array.
+		$links = array_filter( wp_list_pluck( $links_data, 'link' ) );
+
 		// Is it recurring?
 		if ( eo_recurs( $post_id ) ) {
-
-			// Extract links array.
-			$links = wp_list_pluck( $links_data, 'link' );
 
 			// Combine into list.
 			$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
@@ -193,7 +310,6 @@ class CEO_WordPress_Shortcodes {
 		} else {
 
 			// Show link.
-			$links   = wp_list_pluck( $links_data, 'link' );
 			$markup .= implode( ' ', $links );
 
 		}
@@ -211,9 +327,10 @@ class CEO_WordPress_Shortcodes {
 	 * @param array  $links_data The array of Registration link data.
 	 * @param array  $wrap_classes The array CSS classes.
 	 * @param string $element The wrapper element.
+	 * @param bool   $show_messages Whether or not to merge messages into the link text.
 	 * @return array $links_data The modified array of Registration link data.
 	 */
-	private function link_data_wrap( $links_data, $wrap_classes, $element ) {
+	private function link_data_wrap( $links_data, $wrap_classes, $element, $show_messages = true ) {
 
 		// Format classes if provided.
 		$classes = '';
@@ -229,7 +346,7 @@ class CEO_WordPress_Shortcodes {
 		}
 
 		// Wrap links if required.
-		if ( empty( $element ) ) {
+		if ( empty( $element ) && true === $show_messages ) {
 			array_walk(
 				$links_data,
 				function( &$item, $key ) use ( $element, $classes ) {
@@ -258,9 +375,9 @@ class CEO_WordPress_Shortcodes {
 		if ( 'button' === $element ) {
 			array_walk(
 				$links_data,
-				function( &$item, $key ) use ( $element, $classes ) {
+				function( &$item, $key ) use ( $element, $classes, $show_messages ) {
 
-					// First wrap the link if there is one.
+					// Wrap the link if there is one.
 					if ( ! empty( $item['link'] ) && ! empty( $item['meta'] ) && in_array( 'active', $item['meta'] ) ) {
 						if ( ! empty( $classes ) ) {
 							$item['link'] = '<button type="button" class="' . $classes . '">' . $item['link'] . '</button>';
@@ -269,20 +386,25 @@ class CEO_WordPress_Shortcodes {
 						}
 					}
 
-					// Next prepend link with messages.
-					if ( ! empty( $item['meta'] ) && in_array( 'waitlist', $item['meta'] ) ) {
-						$item['link'] = '<p class="ceo-event-has-waitlist">' . implode( ' ', $item['messages'] ) . '</p>' . $item['link'];
-					}
-					if ( ! empty( $item['meta'] ) && in_array( 'is_registered', $item['meta'] ) ) {
-						$item['link'] = '<p class="ceo-contact-is-registered">' . implode( ' ', $item['messages'] ) . '</p>' . $item['link'];
-					}
+					// Only merge messages if requested.
+					if ( true === $show_messages ) {
 
-					// Standalone messages.
-					if ( ! empty( $item['meta'] ) && in_array( 'registration_closed', $item['meta'] ) ) {
-						$item['link'] = '<p class="ceo-registration-closed">' . implode( ' ', $item['messages'] ) . '</p>';
-					}
-					if ( ! empty( $item['meta'] ) && in_array( 'event_full', $item['meta'] ) ) {
-						$item['link'] = '<p class="ceo-event-is-full">' . implode( ' ', $item['messages'] ) . '</p>';
+						// Prepend link with messages.
+						if ( ! empty( $item['meta'] ) && in_array( 'waitlist', $item['meta'] ) ) {
+							$item['link'] = '<p class="ceo-event-has-waitlist">' . implode( ' ', $item['messages'] ) . '</p>' . $item['link'];
+						}
+						if ( ! empty( $item['meta'] ) && in_array( 'is_registered', $item['meta'] ) ) {
+							$item['link'] = '<p class="ceo-contact-is-registered">' . implode( ' ', $item['messages'] ) . '</p>' . $item['link'];
+						}
+
+						// Standalone messages.
+						if ( ! empty( $item['meta'] ) && in_array( 'registration_closed', $item['meta'] ) ) {
+							$item['link'] = '<p class="ceo-registration-closed">' . implode( ' ', $item['messages'] ) . '</p>';
+						}
+						if ( ! empty( $item['meta'] ) && in_array( 'event_full', $item['meta'] ) ) {
+							$item['link'] = '<p class="ceo-event-is-full">' . implode( ' ', $item['messages'] ) . '</p>';
+						}
+
 					}
 
 				}
@@ -293,9 +415,9 @@ class CEO_WordPress_Shortcodes {
 		if ( 'div' === $element ) {
 			array_walk(
 				$links_data,
-				function( &$item, $key ) use ( $element, $classes ) {
+				function( &$item, $key ) use ( $element, $classes, $show_messages ) {
 
-					// First wrap the link if there is one.
+					// Wrap the link if there is one.
 					if ( ! empty( $item['link'] ) && ! empty( $item['meta'] ) && in_array( 'active', $item['meta'] ) ) {
 						if ( ! empty( $classes ) ) {
 							$item['link'] = '<div class="' . $classes . '">' . $item['link'] . '</div>';
@@ -304,20 +426,25 @@ class CEO_WordPress_Shortcodes {
 						}
 					}
 
-					// Next prepend link with messages.
-					if ( ! empty( $item['meta'] ) && in_array( 'waitlist', $item['meta'] ) ) {
-						$item['link'] = '<p class="ceo-event-has-waitlist">' . implode( ' ', $item['messages'] ) . '</p>' . $item['link'];
-					}
-					if ( ! empty( $item['meta'] ) && in_array( 'is_registered', $item['meta'] ) ) {
-						$item['link'] = '<p class="ceo-contact-is-registered">' . implode( ' ', $item['messages'] ) . '</p>' . $item['link'];
-					}
+					// Only merge messages if requested.
+					if ( true === $show_messages ) {
 
-					// Standalone messages.
-					if ( ! empty( $item['meta'] ) && in_array( 'registration_closed', $item['meta'] ) ) {
-						$item['link'] = '<p class="ceo-registration-closed">' . implode( ' ', $item['messages'] ) . '</p>';
-					}
-					if ( ! empty( $item['meta'] ) && in_array( 'event_full', $item['meta'] ) ) {
-						$item['link'] = '<p class="ceo-event-is-full">' . implode( ' ', $item['messages'] ) . '</p>';
+						// Prepend link with messages.
+						if ( ! empty( $item['meta'] ) && in_array( 'waitlist', $item['meta'] ) ) {
+							$item['link'] = '<p class="ceo-event-has-waitlist">' . implode( ' ', $item['messages'] ) . '</p>' . $item['link'];
+						}
+						if ( ! empty( $item['meta'] ) && in_array( 'is_registered', $item['meta'] ) ) {
+							$item['link'] = '<p class="ceo-contact-is-registered">' . implode( ' ', $item['messages'] ) . '</p>' . $item['link'];
+						}
+
+						// Standalone messages.
+						if ( ! empty( $item['meta'] ) && in_array( 'registration_closed', $item['meta'] ) ) {
+							$item['link'] = '<p class="ceo-registration-closed">' . implode( ' ', $item['messages'] ) . '</p>';
+						}
+						if ( ! empty( $item['meta'] ) && in_array( 'event_full', $item['meta'] ) ) {
+							$item['link'] = '<p class="ceo-event-is-full">' . implode( ' ', $item['messages'] ) . '</p>';
+						}
+
 					}
 
 				}
