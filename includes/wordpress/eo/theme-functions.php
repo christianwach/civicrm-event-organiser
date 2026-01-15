@@ -33,12 +33,32 @@ function civicrm_event_organiser_register_links( $post_id = null, $title = null,
 		return;
 	}
 
+	// Process messages.
+	array_walk(
+		$links_data,
+		function( &$item, $key ) {
+
+			// Prepend link with message.
+			if ( ! empty( $item['meta'] ) && in_array( 'waitlist', $item['meta'] ) ) {
+				$item['link'] = '<span class="ceo-event-has-waitlist">' . implode( ' ', $item['messages'] ) . '</span> ' . $item['link'];
+			}
+			if ( ! empty( $item['meta'] ) && in_array( 'is_registered', $item['meta'] ) ) {
+				$item['link'] = '<span class="ceo-contact-is-registered">' . implode( ' ', $item['messages'] ) . '</span> ' . $item['link'];
+			}
+
+			// Standalone messages.
+			if ( ! empty( $item['meta'] ) && in_array( 'event_full', $item['meta'] ) ) {
+				$item['link'] = '<span class="ceo-event-is-full">' . implode( ' ', $item['messages'] ) . '</span>';
+			}
+			if ( ! empty( $item['meta'] ) && in_array( 'registration_closed', $item['meta'] ) ) {
+				$item['link'] = '<span class="ceo-registration-closed">' . implode( ' ', $item['messages'] ) . '</span>';
+			}
+
+		}
+	);
+
 	// Extract links array.
-	$links = [];
-	foreach ( $links_data as $link_data ) {
-		$sub_links = wp_list_pluck( $link_data, 'link' );
-		$links[]   = implode( ' ', $sub_links );
-	}
+	$links = wp_list_pluck( $links_data, 'link' );
 
 	// Combine into list.
 	$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
@@ -116,299 +136,8 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 	// Get plugin reference.
 	$plugin = civicrm_eo();
 
-	// Get CiviCRM Events.
-	$civi_events = $plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
-	if ( empty( $civi_events ) ) {
-		return $links;
-	}
-
-	// Did we get more than one?
-	$multiple = ( count( $civi_events ) > 1 ) ? true : false;
-
-	// Get the Contact ID for the current User.
-	$contact_id = $plugin->ufmatch->contact_id_get_by_user_id( get_current_user_id() );
-
-	// Loop through them.
-	foreach ( $civi_events as $civi_event_id ) {
-
-		// Get the full CiviCRM Event.
-		$civi_event = $plugin->civi->event->get_event_by_id( $civi_event_id );
-		if ( false === $civi_event ) {
-			continue;
-		}
-
-		// Init closed flag.
-		$closed = false;
-
-		// Assign the status of the Event if Registration is not open.
-		if ( $plugin->civi->registration->is_registration_closed( $civi_event ) ) {
-
-			// Get the Event's Registration status.
-			$status = $plugin->civi->registration->get_registration_status( $civi_event );
-
-			// Do not add item if Registration is not enabled.
-			if ( false === $status ) {
-				continue;
-			}
-
-			// Set different text for single and multiple Occurrences.
-			if ( $multiple ) {
-
-				// Get Occurrence ID for this CiviCRM Event.
-				$occurrence_id = $plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
-
-				if ( 'not-yet-open' === $status ) {
-
-					// Use start date.
-					$reg_start = new DateTime( $civi_event['registration_start_date'], eo_get_blog_timezone() );
-
-					$text = sprintf(
-						/* translators: 1: The formatted Event Occurrence, 2: The date, 3: The time. */
-						esc_html__( 'Online registration for %1$s will open on %2$s at %3$s.', 'civicrm-event-organiser' ),
-						eo_format_event_occurrence( $post_id, $occurrence_id ),
-						wp_date( get_option( 'date_format' ), $reg_start->getTimestamp() ),
-						wp_date( get_option( 'time_format' ), $reg_start->getTimestamp() )
-					);
-
-				} else {
-					$text = sprintf(
-						/* translators: %s: The formatted Event Occurrence. */
-						esc_html__( 'Online registration has closed for %s.', 'civicrm-event-organiser' ),
-						eo_format_event_occurrence( $post_id, $occurrence_id )
-					);
-				}
-
-			} else {
-
-				if ( 'not-yet-open' === $status ) {
-
-					// Use start date.
-					$reg_start = new DateTime( $civi_event['registration_start_date'], eo_get_blog_timezone() );
-
-					$text = sprintf(
-						/* translators: 1: The date, 2: The time. */
-						esc_html__( 'Online registration will open on %1$s at %2$s.', 'civicrm-event-organiser' ),
-						wp_date( get_option( 'date_format' ), $reg_start->getTimestamp() ),
-						wp_date( get_option( 'time_format' ), $reg_start->getTimestamp() )
-					);
-
-				} else {
-					$text = esc_html__( 'Online registration has closed.', 'civicrm-event-organiser' );
-				}
-
-			}
-
-			/**
-			 * Filter the "registration closed" text.
-			 *
-			 * @since 0.8.2
-			 *
-			 * @param string $text The text content.
-			 * @param int    $post_id The numeric ID of the WP Post.
-			 * @param int    $civi_event_id The numeric ID of the CiviCRM Event.
-			 * @param int    $contact_id The numeric ID of the CiviCRM Contact.
-			 */
-			$text = apply_filters( 'ceo/theme/registration/closed', $text, $post_id, $civi_event_id, $contact_id );
-
-			// Add to return array.
-			$links[ $civi_event_id ][] = [
-				'link' => $text,
-				'meta' => 'registration_closed',
-			];
-
-			// Update closed flag.
-			$closed = true;
-
-		}
-
-		// Check if the Event is full.
-		if ( $plugin->civi->registration->is_full( $civi_event ) ) {
-
-			// Set different text for single and multiple Occurrences.
-			if ( $multiple ) {
-				$text = sprintf(
-					/* translators: %s: The formatted Event Occurrence. */
-					esc_html__( 'The event on %s is currently full.', 'civicrm-event-organiser' ),
-					eo_format_event_occurrence( $post_id, $occurrence_id )
-				);
-			} else {
-				$text = esc_html__( 'This event is currently full.', 'civicrm-event-organiser' );
-			}
-
-			/**
-			 * Filter the "event full" text.
-			 *
-			 * @since 0.8.2
-			 *
-			 * @param string $text The text content.
-			 * @param int    $post_id The numeric ID of the WP Post.
-			 * @param int    $civi_event_id The numeric ID of the CiviCRM Event.
-			 * @param int    $contact_id The numeric ID of the CiviCRM Contact.
-			 */
-			$text = apply_filters( 'ceo/theme/registration/full', $text, $post_id, $civi_event_id, $contact_id );
-
-			// Add to return array.
-			$links[ $civi_event_id ][] = [
-				'link' => $text,
-				'meta' => 'event_full',
-			];
-
-			// Update closed flag.
-			$closed = true;
-
-		}
-
-		// Skip to next if this Contact is already registered.
-		if ( ! empty( $contact_id ) && $plugin->civi->registration->is_registered( $civi_event_id, $contact_id ) ) {
-
-			// Set different text for single and multiple Occurrences.
-			if ( $multiple && false === $closed ) {
-
-				// Get Occurrence ID for this CiviCRM Event.
-				$occurrence_id = $plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
-
-				// Define text.
-				$text = sprintf(
-					/* translators: %s: The formatted Event Occurrence. */
-					esc_html__( 'You are already registered for %s.', 'civicrm-event-organiser' ),
-					eo_format_event_occurrence( $post_id, $occurrence_id )
-				);
-
-			} else {
-				$text = esc_html__( 'You are already registered for this event.', 'civicrm-event-organiser' );
-			}
-
-			/**
-			 * Filter the "already registered" text.
-			 *
-			 * @since 0.8.2
-			 *
-			 * @param string $text The text content.
-			 * @param int    $post_id The numeric ID of the WP Post.
-			 * @param int    $civi_event_id The numeric ID of the CiviCRM Event.
-			 * @param int    $contact_id The numeric ID of the CiviCRM Contact.
-			 */
-			$text = apply_filters( 'ceo/theme/registration/text', $text, $post_id, $civi_event_id, $contact_id );
-
-			// Add to return array.
-			$links[ $civi_event_id ][] = [
-				'link' => $text,
-				'meta' => 'is_registered',
-			];
-
-			continue;
-
-		}
-
-		// Allows all the above messages to be rendered.
-		if ( true === $closed ) {
-			continue;
-		}
-
-		// Get link for the Registration page.
-		$url = $plugin->civi->registration->get_registration_link( $civi_event );
-		if ( empty( $url ) ) {
-			continue;
-		}
-
-		/**
-		 * Filter Registration URL.
-		 *
-		 * @since 0.3
-		 * @deprecated 0.8.0 Use the {@see 'ceo/theme/registration/url'} filter instead.
-		 *
-		 * @param string $url The raw URL to the CiviCRM Registration page.
-		 * @param array  $civi_event The array of data that represents a CiviCRM Event.
-		 * @param int    $post_id The numeric ID of the WP Post.
-		 */
-		$url = apply_filters_deprecated( 'civicrm_event_organiser_registration_url', [ $url, $civi_event, $post_id ], '0.8.0', 'ceo/theme/registration/url' );
-
-		/**
-		 * Filter the Registration URL.
-		 *
-		 * @since 0.8.0
-		 *
-		 * @param string $url The raw URL to the CiviCRM Registration page.
-		 * @param array  $civi_event The array of data that represents a CiviCRM Event.
-		 * @param int    $post_id The numeric ID of the WP Post.
-		 * @param string $title The link title when the Event does not recur.
-		 * @param string $classes The space-delimited classes to add to the link.
-		 */
-		$url = apply_filters( 'ceo/theme/registration/url', $url, $civi_event, $post_id, $title, $classes );
-
-		// Set different link text for single and multiple Occurrences.
-		if ( $multiple ) {
-
-			// Get Occurrence ID for this CiviCRM Event.
-			$occurrence_id = $plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
-
-			// Define text.
-			$text = sprintf(
-				/* translators: %s: The formatted Event Occurrence. */
-				esc_html__( 'Register for %s', 'civicrm-event-organiser' ),
-				eo_format_event_occurrence( $post_id, $occurrence_id )
-			);
-
-		} else {
-
-			// Default title.
-			$text = esc_html__( 'Register', 'civicrm-event-organiser' );
-
-			// Use custom title if provided.
-			if ( ! empty( $title ) ) {
-				$text = esc_html( $title );
-			}
-
-		}
-
-		// Format classes if provided.
-		if ( ! empty( $classes ) ) {
-			$classes = explode( ' ', $classes );
-			array_walk(
-				$classes,
-				function( &$item ) {
-					$item = esc_attr( $item );
-				}
-			);
-			$classes = ' ' . implode( ' ', $classes );
-		}
-
-		// Construct link.
-		$link = '<a class="civicrm-event-organiser-register-link' . $classes . '" href="' . esc_url( $url ) . '">' . $text . '</a>';
-
-		/**
-		 * Filter Registration link.
-		 *
-		 * @since 0.3
-		 * @deprecated 0.8.0 Use the {@see 'ceo/theme/registration/link'} filter instead.
-		 *
-		 * @param string $link The HTML link to the CiviCRM Registration page.
-		 * @param string $url The raw URL to the CiviCRM Registration page.
-		 * @param string $text The text content of the link.
-		 * @param int    $post_id The numeric ID of the WP Post.
-		 */
-		$link = apply_filters_deprecated( 'civicrm_event_organiser_registration_link', [ $link, $url, $text, $post_id ], '0.8.0', 'ceo/theme/registration/link' );
-
-		/**
-		 * Filter the Registration link.
-		 *
-		 * @since 0.8.0
-		 *
-		 * @param string $link The HTML link to the CiviCRM Registration page.
-		 * @param string $url The raw URL to the CiviCRM Registration page.
-		 * @param string $text The text content of the link.
-		 * @param int    $post_id The numeric ID of the WP Post.
-		 * @param string $classes The space-delimited classes to add to the link.
-		 */
-		$link = apply_filters( 'ceo/theme/registration/link', $link, $url, $text, $post_id, $classes );
-
-		// Add to return array.
-		$links[ $civi_event_id ][] = [
-			'link' => $link,
-			'meta' => 'active',
-		];
-
-	}
+	// Call link builder method.
+	$links = $plugin->wordpress->shortcodes->links_get( $post_id, $title, $classes );
 
 	// --<
 	return $links;
