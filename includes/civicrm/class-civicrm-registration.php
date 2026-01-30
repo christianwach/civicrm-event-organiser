@@ -1336,6 +1336,58 @@ class CEO_CiviCRM_Registration {
 	}
 
 	/**
+	 * Gets the number of free places for a given CiviCRM Event.
+	 *
+	 * @since 0.8.6
+	 *
+	 * @param int $event_id The numeric ID of a CiviCRM Event.
+	 * @return int|bool $remaining The number of free places, or false on failure.
+	 */
+	public function get_remaining_participants( $event_id ) {
+
+		// Init as not registered.
+		$remaining = false;
+
+		// Bail if we fail to init CiviCRM.
+		if ( ! $this->civicrm->is_active() ) {
+			return $remaining;
+		}
+
+		try {
+
+			// Call the API.
+			$result = \Civi\Api4\Event::get( false )
+				->addSelect( 'remaining_participants' )
+				->addWhere( 'id', '=', $event_id )
+				->execute();
+
+		} catch ( CRM_Core_Exception $e ) {
+			$log = [
+				'method'    => __METHOD__,
+				'error'     => $e->getMessage(),
+				'backtrace' => $e->getTraceAsString(),
+			];
+			$this->plugin->log_error( $log );
+			return $remaining;
+		}
+
+		// Return failure if no result.
+		if ( 0 === $result->count() ) {
+			return $remaining;
+		}
+
+		// The first result is what we're after.
+		$data = $result->first();
+
+		// Cast as integer.
+		$remaining = (int) $data['remaining_participants'];
+
+		// --<
+		return $remaining;
+
+	}
+
+	/**
 	 * Check if a Contact is registered for a given CiviCRM Event.
 	 *
 	 * @since 0.8.2

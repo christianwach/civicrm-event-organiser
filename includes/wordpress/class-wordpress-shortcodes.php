@@ -77,8 +77,127 @@ class CEO_WordPress_Shortcodes {
 	public function register_shortcodes() {
 
 		// Register Shortcodes.
+		add_shortcode( 'ceo_register_remaining', [ $this, 'register_remaining_render' ] );
 		add_shortcode( 'ceo_register_messages', [ $this, 'register_messages_render' ] );
 		add_shortcode( 'ceo_register_link', [ $this, 'register_link_render' ] );
+
+	}
+
+	// -----------------------------------------------------------------------------------
+
+	/**
+	 * Renders the CiviCRM Registration remaining participant count via a Shortcode.
+	 *
+	 * @since 0.8.6
+	 *
+	 * @param array  $attr The saved Shortcode attributes.
+	 * @param string $content The enclosed content of the Shortcode.
+	 * @return string $markup The HTML markup for the Shortcode.
+	 */
+	public function register_remaining_render( $attr, $content = null ) {
+
+		// Init defaults.
+		$defaults = [
+			'event_id' => null, // Defaults to the current Event.
+			'class'    => null, // Defaults to no classes on wrapper element.
+			'format'   => null, // Defaults to full text. Use "raw" to render just the number.
+		];
+
+		// Parse attributes.
+		$shortcode_atts = shortcode_atts( $defaults, $attr, 'ceo_register_remaining' );
+
+		// Set a Post ID if the attribute exists.
+		$post_id = null;
+		if ( ! empty( $shortcode_atts['event_id'] ) ) {
+			$post_id = (int) trim( $shortcode_atts['event_id'] );
+		}
+
+		// Default to the current Event.
+		$post_id = intval( empty( $post_id ) ? get_the_ID() : $post_id );
+
+		// Get the format if the attribute exists.
+		$format = null;
+		if ( ! empty( $shortcode_atts['format'] ) ) {
+			$att = trim( $shortcode_atts['format'] );
+			if ( ! empty( $att ) ) {
+				$format = $att;
+			}
+		}
+
+		// Init return.
+		$markup = '';
+
+		// Get links array.
+		$links_data = civicrm_event_organiser_get_register_links( $post_id );
+		if ( empty( $links_data ) ) {
+			return $markup;
+		}
+
+		// Process messages.
+		array_walk(
+			$links_data,
+			function( &$item, $key ) {
+
+				// Wrap messages.
+				if ( ! empty( $item['remaining_message'] ) && false !== $item['remaining_count'] ) {
+
+					// Define classes.
+					$class_common = 'ceo-event-remaining-message';
+					$class_count  = 'ceo-event-remaining-count-' . $item['remaining_count'];
+
+					// Wrap in span.
+					$item['remaining_message'] = '<span class="' . $class_common . ' ' . $class_count . ' ">' . $item['remaining_message'] . '</span>';
+
+				}
+
+			}
+		);
+
+		// Extract remaining array.
+		$remaining_messages = array_filter( wp_list_pluck( $links_data, 'remaining_message' ) );
+		$remaining_count    = array_filter( wp_list_pluck( $links_data, 'remaining_count' ), 'strlen' );
+
+		// Is it recurring?
+		if ( eo_recurs( $post_id ) ) {
+
+			// Combine into list.
+			if ( 'raw' === $format ) {
+				$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-remaining">', $remaining_count );
+			} else {
+				$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-remaining">', $remaining_messages );
+			}
+
+			// Top and tail.
+			$list = '<li class="civicrm-event-register-remaining">' . $list . '</li>' . "\n";
+
+			// Wrap in unordered list.
+			$list = '<ul class="civicrm-event-register-remaining">' . $list . '</ul>';
+
+			// Open a list item.
+			$markup .= '<li class="civicrm-event-register-remaining">';
+
+			// Show a title.
+			$markup .= '<strong>' . esc_html__( 'Remaining Participants', 'civicrm-event-organiser' ) . ':</strong>';
+
+			// Show links.
+			$markup .= $list;
+
+			// Finish up.
+			$markup .= '</li>' . "\n";
+
+		} else {
+
+			// Remder markup.
+			if ( 'raw' === $format ) {
+				$markup .= implode( ' ', $remaining_count );
+			} else {
+				$markup .= implode( ' ', $remaining_messages );
+			}
+
+		}
+
+		// --<
+		return $markup;
 
 	}
 
@@ -502,9 +621,11 @@ class CEO_WordPress_Shortcodes {
 			 * There can be multiple meta per event.
 			 */
 			$info = [
-				'link'     => '',
-				'messages' => [],
-				'meta'     => [],
+				'link'              => '',
+				'messages'          => [],
+				'meta'              => [],
+				'remaining_count'   => false,
+				'remaining_message' => '',
 			];
 
 			// Init closed flag.
@@ -764,6 +885,38 @@ class CEO_WordPress_Shortcodes {
 					if ( ! empty( $title ) ) {
 						$text = esc_html( $title );
 					}
+
+				}
+
+				// Get remaining places if there is a limit on participants.
+				if ( ! empty( $civi_event['max_participants'] ) ) {
+
+					$remaining = $this->plugin->civi->registration->get_remaining_participants( $civi_event_id );
+
+					// Set different text for single and multiple Occurrences.
+					if ( $multiple ) {
+
+						// Get Occurrence ID for this CiviCRM Event.
+						$occurrence_id = $this->plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
+
+						$message = sprintf(
+							/* translators: 1: The number of remaining places, 2: The formatted Event Occurrence. */
+							_n( '%1$d place remaining for %2$s.', '%1$d places remaining for %2$s.', $remaining, 'civicrm-event-organiser' ),
+							esc_html( $remaining ),
+							eo_format_event_occurrence( $post_id, $occurrence_id )
+						);
+
+					} else {
+						$message = sprintf(
+							/* translators: %d: The number of remaining places. */
+							_n( '%d place remaining', '%d places remaining', $remaining, 'civicrm-event-organiser' ),
+							esc_html( $remaining )
+						);
+					}
+
+					// Add to info array.
+					$info['remaining_count'] = (string) $remaining;
+					$info['remaining_message'] = $message;
 
 				}
 
