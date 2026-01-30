@@ -171,19 +171,7 @@ class CEO_WordPress_Shortcodes {
 			$list = '<li class="civicrm-event-register-remaining">' . $list . '</li>' . "\n";
 
 			// Wrap in unordered list.
-			$list = '<ul class="civicrm-event-register-remaining">' . $list . '</ul>';
-
-			// Open a list item.
-			$markup .= '<li class="civicrm-event-register-remaining">';
-
-			// Show a title.
-			$markup .= '<strong>' . esc_html__( 'Remaining Participants', 'civicrm-event-organiser' ) . ':</strong>';
-
-			// Show links.
-			$markup .= $list;
-
-			// Finish up.
-			$markup .= '</li>' . "\n";
+			$markup .= '<ul class="civicrm-event-register-remaining">' . $list . '</ul>';
 
 		} else {
 
@@ -277,23 +265,11 @@ class CEO_WordPress_Shortcodes {
 			// Combine into list.
 			$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
 
-			// Top and tail.
+			// Top and tail list items.
 			$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
 
 			// Wrap in unordered list.
-			$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
-
-			// Open a list item.
-			$markup .= '<li class="civicrm-event-register-links">';
-
-			// Show a title.
-			$markup .= '<strong>' . esc_html__( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
-
-			// Show links.
-			$markup .= $list;
-
-			// Finish up.
-			$markup .= '</li>' . "\n";
+			$markup .= '<ul class="civicrm-event-register-links">' . $list . '</ul>';
 
 		} else {
 
@@ -408,23 +384,11 @@ class CEO_WordPress_Shortcodes {
 			// Combine into list.
 			$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
 
-			// Top and tail.
+			// Top and tail list items.
 			$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
 
 			// Wrap in unordered list.
-			$list = '<ul class="civicrm-event-register-links">' . $list . '</ul>';
-
-			// Open a list item.
-			$markup .= '<li class="civicrm-event-register-links">';
-
-			// Show a title.
-			$markup .= '<strong>' . esc_html__( 'Registration Links', 'civicrm-event-organiser' ) . ':</strong>';
-
-			// Show links.
-			$markup .= $list;
-
-			// Finish up.
-			$markup .= '</li>' . "\n";
+			$markup .= '<ul class="civicrm-event-register-links">' . $list . '</ul>';
 
 		} else {
 
