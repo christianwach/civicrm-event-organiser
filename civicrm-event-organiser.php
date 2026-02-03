@@ -11,7 +11,6 @@
  * Author URI:        https://haystack.co.uk
  * Requires at least: 4.9
  * Requires PHP:      7.4
- * Requires Plugins:  civicrm, event-organiser, radio-buttons-for-taxonomies
  * License:           GPLv2 or later
  * License URI:       https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * Text Domain:       civicrm-event-organiser
