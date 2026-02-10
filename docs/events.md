@@ -13,3 +13,6 @@ If you will also be enabling Registration, select the **Enable Online Registrati
 Once you've enabled registration when viewing an event on the website, there will be a Register link that brings visitors to the CiviCRM Event Registration page for that event.
 
 ![CiviCRM Event Organiser Register Link](./images/ceo-event-register-link.jpg)
+
+### User permissions
+For users to sync events to CiviCRM, they must have `publish_posts` and `access CiviEvent` capabilities
