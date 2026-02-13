@@ -298,7 +298,7 @@ class CEO_Mapping {
 		$civi_event_data = $this->get_all_civi_to_eo_correspondences();
 
 		// If we have a CiviCRM Event ID for this Event Organiser Occurrence.
-		if ( false === $civi_event_id ) {
+		if ( false !== $civi_event_id ) {
 
 			// Unset the item with this key in the option array.
 			if ( isset( $civi_event_data[ $civi_event_id ] ) ) {
