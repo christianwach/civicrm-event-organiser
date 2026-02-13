@@ -110,9 +110,10 @@ add_action( 'eventorganiser_additional_event_meta', 'civicrm_event_organiser_reg
  * @param int    $post_id The numeric ID of the WP Post.
  * @param string $title The link title when the Event does not recur.
  * @param string $classes The space-delimited classes to add to the links.
+ * @param string $waitlist The link title when the Event does not recur and is full and there is a waitlist.
  * @return array $links The array of HTML links to the CiviCRM Registration pages with metadata for each link.
  */
-function civicrm_event_organiser_get_register_links( $post_id = null, $title = null, $classes = null ) {
+function civicrm_event_organiser_get_register_links( $post_id = null, $title = null, $classes = null, $waitlist = null ) {
 
 	// Init return.
 	$links = [];
@@ -137,7 +138,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 	$plugin = civicrm_eo();
 
 	// Call link builder method.
-	$links = $plugin->wordpress->shortcodes->links_get( $post_id, $title, $classes );
+	$links = $plugin->wordpress->shortcodes->links_get( $post_id, $title, $classes, $waitlist );
 
 	// --<
 	return $links;

@@ -42,7 +42,7 @@ class CEO_WordPress_Shortcodes {
 	 *
 	 * Holds data about Events, keyed by Post ID.
 	 *
-	 * This array gets added to when either of the Shortcodes gets called, so that
+	 * This array gets added to when any of the Shortcodes gets called, so that
 	 * database queries are minimised.
 	 *
 	 * @since 0.8.6
@@ -303,6 +303,7 @@ class CEO_WordPress_Shortcodes {
 			'wrap_class'   => null, // Defaults to no classes on wrapper element.
 			'anchor_class' => null, // Defaults to no classes on anchor element.
 			'title'        => null, // Defaults to "Register" for single Events.
+			'waitlist'     => null, // Defaults to "Waitlist" for single Events.
 			'messages'     => null, // Defaults to showing messages.
 		];
 
@@ -342,12 +343,21 @@ class CEO_WordPress_Shortcodes {
 			}
 		}
 
-		// Get the title if the attribute exists.
+		// Get the link text if the attribute exists.
 		$title = null;
 		if ( ! empty( $shortcode_atts['title'] ) ) {
 			$att = trim( $shortcode_atts['title'] );
 			if ( ! empty( $att ) ) {
 				$title = $att;
+			}
+		}
+
+		// Get the waitlist link text if the attribute exists.
+		$waitlist = null;
+		if ( ! empty( $shortcode_atts['waitlist'] ) ) {
+			$att = trim( $shortcode_atts['waitlist'] );
+			if ( ! empty( $att ) ) {
+				$waitlist = $att;
 			}
 		}
 
@@ -364,7 +374,7 @@ class CEO_WordPress_Shortcodes {
 		$markup = '';
 
 		// Get links array.
-		$links_data = civicrm_event_organiser_get_register_links( $post_id, $title, $anchor_classes );
+		$links_data = civicrm_event_organiser_get_register_links( $post_id, $title, $anchor_classes, $waitlist );
 		if ( empty( $links_data ) ) {
 			return $markup;
 		}
@@ -547,9 +557,10 @@ class CEO_WordPress_Shortcodes {
 	 * @param int    $post_id The numeric ID of the WP Post.
 	 * @param string $title The link title when the Event does not recur.
 	 * @param string $classes The space-delimited classes to add to the links.
+	 * @param string $waitlist The link title when the Event does not recur and is full and there is a waitlist.
 	 * @return array $data The array of HTML links to the CiviCRM Registration pages with metadata for each link.
 	 */
-	public function links_get( $post_id, $title = null, $classes = null ) {
+	public function links_get( $post_id, $title = null, $classes = null, $waitlist = null ) {
 
 		// Return data if already parsed.
 		if ( isset( $this->data[ $post_id ] ) ) {
@@ -833,21 +844,37 @@ class CEO_WordPress_Shortcodes {
 					// Get Occurrence ID for this CiviCRM Event.
 					$occurrence_id = $this->plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
 
-					// Define text.
-					$text = sprintf(
-						/* translators: %s: The formatted Event Occurrence. */
-						esc_html__( 'Register for %s', 'civicrm-event-organiser' ),
-						eo_format_event_occurrence( $post_id, $occurrence_id )
-					);
+					// Change text when there is a waitlist.
+					if ( in_array( 'waitlist', $info['meta'] ) ) {
+						$text = sprintf(
+							/* translators: %s: The formatted Event Occurrence. */
+							esc_html__( 'Join the waitlist for %s', 'civicrm-event-organiser' ),
+							eo_format_event_occurrence( $post_id, $occurrence_id )
+						);
+					} else {
+						$text = sprintf(
+							/* translators: %s: The formatted Event Occurrence. */
+							esc_html__( 'Register for %s', 'civicrm-event-organiser' ),
+							eo_format_event_occurrence( $post_id, $occurrence_id )
+						);
+					}
 
 				} else {
 
-					// Default title.
-					$text = esc_html__( 'Register', 'civicrm-event-organiser' );
-
-					// Use custom title if provided.
-					if ( ! empty( $title ) ) {
-						$text = esc_html( $title );
+					/*
+					 * Change button text when there is a waitlist.
+					 * Also override with custom button text if provided.
+					 */
+					if ( in_array( 'waitlist', $info['meta'] ) ) {
+						$text = esc_html__( 'Waitlist', 'civicrm-event-organiser' );
+						if ( ! empty( $waitlist ) ) {
+							$text = esc_html( $waitlist );
+						}
+					} else {
+						$text = esc_html__( 'Register', 'civicrm-event-organiser' );
+						if ( ! empty( $title ) ) {
+							$text = esc_html( $title );
+						}
 					}
 
 				}
