@@ -38,20 +38,6 @@ class CEO_WordPress_Shortcodes {
 	public $wordpress;
 
 	/**
-	 * Event data array.
-	 *
-	 * Holds data about Events, keyed by Post ID.
-	 *
-	 * This array gets added to when any of the Shortcodes gets called, so that
-	 * database queries are minimised.
-	 *
-	 * @since 0.8.6
-	 * @access public
-	 * @var array
-	 */
-	public $data = [];
-
-	/**
 	 * Constructor.
 	 *
 	 * @since 0.6.3
@@ -562,11 +548,6 @@ class CEO_WordPress_Shortcodes {
 	 */
 	public function links_get( $post_id, $title = null, $classes = null, $waitlist = null ) {
 
-		// Return data if already parsed.
-		if ( isset( $this->data[ $post_id ] ) ) {
-			return $this->data[ $post_id ];
-		}
-
 		// Bail if there are no CiviCRM Event IDs.
 		$civi_event_ids = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
 		if ( empty( $civi_event_ids ) ) {
@@ -574,7 +555,7 @@ class CEO_WordPress_Shortcodes {
 		}
 
 		// Init data array for this Post ID.
-		$this->data[ $post_id ] = [];
+		$data = [];
 
 		// Did we get more than one?
 		$multiple = ( count( $civi_event_ids ) > 1 ) ? true : false;
@@ -959,12 +940,12 @@ class CEO_WordPress_Shortcodes {
 			}
 
 			// Assign to data.
-			$this->data[ $post_id ][ $civi_event_id ] = $info;
+			$data[ $civi_event_id ] = $info;
 
 		}
 
 		// --<
-		return $this->data[ $post_id ];
+		return $data;
 
 	}
 
