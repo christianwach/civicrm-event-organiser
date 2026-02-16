@@ -558,7 +558,7 @@ class CEO_WordPress_Shortcodes {
 		$data = [];
 
 		// Did we get more than one?
-		$multiple = ( count( $civi_event_ids ) > 1 ) ? true : false;
+		$multiple = count( $civi_event_ids ) > 1 ? true : false;
 
 		// Get the Contact ID for the current User.
 		$contact_id = $this->plugin->ufmatch->contact_id_get_by_user_id( get_current_user_id() );
@@ -785,6 +785,38 @@ class CEO_WordPress_Shortcodes {
 
 			}
 
+			// Get remaining places if there is a limit on participants.
+			if ( ! empty( $civi_event['max_participants'] ) ) {
+
+				$remaining = $this->plugin->civi->registration->get_remaining_participants( $civi_event_id );
+
+				// Set different text for single and multiple Occurrences.
+				if ( $multiple ) {
+
+					// Get Occurrence ID for this CiviCRM Event.
+					$occurrence_id = $this->plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
+
+					$message = sprintf(
+						/* translators: 1: The number of remaining places, 2: The formatted Event Occurrence. */
+						_n( '%1$d place remaining for %2$s.', '%1$d places remaining for %2$s.', $remaining, 'civicrm-event-organiser' ),
+						esc_html( $remaining ),
+						eo_format_event_occurrence( $post_id, $occurrence_id )
+					);
+
+				} else {
+					$message = sprintf(
+						/* translators: %d: The number of remaining places. */
+						_n( '%d place remaining', '%d places remaining', $remaining, 'civicrm-event-organiser' ),
+						esc_html( $remaining )
+					);
+				}
+
+				// Add to info array.
+				$info['remaining_count']   = (string) $remaining;
+				$info['remaining_message'] = $message;
+
+			}
+
 			// Closed Events do not have a link.
 			if ( false === $closed ) {
 
@@ -857,38 +889,6 @@ class CEO_WordPress_Shortcodes {
 							$text = esc_html( $title );
 						}
 					}
-
-				}
-
-				// Get remaining places if there is a limit on participants.
-				if ( ! empty( $civi_event['max_participants'] ) ) {
-
-					$remaining = $this->plugin->civi->registration->get_remaining_participants( $civi_event_id );
-
-					// Set different text for single and multiple Occurrences.
-					if ( $multiple ) {
-
-						// Get Occurrence ID for this CiviCRM Event.
-						$occurrence_id = $this->plugin->mapping->get_eo_occurrence_id_by_civi_event_id( $civi_event_id );
-
-						$message = sprintf(
-							/* translators: 1: The number of remaining places, 2: The formatted Event Occurrence. */
-							_n( '%1$d place remaining for %2$s.', '%1$d places remaining for %2$s.', $remaining, 'civicrm-event-organiser' ),
-							esc_html( $remaining ),
-							eo_format_event_occurrence( $post_id, $occurrence_id )
-						);
-
-					} else {
-						$message = sprintf(
-							/* translators: %d: The number of remaining places. */
-							_n( '%d place remaining', '%d places remaining', $remaining, 'civicrm-event-organiser' ),
-							esc_html( $remaining )
-						);
-					}
-
-					// Add to info array.
-					$info['remaining_count']   = (string) $remaining;
-					$info['remaining_message'] = $message;
 
 				}
 
