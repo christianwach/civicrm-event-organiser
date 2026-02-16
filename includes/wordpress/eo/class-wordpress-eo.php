@@ -1086,8 +1086,13 @@ class CEO_WordPress_EO {
 			return;
 		}
 
-		// Bail if User lacks capability.
-		if ( ! current_user_can( 'publish_posts' ) ) {
+		// Bail if the User lacks the Event Organiser capability.
+		if ( ! current_user_can( 'publish_events' ) ) {
+			return;
+		}
+
+		// Bail if the User lacks the CiviCRM permission.
+		if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) {
 			return;
 		}
 
@@ -1274,9 +1279,16 @@ class CEO_WordPress_EO {
 			}
 		}
 
-		// Do not sync if the User cannot publish Posts.
+		// Do not sync if the User cannot publish Event Organiser Events.
 		if ( $should_be_synced ) {
-			if ( ! current_user_can( 'publish_posts' ) ) {
+			if ( ! current_user_can( 'publish_events' ) ) {
+				$should_be_synced = false;
+			}
+		}
+
+		// Do not sync if the User cannot access CiviCRM Events.
+		if ( $should_be_synced ) {
+			if ( ! $this->plugin->civi->check_permission( 'access CiviEvent' ) ) {
 				$should_be_synced = false;
 			}
 		}

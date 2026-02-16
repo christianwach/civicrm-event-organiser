@@ -408,14 +408,17 @@ class CEO_Menus {
 			return;
 		}
 
-		// Build view link.
-		$link_view = '<li><a class="crm-event-wordpress-view" href="' . get_permalink( $post_id ) . '">' .
-			__( 'View Event in WordPress', 'civicrm-event-organiser' ) .
-		'</a><li>' . "\n";
+		// Add view link if permissions allow.
+		$link_view = '';
+		if ( current_user_can( 'read_event', $post_id ) ) {
+			$link_view = '<li><a class="crm-event-wordpress-view" href="' . get_permalink( $post_id ) . '">' .
+				__( 'View Event in WordPress', 'civicrm-event-organiser' ) .
+			'</a><li>' . "\n";
+		}
 
 		// Add edit link if permissions allow.
 		$link_edit = '';
-		if ( current_user_can( 'edit_post', $post_id ) ) {
+		if ( current_user_can( 'edit_event', $post_id ) ) {
 			$link_edit = '<li><a class="crm-event-wordpress-edit" href="' . get_edit_post_link( $post_id ) . '">' .
 				__( 'Edit Event in WordPress', 'civicrm-event-organiser' ) .
 			'</a><li>' . "\n";

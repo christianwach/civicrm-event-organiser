@@ -701,7 +701,7 @@ class CEO_CiviCRM_Event {
 		}
 
 		// Disallow users without permission to create events.
-		if ( ! current_user_can( 'edit_events' ) ) {
+		if ( ! current_user_can( 'publish_events' ) ) {
 			return;
 		}
 
@@ -737,7 +737,7 @@ class CEO_CiviCRM_Event {
 		}
 
 		// Disallow users without permission to create events.
-		if ( ! current_user_can( 'edit_events' ) ) {
+		if ( ! current_user_can( 'publish_events' ) ) {
 			return;
 		}
 
@@ -1285,8 +1285,9 @@ class CEO_CiviCRM_Event {
 		 * automatically.
 		 *
 		 * Since CiviCRM Events will only be generated when the "Create CiviCRM Events"
-		 * checkbox is ticked (and only those with 'publish_posts' caps can see
-		 * the checkbox) we assume that this is the definitive set of Events.
+		 * checkbox is ticked (and only those with both the 'publish_events' capability
+		 * and the 'access CiviEvents' permission can see the checkbox) we assume that
+		 * this is the definitive set of Events.
 		 *
 		 * Any further changes work thusly:
 		 *
