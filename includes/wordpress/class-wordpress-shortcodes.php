@@ -887,7 +887,7 @@ class CEO_WordPress_Shortcodes {
 					}
 
 					// Add to info array.
-					$info['remaining_count'] = (string) $remaining;
+					$info['remaining_count']   = (string) $remaining;
 					$info['remaining_message'] = $message;
 
 				}
