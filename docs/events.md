@@ -14,5 +14,6 @@ Once you've enabled registration when viewing an event on the website, there wil
 
 ![CiviCRM Event Organiser Register Link](./images/ceo-event-register-link.jpg)
 
-### User permissions
-For users to sync events to CiviCRM, they must have `publish_posts` and `access CiviEvent` capabilities
+### Permissions & Capabilities
+
+For Users to sync Events between Event Organiser and CiviCRM, they must have the `publish_events` capability and the `access CiviEvent` permission.
