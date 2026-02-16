@@ -1,15 +1,15 @@
-# Copyright (C) 2025 Christian Wach
+# Copyright (C) 2026 Christian Wach
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: CiviCRM Event Organiser 0.8.5a\n"
+"Project-Id-Version: CiviCRM Event Organiser 0.8.6a\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/civicrm-event-organiser\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2025-11-24T20:35:29+00:00\n"
+"POT-Creation-Date: 2026-02-16T14:06:45+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: civicrm-event-organiser\n"
@@ -388,7 +388,7 @@ msgstr ""
 
 #: assets/templates/wordpress/pages/page-admin-manual-sync.php:17
 #: assets/templates/wordpress/pages/page-admin-settings.php:18
-#: civicrm-event-organiser.php:479
+#: civicrm-event-organiser.php:478
 #: includes/admin/class-admin-settings.php:203
 #: includes/admin/class-admin-settings.php:511
 msgid "Settings"
@@ -431,7 +431,7 @@ msgstr ""
 msgid "Delete unused CiviCRM Events"
 msgstr ""
 
-#: civicrm-event-organiser.php:483
+#: civicrm-event-organiser.php:482
 msgid "Donate!"
 msgstr ""
 
@@ -867,9 +867,92 @@ msgstr ""
 msgid "Edit Event in WordPress"
 msgstr ""
 
-#: includes/wordpress/class-wordpress-shortcodes.php:172
-#: includes/wordpress/eo/theme-functions.php:59
-msgid "Registration Links"
+#. translators: %s: The formatted Event Occurrence.
+#: includes/wordpress/class-wordpress-shortcodes.php:607
+#, php-format
+msgid "This event on %s is currently full. However you can register now and get added to a waiting list. You will be notified if spaces become available."
+msgstr ""
+
+#: includes/wordpress/class-wordpress-shortcodes.php:612
+msgid "This event is currently full. However you can register now and get added to a waiting list. You will be notified if spaces become available."
+msgstr ""
+
+#. translators: %s: The formatted Event Occurrence.
+#: includes/wordpress/class-wordpress-shortcodes.php:627
+#, php-format
+msgid "The event on %s is currently full."
+msgstr ""
+
+#: includes/wordpress/class-wordpress-shortcodes.php:631
+msgid "This event is currently full."
+msgstr ""
+
+#. translators: %s: The formatted Event Occurrence.
+#: includes/wordpress/class-wordpress-shortcodes.php:671
+#, php-format
+msgid "You are already registered for %s."
+msgstr ""
+
+#: includes/wordpress/class-wordpress-shortcodes.php:676
+msgid "You are already registered for this event."
+msgstr ""
+
+#. translators: 1: The formatted Event Occurrence, 2: The date, 3: The time.
+#: includes/wordpress/class-wordpress-shortcodes.php:733
+#, php-format
+msgid "Online registration for %1$s will open on %2$s at %3$s."
+msgstr ""
+
+#. translators: %s: The formatted Event Occurrence.
+#: includes/wordpress/class-wordpress-shortcodes.php:742
+#, php-format
+msgid "Online registration has closed for %s."
+msgstr ""
+
+#. translators: 1: The date, 2: The time.
+#: includes/wordpress/class-wordpress-shortcodes.php:756
+#, php-format
+msgid "Online registration will open on %1$s at %2$s."
+msgstr ""
+
+#: includes/wordpress/class-wordpress-shortcodes.php:762
+msgid "Online registration has closed."
+msgstr ""
+
+#. translators: 1: The number of remaining places, 2: The formatted Event Occurrence.
+#: includes/wordpress/class-wordpress-shortcodes.php:801
+#, php-format
+msgid "%1$d place remaining for %2$s."
+msgid_plural "%1$d places remaining for %2$s."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %d: The number of remaining places.
+#: includes/wordpress/class-wordpress-shortcodes.php:809
+#, php-format
+msgid "%d place remaining"
+msgid_plural "%d places remaining"
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: The formatted Event Occurrence.
+#: includes/wordpress/class-wordpress-shortcodes.php:864
+#, php-format
+msgid "Join the waitlist for %s"
+msgstr ""
+
+#. translators: %s: The formatted Event Occurrence.
+#: includes/wordpress/class-wordpress-shortcodes.php:870
+#, php-format
+msgid "Register for %s"
+msgstr ""
+
+#: includes/wordpress/class-wordpress-shortcodes.php:882
+msgid "Waitlist"
+msgstr ""
+
+#: includes/wordpress/class-wordpress-shortcodes.php:887
+msgid "Register"
 msgstr ""
 
 #: includes/wordpress/class-wordpress-taxonomy.php:725
@@ -911,62 +994,14 @@ msgstr ""
 msgid "Untitled CiviCRM Event"
 msgstr ""
 
-#: includes/wordpress/eo/class-wordpress-eo.php:867
+#: includes/wordpress/eo/class-wordpress-eo.php:872
 msgid "CiviCRM Event Settings"
 msgstr ""
 
-#: includes/wordpress/eo/class-wordpress-eo.php:877
+#: includes/wordpress/eo/class-wordpress-eo.php:882
 msgid "Edit in CiviCRM"
 msgstr ""
 
-#. translators: 1: The formatted Event Occurrence, 2: The date, 3: The time.
-#: includes/wordpress/eo/theme-functions.php:167
-#, php-format
-msgid "Online registration for %1$s will open on %2$s at %3$s."
-msgstr ""
-
-#. translators: %s: The formatted Event Occurrence.
-#: includes/wordpress/eo/theme-functions.php:176
-#, php-format
-msgid "Online registration has closed for %s."
-msgstr ""
-
-#. translators: 1: The date, 2: The time.
-#: includes/wordpress/eo/theme-functions.php:190
-#, php-format
-msgid "Online registration will open on %1$s at %2$s."
-msgstr ""
-
-#: includes/wordpress/eo/theme-functions.php:196
-msgid "Online registration has closed."
-msgstr ""
-
-#. translators: %s: The formatted Event Occurrence.
-#: includes/wordpress/eo/theme-functions.php:231
-#, php-format
-msgid "The event on %s is currently full."
-msgstr ""
-
-#: includes/wordpress/eo/theme-functions.php:235
-msgid "This event is currently full."
-msgstr ""
-
-#. translators: %s: The formatted Event Occurrence.
-#: includes/wordpress/eo/theme-functions.php:273
-#, php-format
-msgid "You are already registered for %s."
-msgstr ""
-
-#: includes/wordpress/eo/theme-functions.php:278
-msgid "You are already registered for this event."
-msgstr ""
-
-#. translators: %s: The formatted Event Occurrence.
-#: includes/wordpress/eo/theme-functions.php:348
-#, php-format
-msgid "Register for %s"
-msgstr ""
-
-#: includes/wordpress/eo/theme-functions.php:355
-msgid "Register"
+#: includes/wordpress/eo/theme-functions.php:79
+msgid "Registration Links"
 msgstr ""
