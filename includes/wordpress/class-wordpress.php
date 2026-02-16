@@ -164,16 +164,17 @@ class CEO_WordPress {
 	/**
 	 * Replaces paragraph elements with double line-breaks.
 	 *
-	 * This is the inverse behavior of the wpautop() function found in WordPress
-	 * which converts double line-breaks to paragraphs. Handy when you want to
-	 * undo whatever it did.
+	 * This is an attempt to reverse the behaviour of the wpautop() function found
+	 * in WordPress which converts double line-breaks to paragraphs. Handy when you
+	 * want to (mostly) undo whatever it did.
 	 *
-	 * Code via Frankie Jarrett on GitHub.
+	 * Modified from code by Scott Thomason.
 	 *
-	 * @link https://gist.github.com/fjarrett/ecddd0ed419bb853e390
+	 * @link https://scotthom.com/unautop-undo-wordpress-wpautop/
 	 * @link https://core.trac.wordpress.org/ticket/25615
 	 *
 	 * @since 0.8.2
+	 * @since 0.8.6 Switched to string replacement method.
 	 *
 	 * @param string $text The string to match paragraphs tags in.
 	 * @param bool   $br (Optional) Whether to process line breaks.
@@ -186,37 +187,22 @@ class CEO_WordPress {
 			return '';
 		}
 
-		// Match plain <p> tags and their contents (ignore <p> tags with attributes).
-		$matches = preg_match_all( '/<(p+)*(?:>(.*)<\/\1>|\s+\/>)/m', $text, $text_parts );
+		// Remove new lines and carriage returns.
+		$text = str_replace( "\n", '', $text );
+		$text = str_replace( "\r", '', $text );
 
-		// Bail if no matches.
-		if ( ! $matches ) {
-			return $text;
-		}
-
-		// Init replacements array.
-		$replace = [
-			"\n" => '',
-			"\r" => '',
-		];
-
-		// Maybe add breaks to replacements array.
+		// Maybe replace line breaks.
 		if ( $br ) {
-			$replace['<br>']   = "\r\n";
-			$replace['<br/>']  = "\r\n";
-			$replace['<br />'] = "\r\n";
+			$text = str_ireplace( [ '<br>', '<br/>', '<br />' ], "\n", $text );
 		}
 
-		// Build keyed replacements.
-		foreach ( $text_parts[2] as $i => $text_part ) {
-			$replace[ $text_parts[0][ $i ] ] = $text_part . "\r\n\r\n";
-		}
-
-		// Do replacements.
-		$replaced = str_replace( array_keys( $replace ), array_values( $replace ), $text );
+		// Convert paragraph tags to new lines and clean up.
+		$text = str_ireplace( '<p>', "\n", $text );
+		$text = str_ireplace( '</p>', "\n\n", $text );
+		$text = str_replace( "\n\n\n", "\n\n", $text );
 
 		// --<
-		return rtrim( $replaced );
+		return $text;
 
 	}
 
