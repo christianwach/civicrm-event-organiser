@@ -470,7 +470,12 @@ class CEO_WordPress_EO {
 		if ( isset( $civi_event['description'] ) ) {
 			$description = $this->plugin->civi->denullify( $civi_event['description'] );
 			if ( ! empty( $description ) ) {
-				$post_data['post_content'] = $this->wordpress->unautop( $description );
+				// Try to undo wpautop.
+				$description = shortcode_unautop( $description );
+				$description = $this->wordpress->unautop( $description );
+				$description = html_entity_decode( $description );
+				// Assign to Post data.
+				$post_data['post_content'] = $description;
 			}
 		}
 
