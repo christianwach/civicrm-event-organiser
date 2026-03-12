@@ -789,6 +789,9 @@ class CEO_WordPress_Shortcodes {
 			if ( ! empty( $civi_event['max_participants'] ) ) {
 
 				$remaining = $this->plugin->civi->registration->get_remaining_participants( $civi_event_id );
+				if ( 0 > $remaining ) {
+					$remaining = 0;
+				}
 
 				// Set different text for single and multiple Occurrences.
 				if ( $multiple ) {
