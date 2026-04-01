@@ -1039,10 +1039,10 @@ class CEO_WordPress_Shortcodes {
 	public function template_patterns( $patterns, $template ) {
 
 		// Add the CiviCRM patterns.
-		$patterns[] = '/%(ceo_event_remaining)%/';
-		$patterns[] = '/%(ceo_event_remaining_number)%/';
-		$patterns[] = '/%(ceo_event_messages)%/';
-		$patterns[] = '/%(ceo_event_link)%/';
+		$patterns[] = '/%(ceo_remaining)%/';
+		$patterns[] = '/%(ceo_remaining_number)%/';
+		$patterns[] = '/%(ceo_messages)%/';
+		$patterns[] = '/%(ceo_link)%/';
 
 		// --<
 		return $patterns;
@@ -1074,20 +1074,20 @@ class CEO_WordPress_Shortcodes {
 		}
 
 		switch ( $matches[1] ) {
-			case 'ceo_event_remaining_number':
-			case 'ceo_event_remaining':
+			case 'ceo_remaining_number':
+			case 'ceo_remaining':
 				$format = null;
-				if ( 'ceo_event_remaining_number' === $matches[1] ) {
+				if ( 'ceo_remaining_number' === $matches[1] ) {
 					$format = 'raw';
 				}
 				$replacement = $this->remaining_process( $links_data, $post_id, $format );
 				break;
 
-			case 'ceo_event_messages':
+			case 'ceo_messages':
 				$replacement = $this->messages_process( $links_data, $post_id );
 				break;
 
-			case 'ceo_event_link':
+			case 'ceo_link':
 				$replacement = $this->link_process( $links_data, $post_id );
 				break;
 
