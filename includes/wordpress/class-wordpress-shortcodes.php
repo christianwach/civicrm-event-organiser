@@ -1042,7 +1042,7 @@ class CEO_WordPress_Shortcodes {
 		$patterns[] = '/%(ceo_event_remaining)%/';
 		$patterns[] = '/%(ceo_event_remaining_number)%/';
 		$patterns[] = '/%(ceo_event_messages)%/';
-		$patterns[] = '/%(ceo_event_links)%/';
+		$patterns[] = '/%(ceo_event_link)%/';
 
 		// --<
 		return $patterns;
@@ -1087,7 +1087,7 @@ class CEO_WordPress_Shortcodes {
 				$replacement = $this->messages_process( $links_data, $post_id );
 				break;
 
-			case 'ceo_event_links':
+			case 'ceo_event_link':
 				$replacement = $this->link_process( $links_data, $post_id );
 				break;
 
