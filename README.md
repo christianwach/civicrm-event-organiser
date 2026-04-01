@@ -82,9 +82,13 @@ Now that you've installed the plugin, you'll want to find out:
 * How to [configure the CiviCRM Event Organiser settings](/docs/settings.md).
 * How to [add synced Events to your website](/docs/events.md).
 
-### Shortcode
+### Shortcodes
 
-CiviCRM Event Organiser provides a `[ceo_register_link]` Shortcode through which you can render the Register button in your page wherever you want.
+CiviCRM Event Organiser provides a number of Shortcodes for adding CiviCRM-related elements.
+
+#### `[ceo_register_link]`
+
+Use the `[ceo_register_link]` Shortcode to display a Registration link or button in your page wherever you want. The default link text is "Register" but switches to "Waitlist" when the visitor is not a registered Participant and there is a waitlist with space available.
 
 The attributes that the Shortcode accepts are:
 
@@ -93,6 +97,27 @@ The attributes that the Shortcode accepts are:
 * `wrap_class` which defaults to no classes on the wrapper element.
 * `anchor_class` which defaults to no classes on the anchor element.
 * `title` which defaults to "Register" for single Events.
+* `waitlist` which defaults to "Waitlist" for single Events.
+* `messages` which defaults to showing messages. Use `messages="no"` or `messages="false"` to suppress them.
+
+#### `[ceo_register_messages]`
+
+Use the `[ceo_register_messages]` Shortcode to display the Registration messages separately from the Registration link button. Add `messages="no"` to your `[ceo_register_link]` Shortcode to suppress displaying the messages alongside the link or button.
+
+The attributes that the Shortcode accepts are:
+
+* `event_id` which defaults to the currently displayed Event.
+* `class` which defaults to no classes on the wrapper element.
+
+#### `[ceo_register_remaining]`
+
+Use the `[ceo_register_remaining]` Shortcode to display the number of remaining places for a CiviCRM Event that has a waitlist.
+
+The attributes that the Shortcode accepts are:
+
+* `event_id` which defaults to the currently displayed Event.
+* `class` which defaults to no classes on the wrapper element.
+* `format` which defaults to e.g. "2 places remaining". Use `format="raw"` to display just the number.
 
 ### Known Issues
 
