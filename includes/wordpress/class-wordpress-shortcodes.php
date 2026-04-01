@@ -63,9 +63,13 @@ class CEO_WordPress_Shortcodes {
 	public function register_shortcodes() {
 
 		// Register Shortcodes.
-		add_shortcode( 'ceo_register_remaining', [ $this, 'register_remaining_render' ] );
-		add_shortcode( 'ceo_register_messages', [ $this, 'register_messages_render' ] );
-		add_shortcode( 'ceo_register_link', [ $this, 'register_link_render' ] );
+		add_shortcode( 'ceo_register_remaining', [ $this, 'remaining_render' ] );
+		add_shortcode( 'ceo_register_messages', [ $this, 'messages_render' ] );
+		add_shortcode( 'ceo_register_link', [ $this, 'link_render' ] );
+
+		// Register Shortcode compatibility.
+		add_filter( 'eo_placeholder_template_patterns', [ $this, 'template_patterns' ], 10, 2 );
+		add_filter( 'eo_placeholder_template_replacement', [ $this, 'template_replacement' ], 10, 2 );
 
 	}
 
@@ -80,7 +84,7 @@ class CEO_WordPress_Shortcodes {
 	 * @param string $content The enclosed content of the Shortcode.
 	 * @return string $markup The HTML markup for the Shortcode.
 	 */
-	public function register_remaining_render( $attr, $content = null ) {
+	public function remaining_render( $attr, $content = null ) {
 
 		// Init defaults.
 		$defaults = [
@@ -119,9 +123,32 @@ class CEO_WordPress_Shortcodes {
 			return $markup;
 		}
 
+		// Process array into markup.
+		$markup = $this->remaining_process( $links_data, $post_id, $format );
+
+		// --<
+		return $markup;
+
+	}
+
+	/**
+	 * Processes the CiviCRM Registration remaining participant count markup.
+	 *
+	 * @since 0.8.7
+	 *
+	 * @param array  $links The array of HTML links to the CiviCRM Registration pages with metadata for each link.
+	 * @param int    $post_id The numeric ID of the Event.
+	 * @param string $format The format of the returned string - passing "raw" renders just the number.
+	 * @return string $markup The rendered HTML markup.
+	 */
+	private function remaining_process( $links, $post_id, $format = '' ) {
+
+		// Init return.
+		$markup = '';
+
 		// Process messages.
 		array_walk(
-			$links_data,
+			$links,
 			function( &$item, $key ) {
 
 				// Wrap messages.
@@ -140,8 +167,8 @@ class CEO_WordPress_Shortcodes {
 		);
 
 		// Extract remaining array.
-		$remaining_messages = array_filter( wp_list_pluck( $links_data, 'remaining_message' ) );
-		$remaining_count    = array_filter( wp_list_pluck( $links_data, 'remaining_count' ), 'strlen' );
+		$remaining_messages = array_filter( wp_list_pluck( $links, 'remaining_message' ) );
+		$remaining_count    = array_filter( wp_list_pluck( $links, 'remaining_count' ), 'strlen' );
 
 		// Is it recurring?
 		if ( eo_recurs( $post_id ) ) {
@@ -161,7 +188,7 @@ class CEO_WordPress_Shortcodes {
 
 		} else {
 
-			// Remder markup.
+			// Render markup.
 			if ( 'raw' === $format ) {
 				$markup .= implode( ' ', $remaining_count );
 			} else {
@@ -186,7 +213,7 @@ class CEO_WordPress_Shortcodes {
 	 * @param string $content The enclosed content of the Shortcode.
 	 * @return string $markup The HTML markup for the Shortcode.
 	 */
-	public function register_messages_render( $attr, $content = null ) {
+	public function messages_render( $attr, $content = null ) {
 
 		// Init defaults.
 		$defaults = [
@@ -214,6 +241,28 @@ class CEO_WordPress_Shortcodes {
 		if ( empty( $links_data ) ) {
 			return $markup;
 		}
+
+		// Process array into markup.
+		$markup = $this->messages_process( $links_data, $post_id );
+
+		// --<
+		return $markup;
+
+	}
+
+	/**
+	 * Processes the CiviCRM Registration messages markup.
+	 *
+	 * @since 0.8.7
+	 *
+	 * @param array $links_data The array of HTML links to the CiviCRM Registration pages with metadata for each link.
+	 * @param int   $post_id The numeric ID of the Event.
+	 * @return string $markup The rendered HTML markup.
+	 */
+	private function messages_process( $links_data, $post_id ) {
+
+		// Init return.
+		$markup = '';
 
 		// Process messages.
 		array_walk(
@@ -280,7 +329,7 @@ class CEO_WordPress_Shortcodes {
 	 * @param string $content The enclosed content of the Shortcode.
 	 * @return string $markup The HTML markup for the Shortcode.
 	 */
-	public function register_link_render( $attr, $content = null ) {
+	public function link_render( $attr, $content = null ) {
 
 		// Init defaults.
 		$defaults = [
@@ -371,27 +420,8 @@ class CEO_WordPress_Shortcodes {
 		// Make sure we have a Post ID.
 		$post_id = intval( empty( $post_id ) ? get_the_ID() : $post_id );
 
-		// Extract links array.
-		$links = array_filter( wp_list_pluck( $links_data, 'link' ) );
-
-		// Is it recurring?
-		if ( eo_recurs( $post_id ) ) {
-
-			// Combine into list.
-			$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
-
-			// Top and tail list items.
-			$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
-
-			// Wrap in unordered list.
-			$markup .= '<ul class="civicrm-event-register-links">' . $list . '</ul>';
-
-		} else {
-
-			// Show link.
-			$markup .= implode( ' ', $links );
-
-		}
+		// Process array into markup.
+		$markup = $this->link_process( $links_data, $post_id );
 
 		// --<
 		return $markup;
@@ -534,6 +564,49 @@ class CEO_WordPress_Shortcodes {
 		return $links_data;
 
 	}
+
+	/**
+	 * Processes the CiviCRM Register link markup.
+	 *
+	 * @since 0.8.7
+	 *
+	 * @param array $links_data The array of HTML links to the CiviCRM Registration pages with metadata for each link.
+	 * @param int   $post_id The numeric ID of the Event.
+	 * @return string $markup The rendered HTML markup.
+	 */
+	private function link_process( $links_data, $post_id ) {
+
+		// Init return.
+		$markup = '';
+
+		// Extract links array.
+		$links = array_filter( wp_list_pluck( $links_data, 'link' ) );
+
+		// Is it recurring?
+		if ( eo_recurs( $post_id ) ) {
+
+			// Combine into list.
+			$list = implode( '</li>' . "\n" . '<li class="civicrm-event-register-link">', $links );
+
+			// Top and tail list items.
+			$list = '<li class="civicrm-event-register-link">' . $list . '</li>' . "\n";
+
+			// Wrap in unordered list.
+			$markup .= '<ul class="civicrm-event-register-links">' . $list . '</ul>';
+
+		} else {
+
+			// Show link.
+			$markup .= implode( ' ', $links );
+
+		}
+
+		// --<
+		return $markup;
+
+	}
+
+	// -----------------------------------------------------------------------------------
 
 	/**
 	 * Parses a given Event Organiser Event.
@@ -949,6 +1022,79 @@ class CEO_WordPress_Shortcodes {
 
 		// --<
 		return $data;
+
+	}
+
+	/**
+	 * Filters the array of Event Organiser Placeholder Tag patterns.
+	 *
+	 * Note that this functionality only works with the Tadpole clone of Event Organiser.
+	 *
+	 * @since 0.8.7
+	 *
+	 * @param array  $patterns The array of Placeholder Tag patterns.
+	 * @param string $template The "placeholder" template.
+	 * @return array $patterns The modified array of Placeholder Tag patterns.
+	 */
+	public function template_patterns( $patterns, $template ) {
+
+		// Add the CiviCRM patterns.
+		$patterns[] = '/%(ceo_event_remaining)%/';
+		$patterns[] = '/%(ceo_event_remaining_number)%/';
+		$patterns[] = '/%(ceo_event_messages)%/';
+		$patterns[] = '/%(ceo_event_links)%/';
+
+		// --<
+		return $patterns;
+
+	}
+
+	/**
+	 * Filters the replacement string for an Event Organiser Placeholder Tag.
+	 *
+	 * Note that this functionality only works with the Tadpole clone of Event Organiser.
+	 *
+	 * @since 0.8.7
+	 *
+	 * @param string $replacement The replacement string.
+	 * @param array  $matches The array of matched elements.
+	 * @return string $replacement The modified replacement string.
+	 */
+	public function template_replacement( $replacement, $matches ) {
+
+		global $post;
+
+		// Default to the current Event.
+		$post_id = intval( empty( $post->id ) ? get_the_ID() : $post->id );
+
+		// Get links array.
+		$links_data = civicrm_event_organiser_get_register_links( $post_id );
+		if ( empty( $links_data ) ) {
+			return $replacement;
+		}
+
+		switch ( $matches[1] ) {
+			case 'ceo_event_remaining_number':
+			case 'ceo_event_remaining':
+				$format = null;
+				if ( 'ceo_event_remaining_number' === $matches[1] ) {
+					$format = 'raw';
+				}
+				$replacement = $this->remaining_process( $links_data, $post_id, $format );
+				break;
+
+			case 'ceo_event_messages':
+				$replacement = $this->messages_process( $links_data, $post_id );
+				break;
+
+			case 'ceo_event_links':
+				$replacement = $this->link_process( $links_data, $post_id );
+				break;
+
+		}
+
+		// --<
+		return $replacement;
 
 	}
 
