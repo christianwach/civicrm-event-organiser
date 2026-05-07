@@ -4,7 +4,7 @@
     <td>&nbsp;</td>
     <td class="ceo_event_sync">
       {$form.ceo_event_sync_checkbox.html}
-      {$form.ceo_event_sync_checkbox.label}
+      <strong>{$form.ceo_event_sync_checkbox.label}</strong>
     </td>
   </tr>
 </table>

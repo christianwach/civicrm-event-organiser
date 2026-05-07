@@ -771,7 +771,7 @@ class CEO_CiviCRM_Event {
 		}
 
 		// Add our checkbox.
-		$label = '<strong>' . __( 'Sync this Event to WordPress now', 'civicrm-event-organiser' ) . '</strong>';
+		$label = __( 'Sync this Event to WordPress now', 'civicrm-event-organiser' );
 		$form->add( 'checkbox', 'ceo_event_sync_checkbox', $label );
 
 		// Insert template block into the page.
