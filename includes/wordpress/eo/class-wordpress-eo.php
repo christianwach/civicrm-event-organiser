@@ -1371,7 +1371,7 @@ class CEO_WordPress_EO {
 		$correspondences = $this->plugin->mapping->get_civi_event_ids_by_eo_event_id( $post_id );
 
 		// Check if this Event is repeating.
-		$repeating = ( 1 < count( $correspondences ) ) ? true : false;
+		$repeating = ( 1 < count( $correspondences ) || eo_recurs( $post_id ) ) ? true : false;
 
 		/*
 		 * There is no need to check the "Sync Event to CiviCRM" checkbox when the
@@ -1391,7 +1391,7 @@ class CEO_WordPress_EO {
 		}
 
 		// phpcs:ignore WordPress.Security.NonceVerification.Missing
-		$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : 0;
+		$sync = isset( $_POST['civi_eo_event_sync'] ) ? sanitize_text_field( wp_unslash( $_POST['civi_eo_event_sync'] ) ) : '0';
 
 		// Only sync if the "Sync this Event with CiviCRM" checkbox is checked.
 		if ( '1' === (string) $sync ) {
