@@ -1024,22 +1024,19 @@ class CEO_CiviCRM_Registration {
 		// Do we have a default set?
 		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_confirm' );
 
-		// Override with default value if we have one.
-		if ( '' !== $default && is_numeric( $default ) ) {
+		// If no default has been set (or default is not valid) use CiviCRM default.
+		if ( ! in_array( $default, [ '0', '1' ], true ) ) {
+			$setting = 1; // Show a confirmation screen.
+		} else {
 			$setting = (int) $default;
 		}
 
-		// If we have a Post.
-		if ( isset( $post_id ) && is_numeric( $post_id ) ) {
-
-			// Get stored value.
+		// Override with Post's stored value if we have one.
+		if ( ! empty( $post_id ) ) {
 			$stored_setting = $this->plugin->wordpress->eo->get_event_registration_confirm( $post_id );
-
-			// Override with stored value if we get a value.
 			if ( '' !== $stored_setting && is_numeric( $stored_setting ) ) {
 				$setting = (int) $stored_setting;
 			}
-
 		}
 
 		// --<
@@ -1156,22 +1153,19 @@ class CEO_CiviCRM_Registration {
 		// Do we have a default set?
 		$default = $this->plugin->admin->option_get( 'civi_eo_event_default_send_email' );
 
-		// Override with default value if we have one.
-		if ( '' !== $default && is_numeric( $default ) ) {
+		// If no default has been set (or default is not valid) use CiviCRM default.
+		if ( ! in_array( $default, [ '0', '1' ], true ) ) {
+			$setting = 0; // Do not send a Confirmation Email.
+		} else {
 			$setting = (int) $default;
 		}
 
-		// If we have a Post.
-		if ( isset( $post_id ) && is_numeric( $post_id ) ) {
-
-			// Get stored value.
+		// Override with Post's stored value if we have one.
+		if ( ! empty( $post_id ) ) {
 			$stored_setting = $this->plugin->wordpress->eo->get_event_registration_send_email( $post_id );
-
-			// Override with stored value if we get a value.
 			if ( '' !== $stored_setting && is_numeric( $stored_setting ) ) {
 				$setting = (int) $stored_setting;
 			}
-
 		}
 
 		// --<
