@@ -1888,16 +1888,16 @@ class CEO_WordPress_EO {
 	 * @since 0.6.4
 	 *
 	 * @param int $post_id The numeric ID of the WP Post.
-	 * @return int $setting The Event Registration Confirmation screen setting for the CiviCRM Event.
+	 * @return int|string $setting The Event Registration Confirmation screen setting, or an empty string when unset.
 	 */
 	public function get_event_registration_confirm( $post_id ) {
 
 		// Get the meta value.
 		$setting = get_post_meta( $post_id, '_civi_registration_confirm', true );
 
-		// If it's not yet set it will be an empty string, so cast as boolean.
+		// If it's not yet set, allow the CEO default to apply.
 		if ( '' === $setting ) {
-			$setting = 1; // The default in CiviCRM is to show a confirmation screen.
+			return '';
 		}
 
 		// --<
@@ -2161,16 +2161,16 @@ class CEO_WordPress_EO {
 	 * @since 0.7.2
 	 *
 	 * @param int $post_id The numeric ID of the WP Post.
-	 * @return int $setting The Event Confirmation Email setting for the CiviCRM Event.
+	 * @return int|string $setting The Event Confirmation Email setting, or an empty string when unset.
 	 */
 	public function get_event_registration_send_email( $post_id ) {
 
 		// Get the meta value.
 		$setting = get_post_meta( $post_id, '_civi_registration_send_email', true );
 
-		// If it's not yet set it will be an empty string, so cast as boolean.
+		// If it's not yet set, allow the CEO default to apply.
 		if ( '' === $setting ) {
-			$setting = 0; // The default in CiviCRM is not to send a Confirmation Email.
+			return '';
 		}
 
 		// --<
