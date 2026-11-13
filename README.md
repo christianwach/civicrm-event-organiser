@@ -25,6 +25,8 @@ This plugin is compatible with [CiviCRM Profile Sync](https://wordpress.org/plug
 
 *Important note:* Please make sure you have *CiviCRM Profile Sync* version 0.5 or greater.
 
+To allow CiviCRM event fees to be setup within a Wordpress event, see [setting up a Quick Config Price Set Field](/docs/events.md#quick-config-price-set).
+
 #### CiviCRM Event ID Field
 
 *CiviCRM Event Organiser* supplies a custom ACF Field called "CiviCRM Event ID" which can be used for Event Organiser Events that have a one-to-one correspondence with CiviCRM Events. The field *will not work* as expected for synced recurring Events.
@@ -118,6 +120,14 @@ The attributes that the Shortcode accepts are:
 * `event_id` which defaults to the currently displayed Event.
 * `class` which defaults to no classes on the wrapper element.
 * `format` which defaults to e.g. "2 places remaining". Use `format="raw"` to display just the number.
+
+#### `[ceo_register_fees]`
+
+Use the `[ceo_register_fees]` Shortcode to display a list of saved fees from the Event's "CiviCRM Event: Quick Config Price Set" ACF Field. The ACF field name you use is detected automatically; no further configration required.
+
+The attributes that the Shortcode accepts are:
+
+* `event_id` which defaults to the currently displayed Event.
 
 ### Known Issues
 

@@ -66,10 +66,143 @@ class CEO_WordPress_Shortcodes {
 		add_shortcode( 'ceo_register_remaining', [ $this, 'remaining_render' ] );
 		add_shortcode( 'ceo_register_messages', [ $this, 'messages_render' ] );
 		add_shortcode( 'ceo_register_link', [ $this, 'link_render' ] );
+		add_shortcode( 'ceo_register_fees', [ $this, 'fees_render' ] );
 
 		// Register Shortcode compatibility.
 		add_filter( 'eo_placeholder_template_patterns', [ $this, 'template_patterns' ], 10, 2 );
 		add_filter( 'eo_placeholder_template_replacement', [ $this, 'template_replacement' ], 10, 2 );
+
+	}
+
+	// -----------------------------------------------------------------------------------
+
+	/**
+	 * Renders the saved Quick Config Price Set fees via a Shortcode.
+	 *
+	 * @since Unreleased
+	 *
+	 * @param array  $attr The saved Shortcode attributes.
+	 * @param string $content The enclosed content of the Shortcode.
+	 * @return string $markup The HTML markup for the Shortcode.
+	 */
+	public function fees_render( $attr, $content = null ) {
+
+		// Init defaults.
+		$defaults = [
+			'event_id' => null, // Defaults to the current Event.
+		];
+
+		// Parse attributes.
+		$shortcode_atts = shortcode_atts( $defaults, $attr, 'ceo_register_fees' );
+
+		// Get saved fees.
+		$fees = civicrm_event_organiser_get_event_fees( $shortcode_atts['event_id'] );
+		if ( empty( $fees ) ) {
+			return '';
+		}
+
+		// Initialise CiviCRM for currency formatting.
+		if ( ! function_exists( 'civi_wp' ) || ! civi_wp()->initialize() ) {
+			return '';
+		}
+
+		// --<
+		return $this->fees_process( $fees );
+
+	}
+
+	/**
+	 * Gets the saved Quick Config Price Set fees for an Event.
+	 *
+	 * @since Unreleased
+	 *
+	 * @param int $post_id The numeric ID of the WP Post.
+	 * @return array $fees The fee rows, each containing label, amount and currency.
+	 */
+	public function fees_get( $post_id ) {
+
+		// Init return.
+		$fees = [];
+
+		// Use the same Field discovery as CEO's Quick Config synchronisation.
+		$acf_field = $this->plugin->compat->cwps->cwps->acf->acf->field ?? null;
+		if ( ! is_callable( [ $acf_field, 'fields_get_for_post' ] ) ) {
+			return $fees;
+		}
+
+		// Get mapped ACF Fields for this Event; require exactly one Quick Config Price Set Field.
+		$acf_fields = $acf_field->fields_get_for_post( $post_id );
+		if ( empty( $acf_fields['price_set_quick'] ) || 1 !== count( $acf_fields['price_set_quick'] ) ) {
+			return $fees;
+		}
+
+		// An Event has one Quick Config Price Set Field.
+		$selector = key( $acf_fields['price_set_quick'] );
+
+		// Read the Field definition without loading or formatting its value.
+		$field = get_field_object( $selector, $post_id, false, false );
+		if ( empty( $field['name'] ) ) {
+			return $fees;
+		}
+
+		// Require a currency selected in the ACF Field's CiviCRM Currency setting.
+		if ( empty( $field['currency'] ) ) {
+			return $fees;
+		}
+
+		// WordPress unserialises the stored rows for us.
+		$rows = get_post_meta( $post_id, $field['name'], true );
+		if ( ! is_array( $rows ) ) {
+			return $fees;
+		}
+
+		foreach ( $rows as $row ) {
+
+			// Skip rows missing a fee label or amount.
+			if ( ! is_array( $row ) || ! isset( $row['field_ceo_civicrm_fee_label'], $row['field_ceo_civicrm_amount'] ) ) {
+				continue;
+			}
+			$label  = trim( $row['field_ceo_civicrm_fee_label'] );
+			$amount = trim( (string) $row['field_ceo_civicrm_amount'] );
+
+			// Preserve row order and decimal strings without rounding.
+			$fees[] = [
+				'label'    => $label,
+				'amount'   => $amount,
+				'currency' => $field['currency'],
+			];
+
+		}
+
+		// --<
+		return $fees;
+
+	}
+
+	/**
+	 * Processes the saved Quick Config Price Set fees into a list.
+	 *
+	 * @since Unreleased
+	 *
+	 * @param array $fees The array of fee labels, amounts and currencies.
+	 * @return string $markup The rendered HTML markup.
+	 */
+	private function fees_process( $fees ) {
+
+		// Init list items.
+		$list_items = [];
+
+		foreach ( $fees as $fee ) {
+
+			// Format amounts using the Field's currency and CiviCRM locale.
+			$formatted_amount = Civi::format()->money( $fee['amount'], $fee['currency'] );
+
+			$list_items[] = '<li class="ceo-event-fee"><span class="ceo-event-fee-label">' . esc_html( $fee['label'] ) . '</span>: <span class="ceo-event-fee-amount">' . esc_html( $formatted_amount ) . '</span></li>';
+
+		}
+
+		// --<
+		return '<ul class="ceo-event-fees">' . implode( "\n", $list_items ) . '</ul>';
 
 	}
 

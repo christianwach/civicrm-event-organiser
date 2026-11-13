@@ -144,3 +144,36 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
 	return $links;
 
 }
+
+/**
+ * Gets the saved Quick Config Price Set fees for an Event Organiser Event.
+ *
+ * Reads WordPress metadata, not live CiviCRM prices. Recurring Events share the
+ * fees saved on their WordPress Post. No CiviCRM initialisation is required.
+ *
+ * @since Unreleased
+ *
+ * @param int $post_id The numeric ID of the WP Post. Defaults to the current Post.
+ * @return array $fees The fee rows, each containing label, amount and currency.
+ */
+function civicrm_event_organiser_get_event_fees( $post_id = null ) {
+
+	// Init return.
+	$fees = [];
+
+	// Need an Event Post ID.
+	$post_id = intval( empty( $post_id ) ? get_the_ID() : $post_id );
+	if ( 0 >= $post_id || 'event' !== get_post_type( $post_id ) ) {
+		return $fees;
+	}
+
+	// Get plugin reference.
+	$plugin = civicrm_eo();
+
+	// Call fee retrieval method.
+	$fees = $plugin->wordpress->shortcodes->fees_get( $post_id );
+
+	// --<
+	return $fees;
+
+}
