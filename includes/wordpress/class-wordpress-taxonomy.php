@@ -78,6 +78,9 @@ class CEO_WordPress_Taxonomy {
 		// Add CiviCRM listeners once CiviCRM is available.
 		add_action( 'civicrm_config', [ $this, 'civicrm_config' ] );
 
+		// Save the Event Category before Event Organiser fires its "Event Saved" hook.
+		add_action( 'wp_loaded', [ $this, 'save_term_early' ], 20 );
+
 		// Filter Radio Buttons for Taxonomies null Term insertion.
 		add_filter( 'radio-buttons-for-taxonomies-no-term-event-category', [ $this, 'skip_null_term' ], 20, 1 );
 		add_filter( 'radio_buttons_for_taxonomies_no_term_event-category', [ $this, 'skip_null_term' ], 20, 1 );
@@ -97,6 +100,40 @@ class CEO_WordPress_Taxonomy {
 		add_filter( 'ceo/taxonomy/term/the_content', 'convert_chars' );
 		add_filter( 'ceo/taxonomy/term/the_content', 'wpautop' );
 		add_filter( 'ceo/taxonomy/term/the_content', 'shortcode_unautop' );
+
+	}
+
+	/**
+	 * Alters the priority of the "save_post" callback that the "Radio Buttons
+	 * for Taxonomies" plugin uses to save the Term in the Event Category.
+	 *
+	 * This is needed to correctly assign the Event Type when an Event is created
+	 * and synced to CiviCRM without saving prior to syncing.
+	 *
+	 * @since 0.8.8
+	 */
+	public function save_term_early() {
+
+		// Bail if Radio Buttons for Taxonomies is not active.
+		if ( ! function_exists( 'radio_buttons_for_taxonomies' ) ) {
+			return;
+		}
+
+		// Try to find the taxonomies property.
+		$objects = radio_buttons_for_taxonomies()->taxonomies ?? false;
+		if ( false === $objects ) {
+			return;
+		}
+
+		//
+		$object = $objects['event-category'] ?? false;
+		if ( false === $object ) {
+			return;
+		}
+
+		// Save Term earlier than the default priority.
+		remove_action( 'save_post', [ $object, 'save_single_term' ] );
+		add_action( 'save_post', [ $object, 'save_single_term' ], 9 );
 
 	}
 
