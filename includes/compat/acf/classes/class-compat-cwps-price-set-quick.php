@@ -916,7 +916,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 		do_action( 'ceo/acf/civicrm/price_set_quick/updated', $current_price_set, $args );
 
 		// --<
-		return $price_set;
+		return $current_price_set;
 
 	}
 
