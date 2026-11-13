@@ -27,16 +27,22 @@
 		<!-- Allow non-strict array checks. -->
 		<exclude name="WordPress.PHP.StrictInArray.MissingTrueStrict" />
 
+		<!-- Allow some stylistic choices. -->
+		<exclude name="PSR2.Classes.ClassDeclaration.CloseBraceAfterBody" />
+		<exclude name="PSR2.Methods.FunctionClosingBrace.SpacingBeforeClose" />
+		<exclude name="Universal.Files.SeparateFunctionsFromOO.Mixed" />
+		<exclude name="Universal.ControlStructures.DisallowLonelyIf.Found" />
+
 	</rule>
 
 	<rule ref="WordPress.WP.I18n">
 		<properties>
-			<property name="text_domain" type="array" value="civicrm-event-organiser" />
+			<property name="text_domain" value="civicrm-event-organiser" />
 		</properties>
 	</rule>
 
 	<!-- Enforce short array syntax. -->
-	<rule ref="Generic.Arrays.DisallowShortArraySyntax.Found">
+	<rule ref="Universal.Arrays.DisallowShortArraySyntax.Found">
 		<severity>0</severity>
 	</rule>
 	<rule ref="Generic.Arrays.DisallowLongArraySyntax.Found" />
