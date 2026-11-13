@@ -532,10 +532,8 @@ class CEO_WordPress_EO {
 		// Init Category as undefined.
 		$terms = [];
 
-		// Get Location ID.
+		// Find Term if there is an Event Type ID.
 		if ( isset( $civi_event['event_type_id'] ) ) {
-
-			// We have a Category...
 
 			// Get Event Type data for this pseudo-ID (actually "value").
 			$type = $this->plugin->wordpress->taxonomy->get_event_type_by_value( $civi_event['event_type_id'] );
