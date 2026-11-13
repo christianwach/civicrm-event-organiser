@@ -559,7 +559,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 				$price_field_id => $price_field,
 			];
 
-			// Init array to collectPrice Field Values.
+			// Init array to collect Price Field Values.
 			$price_field_values = [];
 
 			// Create a Price Field Value from each value.
@@ -640,9 +640,9 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 				'currency'            => $settings['currency'],
 				'financial_type_id'   => $settings['financial_type_id'],
 				'payment_processor'   => $settings['payment_processor_id'],
-				'pay_later_text'      => $settings['pay_later_label'],
-				'pay_later_receipt'   => $settings['pay_later_instructions'],
-				'is_billing_required' => $settings['pay_later_billing_required'],
+				'pay_later_text'      => $settings['pay_later_label'] ?? '',
+				'pay_later_receipt'   => $settings['pay_later_instructions'] ?? '',
+				'is_billing_required' => $settings['pay_later_billing_required'] ?? '',
 			];
 
 			// Maybe add Pay Later params.
