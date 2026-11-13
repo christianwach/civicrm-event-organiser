@@ -1432,7 +1432,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 		// Sanitise array contents.
 		array_walk(
 			$price_field_value_ids,
-			function( &$item ) {
+			function ( &$item ) {
 				$item = maybe_unserialize( trim( $item ) );
 			}
 		);
@@ -1471,7 +1471,7 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 		// Sanitise array contents.
 		array_walk(
 			$price_field_value_ids,
-			function( &$item ) {
+			function ( &$item ) {
 				$item = (int) trim( $item );
 			}
 		);

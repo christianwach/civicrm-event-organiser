@@ -766,7 +766,7 @@ class CEO_Admin_Settings {
 		} else {
 			array_walk(
 				$profiles_allowed,
-				function( &$item ) {
+				function ( &$item ) {
 					$item = (int) sanitize_text_field( wp_unslash( $item ) );
 				}
 			);

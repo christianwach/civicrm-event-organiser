@@ -30,7 +30,7 @@ body.js .civi_eo_event_send_email_toggle {
 
 <p>
 	<?php
-	echo sprintf(
+	printf(
 		/* translators: 1: The opening strong tag, 2: The closing strong tag. */
 		esc_html__( '%1$sNOTE%2$s: Changes that you make will override the defaults set on the CiviCRM Event Organiser Settings page.', 'civicrm-event-organiser' ),
 		'<strong>',
@@ -39,7 +39,7 @@ body.js .civi_eo_event_send_email_toggle {
 	?>
 	<?php if ( $multiple ) : ?>
 		<?php
-		echo sprintf(
+		printf(
 			/* translators: 1: The opening emphasis tag, 2: The closing emphasis tag. */
 			esc_html__( 'Because this is a repeating Event, these options will be set for %1$sall corresponding CiviCRM Events%2$s when you sync this Event to CiviCRM.', 'civicrm-event-organiser' ),
 			'<em>',

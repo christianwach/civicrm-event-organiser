@@ -489,7 +489,7 @@ class CEO_ACF_Custom_CiviCRM_Price_Set_Quick_Field extends acf_field {
 		// Sanitise array contents.
 		array_walk(
 			$fee_labels,
-			function( &$item ) {
+			function ( &$item ) {
 				$item = (string) trim( $item );
 			}
 		);
@@ -506,7 +506,7 @@ class CEO_ACF_Custom_CiviCRM_Price_Set_Quick_Field extends acf_field {
 		// Sanitise array contents.
 		array_walk(
 			$amounts,
-			function( &$item ) {
+			function ( &$item ) {
 				$item = (string) trim( $item );
 			}
 		);
@@ -540,7 +540,7 @@ class CEO_ACF_Custom_CiviCRM_Price_Set_Quick_Field extends acf_field {
 		if ( ! empty( $field['sub_fields'] ) ) {
 			array_walk(
 				$field['sub_fields'],
-				function( &$item ) {
+				function ( &$item ) {
 					$item = acf_validate_field( $item );
 				}
 			);

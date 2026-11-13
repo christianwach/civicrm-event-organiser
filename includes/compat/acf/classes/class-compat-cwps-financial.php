@@ -1077,7 +1077,7 @@ class CEO_Compat_CWPS_Financial {
 		// Build tax rates.
 		$tax_rates = array_reduce(
 			$result['values'],
-			function( $tax_rates, $financial_account ) {
+			function ( $tax_rates, $financial_account ) {
 				$tax_rates[ $financial_account['entity_id'] ] = $financial_account['financial_account_id.tax_rate'];
 				return $tax_rates;
 			},

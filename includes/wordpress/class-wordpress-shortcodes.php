@@ -79,7 +79,7 @@ class CEO_WordPress_Shortcodes {
 	/**
 	 * Renders the saved Quick Config Price Set fees via a Shortcode.
 	 *
-	 * @since Unreleased
+	 * @since 0.8.8
 	 *
 	 * @param array  $attr The saved Shortcode attributes.
 	 * @param string $content The enclosed content of the Shortcode.
@@ -114,7 +114,7 @@ class CEO_WordPress_Shortcodes {
 	/**
 	 * Gets the saved Quick Config Price Set fees for an Event.
 	 *
-	 * @since Unreleased
+	 * @since 0.8.8
 	 *
 	 * @param int $post_id The numeric ID of the WP Post.
 	 * @return array $fees The fee rows, each containing label, amount and currency.
@@ -182,7 +182,7 @@ class CEO_WordPress_Shortcodes {
 	/**
 	 * Processes the saved Quick Config Price Set fees into a list.
 	 *
-	 * @since Unreleased
+	 * @since 0.8.8
 	 *
 	 * @param array $fees The array of fee labels, amounts and currencies.
 	 * @return string $markup The rendered HTML markup.
@@ -282,7 +282,7 @@ class CEO_WordPress_Shortcodes {
 		// Process messages.
 		array_walk(
 			$links,
-			function( &$item, $key ) {
+			function ( &$item, $key ) {
 
 				// Wrap messages.
 				if ( ! empty( $item['remaining_message'] ) && false !== $item['remaining_count'] ) {
@@ -400,7 +400,7 @@ class CEO_WordPress_Shortcodes {
 		// Process messages.
 		array_walk(
 			$links_data,
-			function( &$item, $key ) {
+			function ( &$item, $key ) {
 
 				// Standalone messages.
 				if ( ! empty( $item['meta'] ) && in_array( 'waitlist', $item['meta'] ) ) {
@@ -580,7 +580,7 @@ class CEO_WordPress_Shortcodes {
 			$classes = explode( ' ', $wrap_classes );
 			array_walk(
 				$classes,
-				function( &$item ) {
+				function ( &$item ) {
 					$item = esc_attr( $item );
 				}
 			);
@@ -591,7 +591,7 @@ class CEO_WordPress_Shortcodes {
 		if ( empty( $element ) && true === $show_messages ) {
 			array_walk(
 				$links_data,
-				function( &$item, $key ) use ( $element, $classes ) {
+				function ( &$item, $key ) use ( $element, $classes ) {
 
 					// Prepend link with messages.
 					if ( ! empty( $item['meta'] ) && in_array( 'waitlist', $item['meta'] ) ) {
@@ -617,7 +617,7 @@ class CEO_WordPress_Shortcodes {
 		if ( 'button' === $element ) {
 			array_walk(
 				$links_data,
-				function( &$item, $key ) use ( $element, $classes, $show_messages ) {
+				function ( &$item, $key ) use ( $element, $classes, $show_messages ) {
 
 					// Wrap the link if there is one.
 					if ( ! empty( $item['link'] ) && ! empty( $item['meta'] ) && in_array( 'active', $item['meta'] ) ) {
@@ -657,7 +657,7 @@ class CEO_WordPress_Shortcodes {
 		if ( 'div' === $element ) {
 			array_walk(
 				$links_data,
-				function( &$item, $key ) use ( $element, $classes, $show_messages ) {
+				function ( &$item, $key ) use ( $element, $classes, $show_messages ) {
 
 					// Wrap the link if there is one.
 					if ( ! empty( $item['link'] ) && ! empty( $item['meta'] ) && in_array( 'active', $item['meta'] ) ) {
@@ -1106,7 +1106,7 @@ class CEO_WordPress_Shortcodes {
 					$classes = explode( ' ', $classes );
 					array_walk(
 						$classes,
-						function( &$item ) {
+						function ( &$item ) {
 							$item = esc_attr( $item );
 						}
 					);

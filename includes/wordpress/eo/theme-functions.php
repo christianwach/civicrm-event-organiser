@@ -36,7 +36,7 @@ function civicrm_event_organiser_register_links( $post_id = null, $title = null,
 	// Process messages.
 	array_walk(
 		$links_data,
-		function( &$item, $key ) {
+		function ( &$item, $key ) {
 
 			// Prepend link with message.
 			if ( ! empty( $item['meta'] ) && in_array( 'waitlist', $item['meta'] ) ) {
@@ -151,7 +151,7 @@ function civicrm_event_organiser_get_register_links( $post_id = null, $title = n
  * Reads WordPress metadata, not live CiviCRM prices. Recurring Events share the
  * fees saved on their WordPress Post. No CiviCRM initialisation is required.
  *
- * @since Unreleased
+ * @since 0.8.8
  *
  * @param int $post_id The numeric ID of the WP Post. Defaults to the current Post.
  * @return array $fees The fee rows, each containing label, amount and currency.

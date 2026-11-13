@@ -471,7 +471,7 @@ class CiviCRM_Event_Organiser {
 	public function plugin_action_links( $links, $file ) {
 
 		// Add settings link.
-		if ( plugin_basename( dirname( __FILE__ ) . '/civicrm-event-organiser.php' ) === $file ) {
+		if ( plugin_basename( CIVICRM_WP_EVENT_ORGANISER_FILE ) === $file ) {
 
 			// Add settings link.
 			$link    = $this->admin->settings->page_settings_submit_url_get();

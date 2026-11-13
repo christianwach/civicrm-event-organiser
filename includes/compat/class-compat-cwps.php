@@ -835,7 +835,7 @@ class CEO_Compat_CWPS {
 		// Prepend the Event Field prefix.
 		array_walk(
 			$to_remove,
-			function( &$item ) use ( $event_field_prefix ) {
+			function ( &$item ) use ( $event_field_prefix ) {
 				$item = $event_field_prefix . $item;
 			}
 		);
