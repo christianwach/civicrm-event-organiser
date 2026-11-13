@@ -25,7 +25,7 @@ This plugin is compatible with [CiviCRM Profile Sync](https://wordpress.org/plug
 
 *Important note:* Please make sure you have *CiviCRM Profile Sync* version 0.5 or greater.
 
-To allow CiviCRM event fees to be setup within a Wordpress event, see [setting up a Quick Config Price Set Field](/docs/events.md#quick-config-price-set).
+To allow CiviCRM event fees to be setup within a WordPress event, see [setting up a Quick Config Price Set Field](/docs/events.md#quick-config-price-set).
 
 #### CiviCRM Event ID Field
 

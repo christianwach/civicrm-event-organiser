@@ -20,7 +20,7 @@ Once you've enabled registration when viewing an event on the website, there wil
 
 With ACF Pro and CiviCRM Profile Sync active, you can add a "CiviCRM Event: Quick Config Price Set" Field to manage registration fees from the WordPress Event editor.
 
-1. Go to **ACF > Field Groups** and create a **Event Fees** a Field Group.
+1. Go to **ACF > Field Groups** and create a Field Group called, for example, **Event Fees**.
 2. Set its Location Rule to **Post Type is equal to Event**.
 3. Add a Field with the type **CiviCRM Event: Quick Config Price Set**. Choose a Field Label and Field Name, for example "Fee Options" and `fee_options`.
 4. Select the **CiviCRM Currency**, **CiviCRM Financial Type** (typically Event Fees) and **CiviCRM Payment Processor**. **CiviCRM Pay Later** if you want to allow offline payments.
