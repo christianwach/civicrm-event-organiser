@@ -905,6 +905,16 @@ class CEO_Compat_CWPS_Price_Set_Quick {
 
 		}
 
+		/**
+		 * Fires when a CiviCRM "Quick Config Price Set" Record has been updated.
+		 *
+		 * @since 0.8.8
+		 *
+		 * @param array $current_price_set The Price Set whose Price Field Values have been modified.
+		 * @param array $args The array of WordPress params.
+		 */
+		do_action( 'ceo/acf/civicrm/price_set_quick/updated', $current_price_set, $args );
+
 		// --<
 		return $price_set;
 
