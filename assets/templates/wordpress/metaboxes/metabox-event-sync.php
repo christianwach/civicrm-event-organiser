@@ -150,7 +150,7 @@ body.js .civi_eo_event_send_email_toggle {
 			</tr>
 
 			<tr valign="top" class="civi_eo_event_send_email_toggle">
-				<th scope="row"><label for="civi_eo_event_send_email_from"><?php esc_html_e( 'From Name', 'civicrm-event-organiser' ); ?></label></th>
+				<th scope="row"><label for="civi_eo_event_send_email_from"><?php esc_html_e( 'From Email', 'civicrm-event-organiser' ); ?></label></th>
 				<td>
 					<input type="text" class="widefat" id="civi_eo_event_send_email_from" name="civi_eo_event_send_email_from" value="<?php echo esc_attr( $send_email_from ); ?>" />
 				</td>

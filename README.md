@@ -83,6 +83,7 @@ Now that you've installed the plugin, you'll want to find out:
 
 * How to [configure the CiviCRM Event Organiser settings](/docs/settings.md).
 * How to [add synced Events to your website](/docs/events.md).
+* What is the [expected sync behavior between WordPress and CiviCRM sync](/docs/events.md#sync-behavior).
 
 ### Shortcodes
 
