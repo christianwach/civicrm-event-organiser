@@ -413,14 +413,25 @@ class CEO_Compat_CWPS {
 		// Loop through the CiviCRM Events.
 		foreach ( $correspondences as $occurrence_id => $civi_event_id ) {
 
+			// Add our data to the params.
+			$args['civi_event_id'] = $civi_event_id;
+			$args['post_id']       = $post->ID;
+			$args['post']          = $post;
+
+			/**
+			 * Fires when a CiviCRM Event is about to be updated after ACF Fields were saved.
+			 *
+			 * @since 0.8.8
+			 *
+			 * @param array $args The updated array of WordPress params.
+			 */
+			do_action( 'ceo/acf/event/acf_fields_saved/pre', $args );
+
 			// Update each CiviCRM Event.
 			$civi_event = $this->update_from_fields( $civi_event_id, $fields );
 
-			// Add our data to the params.
-			$args['civi_event_id'] = $civi_event_id;
-			$args['civi_event']    = $civi_event;
-			$args['post_id']       = $post->ID;
-			$args['post']          = $post;
+			// Add our CiviCRM Event to the params.
+			$args['civi_event'] = $civi_event;
 
 			/**
 			 * Fires when a CiviCRM Event has been updated after ACF Fields were saved.
